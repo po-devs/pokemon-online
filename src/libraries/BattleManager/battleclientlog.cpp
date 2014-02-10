@@ -203,6 +203,16 @@ void BattleClientLog::onStatBoost(int spot, int stat, int boost, bool silent)
                                                        boost > 0 ? tr("rose") : tr("fell"))), silent);
 }
 
+void BattleClientLog::onMaximumBoost(int spot, int stat)
+{
+    printLine("WontGoHigher", tr("%1's %2 won't go any higher!").arg(tu(nick(spot)), StatInfo::Stat(stat, data()->gen().num)));
+}
+
+void BattleClientLog::onMinimumBoost(int spot, int stat)
+{
+    printLine("WontGoLower", tr("%1's %2 won't go any lower!").arg(tu(nick(spot)), StatInfo::Stat(stat, data()->gen().num)));
+}
+
 void BattleClientLog::onMajorStatusChange(int spot, int status, bool multipleTurns, bool silent)
 {
     static const QString statusChangeMessages[6] = {

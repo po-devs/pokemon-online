@@ -162,6 +162,20 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         output<BattleEnum::StatChange>(spot, stat, boost, silent);
         break;
     }
+    case BC::WontGoHigher:
+    {
+        qint8 stat;
+        in >> stat;
+        output<BattleEnum::WontGoHigher>(spot, stat);
+        break;
+    }
+    case BC::WontGoLower:
+    {
+        qint8 stat;
+        in >> stat;
+        output<BattleEnum::WontGoLower>(spot, stat);
+        break;
+    }
     case BC::StatusChange:
     {
         qint8 status;

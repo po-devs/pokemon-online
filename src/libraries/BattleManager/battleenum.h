@@ -73,7 +73,9 @@ enum /* class */ BattleEnum
     ChooseShiftToCenter,
     ChooseDraw,
     UseItem,
-    ItemCountChange
+    ItemCountChange,
+    WontGoHigher,
+    WontGoLower
 };
 
 inline unsigned int qHash(const BattleEnum &b) {

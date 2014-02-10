@@ -2291,6 +2291,8 @@ bool BattleBase::gainStatMod(int player, int stat, int bonus, int , bool tell)
     if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
+    } else {
+        notify(All, WontGoHigher, player, qint8(stat));
     }
 
     return true;
