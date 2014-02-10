@@ -26,8 +26,7 @@ public:
     void onMiss(int spot);
     void onAvoid(int spot);
     void onStatBoost(int spot, int stat, int boost, bool silent);
-    void onMaximumBoost(int spot, int stat);
-    void onMinimumBoost(int spot, int stat);
+    void onCappedStat(int spot, int stat, bool maxi);
     void onMajorStatusChange(int spot, int status, bool multipleTurns, bool silent);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onStatusAlreadyThere(int spot, int status);
