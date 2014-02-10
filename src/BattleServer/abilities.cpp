@@ -1090,7 +1090,7 @@ struct AMTrace : public AM {
         int ab = b.ability(t);
         //Multitype
         if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace
-            && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget"))) {
+            && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget")) && ab != Ability::StanceChange) {
             b.sendAbMessage(66,0,s,t,0,ab);
             b.loseAbility(s);
             b.acquireAbility(s, ab);
