@@ -2023,6 +2023,11 @@ void BattleBase::healDamage(int player, int target)
         //In RBY, if the HP difference is 255, it fails
         if(poke(target).lifePoints() < poke(target).totalLifePoints() && ((gen() != Gen::RedBlue && gen() != Gen::Yellow)
                                                                           || (poke(target).totalLifePoints()-poke(target).lifePoints()) % 256 != 255)) {
+
+            if (pokeMemory(target)["HealBlockCount"].toInt() > 0){
+                sendMoveMessage(59, 3, target, Type::Psychic, target, Move::HealPulse);
+                return;
+            }
             sendMoveMessage(60, 0, target, tmove(player).type);
 
             int damage = poke(target).totalLifePoints() * healing / 100;

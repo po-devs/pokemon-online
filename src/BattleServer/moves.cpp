@@ -3529,8 +3529,8 @@ struct MMHealBlock: public MM
 
     static void msp(int s, int, BS &b) {
         for (int i = 0; i < 4; i++) {
-            if (MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
-                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) {
+            if ((MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
+                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
@@ -3538,9 +3538,10 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if(tmove(b,s).flags & Move::HealingFlag
-                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) {
+        if((tmove(b,s).flags & Move::HealingFlag
+                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
             turn(b,s)["ImpossibleToMove"] = true;
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
             b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
         }
     }

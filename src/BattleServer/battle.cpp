@@ -2227,7 +2227,8 @@ void BattleSituation::inflictRecoil(int source, int target)
 
         if (hasWorkingAbility(target, Ability::LiquidOoze)) {
             if (gen().num < 5 && tmove(source).attack == Move::DreamEater) {
-                healLife(source, damage);
+                if (canHeal(source,HealByMove,Move::DreamEater))
+                    healLife(source, damage);
             } else {
                 sendMoveMessage(1,2,source,Pokemon::Poison,target);
                 inflictDamage(source,damage,source,false);
@@ -2239,9 +2240,7 @@ void BattleSituation::inflictRecoil(int source, int target)
                 }
             }
         } else {
-            if (pokeMemory(source).value("HealBlockCount").toInt() > 0) {
-                sendMoveMessage(60, 0, source);
-            } else {
+            if (canHeal(source,HealByMove,tmove(source).attack)) {
                 healLife(source, damage);
             }
         }
