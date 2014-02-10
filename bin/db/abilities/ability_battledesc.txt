@@ -182,7 +182,7 @@
 181 Raises the Special Attack of a Pokémon with this ability by 2 stages every time the enemy lowers any of its stats.
 182 Raises priority of all Flying-type moves used by a Pokémon with this ability by 1.
 183 Lowers the Speed of the opponent every time it uses a contact move on a Pokémon with this ability.
-184 Prevents the partners of a Pokémon with this ability from being infatuated, or being under the effect of Taunt, Encore, Torment and Disable.
+184 Prevents any Pokémon on the side of a Pokémon with this ability from being infatuated, or being under the effect of Disable, Encore, Heal Block, Taunt, and Torment.
 185 Makes a Pokémon with this ability immune to Acid Spray, Aura Sphere, Barrage, Bullet Seed, Egg Bomb, Electro Ball, Energy Ball, Focus Blast, Gyro Ball, Ice Ball, Magnet Bomb, Mud Bomb, Octazooka, Seed Bomb, Shadow Ball, Sludge Bomb, and Weather Ball.
 186 Raises the Defense of a Pokémon with this ability by 50% while Grassy Terrain is in effect.
 187 When a Pokémon with this ability uses an attacking move and it is holding no item, steals the opponent's held item.
