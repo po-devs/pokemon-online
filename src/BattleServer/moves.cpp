@@ -3509,11 +3509,17 @@ struct MMHealBlock: public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        poke(b,t)["HealBlockCount"] = 5;
-        b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "HealBlock", &et);
-        addFunction(poke(b,t), "MovePossible", "HealBlock", &mp);
-        addFunction(poke(b,t), "MovesPossible", "HealBlock", &msp);
         b.sendMoveMessage(59,0,s,type(b,s),t);
+        if (b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
+            b.disposeItem(t);
+        } else {
+            poke(b,t)["HealBlockCount"] = 5;
+            poke(b,t)["HealBlocked"] = true;
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "HealBlock", &et);
+            addFunction(poke(b,t), "MovePossible", "HealBlock", &mp);
+            addFunction(poke(b,t), "MovesPossible", "HealBlock", &msp);
+        }
     }
     static void et(int s, int , BS &b) {
         inc(poke(b,s)["HealBlockCount"], -1);
@@ -3524,6 +3530,7 @@ struct MMHealBlock: public MM
             b.removeEndTurnEffect(BS::PokeEffect, s, "HealBlock");
             removeFunction(poke(b,s), "MovesPossible", "HealBlock");
             removeFunction(poke(b,s), "MovePossible", "HealBlock");
+            poke(b,s).remove("HealBlocked");
         }
     }
 
