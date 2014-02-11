@@ -2409,7 +2409,7 @@ void AbilityEffect::init()
     REGISTER_AB(109, ToughClaws);
     REGISTER_AB(110, StanceChange);
     REGISTER_AB(111, ParentalBond);
-    //112 sweet veil
+    //112 sweet veil, aroma veil
     //113 Competitive
     REGISTER_AB(114, GaleWings);
     REGISTER_AB(115, Gooey);
@@ -2421,4 +2421,4 @@ void AbilityEffect::init()
     REGISTER_AB(121, Aerilate);
 }
 
-/* Not done: Aroma Veil, BulletProof, Grass Pelt, Symbiosis */
+/* Not done: Symbiosis */
