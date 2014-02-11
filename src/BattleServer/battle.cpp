@@ -2404,7 +2404,16 @@ bool BattleSituation::canGetStatus(int player, int status) {
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
     switch (status) {
-    case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
+        case Pokemon::Paralysed: {
+		if (hasWorkingAbility(player, Ability::Limber)) {
+			return false;
+		}
+		if (gen() < 6 && hasType(player, Type::Electric)) {
+			sendMoveMessage(31,0,player);
+			return false;
+		}
+		return true;
+	}
     case Pokemon::Asleep: {
         if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit) ||
                 hasWorkingTeamAbility(player, Ability::SweetVeil) || isThereUproar()) {
