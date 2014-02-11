@@ -87,7 +87,7 @@
 86 The Pokémon is prone to wild stat changes.
 87 Reduces HP if it is hot. Water restores HP.
 88 Adjusts power according to the foe's ability.
-89 Boosts the power of punching moves.
+89 Boosts the power of punching moves by 30%.
 90 Restores HP if the Pokémon is poisoned.
 91 Powers up moves of the same type.
 92 Increases the frequency of multi-strike moves.
@@ -155,7 +155,7 @@
 154 Raises Attack when hit by dark-type moves.
 155 Raises Speed one stage upon being hit by a Dark, Ghost, or Bug move.
 156 Reflects most non-damaging moves back at their user.
-157 Absorbs Grass moves, raising Attack one stage{mechanic:stat modifier}.
+157 Absorbs Grass moves, raising Attack one stage.
 158 Raises non-damaging moves' priority by one stage.
 159 Strengthens Rock, Ground, and Steel moves to 1.3× their power during a sandstorm.
 160 Damages attacking Pokémon for 1/8 their max HP on contact.
@@ -163,3 +163,27 @@
 162 Raises moves' accuracy to 1.1× for friendly Pokémon.
 163 Makes moves ignore targets' abilities if they could hinder or prevent them.
 164 Makes moves ignore targets' abilities if they could hinder or prevent them.
+165 Changes Normal-type moves into Flying-type, and boosts their power by 30%.
+166 Reverses the effects of Aura abilities.
+167 Restores 30% HP when eating a berry.
+168 Boost the power of Dark-type moves used by all Pokémon by 1/3
+169 Boost the power of Fairy-type moves used by all Pokémon by 1/3
+170 Prevents Grass-type partners from having stats reduced by the opponent.
+171 Halves damage from Physical moves.
+172 Boosts the power of Pulse moves and Aura Sphere.
+173 Adds an extra hit at 1/2 power to all single target attacks.
+174 Changes Normal-type moves into Fairy-type, and boosts their power by 30%.
+175 Changes the user's type to match the attack used.
+176 Changes Normal-type moves into Ice-type, and boosts their power by 30%.
+177 Changes Aegislash's form based on the move used.
+178 Boosts the power of biting moves by 30%.
+179 Prevents all Pokémon on the user's side of the field from falling asleep.
+180 Boosts the power of contact moves by 30%.
+181 Raises Special Attack two stages upon having any stat lowered.
+182 Raises the priority of all Flying-type moves by 1.
+183 Lowers opponents Speed by 1 stage on contact.
+184 Prevents all Pokémon on the user's side of the field from infatuation and altered mental states.
+185 Protects the Pokémon from some ball and bomb moves.
+186 Boosts Defense by 50% in Grassy Terrain.
+187 Steals attacking Pokémon's held item on contact.
+188 Transfers held item to partner after the partner consumes their item.
