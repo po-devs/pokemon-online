@@ -314,6 +314,9 @@ struct IMLifeOrb : public IM
     }
 
     static void atl(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
         if (turn(b,s).value("ActivateLifeOrb").toBool() && !turn(b,s).value("NoLifeOrbActivation").toBool() && !turn(b,s).value("EncourageBug").toBool()
                 && !b.hasWorkingAbility(s, Ability::MagicGuard)) {
             if (b.gen() >= 5)
