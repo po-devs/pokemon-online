@@ -513,6 +513,12 @@ struct IMMentalHerb : public IM
                 b.removeEndTurnEffect(BS::PokeEffect, s, "Disable");
                 used = true;
             }
+            if (poke(b,s).contains("HealBlocked")) {
+                removeFunction(poke(b,s), "MovesPossible", "HealBlock");
+                removeFunction(poke(b,s), "MovePossible", "HealBlock");
+                poke(b,s).remove("HealBlocked");
+                used = true;
+            }
             b.counters(s).clear();
         }
         if (used) {
