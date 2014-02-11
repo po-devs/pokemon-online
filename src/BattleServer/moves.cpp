@@ -1695,6 +1695,10 @@ struct MMEncore : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
         b.sendMoveMessage(33,1,s,0,t);
         if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
@@ -3057,6 +3061,10 @@ struct MMAttract : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
         b.sendMoveMessage(58,1,s,0,t);
         if (b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
@@ -3190,8 +3198,11 @@ struct MMTaunt : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
         b.sendMoveMessage(134,1,s,Pokemon::Dark,t);
-
         if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
             b.disposeItem(t);
@@ -3509,6 +3520,10 @@ struct MMHealBlock: public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
         b.sendMoveMessage(59,0,s,type(b,s),t);
         if (b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
@@ -4874,6 +4889,10 @@ struct MMTorment : public MM {
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
         b.sendMoveMessage(135,0,s,Pokemon::Dark,t);
         if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);

@@ -69,6 +69,10 @@ struct MMDisable : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         /* Disable disables a random move in gen 1 */
         if (b.gen().num == 1) {

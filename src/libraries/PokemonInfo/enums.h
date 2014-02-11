@@ -1794,7 +1794,6 @@ namespace Ability
         VictoryStar,
         TurboBlaze,
         TeraVolt,
-
         Aerilate,
         AuraBreak,
         CheekPouch,
@@ -1810,7 +1809,15 @@ namespace Ability
         StrongJaw,
         StanceChange,
         SweetVeil,
-        ToughClaws
+        ToughClaws,
+        Competitive,
+        GaleWings,
+        Gooey,
+        AromaVeil,
+        BulletProof,
+        GrassPelt,
+        Magician,
+        Symbiosis
     };
 }
 
