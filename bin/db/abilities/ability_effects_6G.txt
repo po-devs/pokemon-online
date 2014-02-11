@@ -144,7 +144,6 @@
 176 121-14#Refrigerate
 177 110#Stance Change
 178 108#Strong Jaw
-179 112#Sweet Veil
 180 109#Tough Claws
 181 80-3#Competitive
 182 114#Gale Wings
