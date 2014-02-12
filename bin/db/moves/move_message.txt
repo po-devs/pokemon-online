@@ -118,7 +118,7 @@
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
 190 %f took the kind offer!
 199 %ts's team is protected by Crafty Shield!|%ts's team Crafty Shield was broken!
-201 The terrain became electrified!|Electricity on the terrain faded away.
+201 The terrain became electrified!|Electricity on the terrain faded away.|Electric Terrain prevents %s from falling asleep!
 202 %f became electrified!
 203 Pokemon can no longer flee!|Fairy Lock's effect disappeared.
 205 The terrain became grassy!|Grass on the terrain faded away.|The Grassy Terrain heals the Pokemon on the field
