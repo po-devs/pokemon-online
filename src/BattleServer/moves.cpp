@@ -2943,7 +2943,7 @@ struct MMToxicSpikes : public MM
             b.sendMoveMessage(136, 1, s, Pokemon::Poison);
             return;
         }
-        if (b.hasSubstitute(s) || b.isFlying(s)) {
+        if ((b.gen().num != 5 && b.hasSubstitute(s)) || b.isFlying(s)) {
             return;
         }
         if (team(b,source).value("SafeGuardCount").toInt() > 0) {
