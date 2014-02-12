@@ -2398,26 +2398,36 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
 bool BattleSituation::canGetStatus(int player, int status) {
     if (!BattleBase::canGetStatus(player, status)) {
+        sendMoveMessage(31,0,player); //Needs to allow Statuses to "connect" for best results, L1905
         return false;
     }
     if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
     switch (status) {
-    case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
     case Pokemon::Asleep: {
-        if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit) ||
-                hasWorkingTeamAbility(player, Ability::SweetVeil) || isThereUproar()) {
+        if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit)) {
+            return false;
+        }
+        if (hasWorkingTeamAbility(player, Ability::SweetVeil)){
+            sendAbMessage(112,0,player);
+            return false;
+        }
+        if (isThereUproar()) {
+            //sendMoveMessage(141,4,player); //Needs to remove "But it failed" from Rest first
             return false;
         }
         if (!isFlying(player) && terrainCount > 0 && terrain == Type::Electric) {
+            sendMoveMessage(201,2,player);
             return false;
         }
         return true;
     }
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
-    case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
-    case Pokemon::Frozen: return !isWeatherWorking(Sunny) && !hasWorkingAbility(player, Ability::MagmaArmor);
+    case Pokemon::Frozen: return !hasWorkingAbility(player, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
+    case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
+    case Pokemon::Poisoned: return !hasWorkingAbility(player, Ability::Immunity);
+
     default:
         return false;
     }
