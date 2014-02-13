@@ -3131,7 +3131,7 @@ struct MMSwitcheroo : public MM
     static void daf(int s, int t, BS &b) {
         int i1 = b.poke(s).item();
         int i2 = b.poke(t).item();
-        if (b.koed(t) || b.koed(s) || !b.canLoseItem(t, s) || !b.canLoseItem(s, s) ||
+        if (b.koed(t) || b.koed(s) || (i1 == 0 && i2 == 0) || (i2 != 0 && !b.canLoseItem(t, s)) || (i1 != 0 && !b.canLoseItem(s, s)) ||
                 (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()) ||
                 (ItemInfo::isMegaStone(i2) && ItemInfo::MegaStoneForme(i2).original() == b.pokenum(s).original())) {
             if (b.hasWorkingAbility(t, Ability::StickyHold)) {
