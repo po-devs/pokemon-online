@@ -717,3 +717,4 @@
 716 Life Pokémon
 717 Destruction Pokémon	
 718 Order Pokémon	
+719 Jewel Pokémon
