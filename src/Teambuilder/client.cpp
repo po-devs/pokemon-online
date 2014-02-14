@@ -1473,6 +1473,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
     dontUseNicknames->setChecked(globals.value("Battle/NoNicknames").toBool());
 
+    w->addLanguageMenu(menuBar);
+
+    QMenu *helpMenu = menuBar->addMenu(tr("&About"));
+    helpMenu->addAction(tr("&Credits"), w, SLOT(launchCredits()));
+
     mymenubar = menuBar;
 
     return menuBar;
