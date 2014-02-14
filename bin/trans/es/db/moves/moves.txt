@@ -558,3 +558,54 @@
 557 V de Fuego
 558 Llama Fusión
 559 Rayo Fusión
+560 Ojitos tiernos
+561 Estruendo
+562 Truco defensa
+563 Brillo mágico
+564 Beso drenaje
+565 Viento feérico
+566 Plancha voladora
+567 Condena silvana
+568 Liofilización
+569 Geocontrol
+570 Tormenta floral
+571 Acoso
+572 Fuerza lunar
+573 Llama embrujada
+574 Rugido de guerra
+575 Moflete estático
+576 Ala mortífera
+577 Carga parábola
+578 Golpe fantasma
+579 Carantoña
+580 Camaradería
+581 Halloween
+582 Shuriken de agua
+583 Niebla aromática
+584 Eructo
+585 Confidencia
+586 Voz cautivadora
+587 Onda anómala
+588 Campo eléctrico
+589 Electrificación
+590 Cerrojo feérico
+591 Aguijón letal
+592 Defensa floral
+593 Campo de hierba
+594 Cortina plasma
+595 Escudo real
+596 Fuerza telúrica
+597 Aura magnética
+598 Escudo tatami
+599 Campo de niebla
+600 Última palabra
+601 Polvo explosivo
+602 Puño incremento
+603 Fertilizante
+604 Barrera espinosa
+605 Red viscosa
+606 Reversión
+607 Trampa venenosa
+608 Paga extra
+609 Celebración
+610 Clemencia
