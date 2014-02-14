@@ -43,7 +43,7 @@
 67 %s is carelessly slacking off!
 68 %s's %a raised its attack!|%s's %a made the attack useless!
 70 %s's %a absorbs the attack!|%s's %a made the attack useless!
-71 %s's Wonder Guard evades the attack!
+71 %s's Wonder Guard blocks the attack!
 74 %s lost part of its armor!
 78 %s stole %f's %i!
 80 %a sharply raised %s's Attack!|%a sharply raised %s's Defense!|%a sharply raised %s's Sp. Att.!|%a sharply raised %s's Sp. Def.!|%a sharply raised %s's Speed!
