@@ -838,4 +838,3 @@
 716:0 Xerneas
 717:0 Yveltal
 718:0 Zygarde
-719:0 Diancie
