@@ -545,7 +545,7 @@
 544 Rueda Doble
 545 Bomba Ígnea
 546 Tecno Shock
-547 Cantoarcaico
+547 Canto Arcaico
 548 Sablemístico
 549 Mundo Gélido
 550 Ataque Fulgor

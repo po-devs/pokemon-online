@@ -2,7 +2,7 @@
 1 %f wurde KP abgesaugt!|%s devoured %f's dreams!|%s is hurt by %f's Liquid Ooze!
 2 %s umgibt sich mit eimem Ring aus Wasser!|Aquaring heilt %s's KP.
 3 A soothing aroma wafted through the area!|Eine Glocke läutet!
-7 %q attacked!
+7 %q greift an!
 8 %s hat nicht genug KP mehr übrig!|%s verliert die Hälfte seiner KP und maximiert seinen Angriff!
 9 %s speichert Energie!|%s gibt Energie frei!
 10 %s wurde durch %m verletzt!|%s befreit sich von %m!|%f became trapped by swirling magma!
@@ -12,20 +12,20 @@
 14 %s shattered %tf's team protections!
 16 %s stahl %i von %f und aß sie!
 17 %s transformed into the %t type!
-18 %s began charging power!
+18 %s lädt sich auf!
 19 %s transformed into the %t type!
 20 %s transformed into the %t type!
-23 %s begged %f!%f gave its %i to %s|%s stiehlt %f's %i!
+23 %s stahl %f's %i!%s stahl %f's %i!
 25 %s verliert einige KP und legt einen Fluch auf %f!|%s nimmt durch den Fluch Schaden!
 26 %s nahm %f mit sich!|%s versucht das Ziel mit sich zu nehmen!
 27 %s schützt sich selbst!
 28 %f's %m wurde blockiert!|%s's %m ist blockiert!|%s ist nicht mehr blockiert!
-29 %s took the %m attack!|%s foresaw an attack!|%s chose Doom Desire as its destiny!
-31 It doesn't affect %s!
+29 %s took the %m attack!|%s sieht eine Attacke voraus!|%s chose Doom Desire as its destiny!
+31 Es hat keine Wirkung auf %s!
 32 %f kann keine Items mehr benutzen!|%s kann wieder Items benutzen!
-33 %s's Encore ended!|%f received an encore!
+33 %s's Zugabe endet!|%f macht eine Zugabe!
 35 %s endured the hit!|%s braced itself!
-43 %f's Sturdy made the attack fail!|It's a one hit KO!
+43 %f's Robustheit verhindert einen KO-Treffer!|Ein K.O.-Treffer!
 45 %s flung its %i!
 46 %s is getting pumped!
 47 %s hat seinen Fokus verloren!|%s verstärkt seinen Fokus!
@@ -42,7 +42,7 @@
 62 %s tauscht seine Verteidigung und seinen Angriff!
 63 %s ist bereit %f zu helfen!
 64 %s macht weiter und bricht zusammen!
-67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
+67 %s versiegelt die Attacke(n) des Gegners|%s kann %m wegen Begrenzer nicht einsetzen!
 68 %s schwebt durch Elektromagnetismus!|Magnetflug von %s lässt nach!
 70 %s knocked off %f's %i!
 72 Es hat keine Wirkung auf %s...|%f wurde bepflanzt!|Egelsamen schadet %s!
@@ -68,20 +68,20 @@
 102 %s's rage builds up!
 103 %s kam von %f's %m frei!|%s zerstört die Egelsamen!|%s fegt die Stachler vom Feld!|%s fegt die Giftspitzen vom Feld!|%s fegt die Tarnsteine vom Feld!
 104 %s prepared a gust of wind!|%s became cloaked in a harsh light!|%s tucked in its head!|%s absorbiert Sonnenlicht!
-105 %s recycled %i!
+105 %s bereitet %i wieder auf!
 106 %s went to sleep and became healthy!
 107 %s held on to the ground using its Suction Cups!|%s is solidly rooted to the ground!|%f was dragged out!
 108 %s copied %f's %a!
 109 %ts's team became cloaked in a mystical veil!|%ts's team is no longer protected by Safeguard!|Safeguard prevents %f from being inflicted by status!
-111 %s sketched %m!
+111 %s kopiert %m!
 112 %s tauscht die Fähigkeiten mit dem Ziel!
-114 %s's Damp prevents it from working!
+114 %s's Feuchtigkeit verhindert die Attacke!
 118 %s snatched %f's %m!|%s waits for a target to make a move!
 121 Die Pokemon auf gegnerischer Seite sind von Stacheln umgeben!|%s wurde durch Stachler verletzt!
 122 %s released!
 123 Es verringert die AP von %f's %m um 4!
 124 Um das Team von %tf schweben spitze Steine!|%s wurde von spitzen Steinen getroffen!
-125 %s stockpiled %d!
+125 %s hortet %d!
 127 %s erleidet Rückstoßschaden!
 128 %s hat bereits einen Delegator!|Delegator von %s verschwindet!|Delegator von %f fängt %m ab!|Delegator von %s fängt den Angriff ab!|%s erschafft einen Delegator!
 131 %s swallowed!
@@ -95,7 +95,7 @@
 141 %s verursacht einen Aufruhr!|%s macht einen Aufruhr!|%s beruhigt sich!|%s wacht auf!|%s stays awake because of the uproar!
 142 %q's Wunschtraum erfüllt sich!
 143 %f hat nun die Fähigkeit %a!
-144 %s made %f feel drowsy!|%s yawns!|%s's %a made it ineffective!
+144 %s macht %f schläfrig!|%s gähnt!|%s's %a macht es wirkungslos!
 149 All stat changes were elimnated!
 150 %s landet auf dem Boden!
 151 %s pflanzt seine Wurzeln!|%s nimmt mit seinen Wurzeln Nährstoffe auf!
@@ -104,7 +104,7 @@
 157 %s transformed into the %t type!
 158 %f erhält %a!
 160 %f's %i verbrennt!
-162 %s gave %f its %i!
+162 %s gibt %f sein Item %i!
 164 %s's status cleared!
 168 %s tauscht die Verteidigung und die Spezial Vertidigung von allen Pokémon!|Die Verteidigung und die Spezial Verteidigung der Pokémon ist wieder normal!
 169 %ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
@@ -123,8 +123,9 @@
 203 Die Pokémon können nicht mehr fliehen!|Der Effekt von Feenschloss verschwindet!
 205 The terrain became grassy!|Grass on the terrain faded away!|The Grassy Terrain heals the Pokemon on the field!
 206 %s schützt sich selbst!
-207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
+207 %ts's Team ist durch Tatami-Schild geschützt!|Tatami-Schild von %ts's Team wurde zerstört!
 208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!
 210 Sticky Web was put around %tf's team!|%s became entangled in Sticky Web!
-211 %f had its stat boosts reversed!
+211 %f's Statusveränderungen wurden umgekehrt!
 215 %f was covered in powder!|%s exploded!
+218 Herzlichen Glückwunsch, %ts!
