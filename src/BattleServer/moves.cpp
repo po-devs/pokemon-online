@@ -173,8 +173,8 @@ struct MMAssurance : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        if (turn(b,t).contains("DamageTaken")) {
-            tmove(b, s).power = tmove(b, s).power * 2;
+        if (turn(b,t).contains("DamageTaken") || (team(b, b.player(t)).contains("LastKoedTurn") && team(b, b.player(t))["LastKoedTurn"].toInt() == b.turn() - 1)) {
+                    tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
