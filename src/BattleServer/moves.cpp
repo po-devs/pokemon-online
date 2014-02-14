@@ -1570,6 +1570,10 @@ struct MMDoomDesire : public MM
                         b.notify(BS::All, BattleCommands::Effective, s, quint8(0));
                         return;
                     }
+                    if ((b.rawTypeEff(MoveInfo::Type(slot(b,s)["DoomDesireMove"].toInt(), b.gen()), s) <= 0) && b.hasWorkingAbility(s, Ability::WonderGuard) && b.gen() >= 5) {
+                        b.sendAbMessage(71,0,s);
+                        return;
+                    }
                     fturn(b,s).stab = slot(b,s)["DoomDesireStab"].toInt();
                     turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
                     fturn(b,s).remove(TM::CriticalHit);
