@@ -686,6 +686,7 @@ struct AMInsomnia : public AM {
     AMInsomnia() {
         functions["UponSetup"] = &us;
         functions["PreventStatChange"] = &psc;
+        functions["OnAbilityAcquire"] = &us;
     }
 
     static void us(int s, int, BS &b) {
