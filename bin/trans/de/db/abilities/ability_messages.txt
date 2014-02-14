@@ -59,8 +59,11 @@
 99 %s's Heilherz heilt %f's Status!
 102 %s macht %tf's Team zu nervös um Beeren zu essen!
 103 %s strahlt eine %t Aura aus!
-104 %f's %a prevents stats changes to affect %s!
+104 %f's %a verhindert Statusveränderungen an %s!
 107 %s hat seinen Typ in %t geändert!
 113 Unbeugsamkeit von %s erhöht seinen Sp. Angriff stark!
 115 %s's Viskosität verlangsamt %f!
 117 %s kehrt alle Auren der anderen Pokémon um!
+118 %s's Kugelsicher wehrt die Attacke ab!
+120 %s schwebt in der Luft!
+121 %s's Wertehalte machte die Attacke wirkungslos!|%s's Wertehalter verhindert, dass das Item verloren geht!
