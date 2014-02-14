@@ -3550,7 +3550,7 @@ void BattleSituation::requestSwitchIns()
             koedPlayers.insert(player(i));
             koedPokes.insert(i);
 
-            if (gen() >= 5) {
+            if (gen() >= 4) {
                 /* For Get Even. */
                 teamMemory(player(i))["LastKoedTurn"] = turn();
             }
