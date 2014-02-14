@@ -62,6 +62,9 @@
 61 Baccacrela
 62 Baccajaba
 63 Baccaroam
+64 Baccarcadè
+65 Baccalighia
+66 Baccapane
 1000 Baccantiparalisi
 1001 Bacca Menta
 1002 Baccantiveleno
