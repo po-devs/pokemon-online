@@ -606,3 +606,6 @@
 605 Toile Gluante
 606 Renversement
 607 Piège de Venin
+608 Étrennes
+609 Célébration
+610 Retenue

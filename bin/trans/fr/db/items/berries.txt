@@ -63,6 +63,8 @@
 62 Baie Jaboca
 63 Baie Pommo
 64 Baie Selro
+65 Baie Éka
+66 Baie Rangma
 1000 Baie Antipar
 1001 Baie Menthe
 1002 Baie Antidot
