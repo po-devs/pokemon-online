@@ -20,8 +20,8 @@ public:
     };
 
 
-    Q_PROPERTY(int spikes READ spikesLevel NOTIFY spikesChanged)
-    Q_PROPERTY(int toxicSpikes READ tspikesLevel NOTIFY tspikesChanged)
+    Q_PROPERTY(int spikesLevel READ spikesLevel NOTIFY spikesChanged)
+    Q_PROPERTY(int toxicSpikesLevel READ tspikesLevel NOTIFY tspikesChanged)
     Q_PROPERTY(bool stealthRocks READ stealthRocks NOTIFY rocksChanged)
     Q_PROPERTY(bool stickyWeb READ stickyWeb NOTIFY stickyWebChanged)
 
