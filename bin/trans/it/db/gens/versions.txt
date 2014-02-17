@@ -15,3 +15,4 @@
 4:2 Heart Gold/Soul Silver
 5:0 Nero/Bianco
 5:1 Nero 2/Bianco 2
+6:0 X/Y

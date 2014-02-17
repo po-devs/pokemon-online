@@ -30,7 +30,7 @@
 29 Sea Incense
 30 Shed Shell
 31 Silk Scarf
-32 Silver Powder
+32 SilverPowder
 33 Smooth Rock
 34 Soft Sand
 35 Soothe Bell
@@ -137,7 +137,7 @@
 136 Sun Stone
 137 Super Potion
 138 Super Repel
-139 Thunderstone
+139 Thunder Stone
 140 TinyMushroom
 141 Toxic Orb
 142 TwistedSpoon

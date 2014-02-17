@@ -648,3 +648,73 @@
 647 Pokémon Potro
 648 Pokémon Melodía
 649 Pokémon Paleozoico
+650 Pokémon Erizo
+651 Pokémon Corazaespín
+652 Pokémon Corazaespín
+653 Pokémon Zorro
+654 Pokémon Zorro
+655 Pokémon Zorro
+656 Pokémon Burburrana
+657 Pokémon Burburrana
+658 Pokémon Ninja
+659 Pokémon Excavador
+660 Pokémon Excavador
+661 Pokémon Petirrojo
+662 Pokémon Petirrojo
+663 Pokémon Flamígero
+664 Pokémon Tiraescamas
+665 Pokémon Tiraescamas
+666 Pokémon Escamaposa
+667 Pokémon Leoncito
+668 Pokémon Regio
+669 Pokémon Monoflor
+670 Pokémon Monoflor
+671 Pokémon Jardín
+672 Pokémon Montura
+673 Pokémon Montura
+674 Pokémon Juguetón
+675 Pokémon Rostro Fiero
+676 Pokémon Caniche
+677 Pokémon Moderación
+678 Pokémon Autocontrol
+679 Pokémon Tizona
+680 Pokémon Tizona
+681 Pokémon Espada real
+682 Pokémon Aroma
+683 Pokémon Fragancia
+684 Pokémon Chuchería
+685 Pokémon Nata
+686 Pokémon Rotación
+687 Pokémon Revolución
+688 Pokémon Dos Manos
+689 Pokémon Combinación
+690 Pokémon Pseudoalga
+691 Pokémon Pseudoalga
+692 Pokémon Proyectagua
+693 Pokémon Lanzachorro
+694 Pokémon Generador
+695 Pokémon Lagarto generador
+696 Pokémon Heredero
+697 Pokémon Tirano
+698 Pokémon Tundra
+699 Pokémon Tundra
+700 Pokémon Vínculo
+701 Pokémon Lucha Libre
+702 Pokémon Antenas
+703 Pokémon Joya
+704 Pokémon Molusco
+705 Pokémon Molusco
+706 Pokémon Dragón
+707 Pokémon Llavero
+708 Pokémon Tronco
+709 Pokémon Árbol Viejo
+710 Pokémon Calabaza
+711 Pokémon Calabaza
+712 Pokémon Témpano
+713 Pokémon Iceberg
+714 Pokémon Onda Sónica
+715 Pokémon Onda Sónica
+716 Pokémon Creación
+717 Pokémon Destrucción
+718 Pokémon Equilibrio
+719 Pokémon Joya
