@@ -1165,6 +1165,7 @@ struct AMLightningRod : public AM {
     AMLightningRod() {
         functions["GeneralTargetChange"] = &gtc;
         functions["OpponentBlock"] = &ob;
+        functions["DetermineAttackFailure"] =&daf
     }
 
     static void gtc(int s, int t, BS &b) {
@@ -1189,6 +1190,12 @@ struct AMLightningRod : public AM {
         } else {
             b.sendAbMessage(38,0,s,t,0,b.ability(s));
             turn(b,t)["Target"] = s;
+        }
+    }
+    
+    static void daf(int s, int t, BS &b) {
+        if (turn(b, t)["DetectUsed"].toBool() == true) {
+           return;
         }
     }
 
