@@ -1165,7 +1165,7 @@ struct AMLightningRod : public AM {
     AMLightningRod() {
         functions["GeneralTargetChange"] = &gtc;
         functions["OpponentBlock"] = &ob;
-        functions["DetermineAttackFailure"] =&daf
+        functions["DetermineAttackFailure"] = &daf;
     }
 
     static void gtc(int s, int t, BS &b) {
