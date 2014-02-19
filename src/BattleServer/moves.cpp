@@ -1486,8 +1486,13 @@ struct MMCounter : public MM
         tmove(b,s).targets = Move::ChosenTarget;
     }
 
-    static void daf (int s, int, BS &b) {
+    static void daf (int s, int t, BS &b) {
         if (!turn(b,s).contains("CounterDamage")) {
+             if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
+                     && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
+                 turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
+                 return;
+             }
             fturn(b,s).add(TM::Failed);
         }
     }
