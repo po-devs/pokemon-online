@@ -6944,6 +6944,7 @@ struct MMSpikyShield : public MM
 
         if ((tmove(b, s).flags & Move::ContactFlag) ) {
             b.inflictDamage(s,b.poke(s).totalLifePoints()/6,s,false);
+            b.sendMoveMessage(209,0,s);
             return;
         }
     }

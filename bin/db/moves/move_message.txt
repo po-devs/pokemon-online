@@ -125,6 +125,7 @@
 206 %s shielded itself against damage!
 207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
 208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!
+209 %s was hurt!
 210 Sticky Web was put around %tf's team!|%s became entangled in Sticky Web!
 211 %f had its stat boosts reversed!
 215 %f was covered in powder!|%s exploded!
