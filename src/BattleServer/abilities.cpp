@@ -2446,7 +2446,7 @@ void AbilityEffect::init()
     REGISTER_AB(120, Levitate);
     REGISTER_AB(121, Aerilate);
     //122 Sticky Hold
-    REGISTER_AB(123, Symbiosis);
+    //REGISTER_AB(123, Symbiosis);
 }
 
 /* Not done: Symbiosis */
