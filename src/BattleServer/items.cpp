@@ -421,7 +421,7 @@ struct IMStickyBarb : public IM
     static void upa(int s, int t, BS &b) {
         if (!b.koed(t) && b.poke(t).item() == 0) {
             b.poke(t).item() = b.poke(s).item();
-            b.disposeItem(s);
+            b.loseItem(s);
         }
     }
 };
@@ -754,6 +754,7 @@ struct IMEscapeButton : public IM
                 continue;
 
             b.sendItemMessage(39, p, 0);
+            turn(b,p)["SendingBack"] = true;
             b.disposeItem(p);
             b.requestSwitch(p);
         }

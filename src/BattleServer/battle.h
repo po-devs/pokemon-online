@@ -84,7 +84,7 @@ public:
     void inflictDamage(int player, int damage, int source, bool straightattack = false, bool goForSub = false);
     void inflictPercentDamage(int player, int percent, int source, bool straightattack = false);
     void inflictSubDamage(int player, int damage, int source);
-    void disposeItem(int player);
+    void disposeItem(int play);
     void eatBerry(int player, bool show=true);
     /* Eats a berry, not caring about the item the pokemon has, etc. */
     void devourBerry(int player, int berry, int target);

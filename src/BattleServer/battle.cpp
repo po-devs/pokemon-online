@@ -3308,13 +3308,15 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     }
 }
 
-void BattleSituation::disposeItem(int player) {
-    int item = poke(player).item();
+void BattleSituation::disposeItem(int play) {
+    int item = poke(play).item();
     if (item != 0) {
-        poke(player).itemUsed() = item;
-        poke(player).itemUsedTurn() = turn();
+        poke(play).itemUsed() = item;
+        poke(play).itemUsedTurn() = turn();
     }
-    loseItem(player);
+    //callaeffects(s,s,"AllyItemUse");
+
+    loseItem(play);
 }
 
 void BattleSituation::eatBerry(int player, bool show) {
@@ -3379,6 +3381,10 @@ void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
         loseItem(player, false);
     poke(player).item() = item;
+
+    //Symbiosis + Eject Button
+    if (turnMemory(player).value("SendingBack").toBool())
+        return;
 
     if (slotNum(player) < numberPerSide()) {
         ItemEffect::setup(poke(player).item(),player,*this);

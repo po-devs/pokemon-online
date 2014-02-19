@@ -1963,6 +1963,9 @@ struct AMPickUp : public AM {
 
         int i = possibilities[b.randint(possibilities.size())];
         int item = b.poke(i).itemUsed();
+        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s).original())
+            return;
+
         b.sendAbMessage(93, 0, s, 0, 0, item);
         b.poke(i).itemUsed() = 0;
         b.acqItem(s, item);
@@ -2266,6 +2269,29 @@ struct AMLevitate : public AM
     }
 };
 
+/*
+struct AMSymbiosis : public AM
+{
+    AMSymbiosis() {
+        functions["AllyItemUse"] = &aiu;
+    }
+
+    static void aiu (int s, int s2, BS &b) {
+        if (!b.canLoseItem(s2,s2))
+            return;
+
+        int item = b.poke(s2).item();
+        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s).original())
+            return;
+
+        b.sendAbMessage(123, 0, s2, s, Type::Fairy, item);
+        b.acqItem(s, item);
+        b.loseItem(s2);
+        turn(b,s)["Symbiote"] = true;
+    }
+};
+*/
+
 
 /* Events:
     PriorityChoice
@@ -2419,6 +2445,8 @@ void AbilityEffect::init()
     REGISTER_AB(119, GrassPelt);
     REGISTER_AB(120, Levitate);
     REGISTER_AB(121, Aerilate);
+    //122 Sticky Hold
+    REGISTER_AB(123, Symbiosis);
 }
 
 /* Not done: Symbiosis */
