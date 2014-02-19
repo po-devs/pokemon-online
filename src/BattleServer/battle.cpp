@@ -579,7 +579,7 @@ void BattleSituation::endTurnStatus(int player)
                 inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
             else {
                 inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
-                poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+                //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
             }
         }
         break;
@@ -1904,7 +1904,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                  ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
                   ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
                    && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
-                notify(All, Failed, player);
+                sendMoveMessage(31,0,target);
                 continue;
             }
 
@@ -2398,7 +2398,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
 bool BattleSituation::canGetStatus(int player, int status) {
     if (!BattleBase::canGetStatus(player, status)) {
-        sendMoveMessage(31,0,player); //Needs to allow Statuses to "connect" for best results, L1905
+        sendMoveMessage(31,0,player);
         return false;
     }
     if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
@@ -2425,9 +2425,26 @@ bool BattleSituation::canGetStatus(int player, int status) {
     }
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Frozen: return !hasWorkingAbility(player, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
-    case Pokemon::Paralysed: return !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Poisoned: return !hasWorkingAbility(player, Ability::Immunity);
-
+    case Pokemon::Paralysed: {
+        if (hasWorkingAbility(player, Ability::Limber)) {
+            return false;
+        }
+        if (gen() >= 6 && hasType(player, Type::Electric)) {
+            sendMoveMessage(31,0,player);
+            return false;
+        }
+        return true;
+    }
+    case Pokemon::Poisoned: {
+        if (hasWorkingAbility(player, Ability::Immunity)) {
+            return false;
+        }
+        if (gen() > 2 && hasType(player, Pokemon::Steel)) {
+            sendMoveMessage(31,0,player);
+            return false;
+        }
+        return true;
+    }
     default:
         return false;
     }

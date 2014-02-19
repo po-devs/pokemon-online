@@ -1133,9 +1133,12 @@ struct AMVoltAbsorb : public AM {
 
     static void op(int s, int t, BS &b) {
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
-            if (b.canHeal(s,BS::HealByAbility,b.ability(s))){
+            if (!(poke(b, s).value("HealBlockCount").toInt() > 0)) {
+                //HealBlock removes the absorbing effect
                 turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
                 b.sendAbMessage(70,0,s,s,type(b,t), b.ability(s));
+            }
+            if (b.canHeal(s,BS::HealByAbility,b.ability(s))){
                 b.healLife(s, b.poke(s).totalLifePoints()/4);
             }
         }
