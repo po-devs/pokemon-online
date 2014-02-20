@@ -560,9 +560,6 @@ void BattleSituation::endTurnStatus(int player)
         inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1))), player);
         break;
     case Pokemon::Poisoned:
-        /* Toxic still increases under magic guard, poison heal */
-        if (poke(player).statusCount() != 0)
-            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
         //PoisonHeal
         if (hasWorkingAbility(player, Ability::PoisonHeal)) {
             if (canHeal(player,HealByAbility,ability(player))) {
@@ -582,6 +579,9 @@ void BattleSituation::endTurnStatus(int player)
                 poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
             }
         }
+        /* Toxic still increases under magic guard, poison heal */
+        if (poke(player).statusCount() != 0)
+            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
         break;
     }
 }
