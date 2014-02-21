@@ -583,6 +583,12 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     case Cookie: {
         Flags network; QString content;
         in >> network >> content;
+
+        if (content.length() > 4000) {
+            qDebug() << "Cookie too big, ignoring";
+            return;
+        }
+
         QString path = appDataPath("cookies", true) + "/" + QString::fromUtf8(sha_hash(socket().ip().toUtf8()).left(16));
 
         if (!network[0]) {
