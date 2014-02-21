@@ -740,7 +740,7 @@
 637:0 Ramoth
 638:0 Kobalium
 639:0 Terrakium
-640:0 Virdium
+640:0 Viridium
 641:0 Boreos
 642:0 Voltolos
 643:0 Reshiram
