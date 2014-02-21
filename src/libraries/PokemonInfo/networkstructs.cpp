@@ -202,13 +202,13 @@ DataStream & operator >> (DataStream & in, PersonalTeam & team)
     return in;
 }
 
-LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0)
+LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0), cookie(0)
 {
 }
 
 LoginInfo::~LoginInfo()
 {
-    delete teams, delete channel, delete additionalChannels, delete trainerInfo, delete plugins;
+    delete teams, delete channel, delete additionalChannels, delete trainerInfo, delete plugins; delete cookie;
 }
 
 DataStream & operator >> (DataStream &in, LoginInfo &l)
@@ -257,6 +257,7 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
 
     test(events, HasEventSpecification);
     load(plugins, HasPluginList);
+    load(cookie, HasCookie)
 #undef load
 #undef test
 

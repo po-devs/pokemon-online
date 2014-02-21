@@ -133,6 +133,7 @@ inline void writeFileContent(const QString &path, const QByteArray &content) {
 void cropImage(QImage &img);
 
 QByteArray md5_hash(const QByteArray &toHash);
+QByteArray sha_hash(const QByteArray &toHash);
 
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id);
 

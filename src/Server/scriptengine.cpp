@@ -8,6 +8,7 @@
 #include <Utilities/ziputils.h>
 #include <PokemonInfo/pokemoninfo.h>
 #include <PokemonInfo/movesetchecker.h>
+#include <PokemonInfo/networkstructs.h>
 
 #include "server.h"
 #include "player.h"
@@ -2827,6 +2828,36 @@ void ScriptEngine::changeAvatar(int playerId, quint16 avatarId)
     }
     myserver->player(playerId)->avatar() = avatarId;
     myserver->sendPlayer(playerId);
+}
+
+void ScriptEngine::setCookie(int playerId, const QString &cookie)
+{
+    if (!testPlayer("setCookie(id, cookie)", playerId))
+        return;
+
+    myserver->player(playerId)->relay().notify(NetworkServ::Cookie, Flags(1), cookie);
+}
+
+void ScriptEngine::removeCookie(int playerId)
+{
+    if (!testPlayer("removeCookie(id)", playerId))
+        return;
+
+    myserver->player(playerId)->relay().notify(NetworkServ::Cookie, Flags(0));
+}
+
+QScriptValue ScriptEngine::cookie(int playerId)
+{
+    if (!testPlayer("cookie(id)", playerId))
+        return myengine.undefinedValue();
+
+    auto login = myserver->player(playerId)->loginInfo();
+
+    if (!login->cookie) {
+        return myengine.undefinedValue();
+    }
+
+    return *login->cookie;
 }
 
 QScriptValue ScriptEngine::avatar(int playerId)

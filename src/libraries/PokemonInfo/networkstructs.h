@@ -175,6 +175,7 @@ struct LoginInfo
     QStringList *additionalChannels;
     TrainerInfo *trainerInfo;
     QStringList *plugins;
+    QString *cookie;
 };
 
 struct ChangeTeamInfo

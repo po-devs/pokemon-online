@@ -147,6 +147,10 @@ QString appDataPath(const QString &subfolder, bool createFolder)
     return path;
 }
 
+QByteArray sha_hash(const QByteArray &result) {
+    return QCryptographicHash::hash(result, QCryptographicHash::Sha3_256).toHex();
+}
+
 QString removeTrollCharacters(const QString& s)
 {
     // All Non-Spacing Mark characters are banned and will trigger this filter.

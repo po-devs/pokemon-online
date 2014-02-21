@@ -314,6 +314,10 @@ public:
     Q_INVOKABLE QScriptValue info(int playerId);
     Q_INVOKABLE void changeAvatar(int playerId, quint16 avatarId);
     Q_INVOKABLE QScriptValue avatar(int playerId);
+    /* Sets a cookie to the players. Whether they accept it or not depends on their implementation of PO */
+    Q_INVOKABLE void setCookie(int playerId, const QString &cookie);
+    Q_INVOKABLE void removeCookie(int playerId);
+    Q_INVOKABLE QScriptValue cookie(int playerId);
 
     // Overloaded function os.
     // First (no parameters) returns the server's os.

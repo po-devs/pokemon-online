@@ -47,7 +47,7 @@ enum Command {
     SpectatingBattleChat,
     DatabaseMod = 30,
     LoadPlugin,
-    Unused32,
+    Cookie, /* Set/get cookie */
     VersionControl_,
     TierSelection,
     ServMaxChange,
@@ -93,7 +93,8 @@ namespace LoginCommand {
         /* markerbit = 7 */
         HasTeams = 8,
         HasEventSpecification,
-        HasPluginList
+        HasPluginList,
+        HasCookie
     };
     enum NetworkFlagsSC {
         HasReconnectPass = 0

@@ -3,6 +3,7 @@
 */
 
 #include "../Shared/config.h"
+#include <Utilities/functions.h>
 #include <PokemonInfo/battlestructs.h>
 #include <PokemonInfo/teamholder.h>
 
@@ -43,6 +44,11 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     if (color.isValid()) {
         network.setFlag(LoginCommand::HasColor, true);
     }
+
+    QString path = appDataPath("cookies") + "/" + QString::fromUtf8(sha_hash(socket().ip().toUtf8()).left(16));
+    bool hasCookie = QFileInfo(path).exists();
+
+    network.setFlag(LoginCommand::HasCookie, hasCookie);
     //    HasClientType,
     //    HasVersionNumber,
     //    HasReconnect,
@@ -53,6 +59,7 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     //    HasTeams,
     //    HasEventSpecification,
     //    HasPluginList
+    //    HasCookie
 
     Flags data;
     data.setFlag(PlayerFlags::SupportsZipCompression, true);
@@ -94,6 +101,11 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     out << uchar(team.count());
     for (int i = 0; i < team.count(); i++) {
         out << team.team(i);
+    }
+
+    if (hasCookie) {
+        QString cookie = QString::fromUtf8(getFileContent(path));
+        out << cookie;
     }
 
     emit sendCommand(tosend);
@@ -567,6 +579,17 @@ void Analyzer::commandReceived(const QByteArray &commandline)
         this->version = server;
 
         break;
+    }
+    case Cookie: {
+        Flags network; QString content;
+        in >> network >> content;
+        QString path = appDataPath("cookies", true) + "/" + QString::fromUtf8(sha_hash(socket().ip().toUtf8()).left(16));
+
+        if (!network[0]) {
+            QFile(path).remove();
+        } else {
+            writeFileContent(path, content.toUtf8());
+        }
     }
     case TierSelection: {
         QByteArray tierList;
