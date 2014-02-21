@@ -29,6 +29,10 @@ QByteArray md5_hash(const QByteArray &result) {
     return QCryptographicHash::hash(result, QCryptographicHash::Md5).toHex();
 }
 
+QByteArray sha_hash(const QByteArray &result) {
+    return QCryptographicHash::hash(result, QCryptographicHash::Sha1).toHex();
+}
+
 void createIntMapper(QObject *src, const char *signal, QObject *dest, const char *slot, int id)
 {
     QSignalMapper *mymapper = new QSignalMapper(src);
@@ -145,10 +149,6 @@ QString appDataPath(const QString &subfolder, bool createFolder)
     }
 
     return path;
-}
-
-QByteArray sha_hash(const QByteArray &result) {
-    return QCryptographicHash::hash(result, QCryptographicHash::Sha3_256).toHex();
 }
 
 QString removeTrollCharacters(const QString& s)
