@@ -404,8 +404,10 @@
 377:0 Regirock
 378:0 Regice
 379:0 Registeel
-380:0 Latias
-381:0 Latios
+380:0:H Latias
+380:1:M Mega Latias
+381:0:H Latios
+381:1:M Mega Latios
 382:0 Kyogre
 383:0 Groudon
 384:0 Rayquaza
