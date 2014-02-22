@@ -2425,26 +2425,8 @@ bool BattleSituation::canGetStatus(int player, int status) {
     }
     case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
     case Pokemon::Frozen: return !hasWorkingAbility(player, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
-    case Pokemon::Paralysed: {
-        if (hasWorkingAbility(player, Ability::Limber)) {
-            return false;
-        }
-        if (gen() >= 6 && hasType(player, Type::Electric)) {
-            sendMoveMessage(31,0,player);
-            return false;
-        }
-        return true;
-    }
-    case Pokemon::Poisoned: {
-        if (hasWorkingAbility(player, Ability::Immunity)) {
-            return false;
-        }
-        if (gen() > 2 && hasType(player, Pokemon::Steel)) {
-            sendMoveMessage(31,0,player);
-            return false;
-        }
-        return true;
-    }
+    case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
+    case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
     default:
         return false;
     }
