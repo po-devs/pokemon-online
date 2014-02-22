@@ -1036,7 +1036,7 @@ struct MMAssist : public MM
         FM() {
             (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << CraftyShield << DestinyBond << Detect
                               << Endure << Feint << FocusPunch << FollowMe << HelpingHand << KingsShield << MatBlock << MeFirst
-                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << Belch
+                              << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << Belch << SpikyShield
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
         }
 
