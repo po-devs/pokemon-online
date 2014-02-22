@@ -6916,7 +6916,7 @@ struct MMSpikyShield : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "SpikyShield", &dgaf);
         turn(b,s)["SpikyShieldUsed"] = true;
         b.sendMoveMessage(27, 0, s, Pokemon::Grass);
     }
