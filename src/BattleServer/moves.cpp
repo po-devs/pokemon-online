@@ -2038,6 +2038,7 @@ struct MMFling : public MM
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
         b.loseItem(s);
+        //b.callaeffects(s,s,"AllyItemUse");
     }
 };
 
@@ -3785,7 +3786,7 @@ struct MMJudgment : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (ItemInfo::isPlate(item) && b.hasWorkingItem(s, item)) {
+        if (ItemInfo::isPlate(item) && b.hasWorkingItem(s, item) && !turn(b,s).value("Symbiote").toBool()) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
         }
     }
@@ -5762,6 +5763,7 @@ struct MMBestow : public MM {
         b.sendMoveMessage(162,0,s,type(b,s),t,b.poke(s).item());
         b.acqItem(t, b.poke(s).item());
         b.loseItem(s);
+        //b.callaeffects(s,s,"AllyItemUse");
     }
 };
 
@@ -6318,7 +6320,7 @@ struct MMTechnoBlast : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (!ItemInfo::isDrive(item))
+        if (!ItemInfo::isDrive(item) && turn(b,s).value("Symbiote").toBool())
             return;
         if (b.hasWorkingItem(s, item)) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();

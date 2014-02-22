@@ -151,3 +151,4 @@
 185 118#BulletProof
 186 119#Grass Pelt
 187 116#Magician
+#188 123#Symbiosis
