@@ -106,7 +106,7 @@
 160 %f's %i burned!
 162 %s gave %f its %i!
 164 %s's status cleared!
-168 %s swapped the Sp. Def. and the Defense of all the pokemon!|The Sp. Def and Defense of the pokemon went back to normal!
+168 %s created a bizarre area in which Defense and Sp. Def stats are swapped!|Wonder Room wore off, and Defense and Sp. Def stats returned to normal!
 169 %ts's team is protected by Wide Guard!|%ts's team Wide Guard was broken!
 170 %ts's team is protected by Quick Guard!|%ts's team Quick Guard was broken!
 171 %s is being sent back!
