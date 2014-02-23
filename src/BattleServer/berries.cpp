@@ -229,15 +229,15 @@ struct BMSuperHP : public BM
         if (!b.attacking()) {
             return;
         }
-        if (b.canHeal(s,BS::HealByItem,b.poke(s).item()))
-            return;
         if (b.attacker() == s)
             return;
         if (fturn(b,b.attacker()).typeMod <= 0)
             return;
-        b.eatBerry(s);
-        b.sendBerryMessage(6,s,0);
-        b.healLife(s, b.poke(s).totalLifePoints()/5);
+        if (b.canHeal(s,BS::HealByItem,b.poke(s).item())) {
+            b.eatBerry(s);
+            b.sendBerryMessage(6,s,0);
+            b.healLife(s, b.poke(s).totalLifePoints()/5);
+        }
     }
 };
 
