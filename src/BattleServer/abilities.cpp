@@ -1966,6 +1966,9 @@ struct AMPickUp : public AM {
 
         int i = possibilities[b.randint(possibilities.size())];
         int item = b.poke(i).itemUsed();
+        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s).original())
+            return;
+
         b.sendAbMessage(93, 0, s, 0, 0, item);
         b.poke(i).itemUsed() = 0;
         b.acqItem(s, item);
@@ -2422,6 +2425,7 @@ void AbilityEffect::init()
     REGISTER_AB(119, GrassPelt);
     REGISTER_AB(120, Levitate);
     REGISTER_AB(121, Aerilate);
+    //122 Sticky Hold message
 }
 
 /* Not done: Symbiosis */
