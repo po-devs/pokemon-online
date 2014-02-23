@@ -1,7 +1,7 @@
 ﻿0 (No Item)
 1 Big Root
 2 Blue Scarf
-3 BrightPowder
+3 Bright Powder
 4 Choice Band
 5 Choice Scarf
 6 Choice Specs
@@ -30,7 +30,7 @@
 29 Sea Incense
 30 Shed Shell
 31 Silk Scarf
-32 SilverPowder
+32 Silver Powder
 33 Smooth Rock
 34 Soft Sand
 35 Soothe Bell
@@ -49,7 +49,7 @@
 48 Black Belt
 49 Black Flute
 50 Black Sludge
-51 BlackGlasses
+51 Black Glasses
 52 Blue Flute
 53 Blue Shard
 54 Burn Heal
@@ -58,12 +58,12 @@
 57 Charcoal
 58 Cleanse Tag
 59 Damp Mulch
-60 DeepSeaScale
+60 Deep Sea Scale
 61 Dire Hit
 62 Dragon Scale
 63 Elixir
 64 Energy Root
-65 EnergyPowder
+65 Energy Powder
 66 Escape Rope
 67 Ether
 68 Everstone
@@ -105,10 +105,10 @@
 104 Moomoo Milk
 105 Moon Stone
 106 Mystic Water
-107 NeverMeltIce
+107 Never-Melt Ice
 108 Nugget
 109 Old Gateau
-110 Parlyz Heal
+110 Paralyze Heal
 111 Pearl
 112 Poké Doll
 113 Potion
@@ -138,9 +138,9 @@
 137 Super Potion
 138 Super Repel
 139 Thunder Stone
-140 TinyMushroom
+140 Tiny Mushroom
 141 Toxic Orb
-142 TwistedSpoon
+142 Twisted Spoon
 143 Up-Grade
 144 Water Stone
 145 White Flute
@@ -182,7 +182,7 @@
 181 Razor Claw
 182 Shiny Stone
 183 Sticky Barb
-184 DeepSeaTooth
+184 Deep Sea Tooth
 185 Draco Plate
 186 Dread Plate
 187 Earth Plate
@@ -266,7 +266,7 @@
 265 Swift Wing
 266 Pretty Wing
 267 Dream Ball
-268 BalmMushroom
+268 Balm Mushroom
 269 Big Nugget
 270 Pearl String
 271 Comet Shard
