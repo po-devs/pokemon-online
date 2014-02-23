@@ -567,16 +567,15 @@ void BattleSituation::endTurnStatus(int player)
                 healLife(player, poke(player).totalLifePoints()/8);
             }
         } else {
-            if (hasWorkingAbility(player, Ability::MagicGuard)) {
-                return;
-            }
-            notify(All, StatusMessage, player, qint8(HurtPoison));
+            if (!hasWorkingAbility(player, Ability::MagicGuard)) {
+                notify(All, StatusMessage, player, qint8(HurtPoison));
 
-            if (poke(player).statusCount() == 0)
-                inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
-            else {
-                inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
-                //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
+                if (poke(player).statusCount() == 0)
+                    inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
+                else {
+                    inflictDamage(player, poke(player).totalLifePoints() * (16-poke(player).statusCount()) / 16, player);
+                    //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
+                }
             }
         }
         /* Toxic still increases under magic guard, poison heal */
@@ -932,7 +931,7 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
 
     if (p.statusCount() > 0) {
         if (p.status() == Pokemon::Poisoned)
-            p.statusCount() = gen() <= 2 ? 0 : 14;
+            p.statusCount() = gen() <= 2 ? 0 : 15;
         else if (p.status() != Pokemon::Asleep)
             p.statusCount() = 0;
     }

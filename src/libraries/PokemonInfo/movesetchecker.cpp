@@ -407,7 +407,8 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         }
 
         foreach(int move, moves) {
-            if (g > 3 && MoveInfo::isHM(move, Pokemon::gen(g.num-1, GenInfo::NumberOfSubgens(g.num - 1)-1))) {
+            if (g > 3 && MoveInfo::isHM(move, Pokemon::gen(g.num-1, GenInfo::NumberOfSubgens(g.num - 1)-1))
+                    && !PokemonInfo::HasMoveInGen(pokeid, *moves.begin(), g) && !PokemonInfo::dreamWorldMoves(pokeid, g).contains(moves)) {
                 if (error) {
                     *error = QObject::tr("%1 can't have HM %2 inherited from past generations.").arg(PokemonInfo::Name(pokeid), MoveInfo::Name(move));
                 }
