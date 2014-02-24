@@ -1483,6 +1483,12 @@ struct AMDefiant : public AM
     }
 
     static void ansc(int s, int ts, BS &b) {
+        //AbilityArgs defined by speed, so a faster Intimidate would not trigger ability. Also Sticky web.
+        if (b.poke(s).ability() == Ability::Defiant) {
+            poke(b,s)["AbilityArg"] = Attack;
+        } else if (b.poke(s).ability() == Ability::Competitive) {
+            poke(b,s)["AbilityArg"] = SpAttack;
+        }
         int arg = poke(b,s)["AbilityArg"].toInt();
         if (b.hasMaximalStatMod(s, arg))
             return;
