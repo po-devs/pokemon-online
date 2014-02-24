@@ -2245,7 +2245,7 @@ struct MMMetronome : public MM
         MMMetroSet() {
             (*this).unite(MMAssist::forbidden_moves );
             //The inheritance is missing a few moves
-            (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SacredSword
+            (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SecretSword
                                      << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
                                      << Move::Bestow;
         }
