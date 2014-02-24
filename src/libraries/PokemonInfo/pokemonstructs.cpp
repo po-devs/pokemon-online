@@ -259,7 +259,7 @@ void PokePersonal::runCheck()
     }
 
     if (num().pokenum == Pokemon::Keldeo) {
-        if (move(0) == Move::SecretSword || move(1) == Move::SecretSword || move(2) == Move::SecretSword || move(3) == Move::SecretSword) {
+        if (gen() < 6 && (move(0) == Move::SecretSword || move(1) == Move::SecretSword || move(2) == Move::SecretSword || move(3) == Move::SecretSword)) {
             num() = Pokemon::Keldeo_R;
         } else {
             num() = num().original();
