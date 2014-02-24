@@ -1040,7 +1040,7 @@ struct MMAssist : public MM
                               << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
         }
 
-        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+        bool contains(int move, Pokemon::gen gen) const {
             //Assist's Forbidden Moves will be inherited later for Metronome so we break out the moves that are only blocked with Assist
             //Metronome will inherit a block on Assist in Gen III despite it being a valid move
             if (move == Transform || move == NaturePower || move == CircleThrow || move == DragonTail) {
@@ -2227,7 +2227,7 @@ struct MMMetronome : public MM
             }
 
             bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
-                                                      (b.gen() >= 5 && !forbidden.contains(move)));
+                                                      (b.gen() >= 5 && !forbidden.contains(move, b.gen())));
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);
@@ -2249,7 +2249,7 @@ struct MMMetronome : public MM
                                      << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
                                      << Move::Bestow;
         }
-        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+        bool contains(int move, Pokemon::gen gen) const {
             //Nature Power still ruining life since Gen 5
             if (move == NaturePower || move == Snore) {
                 return gen >= 5;
@@ -4138,7 +4138,7 @@ struct MMMimic : public MM
             //For now, we will just block it
             (*this) << NoMove << Struggle << Sketch << Mimic << Chatter << Metronome;
         }
-        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+        bool contains(int move, Pokemon::gen gen) const {
             //Transform blocked in Gen 5, possibly as a result of Transform+Mimic glitch, but this won't affect anything in a simulator
             if (move == Transform) {
                 return gen >= 5;
@@ -4165,7 +4165,7 @@ struct MMMimic : public MM
             return;
         }
         int move = poke(b,t)["LastMoveUsed"].toInt();
-        if (b.hasMove(s,move) || FM.contains(move)) {
+        if (b.hasMove(s,move) || FM.contains(move, b.gen())) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -4181,6 +4181,13 @@ struct MMMimic : public MM
             }
         }
         int slot = fpoke(b,s).lastMoveSlot;
+        //Following check is needed to make sure "Mimic" is replaced, and not other moves, like Sleep Talk.
+        for(int i = 0; i < 4; i++) {
+           if (b.move(s,i) == Move::Mimic) {
+               slot = i;
+               break;
+           }
+        }
         b.changeTempMove(s, slot, move);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
@@ -4673,7 +4680,7 @@ struct MMSleepTalk : public MM
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
                               << Uproar << IceBurn << FreezeShock << Geomancy << PhantomForce << Belch;
         }
-        bool contains(int move, Pokemon::gen gen=GenInfo::GenMax()) const {
+        bool contains(int move, Pokemon::gen gen) const {
             //Nature Power ruining things again, Sketch and Mimic are forbidden at least in Gen 5.
             if (move == NaturePower || move == Sketch || move == Mimic) {
                 return gen >= 5;
@@ -4694,7 +4701,7 @@ struct MMSleepTalk : public MM
             /* On gen 5 it can work several times behind a choice band, so I allowed disabled moves, as
                choice band blocks moves the same way, but it needs to be cross checked. */
             if ( (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false)
-                 && !forbidden_moves.contains(b.move(s,i))) {
+                 && !forbidden_moves.contains(b.move(s,i), b.gen())) {
                 mp.push_back(i);
             }
         }
