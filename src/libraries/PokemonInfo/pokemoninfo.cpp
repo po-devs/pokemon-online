@@ -2456,7 +2456,7 @@ bool ItemInfo::isUseful(int itemnum)
 int ItemInfo::PlateType(int itemnum)
 {
     const auto &effects = Effects(itemnum, GenInfo::GenMax());
-    if (effects.size() == 0) {
+    if (effects.size() == 0 || !isPlate(itemnum)) {
         return 0;
     }
     return effects.front().args.toInt();
