@@ -555,9 +555,16 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
-        if (ItemInfo::isPlate(p.item()) && p.num() == Pokemon::Arceus) {
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus) {
             p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
         }
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Giratina) {
+            p.num() = Pokemon::uniqueId(Pokemon::Giratina, p.item() == Item::GriseousOrb);
+        }
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
+            p.num() = Pokemon::uniqueId(Pokemon::Genesect, ItemInfo::DriveForme(p.item()));
+        }
+        //Maybe Castform, Cherrim, Darmanitan, Aegislash
 
         p.updateStats(gen);
         p.nick() = PokemonInfo::Name(p.num());
