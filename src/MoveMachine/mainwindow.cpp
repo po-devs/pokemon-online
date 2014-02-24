@@ -119,6 +119,7 @@ void PokeMovesDb::save()
                     pokes[id].gens[Pokemon::gen(gen, -1)].moves[i].unite(pokes[id].gens[g].moves[i]);
 
                     QList<int> moves = pokes[id].gens[g].moves[i].toList();
+                    moves.removeOne(Move::Struggle);
 
                     if (moves.size() == 0) {
                         continue;
@@ -175,6 +176,7 @@ void PokeMovesDb::save()
                 pokes[id].gens[g].moves[AllMoves].unite(pokes[id].gens[g].moves[i]);
 
                 QList<int> moves = pokes[id].gens[g].moves[i].toList();
+                moves.removeOne(Move::Struggle);
 
                 if (moves.size() == 0) {
                     continue;
