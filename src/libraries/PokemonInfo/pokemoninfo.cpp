@@ -1778,9 +1778,12 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     } else if (gen.num == 4) {
         HMs << Move::Cut << Move::Surf << Move::RockSmash << Move::Strength
             << Move::Waterfall << Move::Fly << Move::RockClimb;
-    } else if (gen.num == 5) {
-        HMs << Move::Cut << Move::Surf << Move::Dive << Move::Waterfall << Move::Fly << Move::Strength;
     }
+    //Pokebank allows transfer of HMs.
+    //Put this here to prevent incorrect errors when checking moveset (Ex: Have a valid HM, but other invalid move shows the HM is invalid)
+    /*else if (gen.num == 5) {
+        HMs << Move::Cut << Move::Surf << Move::Dive << Move::Waterfall << Move::Fly << Move::Strength;
+    }*/
 }
 
 void MoveInfo::Gen::retranslate()
@@ -2453,7 +2456,7 @@ bool ItemInfo::isUseful(int itemnum)
 int ItemInfo::PlateType(int itemnum)
 {
     const auto &effects = Effects(itemnum, GenInfo::GenMax());
-    if (effects.size() == 0) {
+    if (effects.size() == 0 || !isPlate(itemnum)) {
         return 0;
     }
     return effects.front().args.toInt();

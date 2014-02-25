@@ -1483,6 +1483,12 @@ struct AMDefiant : public AM
     }
 
     static void ansc(int s, int ts, BS &b) {
+        //AbilityArgs defined by speed, so a faster Intimidate would not trigger ability. Also Sticky web.
+        if (b.poke(s).ability() == Ability::Defiant) {
+            poke(b,s)["AbilityArg"] = Attack;
+        } else if (b.poke(s).ability() == Ability::Competitive) {
+            poke(b,s)["AbilityArg"] = SpAttack;
+        }
         int arg = poke(b,s)["AbilityArg"].toInt();
         if (b.hasMaximalStatMod(s, arg))
             return;
@@ -1966,6 +1972,9 @@ struct AMPickUp : public AM {
 
         int i = possibilities[b.randint(possibilities.size())];
         int item = b.poke(i).itemUsed();
+        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s).original())
+            return;
+
         b.sendAbMessage(93, 0, s, 0, 0, item);
         b.poke(i).itemUsed() = 0;
         b.acqItem(s, item);
@@ -2422,6 +2431,7 @@ void AbilityEffect::init()
     REGISTER_AB(119, GrassPelt);
     REGISTER_AB(120, Levitate);
     REGISTER_AB(121, Aerilate);
+    //122 Sticky Hold message
 }
 
 /* Not done: Symbiosis */
