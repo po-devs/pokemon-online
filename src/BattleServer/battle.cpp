@@ -3410,7 +3410,7 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     if (item == 0) {
         return false;
     }
-    if (hasSubstitute(player) && !canBypassSub(attacker)) {
+    if (attacker != player && hasSubstitute(player) && !canBypassSub(attacker)) {
         return false;
     }
     if (attacker != player && hasWorkingAbility(player, Ability::StickyHold)) {
