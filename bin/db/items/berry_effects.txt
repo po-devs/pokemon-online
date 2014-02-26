@@ -9,9 +9,9 @@
 8 1-0#Lum
 9 3-30#pinch Sitrus
 10 13-1#Figy--Bold, Calm, Modest, Timid (-Att)
-11 13-4#Wiki--Adamant, Careful, Impish, Jolly (-SpA)
-12 13-3#Mago--Brave, Quiet, Relaxed, Sassy (-Spe)
-13 13-5#Aguav--Lax, Naive, Naughty, Rash (-SpDef)
+11 13-3#Wiki--Adamant, Careful, Impish, Jolly (-SpA)
+12 13-5#Mago--Brave, Quiet, Relaxed, Sassy (-Spe)
+13 13-4#Aguav--Lax, Naive, Naughty, Rash (-SpDef)
 14 13-2#Iapapa---Gentle, Hasty, Lonely, Mild (-Def)
 35 4-9
 36 4-10

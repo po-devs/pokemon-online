@@ -1147,9 +1147,10 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     //OHKO
     int move  = turnMemory(player)["MoveChosen"].toInt();
 
-    if (pokeMemory(player).value("BerryLock").toBool()) {
-        pokeMemory(player).remove("BerryLock");
-        if (gen() <= 4 || !MoveInfo::isOHKO(move, gen()))
+    //Micle Berry only guarantees next hit in Gen 4 (bar OHKO)
+    if (turnMemory(player).value("BerryLock").toBool()) {
+        turnMemory(player).remove("BerryLock");
+        if (!MoveInfo::isOHKO(move, gen()))
             return true;
     }
 
@@ -1189,6 +1190,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
 
     turnMemory(player).remove("Stat6ItemModifier");
     turnMemory(player).remove("Stat6AbilityModifier");
+    turnMemory(player).remove("Stat6BerryModifier");
     turnMemory(target).remove("Stat7ItemModifier");
     turnMemory(target).remove("Stat7AbilityModifier");
     callieffects(player,target,"StatModifier");
@@ -1208,7 +1210,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             * (20-turnMemory(target).value("Stat7ItemModifier").toInt())/20
             * (20+turnMemory(player).value("Stat6AbilityModifier").toInt())/20
             * (20+turnMemory(player).value("Stat6PartnerAbilityModifier").toInt())/20
-            * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20;
+            * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20
+            * (20+turnMemory(player).value("Stat6BerryModifier)").toInt())/20;
 
     if (coinflip(unsigned(acc), 100)) {
         return true;
@@ -3366,6 +3369,8 @@ void BattleSituation::devourBerry(int p, int berry, int s)
     if (hasWorkingAbility(s, Ability::CheekPouch)) {
         healLife(s, poke(s).totalLifePoints()/3);
     }
+
+    pokeMemory(p)["BerryEaten"] = true;
 
     /* Restoring initial conditions */
     pokeMemory(p)["ItemArg"] = tempItemStorage;

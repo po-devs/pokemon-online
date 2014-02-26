@@ -2004,8 +2004,12 @@ struct MMFling : public MM
 
     static void btl(int s, int, BS &b) {
         if (b.canLoseItem(s,s) && ItemInfo::Power(b.poke(s).item()) > 0) {
-            if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz))
+            if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz)) {
                 return;
+            } else if (!b.hasWorkingItem(s,b.poke(s).item())) {
+                //Embargo, Magic Room, Unnerve+Berry
+                return;
+            }
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
@@ -2018,9 +2022,12 @@ struct MMFling : public MM
         if (!b.koed(t)) {
             if (!ItemInfo::isBerry(item)) {
                 if (item == Item::WhiteHerb || item == Item::MentalHerb) {
-                    int oppitem = b.poke(t).item();
-                    ItemEffect::activate("UponSetup", item, t,s,b);
-                    b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
+                    //Gen 4 doesn't allow Embargoed Targets to use the flung item
+                    if (b.gen() > 4 || !poke(b, t).value("Embargoed").toBool()) {
+                        int oppitem = b.poke(t).item();
+                        ItemEffect::activate("UponSetup", item, t,s,b);
+                        b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
+                    }
                 } else if (item == Item::RazorFang || item == Item::KingsRock) {
                     fturn(b,t).add(TM::Flinched); /* king rock, razor fang */
                 } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
@@ -2032,8 +2039,11 @@ struct MMFling : public MM
                     }
                 }
             } else {
-                b.sendMoveMessage(16,0,t,type(b,s),s,item);
-                b.devourBerry(t, item, t);
+                //Gen 4 doesn't allow Embargoed Targets to use the flung item
+                if (b.gen() > 4 || !poke(b, t).value("Embargoed").toBool()) {
+                    b.sendMoveMessage(16,0,t,type(b,s),s,item);
+                    b.devourBerry(t, item, t);
+                }
             }
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
@@ -6627,7 +6637,6 @@ struct MMBelch :  public MM
         if (!poke(b,s).contains("BerryEaten")) {
             fturn(b,s).add(TM::Failed);
         }
-        poke(b,s).remove("BerryEaten");
     }
 };
 
