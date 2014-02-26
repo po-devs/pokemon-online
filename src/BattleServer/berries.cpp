@@ -395,7 +395,11 @@ struct BMBerryLock : public BMPinch
             return;
         }
 
-        poke(b,s)["BerryLock"] = true;
+        if (b.gen() <= 4) {
+            turn(b,s)["BerryLock"] = true;
+        } else {
+            turn(b,s)["Stat6BerryModifier"] = 4;
+        }
         b.sendBerryMessage(10,s,0);
     }
 };
@@ -410,10 +414,13 @@ struct BMCustap : public BMPinch
         if (!b.isOut(p)) {
             return;
         }
+        if (turn(b,p).value("BugBiter").toBool()) {
+            b.eatBerry(s);
+            return;
+        }
         if (!testpinch(p, s, b, 4, false)) {
             return;
         }
-
         b.sendBerryMessage(11,s,0);
         turn(b,s)["TurnOrder"] = 3;
     }
@@ -458,7 +465,7 @@ struct BMConfuseBerry : public BMPinch
     }
 
     static void tp (int p, int s, BS &b) {
-        if (b.koed(s) || b.poke(s).isFull())
+        if (b.koed(s))
             return;
 
         if (!testpinch(p, s, b, 4, true))
@@ -471,7 +478,7 @@ struct BMConfuseBerry : public BMPinch
         int plus = NatureInfo::StatBoosted(b.poke(s).nature());
         int minus = NatureInfo::StatHindered(b.poke(s).nature());
         if (plus != minus) {
-            int arg = poke(b,p)["ItemArg"].toInt();
+            int arg = poke(b,s)["ItemArg"].toInt();
             if (arg == minus)
                 b.inflictConfused(s,s);
         }
