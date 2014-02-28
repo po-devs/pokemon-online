@@ -609,3 +609,4 @@
 608 Doubles prize money received after battle.
 609 Congratulates you on your special day.
 610 Target is left at 1 HP if this attack would KO.
+611 Has a 50% chance to raise the user's Attack.
