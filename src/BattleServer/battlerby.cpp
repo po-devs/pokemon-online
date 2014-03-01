@@ -235,7 +235,7 @@ void BattleRBY::personalEndTurn(int player)
         if (poke(player).statusCount() == 0)
             inflictDamage(player, poke(player).totalLifePoints()/16, player); // 1/16 in gen 1
         else {
-            inflictDamage(player, poke(player).totalLifePoints() * (15-poke(player).statusCount()) / 16, player);
+            inflictDamage(player, poke(player).totalLifePoints() * (16-poke(player).statusCount()) / 16, player);
             poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
         }
         break;

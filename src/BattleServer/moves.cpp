@@ -2033,7 +2033,7 @@ struct MMFling : public MM
                 } else if (!team(b, b.player(t)).contains("SafeGuardCount"))  {
                     switch (item) {
                     case Item::FlameOrb: b.inflictStatus(t, Pokemon::Burnt, s); break; /*flame orb*/
-                    case Item::ToxicOrb: b.inflictStatus(t, Pokemon::Poisoned, s, 15, 15); break; /*toxic orb*/
+                    case Item::ToxicOrb: b.inflictStatus(t, Pokemon::Poisoned, s, 16, 16); break; /*toxic orb*/
                     case Item::LightBall: b.inflictStatus(t, Pokemon::Paralysed, s); break; /* light ball */
                     case Item::PoisonBarb: b.inflictStatus(t, Pokemon::Poisoned, s); break; /* poison barb */
                     }
@@ -2977,7 +2977,7 @@ struct MMToxicSpikes : public MM
         switch (spikeslevel) {
         case 0: return;
         case 1: b.inflictStatus(s, Pokemon::Poisoned, s); break;
-        default: b.inflictStatus(s, Pokemon::Poisoned, s, 15, 15); break;
+        default: b.inflictStatus(s, Pokemon::Poisoned, s, 16, 16); break;
         }
     }
 };
