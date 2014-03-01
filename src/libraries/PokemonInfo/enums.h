@@ -906,7 +906,8 @@ namespace Pokemon
         Pumpkaboo_XL = Pumpkaboo + (3 << 16),
         Gourgeist_S = Gourgeist + (1 << 16),
         Gourgeist_L = Gourgeist + (2 << 16),
-        Gourgeist_XL = Gourgeist + (3 << 16)
+        Gourgeist_XL = Gourgeist + (3 << 16),
+        Floette_EF = Floette + (1 << 16)
     };
 }
 
@@ -1588,7 +1589,9 @@ namespace Move
         VenomDrench,
         HappyHour,
         Celebrate,
-        HoldBack
+        HoldBack,
+        DiamondStorm,
+        LightOfRuin
     };
 }
 
