@@ -578,3 +578,4 @@
 609 Congratulates you on your special day.
 610 If this attack's damage would be equal to or greater than opponent's current HP, its damage is instead equal to opponent's current HP minus 1. (This attack doesn't fail if 0 damage would be dealt this way.)
 611 May increase user's Defense by 1 stage. (50 %)
+612 Returns to user 1/2 of HP lost by opponent due to this attack (recoil).

@@ -43,7 +43,7 @@ void PokeMovesDb::init()
     }
 
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)
+        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)
             continue;
 
         MovesPerPoke p;
@@ -110,7 +110,7 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)) {
+                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)) {
                         continue;
                     }
                     if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -166,7 +166,7 @@ void PokeMovesDb::save()
 
         for (int i = 0; i < 8; i++) {
             foreach (Pokemon::uniqueId id, ids) {
-                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)) {
+                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)) {
                     continue;
                 }
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -252,7 +252,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(Pokemon::uniqueId id, ids)
     {
-        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic)
+        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)
             continue;
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
