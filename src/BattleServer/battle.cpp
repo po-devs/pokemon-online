@@ -2400,7 +2400,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
 bool BattleSituation::canGetStatus(int player, int status) {
     if (!BattleBase::canGetStatus(player, status)) {
-        sendMoveMessage(31,0,player);
+        //sendMoveMessage(31,0,player);
         return false;
     }
     if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
