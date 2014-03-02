@@ -72,7 +72,7 @@ public:
     static int NumberOfPokemons(); // base + all forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
     static Pokemon::uniqueId Number(const QString &pokename);
-    static int LevelBalance(const Pokemon::uniqueId &pokeid);
+    static int LevelBalance(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QString WeightS(const Pokemon::uniqueId &pokeid);
     static QString Classification(const Pokemon::uniqueId &pokeid);
     /* 4 = 50% male, 7 = 87.5% male, 6 = 75% male. Range is 0-8 */
@@ -186,7 +186,7 @@ private:
 
     static QHash<Pokemon::uniqueId, int> m_Genders;
     static QVector<QHash<Pokemon::uniqueId, PokeBaseStats> > m_BaseStats;
-    static QHash<Pokemon::uniqueId, int> m_LevelBalance;
+    static QVector<QHash<Pokemon::uniqueId, int> > m_LevelBalance;
 
     static QHash<int, QList<int> > m_Evolutions;
     static QHash<int, int> m_OriginalEvos;

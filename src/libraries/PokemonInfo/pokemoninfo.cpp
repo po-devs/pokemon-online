@@ -28,7 +28,7 @@ QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type1;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Type2;
 QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_Abilities[3];
 QVector<QHash<Pokemon::uniqueId, PokeBaseStats> > PokemonInfo::m_BaseStats;
-QHash<Pokemon::uniqueId, int> PokemonInfo::m_LevelBalance;
+QVector<QHash<Pokemon::uniqueId, int> > PokemonInfo::m_LevelBalance;
 QHash<int, quint16> PokemonInfo::m_MaxForme;
 QHash<Pokemon::uniqueId, QString> PokemonInfo::m_Options;
 int PokemonInfo::m_trueNumberOfPokes;
@@ -664,6 +664,7 @@ void PokemonInfo::init(const QString &dir)
     m_Abilities[1].clear();
     m_Abilities[2].clear();
     m_BaseStats.clear();
+    m_LevelBalance.clear();
 
     const int numGens = GenInfo::NumberOfGens();
 
@@ -673,12 +674,14 @@ void PokemonInfo::init(const QString &dir)
     m_Abilities[1].resize(numGens);
     m_Abilities[2].resize(numGens);
     m_BaseStats.resize(numGens);
+    m_LevelBalance.resize(numGens);
 
     for (int i = GenInfo::GenMin(); i <= GenInfo::GenMax(); i++) {
         Pokemon::gen gen(i, -1);
 
         fill_uid_int(m_Type1[i-GenInfo::GenMin()], path(QString("type1.txt"),gen));
         fill_uid_int(m_Type2[i-GenInfo::GenMin()], path(QString("type2.txt"),gen));
+        fill_uid_int(m_LevelBalance[i-GenInfo::GenMin()], path(QString("level_balance.txt"),gen));
 
         if (gen >= 3) {
             for (int j = 0; j < 3; j++) {
@@ -702,7 +705,6 @@ void PokemonInfo::init(const QString &dir)
         }
     }
     
-    fill_uid_int(m_LevelBalance, path("level_balance.txt"));
     loadClassifications();
     loadGenderRates();
     loadHeights();
@@ -1060,9 +1062,13 @@ Pokemon::uniqueId PokemonInfo::Number(const QString &pokename)
     }
 }
 
-int PokemonInfo::LevelBalance(const Pokemon::uniqueId &pokeid)
+int PokemonInfo::LevelBalance(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
-    return m_LevelBalance.value(pokeid);
+    if (m_LevelBalance[gen.num-GEN_MIN].contains(pokeid)) {
+        return m_LevelBalance[gen.num-GEN_MIN].value(pokeid);
+    } else {
+        return m_LevelBalance[gen.num-GEN_MIN].value(pokeid.original());
+    }
 }
 
 int PokemonInfo::Gender(const Pokemon::uniqueId &pokeid)
@@ -1628,10 +1634,6 @@ void PokemonInfo::makeDataConsistent()
         if(!m_Weights.contains(id)) {
             m_Weights[id] = m_Weights.value(OriginalForme(id), "0.0");
         }
-        // Other.
-        if(!m_LevelBalance.contains(id)) {
-            m_LevelBalance[id] = m_LevelBalance.value(OriginalForme(id), 1);
-        }
         if(!m_Genders.contains(id)) {
             m_Genders[id] = m_Genders.value(OriginalForme(id), Pokemon::NeutralAvail);
         }
@@ -1660,6 +1662,10 @@ void PokemonInfo::makeDataConsistent()
             }
             if(!m_Type2[i].contains(id)) {
                 m_Type2[i][id] = m_Type2[i].value(id.original(), Pokemon::Curse);
+            }
+            // CC Level Balance.
+            if(!m_LevelBalance[i].contains(id)) {
+                m_LevelBalance[i][id] = m_LevelBalance[i].value(OriginalForme(id), 1);
             }
         }
     }

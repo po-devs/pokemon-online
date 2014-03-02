@@ -485,7 +485,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
             p.nature() = true_rand()%NatureInfo::NumberOfNatures();
         }
 
-        p.level() = PokemonInfo::LevelBalance(p.num());
+        p.level() = PokemonInfo::LevelBalance(p.num(), gen);
 
         PokePersonal p2;
 
