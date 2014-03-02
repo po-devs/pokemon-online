@@ -13,5 +13,8 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-
 SOURCES += main.cpp
+
+include(../Shared/Common.pri)
+
+LIBS += $$pokemoninfo
