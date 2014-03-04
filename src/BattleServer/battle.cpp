@@ -1906,7 +1906,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                  ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
                   ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
                    && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
-                sendMoveMessage(31,0,target);
+                //sendMoveMessage(31,0,target);
+                notify(All, Failed, player);
                 continue;
             }
 
