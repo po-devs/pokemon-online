@@ -345,15 +345,19 @@ struct AMDrySkin : public AM {
     static void oa(int s, int t, BS &b) {
         if (type(b,t) == Pokemon::Water) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-            b.sendAbMessage(15,0,s,s,Pokemon::Water);
-            b.healLife(s, b.poke(s).totalLifePoints()/4);
+            if (b.canHeal(s, BS::HealByAbility,b.ability(s))) {
+                b.sendAbMessage(15,0,s,s,Pokemon::Water);
+                b.healLife(s, b.poke(s).totalLifePoints()/4);
+            }
         }
     }
 
     static void ws (int s, int , BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain) && !b.poke(s).isFull()) {
-            b.sendAbMessage(15,0,s,s,Pokemon::Water);
-            b.healLife(s, b.poke(s).totalLifePoints()/8);
+        if (b.isWeatherWorking(BattleSituation::Rain)) {
+            if (b.canHeal(s, BS::HealByEffect,0)) {
+                b.sendAbMessage(15,0,s,s,Pokemon::Water);
+                b.healLife(s, b.poke(s).totalLifePoints()/8);
+            }
         } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
             b.sendAbMessage(15,1,s,s,Pokemon::Fire);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
