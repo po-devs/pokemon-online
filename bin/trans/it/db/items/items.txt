@@ -337,6 +337,7 @@
 336 Capsula Abilità
 337 Fossilmascella
 338 Fossilpinna
+339 Pan di Lumi
 340 Bustina Aromi
 341 Dolcespuma
 1000 Fiocco Rosa
