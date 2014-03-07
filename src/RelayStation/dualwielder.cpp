@@ -875,8 +875,17 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "getrankings") {
             int battle = data.toInt();
             notify(Nw::ShowRankings2, qint8(0), qint32(battle));
-
-            qDebug() << "rankings ask";
+        } else if (command == "challenge") {
+            QVariantMap params = jparser.parse(data.toUtf8()).toMap();
+            ChallengeInfo c;
+            c.clauses = params.value("clauses").toInt();
+            c.opp = params.value("id").toInt();
+            c.rated = false;
+            c.team = params.value("team").toInt();
+            c.desttier = params.value("tier", "").toString();
+            c.mode = ChallengeInfo::Singles;
+            c.dsc = ChallengeInfo::Sent;
+            notify(Nw::ChallengeStuff, c);
         }
     }
 }
