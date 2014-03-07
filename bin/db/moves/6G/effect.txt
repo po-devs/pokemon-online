@@ -344,7 +344,7 @@
 364 Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party. Priority level 2.
 365 If the target is holding a Berry, the user consumes that Berry.
 366 For four turns, doubles the Speed of any Pokémon on the user's side.
-367 Raises by 2 stages one of the target's stats that is not maxed out.
+367 Raises by 2 stages one of the target's stats that is not maxed out. Can target the user or its ally.
 368 The target of this move is the last of the opponent's Pokémon to have damaged the user this turn. Deals damage to the target equal to 1.5 times the damage the target dealt to the user with their last attack.
 369 Immediately after using this attack, the user switches out for a chosen Pokémon in its party.
 370 If this attack is successful, lowers the user's Defense and Special Defense by 1 stage.
@@ -550,7 +550,7 @@
 580 Lowers the target's Attack by 1 stage.
 581 Adds Ghost typing to the target.
 582 Multi-hit attack, attacks two to five times in a turn. 37.5% chance for 2 or 3 hits; 12.5% chance for 4 or 5 hits. Priority level 1.
-583 Raises the Special Defense of Pokémon on the user's side by 1 stage.
+583 Raises Special Defense of a user's ally by 1 stage.
 584 This attack cannot be selected unless the user has eaten a Berry.
 585 Lowers the target's Special Attack by 1 stage.
 586 Cannot be evaded.
