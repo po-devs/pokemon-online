@@ -155,7 +155,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
                 map.insert("avatar", p.avatar);
             }
             map.insert("auth", p.auth);
-            //map.insert("away", p.away());
+            map.insert("away", p.away());
             if (p.color.isValid()) {
                 map.insert("color", p.color);
             }
