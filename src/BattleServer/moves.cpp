@@ -2047,7 +2047,8 @@ struct MMFling : public MM
             }
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
-        b.loseItem(s);
+        /* Dispose item is used to allow Recycle to properly recover the item */
+        b.disposeItem(s);
     }
 };
 
