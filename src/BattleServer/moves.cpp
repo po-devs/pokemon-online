@@ -1624,6 +1624,9 @@ struct MMEmbargo : public MM
     }
 
     static void uas(int s, int t, BS &b) {
+        /* Choice Memory */
+        poke(b,t)["ChoiceMemory"] = poke(b,t)["LastMoveUsed"];
+
         b.sendMoveMessage(32,0,s,type(b,s),t);
         poke(b,t)["Embargoed"] = true;
         poke(b,t)["EmbargoEnd"] = b.turn() + 4;
@@ -1635,8 +1638,12 @@ struct MMEmbargo : public MM
             b.sendMoveMessage(32,1,s,0);
             poke(b,s)["Embargoed"] = false;
             b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
-            //White Herb activates right now if there are negative stats
+
+            /* White Herb and Choice Memory */
             b.callieffects(s, s, "AfterStatChange");
+            if (!poke(b,s).contains("ChoiceMemory") || poke(b,s).value("ChoiceMemory").toInt() == 0) {
+                poke(b,s)["ChoiceMemory"] = poke(b,s)["LastMoveUsed"];
+            }
         }
     }
 };
@@ -5650,7 +5657,19 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
+
+            /* White Herb and Choice Memory */
+            foreach (int p, b.sortedBySpeed()) {
+                b.callieffects(p, p, "AfterStatChange");
+                if (!poke(b,p).contains("ChoiceMemory") || poke(b,p).value("ChoiceMemory").toInt() == 0) {
+                    poke(b,p)["ChoiceMemory"] = poke(b,p)["LastMoveUsed"];
+                }
+            }
         } else {
+            /* Choice Memory */
+            foreach (int p, b.sortedBySpeed()) {
+                poke(b,p)["ChoiceMemory"] = poke(b,p)["LastMoveUsed"];
+            }
             b.sendMoveMessage(156,0,s,Pokemon::Psychic);
             b.battleMemory()["MagicRoomCount"] = 5;
             b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MagicRoom", &et);
@@ -5663,9 +5682,13 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
-            //White Herb activates right now if there are negative stats
+
+            /* White Herb and Choice Memory */
             foreach (int p, b.sortedBySpeed()) {
                 b.callieffects(p, p, "AfterStatChange");
+                if (!poke(b,p).contains("ChoiceMemory") || poke(b,p).value("ChoiceMemory").toInt() == 0) {
+                    poke(b,p)["ChoiceMemory"] = poke(b,p)["LastMoveUsed"];
+                }
             }
         }
     }
