@@ -977,7 +977,7 @@ void BattleSituation::callEntryEffects(int player)
     if (!koed(player)) {
         /* Various problems with item setting up are:
            - WhiteHerb restoring baton pass stats
-           - Chesto Berry not having an argument and curing Toxic Spikes
+           - Pecha Berry not having an argument and curing Toxic Spikes
            - Choice Scarf not activating right at weather starting
 
            So All those must be taken in account when changing something to
@@ -2149,6 +2149,9 @@ void BattleSituation::acquireAbility(int play, int ab, bool firstTime) {
 
 void BattleSituation::loseAbility(int slot)
 {
+    /* For when Klutz is lost. Only this line is needed otherwise the Choice memory will never reset.*/
+    pokeMemory(slot)["ChoiceMemory"] = pokeMemory(slot)["LastMoveUsed"];
+
     callaeffects(slot, slot, "OnLoss");
 }
 
