@@ -7120,7 +7120,7 @@ struct MMMagneticFlux : public MM {
         foreach (int p, b.sortedBySpeed())
         {
             if (b.player(p) == b.player(s)) {
-                if (b.hasWorkingAbility(s, Ability::Minus) || b.hasWorkingAbility(s, Ability::Plus)) {
+                if (b.hasWorkingAbility(p, Ability::Minus) || b.hasWorkingAbility(p, Ability::Plus)) {
                     b.inflictStatMod(p, Defense, 1, s);
                     b.inflictStatMod(p, SpDefense, 1, s);
                 }
