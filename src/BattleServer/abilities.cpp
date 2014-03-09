@@ -2290,7 +2290,7 @@ struct AMKlutz : public AM
 
     static void ol(int s, int, BS &b) {
         int item = b.poke(s).item();
-        ItemEffect::activate("ItemNullEnd", item, s, s, b);
+        ItemEffect::activate("UponReactivation", item, s, s, b);
     }
 };
 

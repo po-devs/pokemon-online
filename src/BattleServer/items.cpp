@@ -478,7 +478,7 @@ struct IMMentalHerb : public IM
 {
     IMMentalHerb() {
         functions["UponSetup"] = &as;
-        functions["ItemNullEnd"] = &as;
+        functions["UponReactivation"] = &as;
     }
 
     static void as(int s, int, BS &b) {
@@ -535,7 +535,7 @@ struct IMWhiteHerb : public IM
     IMWhiteHerb() {
         functions["UponSetup"] = &as;
         functions["AfterStatChange"] = &as;
-        functions["ItemNullEnd"] = &as;
+        functions["UponReactivation"] = &as;
     }
 
     static void as(int s, int, BS &b) {

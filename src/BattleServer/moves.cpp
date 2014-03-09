@@ -1635,7 +1635,7 @@ struct MMEmbargo : public MM
             b.sendMoveMessage(32,1,s,0);
             poke(b,s)["Embargoed"] = false;
             b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
-            b.callieffects(s, s, "ItemNullEnd");
+            b.callieffects(s, s, "UponReactivation");
         }
     }
 };
@@ -5650,7 +5650,7 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
-            nullend(b);
+            reactivate(b);
         } else {
             b.sendMoveMessage(156,0,s,Pokemon::Psychic);
             b.battleMemory()["MagicRoomCount"] = 5;
@@ -5664,13 +5664,13 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
-            nullend(b);
+            reactivate(b);
         }
     }
 
-    static void nullend (BS &b) {
+    static void reactivate (BS &b) {
         foreach (int p, b.sortedBySpeed()) {
-            b.callieffects(p, p, "ItemNullEnd");
+            b.callieffects(p, p, "UponReactivation");
         }
     }
 };
