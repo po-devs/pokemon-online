@@ -93,7 +93,6 @@ void Player::doConnections()
     connect(&relay(), SIGNAL(ipChangeRequested(QString)), SLOT(ipChangeRequested(QString)));
     connect(&relay(), SIGNAL(endCommand()), SLOT(sendUpdatedIfNeeded()));
     connect(&relay(), SIGNAL(reconnect(int,QByteArray)), SLOT(onReconnect(int,QByteArray)));
-    connect(&relay(), SIGNAL(showRankings(int)), SLOT(getRankingsForPlayer(int)));
 
     /* To avoid threading / simulateneous calls problems, it's queued */
     connect(this, SIGNAL(unlocked()), &relay(), SLOT(undelay()),Qt::QueuedConnection);

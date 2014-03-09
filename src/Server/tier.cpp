@@ -680,6 +680,7 @@ void Tier::fetchRanking(const QString &name, QObject *o, const char *slot)
         t->pushQuery(name.toLower(), w, make_query_number(GetRanking));
     } else {
         processQuery(0, name, GetRanking, w);
+        w->emitSignal();
     }
 }
 
