@@ -10,6 +10,7 @@ struct BMStatusBerry : public BM
     BMStatusBerry() {
         functions["UponSetup"] = &asc;
         functions["AfterStatusChange"] = &asc;
+        functions["ItemNullEnd"] = &asc;
     }
 
     static void asc(int p, int s, BS &b) {
@@ -66,6 +67,7 @@ struct BMLeppa : public BM
         functions["UponSetup"] = &appl;
         functions["AfterTargetList"] = &appl;
         functions["AfterPPLoss"] = &appl;
+        functions["ItemNullEnd"] = &appl;
     }
 
     static void appl(int p, int s, BS &b) {
@@ -144,6 +146,7 @@ struct BMPinchHP : public BMPinch
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["ItemNullEnd"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -247,6 +250,7 @@ struct BMPinchStat : public BMPinch
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["ItemNullEnd"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -286,6 +290,7 @@ struct BMCriticalPinch : public BMPinch
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["ItemNullEnd"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -328,6 +333,7 @@ struct BMStarf : public BMPinch
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["ItemNullEnd"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -374,6 +380,7 @@ struct BMBerryLock : public BMPinch
     BMBerryLock() {
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["ItemNullEnd"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -452,6 +459,7 @@ struct BMConfuseBerry : public BMPinch
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["ItemNullEnd"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {

@@ -478,6 +478,7 @@ struct IMMentalHerb : public IM
 {
     IMMentalHerb() {
         functions["UponSetup"] = &as;
+        functions["ItemNullEnd"] = &as;
     }
 
     static void as(int s, int, BS &b) {
@@ -516,6 +517,7 @@ struct IMMentalHerb : public IM
             if (poke(b,s).contains("HealBlocked")) {
                 removeFunction(poke(b,s), "MovesPossible", "HealBlock");
                 removeFunction(poke(b,s), "MovePossible", "HealBlock");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "HealBlock");
                 poke(b,s).remove("HealBlocked");
                 used = true;
             }
@@ -533,6 +535,7 @@ struct IMWhiteHerb : public IM
     IMWhiteHerb() {
         functions["UponSetup"] = &as;
         functions["AfterStatChange"] = &as;
+        functions["ItemNullEnd"] = &as;
     }
 
     static void as(int s, int, BS &b) {

@@ -2,6 +2,7 @@
 #define ABILITIES_H
 
 #include "mechanics.h"
+#include "items.h" //For Klutz
 
 struct AbilityMechanics : public Mechanics
 {
