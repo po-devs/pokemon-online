@@ -991,7 +991,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Poke
         power = QString("%1").arg(std::max((p.happiness() * 2 / 5),1));
     } else if (b.num() == Move::Frustration) {
         power = QString("%1").arg(std::max(( (255-p.happiness()) * 2 / 5),1));
-    } else if (b.num() == Move::HiddenPower) {
+    } else if (b.num() == Move::HiddenPower && gen <= 5) {
         power = QString("%1").arg(HiddenPowerInfo::Power(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
     } else {
         power = MoveInfo::PowerS(b.num(), gen);
@@ -1038,7 +1038,7 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Po
         power = QString("%1").arg(std::max((p.happiness() * 2 / 5),1));
     } else if (b.num() == Move::Frustration) {
         power = QString("%1").arg(std::max(( (255-p.happiness()) * 2 / 5),1));
-    } else if (b.num() == Move::HiddenPower) {
+    } else if (b.num() == Move::HiddenPower && gen <= 5) {
         power = QString("%1").arg(HiddenPowerInfo::Power(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
     } else {
         power = MoveInfo::PowerS(b.num(), gen);

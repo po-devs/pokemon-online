@@ -437,7 +437,7 @@ void RegularBattleScene::updateTimers()
         gui.timers[i]->setFormat(QString("%1 : %2").arg(ctime/60).arg(QString::number(ctime%60).rightJustified(2,'0')));
         if (ctime > 60) {
             gui.timers[i]->setStyleSheet("::chunk{background-color: #55a8fc;}");
-        }else if (ctime > 30) {
+        } else if (ctime > 30) {
             gui.timers[i]->setStyleSheet("::chunk{background-color: #F8DB17;;}");
         } else {
             gui.timers[i]->setStyleSheet("::chunk{background-color: #D40202;}");
