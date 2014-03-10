@@ -2282,6 +2282,18 @@ struct AMLevitate : public AM
     }
 };
 
+struct AMKlutz : public AM
+{
+    AMKlutz() {
+        functions["OnLoss"] = &ol;
+    }
+
+    static void ol(int s, int, BS &b) {
+        int item = b.poke(s).item();
+        ItemEffect::activate("UponReactivation", item, s, s, b);
+    }
+};
+
 
 /* Events:
     PriorityChoice
@@ -2436,6 +2448,7 @@ void AbilityEffect::init()
     REGISTER_AB(120, Levitate);
     REGISTER_AB(121, Aerilate);
     //122 Sticky Hold message
+    REGISTER_AB(123, Klutz);
 }
 
 /* Not done: Symbiosis */

@@ -1635,8 +1635,7 @@ struct MMEmbargo : public MM
             b.sendMoveMessage(32,1,s,0);
             poke(b,s)["Embargoed"] = false;
             b.removeEndTurnEffect(BS::PokeEffect, s, "Embargo");
-            //White Herb activates right now if there are negative stats
-            b.callieffects(s, s, "AfterStatChange");
+            b.callieffects(s, s, "UponReactivation");
         }
     }
 };
@@ -2020,10 +2019,11 @@ struct MMFling : public MM
     static void uas (int s, int t, BS &b) {
         int item = b.poke(s).item();
         if (!b.koed(t)) {
+            bool isEmbargoed = poke(b, t).value("Embargoed").toBool();
             if (!ItemInfo::isBerry(item)) {
                 if (item == Item::WhiteHerb || item == Item::MentalHerb) {
                     //Gen 4 doesn't allow Embargoed Targets to use the flung item
-                    if (b.gen() > 4 || !poke(b, t).value("Embargoed").toBool()) {
+                    if (b.gen() > 4 || !isEmbargoed) {
                         int oppitem = b.poke(t).item();
                         ItemEffect::activate("UponSetup", item, t,s,b);
                         b.poke(t).item() = oppitem; /* the effect of mental herb / white herb may have disposed of the foes item */
@@ -2040,7 +2040,7 @@ struct MMFling : public MM
                 }
             } else {
                 //Gen 4 doesn't allow Embargoed Targets to use the flung item
-                if (b.gen() > 4 || !poke(b, t).value("Embargoed").toBool()) {
+                if (b.gen() > 4 || !isEmbargoed) {
                     b.sendMoveMessage(16,0,t,type(b,s),s,item);
                     b.devourBerry(t, item, t);
                 }
@@ -5650,6 +5650,7 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
+            reactivate(b);
         } else {
             b.sendMoveMessage(156,0,s,Pokemon::Psychic);
             b.battleMemory()["MagicRoomCount"] = 5;
@@ -5663,10 +5664,13 @@ struct MMMagicRoom : public MM {
             b.sendMoveMessage(156,1,s,Pokemon::Psychic);
             b.battleMemory().remove("MagicRoomCount");
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MagicRoom");
-            //White Herb activates right now if there are negative stats
-            foreach (int p, b.sortedBySpeed()) {
-                b.callieffects(p, p, "AfterStatChange");
-            }
+            reactivate(b);
+        }
+    }
+
+    static void reactivate (BS &b) {
+        foreach (int p, b.sortedBySpeed()) {
+            b.callieffects(p, p, "UponReactivation");
         }
     }
 };
