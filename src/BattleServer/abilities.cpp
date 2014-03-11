@@ -2294,6 +2294,31 @@ struct AMKlutz : public AM
     }
 };
 
+struct AMSymbiosis : public AM
+{
+    AMSymbiosis() {
+        functions["AllyItemUse"] = &aiu;
+    }
+
+    static void aiu (int s, int s2, BS &b) {
+        //Safeguard to prevent getting passed multiple items
+        if (b.poke(s2).item() != 0)
+            return;
+
+        if (!b.canLoseItem(s,s))
+            return;
+
+        int item = b.poke(s).item();
+        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s2).original())
+            return;
+
+        b.sendAbMessage(124, 0, s, s2, Type::Fairy, item);
+        b.loseItem(s);
+        b.acqItem(s2, item);
+        turn(b,s2)["Symbiote"] = true;
+    }
+};
+
 
 /* Events:
     PriorityChoice
@@ -2321,6 +2346,7 @@ struct AMKlutz : public AM
     AfterKoing
     UponSwitchOut
     OnLoss
+    AllyItemUse
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -2397,7 +2423,7 @@ void AbilityEffect::init()
     REGISTER_AB(70, VoltAbsorb);
     REGISTER_AB(71, WonderGuard);
     REGISTER_AB(72, SandForce);
-//    REGISTER_AB(73, JackOfAllTrades);
+    //REGISTER_AB(73, JackOfAllTrades);
     REGISTER_AB(74, WeakArmor);
     REGISTER_AB(75, VictoryStar);
     REGISTER_AB(76, Defeatist);
@@ -2449,6 +2475,5 @@ void AbilityEffect::init()
     REGISTER_AB(121, Aerilate);
     //122 Sticky Hold message
     REGISTER_AB(123, Klutz);
+    REGISTER_AB(124, Symbiosis)
 }
-
-/* Not done: Symbiosis */
