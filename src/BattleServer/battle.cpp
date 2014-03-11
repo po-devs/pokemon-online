@@ -3316,7 +3316,9 @@ void BattleSituation::disposeItem(int player) {
         poke(player).itemUsed() = item;
         poke(player).itemUsedTurn() = turn();
     }
+
     loseItem(player);
+    symbiosisPass(player);
 }
 
 void BattleSituation::eatBerry(int player, bool show) {
@@ -3383,6 +3385,10 @@ void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
         loseItem(player, false);
     poke(player).item() = item;
+
+    //Symbiosis + Eject Button. Item is not activated, but still transfered
+    if (turnMemory(player).value("SendingBack").toBool())
+        return;
 
     if (slotNum(player) < numberPerSide()) {
         ItemEffect::setup(poke(player).item(),player,*this);
@@ -3967,4 +3973,13 @@ bool BattleSituation::canBypassSub(int t)
             return true;
     }
     return false;
+}
+
+void BattleSituation::symbiosisPass(int s)
+{
+    foreach (int p, sortedBySpeed()) {
+        if (player(p) == player(s)) {
+            callaeffects(p, s, "AllyItemUse");
+        }
+    }
 }

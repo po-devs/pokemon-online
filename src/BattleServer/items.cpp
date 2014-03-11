@@ -757,6 +757,7 @@ struct IMEscapeButton : public IM
                 continue;
 
             b.sendItemMessage(39, p, 0);
+            turn(b,p)["SendingBack"] = true;
             b.disposeItem(p);
             b.requestSwitch(p);
         }
