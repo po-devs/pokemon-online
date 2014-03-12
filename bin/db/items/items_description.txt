@@ -181,7 +181,7 @@
 180 Has a 20% chance to make the holder move first in its priority bracket.
 181 Increases the holder's critical hit ratio by 1 stage. If held by Sneasel during the night while it levels up, makes it evolve into Weavile.
 182 Makes Togetic evolve into Togekiss, Roselia into Roserade and Minccino into Cinccino.
-183 Damages the holder for 12.5% of its max HP at the end of each turn.
+183 Damages the holder for 12.5% of its max HP at the end of each turn. If another Pokémon hits the holder with a contact move and is not holding an item, this item will transfer to that Pokémon.
 184 When held by Clamperl, increases its Special Attack by 100%. If held by Clamperl during a trade, makes it evolve into Huntail.
 185 Increases power of Dragon-type moves used by the holder by 20%. Changes Judgment to the Dragon type.
 186 Increases power of Dark-type moves used by the holder by 20%. Changes Judgment to the Dark type.
