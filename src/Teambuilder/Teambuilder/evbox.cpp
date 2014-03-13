@@ -38,19 +38,16 @@ EvBox::EvBox(QWidget *parent) :
 
 void EvBox::updateNatureButtons()
 {
-
     bool oldgen = poke().gen() <= 2;
 
     for (int i = 0; i < 6; i++) {
             m_boosts[i]->setHidden(oldgen);
     }
 
-
-		
     for (int j = 1; j<6;j++){
         if (NatureInfo::Boost(poke().nature(),j) == 1)
             Theme::ChangePics(m_boosts[j], "plus");
-        else if(NatureInfo::Boost(poke().nature(),j) == 0)
+        else if (NatureInfo::Boost(poke().nature(),j) == 0)
             Theme::ChangePics(m_boosts[j], "equal");
         else
             Theme::ChangePics(m_boosts[j], "minus");
