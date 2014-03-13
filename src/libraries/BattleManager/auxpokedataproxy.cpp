@@ -67,8 +67,13 @@ int AuxPokeDataProxy::minStat(int stat)
 
     int boost = statBoost(stat);
 
-    return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 0))
-            * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    if (pokemon()->gen().num <=2) {
+        return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 0, 0))
+                * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    } else {
+        return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 0, 0) * 9/10)
+                * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    }
 }
 
 int AuxPokeDataProxy::maxStat(int stat)
@@ -81,8 +86,13 @@ int AuxPokeDataProxy::maxStat(int stat)
 
     int boost = statBoost(stat);
 
-    return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 255) * 11 / 10)
-            * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    if (pokemon()->gen().num <=2) {
+        return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 255))
+                * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    } else {
+        return (PokemonInfo::Stat(pokemon()->num(), pokemon()->gen(), stat, pokemon()->level(), 31, 255) * 11/10)
+                * PokeFraction(std::max(2+boost, 2), std::max(2-boost, 2));
+    }
 }
 
 int AuxPokeDataProxy::type1()
