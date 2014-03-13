@@ -190,7 +190,7 @@ void QImageButton::paintEvent(QPaintEvent *e)
         newState = Checked;
         painter.drawPixmap(e->rect(), myCheckedPic, e->rect());
     } else {
-        if (!underMouse()) {
+        if (!underMouse() || !isEnabled()) {
             newState = Normal;
             painter.drawPixmap(e->rect(), myPic, e->rect());
         }
