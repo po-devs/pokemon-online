@@ -28,7 +28,7 @@ EvBox::EvBox(QWidget *parent) :
     setNums(m_boosts);
 #undef setNums
 
-    for(int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         connect(m_sliders[i], SIGNAL(valueChanged(int)), this, SLOT(changeEV(int)));
         connect(m_evs[i], SIGNAL(textChanged(QString)), this, SLOT(changeEV(QString)));
         connect(m_boosts[i], SIGNAL(rightClick()), this, SLOT(changeToMinusBoost()));
@@ -38,6 +38,15 @@ EvBox::EvBox(QWidget *parent) :
 
 void EvBox::updateNatureButtons()
 {
+	if  (poke().gen() <= 2) {
+		ui->hpboost->hide();
+		ui->atkboost->hide();
+		ui->defboost->hide();
+		ui->satkboost->hide();
+		ui->sdefboost->hide();
+		ui->speedboost->hide();
+    }
+		
     for (int j = 1; j<6;j++){
         if (NatureInfo::Boost(poke().nature(),j) == 1)
             Theme::ChangePics(m_boosts[j], "plus");
