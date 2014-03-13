@@ -2108,8 +2108,8 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     if (gen() <= 2)
         return false;
 
-    /* Yes, illusion breaks when hit by mold breaker, right? */
-    if (ab == Ability::Illusion)
+    /* Illusion and Unburden ignore Mold Breaker  */
+    if (ab == Ability::Illusion || ab == Ability::Unburden)
         return true;
     if (ability(player) != ab)
         return false;
@@ -2118,7 +2118,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         // Mold Breaker
         if (heatOfAttack() && player == attacked() && player != attacker() &&
                 (hasWorkingAbility(attacker(), ability(attacker()))
-                 &&( ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
+                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
         }
     }
