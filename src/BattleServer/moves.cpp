@@ -1037,7 +1037,7 @@ struct MMAssist : public MM
             (*this) << NoMove << Assist << Chatter << Copycat << Counter << Covet << CraftyShield << DestinyBond << Detect
                               << Endure << Feint << FocusPunch << FollowMe << HelpingHand << KingsShield << MatBlock << MeFirst
                               << Metronome << Mimic << MirrorCoat << MirrorMove << Protect << Belch << SpikyShield
-                              << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick;
+                              << Sketch << SleepTalk << Snatch << Struggle << Switcheroo << Thief << Trick << Transform;
         }
 
         bool contains(int move, Pokemon::gen gen) const {
