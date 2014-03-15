@@ -1096,8 +1096,8 @@ void BattleSituation::sendBack(int player, bool silent)
         QList<int> opps = revs(player);
         bool notified = false;
         foreach(int opp, opps) {
-            //Pursuit does not deal additional effects to a teammate switching, or on Pokemon using UTurn/etc.
-            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMem(player).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser") && !arePartners(opp, player)) {
+            //Pursuit does not deal additional effects to a teammate switching
+            if (tmove(opp).attack == Move::Pursuit && !turnMem(opp).contains(TurnMemory::HasMoved) && !turnMemory(player).contains("RedCardUser") && !arePartners(opp, player)) {
                 megaEvolve(opp);
                 if (!notified) {
                     notified = true;
