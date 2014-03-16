@@ -967,7 +967,7 @@ struct MMCovet : public MM
     {
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
         int i2 = b.poke(t).item();
-        if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && !((ItemInfo::isMegaStone(i2) && ItemInfo::MegaStoneForme(i2).original() == b.pokenum(s).original()))) {
+        if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && b.canPassMStone(s, i2)) {
             b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
@@ -3153,8 +3153,7 @@ struct MMSwitcheroo : public MM
         int i1 = b.poke(s).item();
         int i2 = b.poke(t).item();
         if (b.koed(t) || b.koed(s) || (i1 == 0 && i2 == 0) || (i2 != 0 && !b.canLoseItem(t, s)) || (i1 != 0 && !b.canLoseItem(s, s)) ||
-                (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()) ||
-                (ItemInfo::isMegaStone(i2) && ItemInfo::MegaStoneForme(i2).original() == b.pokenum(s).original())) {
+                !b.canPassMStone(t, i1) || !b.canPassMStone(s, i2)) {
             if (b.hasWorkingAbility(t, Ability::StickyHold)) {
                 b.sendAbMessage(121,0,t);
             }
@@ -5774,7 +5773,7 @@ struct MMBestow : public MM {
                 || (b.ability(t) == Ability::Multitype && ItemInfo::isPlate(b.poke(s).item()))
                 || (b.pokenum(t).pokenum == Pokemon::Giratina && b.poke(s).item() == Item::GriseousOrb)
                 || (b.pokenum(t).pokenum == Pokemon::Genesect && ItemInfo::isDrive(b.poke(s).item()))
-                || (ItemInfo::isMegaStone(i1) && ItemInfo::MegaStoneForme(i1).original() == b.pokenum(t).original()))
+                || (!b.canPassMStone(t, i1)))
         {
             fturn(b,s).add(TM::Failed);
         }

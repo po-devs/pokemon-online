@@ -79,6 +79,7 @@ public:
     bool canHeal(int s, int part, int focus);
     bool canBypassSub(int t);
     void symbiosisPass(int s);
+    bool canPassMStone(int target, int item);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);
     void inflictRecoil(int source, int target);
