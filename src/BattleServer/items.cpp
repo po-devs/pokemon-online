@@ -557,9 +557,17 @@ struct IMBerryJuice : public IM
 {
     IMBerryJuice() {
         functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
+        /* Copied from Pinch Berries to allow side effects to apply before healing (Knock Off)*/
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+            return;
+        tp(s, s, b);
+    }
+
+    static void tp(int s, int, BS &b) {
         if (b.poke(s).lifePercent() <= 50) {
             if (b.canHeal(s,BS::HealByItem,b.poke(s).item())) {
                 b.disposeItem(s);

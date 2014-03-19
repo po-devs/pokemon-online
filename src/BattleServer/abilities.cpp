@@ -1976,7 +1976,7 @@ struct AMPickUp : public AM {
 
         int i = possibilities[b.randint(possibilities.size())];
         int item = b.poke(i).itemUsed();
-        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s).original())
+        if (!b.canPassMStone(s, item))
             return;
 
         b.sendAbMessage(93, 0, s, 0, 0, item);
@@ -2309,7 +2309,7 @@ struct AMSymbiosis : public AM
             return;
 
         int item = b.poke(s).item();
-        if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == b.pokenum(s2).original())
+        if (!b.canPassMStone(s2, item))
             return;
 
         b.sendAbMessage(124, 0, s, s2, Type::Fairy, item);

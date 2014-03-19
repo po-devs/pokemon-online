@@ -3983,3 +3983,10 @@ void BattleSituation::symbiosisPass(int s)
         }
     }
 }
+
+bool BattleSituation::canPassMStone (int target, int item) {
+    if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == pokenum(target).original()) {
+        return false;
+    }
+    return true;
+}
