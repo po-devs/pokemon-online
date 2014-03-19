@@ -4110,8 +4110,8 @@ struct MMMeFirst : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        /* if has moved or is using a multi-turn move */
-        if (b.koed(t) || fturn(b,t).contains(TM::HasMoved) || fturn(b,t).contains(TM::NoChoice)) {
+        /* if has moved */
+        if (b.koed(t) || fturn(b,t).contains(TM::HasMoved)) {
             fturn(b,s).add(TM::Failed);
             return;
         }
