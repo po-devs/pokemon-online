@@ -443,13 +443,13 @@
 469 Protects the user's team from moves that target more than one Pokémon, but fails if the user acts last in the turn it is used. Priority level 3.
 470 Makes the user's and the target's Defense equal to the average of their Defense stats, and their Special Defense equal to the average of their Special Defense stats. Stat changes are not considered or changed.
 471 Makes the user's and the target's Attack equal to the average of their Attack stats, and their Special Attack equal to the average of their Special Attack stats. Stat changes are not considered or changed.
-472 For five turns, or until this move is used again, switches the Defense and Special Defense of all Pokémon on the field, ignoring stat changes. Priority level -7.
+472 For five turns, or until this move is used again, switches the Defense and Special Defense of all Pokémon on the field, ignoring stat changes.
 473 Damage is calculated using the target's Defense stat, not Special Defense.
 474 This attack's power is doubled if the target is Poisoned.
 475 Raises the user's Speed by 2 stages and halves the user's weight.
 476 Draws to the user any single-target move used by any of the opponent's Pokémon. Priority level 2.
 477 For three turns, or until the target switches out, the target is always hit with 100% accuracy and is immune to Ground moves.
-478 For five turns, or until this move is used again, no Pokémon can use or receive an effect from their held item unless it can change their forme. Priority level -7.
+478 For five turns, or until this move is used again, no Pokémon can use or receive an effect from their held item unless it can change their forme.
 479 Stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
 480 Always scores a critical hit.
 481 Also damages Pokémon next to the target for 1/16 of their max HP.
