@@ -5526,9 +5526,12 @@ struct MMTransform : public MM {
 
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
-        po.type1 = PokemonInfo::Type1(num, b.gen());
-        po.type2 = PokemonInfo::Type2(num, b.gen());
-        po.types = QVector<int>() << po.type1 << po.type2;
+        //For Type changing moves
+        po.types = QVector<int> () << b.getTypes(t);
+        //po.type1 = PokemonInfo::Type1(num, b.gen());
+        //po.type2 = PokemonInfo::Type2(num, b.gen());
+        //po.types = QVector<int>() << po.type1 << po.type2;
+
 
         b.changeSprite(s, num);
 
