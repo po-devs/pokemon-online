@@ -2,7 +2,7 @@
 12 43#Guillotine
 13 104-0#razor wind
 18 107#whirlwind
-19 13-3_16*2_239*2_327_87_542_479#Fly
+19 13-3_16*2_239*2_327_87_542_479_18#Fly
 20 10#bind-inflict damage every turn
 23 126#stomp
 26 64#jump kick
