@@ -127,20 +127,21 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
     if (PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) {
         QMenu *m = new QMenu(ui->altForme);
         QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(num, getGen());
-
-        QSignalMapper *mapper = new QSignalMapper(m);
-        foreach(Pokemon::uniqueId forme, formes) {
-            QAction *ac = m->addAction(PokemonInfo::Name(forme), mapper, SLOT(map()));
-            ac->setCheckable(true);
-            if (forme == num) {
-                ac->setChecked(true);
+        if (formes.length() > 1) {
+            QSignalMapper *mapper = new QSignalMapper(m);
+            foreach(Pokemon::uniqueId forme, formes) {
+                QAction *ac = m->addAction(PokemonInfo::Name(forme), mapper, SLOT(map()));
+                ac->setCheckable(true);
+                if (forme == num) {
+                    ac->setChecked(true);
+                }
+                mapper->setMapping(ac, forme.toPokeRef());
             }
-            mapper->setMapping(ac, forme.toPokeRef());
-        }
-        connect(mapper, SIGNAL(mapped(int)), SLOT(changeForme(int)));
+            connect(mapper, SIGNAL(mapped(int)), SLOT(changeForme(int)));
 
-        ui->altForme->setMenu(m);
-        ui->altForme->setEnabled(true);
+            ui->altForme->setMenu(m);
+            ui->altForme->setEnabled(true);
+        }
     } else {
         delete ui->altForme->menu();
         ui->altForme->setMenu(0);
