@@ -558,6 +558,8 @@ struct IMBerryJuice : public IM
     IMBerryJuice() {
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["UponSetup"] = &tp;
+        functions["UponReactivation"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
