@@ -2049,7 +2049,7 @@ struct AMAura : public AM {
         }
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (!b.koed(i) && b.hasWorkingAbility(i, Ability::AuraBreak)) {
-                boost = -boost;
+                boost = -5;
             }
         }
 
