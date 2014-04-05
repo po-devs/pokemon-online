@@ -299,7 +299,7 @@ void MainEngine::loadStyleSheet()
 
 void MainEngine::openThemesForum()
 {
-    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?92-Themes"));
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/themes.92/"));
 }
 
 void MainEngine::changeStyle()

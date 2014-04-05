@@ -26,8 +26,8 @@ QString MemberRating::toString() const
             QString::number(last_check_time).rightJustified(10,'0',true) + "%" + QString::number(bonus_time).rightJustified(10,' ',true) + "\n";
 }
 
-/* Explanations here: http://pokemon-online.eu/forums/showthread.php?3045-How-to-change-the-rating-system-to-include-auto-decrease
-   and here: http://pokemon-online.eu/forums/showthread.php?4189-New-Rating-system&p=40368#post40368 */
+/* Explanations here: http://pokemon-online.eu/threads/how-to-change-the-rating-system-to-include-auto-decrease.3045/
+   and here: http://pokemon-online.eu/threads/new-rating-system.4189/ */
 void MemberRating::changeRating(int opponent_rating, bool win)
 {
     QPair<int,int> change = pointChangeEstimate(opponent_rating);
