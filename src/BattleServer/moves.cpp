@@ -315,7 +315,6 @@ struct MMCamouflage : public MM {
         if (b.terrain != 0) {
             type = std::abs(b.terrain);
         }
-        QVector<int> valid;
         //Move fails if the type you're transforming to is EXACTLY your typing.
         //Includes type changing moves like Soak in this check
         foreach (int check, fpoke(b,s).types) {
@@ -323,15 +322,12 @@ struct MMCamouflage : public MM {
             if (check == Pokemon::Curse)
                 continue;
             /*Check if a user has a type other than the type you're converting into*/
-            if (check != type)
-                valid.push_back(type);
+            if (check != type) {
+                turn(b,s)["CamouflageType"] = type;
+                return;
+            }
         }
-        if (valid.isEmpty()) {
-            fturn(b, s).add(TM::Failed);
-            return;
-        } else {
-            turn(b,s)["CamouflageType"] = type;
-        }
+        fturn(b, s).add(TM::Failed);
     }
 
     static void uas (int s, int, BS &b) {
