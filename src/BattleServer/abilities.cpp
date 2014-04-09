@@ -471,18 +471,19 @@ struct AMForeCast : public AM {
         if (weather != BS::Hail && weather != BS::Rain && weather != BS::Sunny) {
             weather = BS::NormalWeather;
         }
-
-        if (weather == b.poke(s).num().subnum)
-            return;
+        //To allow the type reset every turn. Also allows Castform to actually Transform properly with the added mechanic
+        //if (weather == b.poke(s).num().subnum)
+        //  return;
 
         b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
     }
 
     static void ol(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum != Pokemon::Castform)
+        //Gens 3 and 4 lock Castform into it's current form. Gens 5 on revert it back to the default form
+        if (b.pokenum(s).pokenum != Pokemon::Castform || b.gen() < 5)
             return;
         if (b.pokenum(s).subnum != 0) {
-            b.changeAForme(s, 0);
+            b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, 0));
         }
     }
 };
