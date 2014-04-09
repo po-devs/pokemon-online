@@ -2255,17 +2255,16 @@ struct MMMetronome : public MM
                 continue;
             }
 
-            bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
-                                                      (b.gen() >= 5 && !forbidden.contains(move, b.gen())));
-
-            if (correctMove) {
-                BS::BasicMoveInfo info = tmove(b,s);
-                MoveEffect::setup(move,s,t,b);
-                turn(b,s)["Target"] = b.randomValidOpponent(s);
-                b.useAttack(s,move,true,true);
-                MoveEffect::unsetup(move, s, b);
-                tmove(b,s) = info;
-                break;
+            if (b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen()) || b.gen() >= 5 && !forbidden.contains(move, b.gen())) {
+                if (!b.hasMove(s, move) || b.gen() == 5 || b.gen() == 3) {
+                    BS::BasicMoveInfo info = tmove(b,s);
+                    MoveEffect::setup(move,s,t,b);
+                    turn(b,s)["Target"] = b.randomValidOpponent(s);
+                    b.useAttack(s,move,true,true);
+                    MoveEffect::unsetup(move, s, b);
+                    tmove(b,s) = info;
+                    break;
+                }
             }
         }
     }
