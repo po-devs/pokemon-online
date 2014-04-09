@@ -304,9 +304,10 @@ struct MMBugBite : public MM
 struct MMCamouflage : public MM {
     MMCamouflage() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
     }
 
-    static void uas (int s, int, BS &b) {
+    static void daf(int s, int, BS &b) {
         int type = Pokemon::Normal;
         if (b.gen().num == 5) {
             type = Pokemon::Ground;
@@ -314,6 +315,27 @@ struct MMCamouflage : public MM {
         if (b.terrain != 0) {
             type = std::abs(b.terrain);
         }
+        QVector<int> valid;
+        //Move fails if the type you're transforming to is EXACTLY your typing.
+        //Includes type changing moves like Soak in this check
+        foreach (int check, fpoke(b,s).types) {
+            /*Ignore Curse*/
+            if (check == Pokemon::Curse)
+                continue;
+            /*Check if a user has a type other than the type you're converting into*/
+            if (check != type)
+                valid.push_back(type);
+        }
+        if (valid.isEmpty()) {
+            fturn(b, s).add(TM::Failed);
+            return;
+        } else {
+            turn(b,s)["CamouflageType"] = type;
+        }
+    }
+
+    static void uas (int s, int, BS &b) {
+        int type = turn(b,s)["CamouflageType"].toInt();
         b.setType(s, type);
         b.sendMoveMessage(17,0,s,type);
     }
@@ -5684,7 +5706,9 @@ struct MMSoak : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.pokenum(t).pokenum == Pokemon::Arceus)
+        //Soak works on Water Pokemon, ForestCurse/TrickOrTreat don't work on Grass/Ghost
+        int type = turn(b,s)["Soak_Arg"].toInt();
+        if (b.pokenum(t).pokenum == Pokemon::Arceus || (move(b,s) != Move::Soak && b.hasType(t,type)))
             fturn(b,s).add(TM::Failed);
     }
 
@@ -5692,10 +5716,11 @@ struct MMSoak : public MM {
         int type = turn(b,s)["Soak_Arg"].toInt();
         if (move(b,s) == Move::Soak) {
             b.setType(t, type);
+            b.sendMoveMessage(157, 0, t, type, t);
         } else {
             b.addType(t, type);
+            b.sendMoveMessage(157, 1, t, type, t);
         }
-        b.sendMoveMessage(157, 0, t, type, t);
     }
 };
 
