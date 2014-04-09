@@ -2237,8 +2237,17 @@ struct MMMetronome : public MM
                 continue;
             }
 
-            bool correctMove = !b.hasMove(s,move) && ((b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen())) ||
-                                                      (b.gen() >= 5 && !forbidden.contains(move, b.gen())));
+            bool correctMove = false;
+            //3G and 5G allow Metronome to call a move the user knows. 2G/4G/6G do not allow this.
+            if (b.hasMove(s,move)) {
+                if (b.gen() == 3 || b.gen() == 5)
+                    correctMove = true;
+            }
+            if (b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen()))
+                correctMove = true;
+
+            if (b.gen() >= 5 && !forbidden.contains(move, b.gen()))
+                correctMove = true;
 
             if (correctMove) {
                 BS::BasicMoveInfo info = tmove(b,s);
