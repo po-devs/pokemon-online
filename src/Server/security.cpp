@@ -481,7 +481,7 @@ void SecurityManager::ban(const QString &name, int time) {
 
 void SecurityManager::banIP(const QString &ip, int time)
 {
-    if (bannedIPs.contains(ip)) {
+    if (bannedIPs.contains(ip) && (time != 0 || bannedIPs.find(ip).value() == 0)) { //overwrite if tempbanned and current ban is perm
         return;
     }
 
