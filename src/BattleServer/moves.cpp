@@ -2008,7 +2008,9 @@ struct MMFling : public MM
             } else if (!b.hasWorkingItem(s,b.poke(s).item())) {
                 //Embargo, Magic Room, Unnerve+Berry
                 return;
-            }
+            } else if (ItemInfo::isGem(b.poke(s).item() || ItemInfo::isMail(b.poke(s).item()) {
+				return;
+			}
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
