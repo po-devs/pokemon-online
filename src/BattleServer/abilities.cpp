@@ -371,6 +371,11 @@ struct AMEffectSpore : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
+        if (b.gen() >= 6) {
+            //Considered a Powder "move"
+            if (b.hasType(t, Pokemon::Grass) || b.hasWorkingItem(t, Item::SafetyGoggles) || b.hasWorkingAbility(t, Ability::Overcoat))
+                return;
+        }
         if (b.poke(t).status() == Pokemon::Fine && b.coinflip(30, 100)) {
             switch (b.randint(3)) {
             case 0:
