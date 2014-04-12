@@ -2028,6 +2028,8 @@ struct MMFling : public MM
                 return;
             } else if (b.battleMemory().value("MagicRoomCount").toInt() > 0) {
                 return;
+            } else if (ItemInfo::isGem(b.poke(s).item()) {
+                return;
             }
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
