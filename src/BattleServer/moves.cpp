@@ -2028,7 +2028,7 @@ struct MMFling : public MM
                 return;
             } else if (b.battleMemory().value("MagicRoomCount").toInt() > 0) {
                 return;
-            } else if (ItemInfo::isGem(b.poke(s).item()) {
+            } else if (ItemInfo::isGem(b.poke(s).item())) {
                 return;
             }
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
@@ -2075,7 +2075,7 @@ struct MMFling : public MM
         b.disposeItem(s);
     }
 
-    static void asf(int s, int t, BS &b) {
+    static void asf(int s, int, BS &b) {
         //If Fling misses due to acc, semi-invuln moves, protect moves, etc. the item is still discarded
         //The item's identity should still be revealed (2nd to last line of btl handles this)
         if (turn(b,s).contains("FlingItem")) {
@@ -2269,7 +2269,7 @@ struct MMMetronome : public MM
                 continue;
             }
 
-            if (b.gen() <= 4 && !MMAssist::forbidden_moves.contains(move, b.gen()) || b.gen() >= 5 && !forbidden.contains(move, b.gen())) {
+            if (!forbidden.contains(move, b.gen())) {
                 if (!b.hasMove(s, move) || b.gen() == 5 || b.gen() == 3) {
                     BS::BasicMoveInfo info = tmove(b,s);
                     MoveEffect::setup(move,s,t,b);
@@ -2289,12 +2289,11 @@ struct MMMetronome : public MM
             //The inheritance is missing a few moves
             (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SecretSword
                                      << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
-                                     << Move::Bestow;
+                                     << Move::Bestow << Move::NaturePower << Move::Snore;
         }
         bool contains(int move, Pokemon::gen gen) const {
-            //Nature Power still ruining life since Gen 5
-            if (move == NaturePower || move == Snore) {
-                return gen >= 5;
+            if (gen <= 4) {
+                return MMAssist::forbidden_moves.contains(move, gen);
             } else {
                 return QSet<int>::contains(move);
             }
