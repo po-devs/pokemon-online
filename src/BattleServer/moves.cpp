@@ -1993,6 +1993,7 @@ struct MMFling : public MM
         functions["DetermineAttackFailure"] = &daf;
         functions["OnFoeOnAttack"] = &uas;
         functions["BeforeTargetList"] = &btl;
+        functions["AttackSomehowFailed"] = &asf;
     }
 
     static void daf(int s, int, BS &b) {
@@ -2005,8 +2006,9 @@ struct MMFling : public MM
         if (b.canLoseItem(s,s) && ItemInfo::Power(b.poke(s).item()) > 0) {
             if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz)) {
                 return;
-            } else if (!b.hasWorkingItem(s,b.poke(s).item())) {
-                //Embargo, Magic Room, Unnerve+Berry
+            } else if (poke(b,s).value("Embargoed").toBool()) {
+                return;
+            } else if (b.battleMemory().value("MagicRoomCount").toInt() > 0) {
                 return;
             }
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
@@ -2039,16 +2041,26 @@ struct MMFling : public MM
                     }
                 }
             } else {
-                //Gen 4 doesn't allow Embargoed Targets to use the flung item
-                if (b.gen() > 4 || !isEmbargoed) {
-                    b.sendMoveMessage(16,0,t,type(b,s),s,item);
-                    b.devourBerry(t, item, t);
+                if (!b.opponentsHaveWorkingAbility(t, Ability::Unnerve)) {
+                    //Gen 4 doesn't allow Embargoed Targets to use the flung item
+                    if (b.gen() > 4 || !isEmbargoed) {
+                        b.sendMoveMessage(16,0,t,type(b,s),s,item);
+                        b.devourBerry(t, item, t);
+                    }
                 }
             }
         }
         /* Can't be in btl, because LO needs to boost Fling's power */
         /* Dispose item is used to allow Recycle to properly recover the item */
         b.disposeItem(s);
+    }
+
+    static void asf(int s, int t, BS &b) {
+        //If Fling misses due to acc, semi-invuln moves, protect moves, etc. the item is still discarded
+        //The item's identity should still be revealed (2nd to last line of btl handles this)
+        if (turn(b,s).contains("FlingItem")) {
+            b.disposeItem(s);
+        }
     }
 };
 
