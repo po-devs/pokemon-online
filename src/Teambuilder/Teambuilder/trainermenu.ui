@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>737</width>
-    <height>526</height>
+    <height>527</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -649,8 +649,8 @@
    <slot>setAvatarPixmap()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
-     <y>486</y>
+     <x>75</x>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel">
      <x>106</x>
