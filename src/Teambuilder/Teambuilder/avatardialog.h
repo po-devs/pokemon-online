@@ -2,7 +2,8 @@
 #define AVATARDIALOG_H
 
 #include <QDialog>
-#include <QtWidgets>
+
+class QPushButton;
 
 namespace Ui {
 class AvatarDialog;

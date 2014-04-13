@@ -1,9 +1,11 @@
-#include "avatardialog.h"
-#include "ui_avatardialog.h"
-
+#include <QDesktopWidget>
 #include "./PokemonInfo/pokemoninfo.h"
 
 #include <TeambuilderLibrary/theme.h>
+
+
+#include "avatardialog.h"
+#include "ui_avatardialog.h"
 
 
 AvatarDialog::AvatarDialog(QWidget *parent, int current) :
