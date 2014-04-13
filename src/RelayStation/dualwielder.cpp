@@ -241,12 +241,25 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("leave|"+QString::number(chan)+"|"+QString::number(id));
         break;
     }
-//    case ChallengeStuff: {
-//        ChallengeInfo c;
-//        in >> c;
-//        emit challengeStuff(c);
-//        break;
-//    }
+    case Nw::ChallengeStuff: {
+        ChallengeInfo c;
+        in >> c;
+        QVariantMap map;
+        map.insert("id", c.opponent());
+        static QStringList descs = QStringList() << "sent" << "accepted" << "cancelled" << "busy"
+            << "refused" << "invalidteam" << "invalidgen" << "invalidtier";
+        if (c.desc() >= descs.length() || c.desc() < 0) {
+            return;
+        }
+        map.insert("desc", descs[c.desc()]);
+        map.insert("opptier", c.srctier);
+        map.insert("tier", c.desttier);
+        map.insert("clauses", c.clauses);
+        map.insert("mode", c.mode);
+
+        web->write("battlechallenge|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
     case Nw::EngageBattle: {
         Flags network;
         Battle battle;
