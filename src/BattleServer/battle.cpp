@@ -1950,8 +1950,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             calleffects(player, target, "AfterAttackSuccessful");
         }
-        if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-            unthaw(target);
+        //Will-O-Wisp shouldn't thaw target. Scald thaws target in Gen 6
+        if (poke(target).status() == Pokemon::Frozen) {
+            if ((tmove(player).type == Type::Fire && tmove(player).power > 0) || (attack == Move::Scald && gen() >= 6)) {
+                unthaw(target);
+            }
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
