@@ -872,7 +872,9 @@ namespace Pokemon
         Xerneas,
         Yveltal,
         Zygarde,
-		Diancie,
+        Diancie,
+        Hoopa,
+        Volcanion,
         // Base forms end here.
         Rotom_C = Rotom + (1 << 16),
         Rotom_H = Rotom + (2 << 16),
@@ -1591,7 +1593,12 @@ namespace Move
         Celebrate,
         HoldBack,
         DiamondStorm,
-        LightOfRuin
+        LightOfRuin,
+        SteamEruption,
+        HyperspaceHole,
+        HoldHands,
+        ThousandArrows,
+        ThousandWaves
     };
 }
 

@@ -571,5 +571,9 @@
 606 72
 607 88
 610 73
-611 72
-612 72
+611 72#Diamond Storm
+612 72#Light of Ruin
+613 72#Steam Eruption
+614 64#Hyperspace Hole
+616 72#Thousand Arrows
+617 72#Thousand Waves

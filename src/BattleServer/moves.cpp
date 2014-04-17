@@ -2289,7 +2289,8 @@ struct MMMetronome : public MM
             //The inheritance is missing a few moves
             (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SecretSword
                                      << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
-                                     << Move::Bestow << Move::NaturePower << Move::Snore;
+                                     << Move::Bestow << Move::NaturePower << Move::Snore << Move::HyperspaceHole << Move::SteamEruption << Move::LightOfRuin
+                                     << Move::DiamondStorm << Move::ThousandArrows << Move::ThousandWaves << Move::HoldHands << Move::Celebrate << Move::HappyHour;
         }
         bool contains(int move, Pokemon::gen gen) const {
             if (gen <= 4) {

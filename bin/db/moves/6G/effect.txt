@@ -579,3 +579,8 @@
 610 Cannot bring the target to 0 HP.
 611 Has a 50% chance to raise the user's Defense by 1 stage.
 612 The user takes recoil damage equal to 1/3 of HP lost by the target from this attack.
+613 Using a hyperspace hole, the user appears next to the target and strikes. This also hits a target using Protect or Detect.
+614 Has a 30% chance to burn the target.
+615 The user and an ally hold hands. This makes them very happy.
+616 This move also hits opposing Pokemon that are in the air. Those Pokemon are knocked down to the ground.
+617 The user attacks with a wave that crawls along the ground. Those hit can’t flee from battle.
