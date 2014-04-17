@@ -584,3 +584,8 @@
 610 Target is left at 1 HP if this attack would KO.
 611 Has a 50% chance to raise the user's Defense.
 612 User receives 1/2 the damage inflicted as recoil.
+613 Has a 30% chance to burn the target.
+614 Has perfect accuracy. Not blocked by Protect or Detect.
+615 User and an ally hold hands to make them happy.
+616 Hits opposing Pokemon that are in the air. Removes target's immunity to Ground.
+617 Prevents the target from switching.

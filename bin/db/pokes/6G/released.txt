@@ -404,7 +404,9 @@
 378:0 Regice
 379:0 Registeel
 380:0 Latias
+380:1 Mega Latias
 381:0 Latios
+381:1 Mega Latios
 382:0 Kyogre
 383:0 Groudon
 384:0 Rayquaza
@@ -840,3 +842,5 @@
 717:0 Yveltal
 718:0 Zygarde
 719:0 Diancie
+720:0 Hoopa
+721:0 Volcanion

@@ -283,7 +283,6 @@
 554 104-5#ice burn
 558 193#Cross Flame
 559 194#Cross Thunder
-560 #
 562 199#Crafty shield
 566 126#Flying Press
 567 157-11#Forest's Curse
@@ -312,3 +311,4 @@
 607 212#Venom Drench
 609 218#Celebrate
 610 41#Hold Back
+616 175#Thousand Arrows
