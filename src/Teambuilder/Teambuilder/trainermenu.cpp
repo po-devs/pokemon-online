@@ -356,7 +356,7 @@ void TrainerMenu::on_colorButton_clicked()
 {
     QColor c = QColorDialog::getColor(team().color());
 
-    if (c.isValid() && (c.lightness() > 140 || c.green() > 180)) {
+    if (!c.isValid() || (c.isValid() && (c.lightness() > 140 || c.green() > 180))) { // So they can click cancel without their colour disappearing!
         return;
     }
 
