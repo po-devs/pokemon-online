@@ -999,11 +999,9 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Poke
 
     QString moveCategory;
     moveCategory = CategoryInfo::Name(MoveInfo::Category(b.num(), gen));
-
-    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nCategory: %5\n\nEffect: %6").arg(MoveInfo::Name(b.num()), power,
-                                                                                                             MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num(), gen),
-                                                                                                             moveCategory,
-                                                                                                             MoveInfo::DetailedDescription(b.num()));
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\n\nDescription: %5").arg(MoveInfo::Name(b.num()), power,
+                                                                                                MoveInfo::AccS(b.num(), gen), moveCategory,
+                                                                                                MoveInfo::Description(b.num(), gen));
 
     int type = b.num() == Move::HiddenPower ?
                 HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
@@ -1044,9 +1042,11 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Po
         power = MoveInfo::PowerS(b.num(), gen);
     }
 
-    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\n\nDescription: %4\n\nEffect: %5").arg(MoveInfo::Name(b.num()), power,
-                                                                                             MoveInfo::AccS(b.num(), gen), MoveInfo::Description(b.num(), gen),
-                                                                                             MoveInfo::DetailedDescription(b.num()));
+    QString moveCategory;
+    moveCategory = CategoryInfo::Name(MoveInfo::Category(b.num(), gen));
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\n\nDescription: %5").arg(MoveInfo::Name(b.num()), power,
+                                                                                                MoveInfo::AccS(b.num(), gen), moveCategory,
+                                                                                                MoveInfo::Description(b.num(), gen));
 
     int type = b.num() == Move::HiddenPower ?
                 HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);

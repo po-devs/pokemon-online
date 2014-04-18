@@ -780,6 +780,25 @@
 664:0 Scatterbug
 665:0 Spewpa
 666:0 Vivillon
+666:1 Vivillon-Icy Snow
+666:2 Vivillon-Archipelago
+666:3 Vivillon-Continental
+666:4 Vivillon-Elegant
+666:5 Vivillon-Garden
+666:6 Vivillon-High Plains
+666:7 Vivillon-Jungle
+666:8 Vivillon-Marine
+666:9 Vivillon-Modern
+666:10 Vivillon-Monsoon
+666:11 Vivillon-Ocean
+666:12 Vivillon-Polar
+666:13 Vivillon-River
+666:14 Vivillon-Sandstorm
+666:15 Vivillon-Savannah
+666:16 Vivillon-Sun
+666:17 Vivillon-Tundra
+666:18 Vivillon-Fancy
+666:19 Vivillon-Pokeball
 667:0 Litleo
 668:0 Pyroar
 669:0 Flabébé
