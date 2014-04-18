@@ -1706,7 +1706,7 @@ void MoveInfo::init(const QString &dir)
 
     loadNames();
     loadMoveMessages();
-    loadDetails();
+    //loadDetails();
 
     m_GenMoves.clear();
     m_GenMoves.resize(GenInfo::NumberOfGens());
@@ -1835,7 +1835,7 @@ void MoveInfo::retranslate()
 {
     loadNames();
     loadMoveMessages();
-    loadDetails();
+    //loadDetails();
 
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].retranslate();
