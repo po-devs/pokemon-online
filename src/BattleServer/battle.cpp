@@ -1901,14 +1901,30 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             /* Needs to be called before opponentblock because lightning rod / twave */
             int type = tmove(player).type; /* move type */
+            if (target != player) {
+                bool fail = false;
+                //Poison can't be poisoned regardless of Sleuthed status
+                if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) {
+                    fail = true;
+                } else if (!pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()) {
+                    //RawTypeEffect is useless here because Inverted will never create an "ineffective" scenario.
+                    if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Steel)) {
+                        fail = true;
+                    } else if (attack == Move::ThunderWave) {
+                        if (hasType(target, Type::Ground)) {
+                            fail = true;
+                        } else if (gen() >= 6 && hasType(target, Type::Electric) &&
+                                   !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb))) {
+                            fail = true;
+                        }
+                    }
+                }
 
-            if ( target != player &&
-                 ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
-                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
-                   && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
-                //sendMoveMessage(31,0,target);
-                notify(All, Failed, player);
-                continue;
+                if (fail) {
+                    sendMoveMessage(31,0,target); //It doesn't affect X...
+                    //notify(All, Failed, player);
+                    continue;
+                }
             }
 
             /* Needs to be called before DetermineAttackFailure because
