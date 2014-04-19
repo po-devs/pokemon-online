@@ -240,6 +240,9 @@ void BattleWindow::cancel()
         }
     }
 
+    mysend->setEnabled(true);
+    mysend->setChecked(false);
+
     goToNextChoice();
 }
 
