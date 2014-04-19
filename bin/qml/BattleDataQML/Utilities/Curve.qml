@@ -1,4 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
+
+/* Todo: use the Path component of Qt Quick 2.0 instead */
 
 Item {
     property variant pos1;

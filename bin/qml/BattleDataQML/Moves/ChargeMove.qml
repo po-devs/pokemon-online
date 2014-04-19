@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import Qt.labs.particles 1.0
+import QtQuick 2.0
+import QtQuick.Particles 2.0
 import "../" 1.0
 
 /* ChargeMove contains logic for many changelike attacks.
@@ -23,30 +23,42 @@ Move {
     property int y0: attacker.pokeSprite.anchors.bottomMargin;
     property int z0: attacker.pokeSprite.z;
 
-    Particles {
+    ParticleSystem {
         id: particles;
 
         x: attacker.pokeSprite.x + attacker.pokeSprite.width/2 - width/2
         y: attacker.pokeSprite.y + attacker.pokeSprite.height-35
         width: 2
         height: 2
-        source: ""
 
-        lifeSpan: 1400
-        lifeSpanDeviation: 100
-        angle: 270
-        angleDeviation: 50
-        velocity: 100
-        count: 0
-        emissionRate: 100
-
-        velocityDeviation: 20
-        z: attacker.pokeSprite.z + 10
-
-        ParticleMotionGravity {
-            yattractor: 1000
-            acceleration: 100
+        ImageParticle {
+            id: imgparticle
+            source: ""
         }
+
+        Emitter {
+            lifeSpan: 1400;
+            lifeSpanVariation: 100;
+
+            velocity: AngleDirection {
+                angle: 270;
+                angleVariation: 50
+                magnitude: 100
+                magnitudeVariation: 20
+            }
+
+            maximumEmitted: parent.count;
+            enabled: parent.count > 0;
+
+            acceleration: AngleDirection {
+                angle: 90;
+                magnitude: 100;
+            }
+        }
+
+        property int count: 0
+
+        z: attacker.pokeSprite.z + 10
     }
 
     property int origin: 0
@@ -55,7 +67,7 @@ Move {
         id: animation;
             ScriptAction { script: {
                     if (params.effect) {
-                        particles.source = params.effect
+                        imgparticle.source = params.effect
                         particles.count = 100;
                     }
                     if (params.rolls) {

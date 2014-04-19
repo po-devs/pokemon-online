@@ -1,5 +1,5 @@
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeError>
+#include <QQuickView>
+#include <QQmlError>
 #include <QHBoxLayout>
 
 #include <BattleManager/battleclientlog.h>
@@ -69,7 +69,7 @@ void SpectatorWindow::init(const FullBattleConfiguration &conf)
 
         scene->launch();
 
-        foreach(QDeclarativeError error, scene->getWidget()->errors()) {
+        foreach(QQmlError error, scene->getView()->errors()) {
             log->printLine("Error", error.toString());
         }
 

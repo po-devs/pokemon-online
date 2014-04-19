@@ -28,5 +28,5 @@ function makeCurve(pos1, pos2, controlY) {
 }
 
 function typeImg(type) {
-    return "<img src='Themes/Classic/types/type" + type + ".png' />";
+    return "<img src='../../../Themes/Classic/types/type" + type + ".png' />";
 }

@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 /* Should be called with those parameters;
   - curve: the function that gives x and y depending on percent: curve.x(percent) and curve.y(percent)

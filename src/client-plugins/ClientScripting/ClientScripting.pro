@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += script network declarative
+QT += script network quick
 
 TARGET = ClientScripting
 TEMPLATE = lib

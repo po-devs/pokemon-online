@@ -229,7 +229,6 @@ void FieldProxy::setWeather(int weather)
 FieldProxy::FieldProxy(int numOfSlots) : mWeather(NormalWeather) {
     for (int i = 0; i < numOfSlots; i++) {
         AuxPokeDataProxy *ptr = new AuxPokeDataProxy();
-        ptr->setParent(this);
         auxdata.push_back(ptr);
     }
     for (int i = 0; i < 2; i++) {
@@ -238,7 +237,13 @@ FieldProxy::FieldProxy(int numOfSlots) : mWeather(NormalWeather) {
 }
 
 FieldProxy::~FieldProxy() {
-    for (int i = 0; i < 2; i++) {
-        delete zonedata[i];
+    for (unsigned i = 0; i < zonedata.size(); i++) {
+        zonedata[i]->deleteLater();
     }
+
+    for (unsigned int i = 0; i < auxdata.size(); i++) {
+        //To still be there in the last update of the qml view
+        auxdata[i]->deleteLater();
+    }
+    auxdata.clear();
 }

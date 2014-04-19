@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import "../" 1.0
 
 Item {
@@ -13,4 +13,8 @@ Item {
     }
 
     signal finished();
+
+    onFinished: {
+        console.log("Animation for move " + attack + " finished")
+    }
 }

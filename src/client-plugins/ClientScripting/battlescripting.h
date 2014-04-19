@@ -27,6 +27,8 @@ public:
     void printLine(const QString &string);
 
     static QScriptValue nativePrint(QScriptContext *context, QScriptEngine *engine);
+    /* To show a move in the animated battle window */
+    static QScriptValue simulateMove(QScriptContext *context, QScriptEngine *engine);
 
     void onSendOut(int spot, int previndex, ShallowBattlePoke* pokemon, bool silent);
 

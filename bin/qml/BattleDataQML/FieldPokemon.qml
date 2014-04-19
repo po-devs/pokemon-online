@@ -1,4 +1,5 @@
-import QtQuick 1.1
+import QtQuick 2.0
+import QtGraphicalEffects 1.0
 import pokemononline.battlemanager.proxies 1.0
 import "Utilities" 1.0
 import "colors.js" as Colors
@@ -20,7 +21,7 @@ Item {
 
     function useAttack(attack, target, params) {
         for (var i in params) {
-            console.log("param: " + i + ": " + params[i]);
+            //console.log("param: " + i + ": " + params[i]);
         }
 
         //battle.scene.debug("Using attack " + attack + "\n");
@@ -77,12 +78,10 @@ Item {
         z: img.z
         opacity: img.opacity
         smooth: false
-        onSourceChanged: shader.grab();
-        onCurrentFrameChanged: shader.grab();
         onStatusChanged: if (status === Image.Ready) {
-                             shader.image = aimg;
+                             shader.source = aimg;
                          } else {
-                             shader.image = img;
+                             shader.source = img;
                              if (status!=Image.Loading &&pokemon.gender==2&&femaleTry) {
                                 femaleTry=false;
                              }
@@ -119,7 +118,6 @@ Item {
 
         scale: baseScale * calculateScale(woof.z+z)
         smooth: false
-        onSourceChanged: shader.grab();
         visible: !aimg.visible
     }
 
@@ -136,7 +134,8 @@ Item {
 
     Tooltip {
         id: tooltip
-        shown: mouseArea.containsMouse
+        shown: mouseArea.containsMouse || mouseArea2.containsMouse
+
         onShownChanged: {
             if (shown) {
                 var s = pokemon.nick + " &nbsp; lv. " + pokemon.level;
@@ -234,12 +233,23 @@ Item {
                 //resetSize();
             }
         }
+
+        MouseArea {
+            id: mouseArea2
+            anchors.fill: parent
+            hoverEnabled: true
+            propagateComposedEvents: true
+            preventStealing: true
+            z: 10000
+        }
     }
 
     MouseArea {
         id: mouseArea
         anchors.fill: img
         hoverEnabled: true
+        propagateComposedEvents: true
+        preventStealing: true
     }
 
     Image {
@@ -251,11 +261,20 @@ Item {
     }
 
     /* Used to display fainted pokemon */
-    ColorShader {
+    ColorOverlay {
         id: shader
-        image: img
-        blendColor: Colors.statusColor(pokemon.status)
-        alpha: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 0.3
+        source: img
+        anchors.fill: source
+        color: transformColor(Colors.statusColor(pokemon.status))
+        scale: source.scale
+        transformOrigin: source.transformOrigin
+        opacity: (pokemon.status === PokeData.Fine || pokemon.status === PokeData.Koed) ? 0.0 : 1.0
+
+        function transformColor(color) {
+            // add transparency
+            color[1] = 'B'
+            return color;
+        }
     }
 
     property Image pokeSprite: img
@@ -332,12 +351,11 @@ Item {
                 ScriptAction {script: {
                         if (woof.pokemon.numRef===0) {
                             anim.stop();
-                            return;
+                        } else {
+                            //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
+                            battle.scene.pause();
+                            battle.scene.playCry(woof.pokemon.numRef);
                         }
-
-                        //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
-                        battle.scene.pause();
-                        battle.scene.playCry(woof.pokemon.numRef);
                     }
                 }
                 ParallelAnimation {

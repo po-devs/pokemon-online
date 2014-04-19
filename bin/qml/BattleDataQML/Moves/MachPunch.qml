@@ -1,5 +1,4 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
-import QtQuick 1.1
+import QtQuick 2.0
 
 Move {
     id: main;
@@ -18,8 +17,9 @@ Move {
 
         parent: defender;
         z: defender.infront(5);
-        anchors.centerIn: defender;
-        anchors.verticalCenterOffset: 10;
+
+        x: defender.x + (defender.width-width)/2
+        y: defender.y + (defender.height-height)/2 + 10
         opacity: 0;
     }
 

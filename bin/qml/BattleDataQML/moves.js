@@ -111,9 +111,10 @@ function useAttack(attacker, attack, defender, params) {
 function launchMove(attacker, attack, defender, extras) {
     var key = attack;
     if (! (key in effects)) {
-        console.log("Error: Move effect not found: " + key);
+        console.log("Move effect not found: " + key);
         return;
     }
+    console.log("Using move " + key);
 
     var c;
     if (! (key in components) ) {

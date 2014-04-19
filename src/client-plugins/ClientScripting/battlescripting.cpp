@@ -142,6 +142,25 @@ QScriptValue BattleScripting::nativePrint(QScriptContext *context, QScriptEngine
     return engine->undefinedValue();
 }
 
+QScriptValue BattleScripting::simulateMove(QScriptContext *context, QScriptEngine *engine)
+{
+    BattleScripting *obj = qobject_cast<BattleScripting*>(context->callee().data().toQObject());
+
+    if (context->argumentCount() <= 0) {
+        obj->printLine("Not enough arguments to simulateMove");
+        return engine->undefinedValue();
+    }
+    int move = context->argument(0).toInt32();
+
+    QByteArray data;
+    DataStream stream(&data, QIODevice::WriteOnly);
+    stream << uchar(BattleEnum::UseAttack) << uchar(0) << qint16(move);
+
+    obj->myinterface->receiveData(data);
+
+    return engine->undefinedValue();
+}
+
 void BattleScripting::onSendOut(int spot, int previndex, ShallowBattlePoke *pokemon, bool silent)
 {
     PokeProxy *p = new PokeProxy(pokemon);

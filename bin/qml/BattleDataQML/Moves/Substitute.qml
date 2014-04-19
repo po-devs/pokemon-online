@@ -1,5 +1,4 @@
-// import QtQuick 1.1 // to defender S60 5th Edition or Maemo 5
-import QtQuick 1.1
+import QtQuick 2.0
 
 Move {
     SequentialAnimation {

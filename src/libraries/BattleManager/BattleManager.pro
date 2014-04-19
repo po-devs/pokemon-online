@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += declarative opengl
+QT += quick qml
 TARGET = po-battlemanager
 TEMPLATE = lib
 
@@ -73,7 +73,6 @@ OTHER_FILES += \
     ../../../bin/qml/BattleDataQML/ProgressBar.qml \
     ../../../bin/qml/BattleDataQML/FrameAnimation.qml \
     ../../../bin/qml/BattleDataQML/PokeballAnimation.qml \
-    ../../../bin/qml/BattleDataQML/ColorShader.qml \
     ../../../bin/qml/BattleDataQML/colors.js \
     ../../../bin/qml/BattleDataQML/weather.js \
     ../../../bin/qml/BattleDataQML/Weather/Rain.qml \

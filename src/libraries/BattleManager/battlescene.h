@@ -5,7 +5,7 @@
 #include "battlecommandmanager.h"
 #include "advancedbattledata.h"
 
-class QDeclarativeView;
+class QQuickView;
 class BattleSceneProxy;
 class ProxyDataContainer;
 class BattleDefaultTheme;
@@ -20,7 +20,8 @@ public:
     BattleScene(battledata_ptr data=0, BattleDefaultTheme *theme=0, QVariantMap options = QVariantMap());
     ~BattleScene();
 
-    QDeclarativeView *getWidget();
+    QWidget *getWidget();
+    QQuickView *getView();
     ProxyDataContainer *getDataProxy();
 
     Q_INVOKABLE void pause(int ticks=1);
@@ -104,6 +105,7 @@ public:
     void replayCommands();
 public slots:
     void log(const QString&);
+    void updateWidgetSize();
 signals:
     void battleLog(const QString &logMessage);
     void printMessage(const QString&);
@@ -125,7 +127,8 @@ private:
 
     BattleSceneProxy *mOwnProxy;
 
-    QDeclarativeView *mWidget;
+    QWidget *mWidget;
+    QQuickView *mView;
 
     struct BattleSceneInfo {
         QLinkedList<int> statChanges;

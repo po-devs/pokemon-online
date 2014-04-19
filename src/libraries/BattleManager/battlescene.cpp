@@ -1,8 +1,8 @@
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeItem>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtOpenGL/QGLWidget>
+#include <QQuickView>
+#include <QQuickItem>
+#include <QQmlEngine>
+#include <QQmlContext>
+#include <QWidget>
 
 #include "battlescene.h"
 #include "battledata.h"
@@ -37,30 +37,34 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
       See http://apidocs.meego.com/1.1/core/html/qt4/qdeclarativeengine.html#objectOwnership */
     ProxyDataContainer *data_ptr = getDataProxy();
     for (int i = 0; i < 2; i++) {
-        QDeclarativeEngine::setObjectOwnership(data_ptr->team(i), QDeclarativeEngine::CppOwnership);
+        QQmlEngine::setObjectOwnership(data_ptr->team(i), QQmlEngine::CppOwnership);
         for (int j = 0; j < 6; j++) {
-            QDeclarativeEngine::setObjectOwnership(data_ptr->team(i)->poke(j), QDeclarativeEngine::CppOwnership);
+            QQmlEngine::setObjectOwnership(data_ptr->team(i)->poke(j), QQmlEngine::CppOwnership);
         }
         for (int j = 0; j < dat->numberOfSlots()/2; j++) {
-            QDeclarativeEngine::setObjectOwnership(data_ptr->field()->poke(j*2+i), QDeclarativeEngine::CppOwnership);
+            QQmlEngine::setObjectOwnership(data_ptr->field()->poke(j*2+i), QQmlEngine::CppOwnership);
         }
     }
-    mWidget = new QDeclarativeView();
+    mView = new QQuickView();
+
+    mView->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
+    mView->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
+    mView->engine()->rootContext()->setContextProperty("moveInfo", new MoveInfoAccessor(this, data()->gen()));
+    mView->engine()->rootContext()->setContextProperty("theme", theme);
+    mView->setSource(QUrl("qml/initial.qml"));
+    mView->setResizeMode(QQuickView::SizeViewToRootObject);
+
+    mWidget = QWidget::createWindowContainer(mView);
     mWidget->setAttribute(Qt::WA_DeleteOnClose);
 
     // Set optimizations not already done in QDeclarativeView
     mWidget->setAttribute(Qt::WA_OpaquePaintEvent);
     mWidget->setAttribute(Qt::WA_NoSystemBackground);
-    // Make QDeclarativeView use OpenGL backend
-    QGLWidget *glWidget = new QGLWidget(mWidget);
-    mWidget->setViewport(glWidget);
-    mWidget->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
-    mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
-    mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
-    mWidget->engine()->rootContext()->setContextProperty("moveInfo", new MoveInfoAccessor(this, data()->gen()));
-    mWidget->engine()->rootContext()->setContextProperty("theme", theme);
-    mWidget->setSource(QString("qml/initial.qml"));
+    connect(mView, SIGNAL(heightChanged(int)), SLOT(updateWidgetSize()));
+    connect(mView, SIGNAL(widthChanged(int)), SLOT(updateWidgetSize()));
+
+    updateWidgetSize();
 }
 
 QVariant BattleScene::option(const QString &opt, const QVariant &def) const
@@ -86,6 +90,12 @@ void BattleScene::log(const QString &mess)
     } else {
         emit battleLog(rep);
     }
+}
+
+void BattleScene::updateWidgetSize()
+{
+    qDebug() << "Updating to size " << mView->sizeHint();
+    mWidget->setFixedSize(mView->sizeHint());
 }
 
 void BattleScene::launch() {
@@ -117,10 +127,14 @@ BattleScene::battledata_ptr BattleScene::data()
     return mData;
 }
 
-QDeclarativeView *BattleScene::getWidget()
+QWidget *BattleScene::getWidget()
 {
-    mWidget->setFixedSize(mWidget->sizeHint());
     return mWidget;
+}
+
+QQuickView *BattleScene::getView()
+{
+    return mView;
 }
 
 ProxyDataContainer * BattleScene::getDataProxy()

@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import pokemononline.battlemanager.proxies 1.0
 
 Item {

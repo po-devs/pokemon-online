@@ -1,12 +1,12 @@
-import QtQuick 1.1
-import Qt.labs.particles 1.0
+import QtQuick 2.0
+import QtQuick.Particles 2.0
 import "../" 1.0
 
 Move {
     id: main;
 
-    Particles {
-        parent: attacker;
+    ParticleSystem {
+        parent: defender;
         x: attacker.pokeSprite.x + attacker.pokeSprite.width/2 - width/2
         y: attacker.pokeSprite.y+attacker.pokeSprite.height -attacker.pokeSprite.height/2*scale;
         z: attacker.pokeSprite.z+2;
@@ -14,17 +14,26 @@ Move {
         height: 2
         scale: attacker.pokeSprite.scale;
         id: particles
-        source: "../../images/lightparticle.png"
 
-        lifeSpan: 800
-        angle: 0
-        angleDeviation: 360
-        velocity: 30
-        count: 0;
-        emissionRate: 80;
+        ImageParticle {
+            source: "../../images/lightparticle.png"
+        }
+
+        Emitter {
+            lifeSpan: 800
+            emitRate: 80;
+            maximumEmitted: parent.count
+            enabled: parent.count > 0
+
+            velocity: AngleDirection {
+                magnitude: 40; magnitudeVariation: 10;
+                angle: 0; angleVariation: 360;
+            }
+        }
+
+
+        property int count: 0;
         opacity: 1;
-
-        velocityDeviation: 10
     }
     Image {
         id: cm

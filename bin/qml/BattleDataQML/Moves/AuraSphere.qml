@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import Qt.labs.particles 1.0
+import QtQuick 2.0
+import QtQuick.Particles 2.0
 import "../" 1.0
 
 Move {
@@ -14,7 +14,7 @@ Move {
     property int y0: attacker.y + attacker.pokeSprite.y + attacker.pokeSprite.height - attacker.pokeSprite.height*attacker.pokeSprite.scale*0.4
                      - aura.height*attacker.pokeSprite.scale*0.4;
 
-    Particles {
+    ParticleSystem {
         parent: defender;
         x: defender.pokeSprite.x + defender.pokeSprite.width/2 - width/2
         y: defender.pokeSprite.y+defender.pokeSprite.height -defender.pokeSprite.height*0.4*scale;
@@ -24,17 +24,26 @@ Move {
         scale: defender.pokeSprite.scale;
         id: particles
         property int n: 1;
-        source: "../../images/lightparticle" + n +".png"
 
-        lifeSpan: 800
-        angle: 0
-        angleDeviation: 360
-        velocity: 40
-        count: 0;
-        emissionRate: 80;
+        ImageParticle {
+            source: "../../images/lightparticle" + n +".png"
+        }
+
+        Emitter {
+            lifeSpan: 800
+            emitRate: 80;
+            maximumEmitted: parent.count
+            enabled: parent.count > 0
+
+            velocity: AngleDirection {
+                magnitude: 40; magnitudeVariation: 10;
+                angle: 0; angleVariation: 360;
+            }
+        }
+
+
+        property int count: 0;
         opacity: 1;
-
-        velocityDeviation: 10
     }
 
     property int oxt: defender.x-attacker.x;
@@ -85,9 +94,9 @@ Move {
             SequentialAnimation {
                 PauseAnimation { duration: throwDuration*pokeAdvance+100 }
                 ParallelAnimation {
-                    NumberAnimation { target: attacker.pokeSprite; property: "anchors.horizontalCenterOffset"; to: ox0; duration: throwDuration*pokeAdvance*2; easing: Easing.InOutQuad}
-                    NumberAnimation { target: attacker.pokeSprite; property: "anchors.bottomMargin"; to: oy0; duration: throwDuration*pokeAdvance*2; easing: Easing.InOutQuad}
-                    NumberAnimation { target: attacker.pokeSprite; property: "z"; to: oz0; duration: throwDuration*pokeAdvance*2; easing: Easing.InOutQuad}
+                    NumberAnimation { target: attacker.pokeSprite; property: "anchors.horizontalCenterOffset"; to: ox0; duration: throwDuration*pokeAdvance*2; easing.type: Easing.InOutQuad}
+                    NumberAnimation { target: attacker.pokeSprite; property: "anchors.bottomMargin"; to: oy0; duration: throwDuration*pokeAdvance*2; easing.type: Easing.InOutQuad}
+                    NumberAnimation { target: attacker.pokeSprite; property: "z"; to: oz0; duration: throwDuration*pokeAdvance*2; easing.type: Easing.InOutQuad}
                 }
             }
         }

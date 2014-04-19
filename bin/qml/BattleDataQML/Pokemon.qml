@@ -1,6 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
+import QtGraphicalEffects 1.0
 import pokemononline.battlemanager.proxies 1.0
-import Qt.labs.shaders 1.0
 import "colors.js" as Colors
 import "Utilities" 1.0
 
@@ -29,17 +29,23 @@ Item {
         width: 32
         height: 32
 
-        onSourceChanged: shader.grab()
         opacity: pokemon.status === PokeData.Koed ? 0.3 : (pokemon.status === PokeData.Fine? 1 : 0.7)
     }
 
     /* Used to display fainted pokemon */
-    ColorShader {
+    ColorOverlay {
         id: shader
-        image: img
-        blendColor: Colors.statusColor(pokemon.status)
-        alpha: pokemon.status === 0 ? 0.0 : 0.5
-        opac: 1
+        anchors.fill: img;
+        source: img;
+        color: transformColor(Colors.statusColor(pokemon.status))
+        opacity: pokemon.status === 0 ? 0.0 : 1.0
+        cached: true
+
+        function transformColor(color) {
+            // add transparency
+            color[1] = '8'
+            return color;
+        }
     }
 
     Tooltip {

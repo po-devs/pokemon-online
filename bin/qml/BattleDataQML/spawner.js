@@ -7,9 +7,11 @@ var effects = {
 function spawn(parent, type, params, callback) {
     var obj = launchEffect(type, parent, params);
 
-    obj.finished.connect(function(){callback(obj)});
+    if (obj) {
+        obj.finished.connect(function(){callback(obj)});
 
-    obj.start();
+        obj.start();
+    }
 }
 
 function launchEffect(key, parent, vars) {

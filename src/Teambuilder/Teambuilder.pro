@@ -1,8 +1,8 @@
 QT += network \
     xml \
-    declarative \
-    opengl \
-    script
+    script \
+    quick \
+    qml
 
 TARGET = Pokemon-Online
 TEMPLATE = app

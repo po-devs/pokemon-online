@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import Qt.labs.particles 1.0
+import QtQuick 2.0
+import QtQuick.Particles 2.0
 
 Item {
     id: main
@@ -13,29 +13,39 @@ Item {
         color: "#deac00";
     }
 
-    Particles {
+    ParticleSystem {
         parent: main.parent;
         y: 0;
         x: 0;
         width: main.parent.width
         height: main.parent.height;
         id: particles
-        source: "../../images/sand.png"
         opacity: 0;
 
-        lifeSpan: 1000
-        angle: 165
-        angleDeviation: 20
-        velocity: 400
-        count:0;
-        emissionRate: 300;
-        fadeInDuration: 10;
-
-        velocityDeviation: 10
-        ParticleMotionWander {
-            pace: 100
-            xvariance: 80
+        ImageParticle {
+            source: "../../images/sand.png"
+            anchors.fill: parent
         }
+
+        Emitter {
+            anchors.fill: parent
+            maximumEmitted: parent.count
+            enabled: parent.count > 0
+            lifeSpan: 1000;
+            velocity: AngleDirection {
+                angle: 165
+                angleVariation: 20
+                magnitude: 400
+                magnitudeVariation: 10
+            }
+        }
+
+        Wander {
+            pace: 100
+            xVariance: 80
+        }
+
+        property int count:0;
     }
 
     SequentialAnimation {

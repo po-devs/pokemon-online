@@ -24,7 +24,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 1.1
+import QtQuick 2.0
 
 TopLevelItem {
     id: tooltip;
@@ -41,7 +41,7 @@ TopLevelItem {
     // Visible items bellow should anchor / be sized in relation to
     // 'parent'. They'll be reparented to a proper positioned and
     // resized toplevel item.
-    keepInside: true;
+    //keepInside: true;
 
     function resetSize() {
         var obj = Qt.createQmlObject("import QtQuick 1.0; Text { visible: false; }", tooltip);
@@ -112,6 +112,7 @@ TopLevelItem {
     Text {
         id: model;
         text: tooltip.text;
+        textFormat: Text.RichText
         visible: false;
     }
 
@@ -122,6 +123,7 @@ TopLevelItem {
         horizontalAlignment: Text.AlignHCenter;
 
         text: tooltip.text;
+        textFormat: Text.RichText
         color: "#ffffff";
         elide: Text.ElideRight
     }

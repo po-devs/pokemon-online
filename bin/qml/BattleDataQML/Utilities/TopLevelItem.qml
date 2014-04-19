@@ -20,7 +20,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-import QtQuick 1.1
+import QtQuick 2.0
 
 Item {
     id: placeholder;
@@ -40,6 +40,10 @@ Item {
         y: mappedY(placeholder);
         width: placeholder.width;
         height: placeholder.height;
+
+//        onXChanged: {
+//            console.log("Dimensions: x,y,w,h: " + x + " " + y + " " + width + " " + height)
+//        }
 
         opacity: placeholder.opacity;
         visible: placeholder.visible;

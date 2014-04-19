@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import pokemononline.battlemanager.proxies 1.0
 import "BattleDataQML" 1.0
 import "BattleDataQML/Utilities/" 1.0
@@ -200,7 +200,7 @@ Item {
             if (battle.scene.option("logger")) logger.log(logMessage);
         }
         onWeatherContinue: {
-            if (battle.scene.option("weather") == "always") Weather.trigger(weather, battle.data.field.weather);
+            if (battle.scene.option("weather") === "always") Weather.trigger(weather, battle.data.field.weather);
         }
     }
 }

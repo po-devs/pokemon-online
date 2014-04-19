@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import "../" 1.0
 
 Move {
@@ -38,9 +38,9 @@ Move {
                     }
 
                     ParallelAnimation {
-                        NumberAnimation { target: bone; property: "x"; to: xt; duration: params.duration; easing: params.easing }
-                        NumberAnimation { target: bone; property: "y"; to: yt; duration: params.duration; easing: params.easing }
-                        NumberAnimation { target: bone; property: "z"; to: defender.infront(1); duration: params.duration; easing: params.easing }
+                        NumberAnimation { target: bone; property: "x"; to: xt; duration: params.duration; easing.type: params.easing }
+                        NumberAnimation { target: bone; property: "y"; to: yt; duration: params.duration; easing.type: params.easing }
+                        NumberAnimation { target: bone; property: "z"; to: defender.infront(1); duration: params.duration; easing.type: params.easing }
                     }
                 }
                 NumberAnimation { target: bone; property: "rotation"; from: 0; to: 360*params.rotations; duration: params.duration }
@@ -50,10 +50,6 @@ Move {
     }
 
     function start() {
-        for (var i in extras) {
-            console.log(i + ": " + extras[i]);
-        }
-
         if ((extras.currentHit || 0) === 0) {
             finished();
         } else {

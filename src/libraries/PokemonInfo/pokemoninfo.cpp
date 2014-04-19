@@ -1210,7 +1210,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
 QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
 {
-    QString archive = path("%1G/sprites.zip").arg(gen.num);
+    QString archives[] = {path("%1G/sprites").arg(gen.num), path("%1G/sprites.zip").arg(gen.num)};
+    bool mod = false;
+    QString archive = getArchive(archives, mod);
 
     QString file;
 

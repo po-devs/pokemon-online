@@ -24,7 +24,7 @@
 **
 ****************************************************************************/
 
-import QtQuick 1.1
+import QtQuick 2.0
 
 TopLevelItem {
     id: logger;
@@ -91,25 +91,12 @@ TopLevelItem {
         wrapMode: Text.Wrap
     }
 
-    /* Use that instead when moving to qt 5.0 */
-//    Timer {
-//        id: clearer;
-//        interval: 750;
-//        onTriggered: {logger.text = ""; if (unpause) {unpause=false; battle.scene.unpause();}}
-
-//        property bool unpause: false;
-//    }
-
-
-    /* We have to do a workaround by setting repeat true because of https://bugreports.qt.nokia.com/browse/QTBUG-22004 */
     Timer {
         id: clearer;
-        interval: 900;
-        repeat: true;
-        onTriggered: {if (!active) return; active=false; logger.text = ""; if (unpause) {unpause=false; logger.unpause();}}
+        interval: 750;
+        onTriggered: {logger.text = ""; if (unpause) {unpause=false; battle.scene.unpause();}}
 
         property bool unpause: false;
-        property bool active: false;
     }
 
     SequentialAnimation {
@@ -136,9 +123,6 @@ TopLevelItem {
                 logger.pause();
                 clearer.unpause = true;
             }
-            if (!clearer.active) { //replace by clearer.running when moving to qt 5.0
-                clearer.active = true; //delete when moving to qt 5.0
-            }
             clearer.restart();
 
             return;
@@ -147,7 +131,6 @@ TopLevelItem {
         logger.text += text;
 
         /* Gives more time before the text is deleted */
-        clearer.active = true; //delete when moving to qt 5.0
         clearer.restart();
 
         if (!delayer.running) {

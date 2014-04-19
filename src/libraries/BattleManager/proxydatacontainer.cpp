@@ -41,6 +41,6 @@ void ProxyDataContainer::reloadTeam(int player)
 
 ProxyDataContainer::~ProxyDataContainer()
 {
-    delete teams[0];
-    delete teams[1];
+    teams[0]->deleteLater();
+    teams[1]->deleteLater();
 }
