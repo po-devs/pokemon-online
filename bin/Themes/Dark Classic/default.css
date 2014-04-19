@@ -208,6 +208,33 @@ TeamBuilder * {
     font-family: Verdana;
 }
 
+/*AvatarDialog #avatarWidget {
+	background: #192b39;
+}
+
+AvatarDialog #scrollArea_avatars {
+	border: 1px solid black;
+}
+
+AvatarDialog #avatarWidget QPushButton {
+	background: qlineargradient(x1:0, x2:0, y1:0, y2:1,
+								stop:0 rgba(255, 255, 255, 25), stop:0.2 rgba(255, 255, 255, 50),
+								stop:0.8 rgba(255, 255, 255, 25), stop:1 rgba(255, 255, 255, 25));
+	border: 1px solid rgba(0, 0, 0, 50);
+	border-radius: 4px;
+}
+
+AvatarDialog #avatarWidget QPushButton:hover {
+	background:qlineargradient(x1:0, x2:0, y1:0, y2:1,
+								stop:0 rgba(255, 255, 255, 75), stop:0.2 rgba(255, 255, 255, 100),
+								stop:0.8 rgba(255, 255, 255, 75), stop:1 rgba(255, 255, 255, 75));
+	border:1px solid rgba(0, 0,0, 100);
+}
+
+AvatarDialog #avatarWidget QPushButton:pressed, AvatarDialog #avatarWidget QPushButton:checked {
+	background:rgba(0, 0,0, 50);
+}*/
+
 TrainerMenu QLabel {
     color: white;
 }

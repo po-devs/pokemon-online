@@ -44,6 +44,7 @@ AvatarDialog::AvatarDialog(QWidget *parent, int current) :
         }
     }
 
+    w->setObjectName("avatarWidget");
     w->setLayout(layout);
     ui->scrollArea_avatars->setWidget(w);
     ui->scrollArea_avatars->ensureWidgetVisible(this->current, 50, -96);
