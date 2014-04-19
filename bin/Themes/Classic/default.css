@@ -227,8 +227,8 @@ AvatarDialog #avatarWidget QPushButton:hover {
 }
 
 AvatarDialog #avatarWidget QPushButton:pressed, AvatarDialog #avatarWidget QPushButton:checked {
-	background: rgba(0,0,0,50);*/
-}
+	background: rgba(0,0,0,50);
+}*/
 
 TrainerMenu QLabel {
     color: white;
