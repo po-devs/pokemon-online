@@ -198,7 +198,7 @@ TeamBuilder * {
     font-family: Verdana;
 }
 
-AvatarDialog {
+/*AvatarDialog {
 	border: 2px solid black;
 	background: #56738a;
 }
@@ -227,7 +227,7 @@ AvatarDialog #avatarWidget QPushButton:hover {
 }
 
 AvatarDialog #avatarWidget QPushButton:pressed, AvatarDialog #avatarWidget QPushButton:checked {
-	background: rgba(0,0,0,50);
+	background: rgba(0,0,0,50);*/
 }
 
 TrainerMenu QLabel {
