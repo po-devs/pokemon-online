@@ -2104,13 +2104,24 @@ struct MMFollowMe : public MM
         addFunction(b.battleMemory(), "GeneralTargetChange", "FollowMe", &gtc);
     }
 
+    struct FM : public QSet<int> {
+        FM() {
+                //Follow Me prevents attraction by all 2-Turn moves
+                (*this) << NoMove << Bounce << Dig << Dive << Fly << FocusPunch << Geomancy << IceBurn
+                                  << ShadowForce << SkullBash << SkyAttack << SkyDrop << SolarBeam << RazorWind
+                                  << FreezeShock << PhantomForce;
+
+        }
+    };
+    static FM forbidden_moves;
+
     static void gtc(int s, int, BS &b) {
         int tar = b.opponent(b.player(s));
 
         if (team(b, tar)["FollowMeTurn"] != b.turn())
             return;
         int target = team(b, tar)["FollowMePlayer"].toInt();
-        if (b.koed(target) || !poke(b, target).contains("FollowMe") || b.player(s) == b.player(target))
+        if (b.koed(target) || !poke(b, target).contains("FollowMe") || b.player(s) == b.player(target) || forbidden_moves.contains(move(b,s)))
             return;
 
         int tarChoice = tmove(b,s).targets;
@@ -2134,6 +2145,8 @@ struct MMFollowMe : public MM
         turn(b,s)["Target"] = target;
     }
 };
+//Declaring satic class variable
+MMFollowMe::FM MMFollowMe::forbidden_moves;
 
 struct MMGravity : public MM
 {
