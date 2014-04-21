@@ -1471,7 +1471,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     turnMem(player).add(TurnMemory::HasMoved);
-    if (gen() >= 5) {
+    if (gen() >= 5 && !battleMemory().value("CoatingAttackNow").toBool()) {
         counters(player).decreaseCounters();
     }
 
