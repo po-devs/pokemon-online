@@ -3,9 +3,9 @@ import QtQuick 2.0
 Move {
     id: main
 
-    property int xt: attacker.pokeSprite.anchors.horizontalCenterOffset+20*(1-2*woof.back);
-    property int yt: attacker.pokeSprite.anchors.bottomMargin+20*(1-2*woof.back);
-    property int zt: attacker.pokeSprite.z + (woof.back ? 10 : -10);
+    property int xt: attacker.pokeSprite.anchors.horizontalCenterOffset+20*(1-2*fieldPoke.back);
+    property int yt: attacker.pokeSprite.anchors.bottomMargin+20*(1-2*fieldPoke.back);
+    property int zt: attacker.pokeSprite.z + (fieldPoke.back ? 10 : -10);
 
     property int x0: attacker.pokeSprite.anchors.horizontalCenterOffset;
     property int y0: attacker.pokeSprite.anchors.bottomMargin;
@@ -15,7 +15,7 @@ Move {
 
     Rectangle {
         id: screen
-        parent: woof
+        parent: fieldPoke
 
         width: 100*completion
         height: 100*completion
@@ -25,10 +25,10 @@ Move {
         border.width: 2
         opacity: 0.7
 
-        z: woof.back ? -8*completion : 8*completion;
-        x: woof.back ? woof.width*0.3*completion : woof.width - width - woof.width*0.3*completion
-        y: woof.back ? woof.height-height*0.75-0.3*woof.height*completion : 0.3*woof.height*completion
-        scale: calculateScale(woof.z+z)
+        z: fieldPoke.back ? -8*completion : 8*completion;
+        x: fieldPoke.back ? fieldPoke.width*0.3*completion : fieldPoke.width - width - fieldPoke.width*0.3*completion
+        y: fieldPoke.back ? fieldPoke.height-height*0.75-0.3*fieldPoke.height*completion : 0.3*fieldPoke.height*completion
+        scale: calculateScale(fieldPoke.z+z)
     }
 
     SequentialAnimation  {

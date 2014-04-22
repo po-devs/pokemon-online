@@ -5,8 +5,8 @@ import "../" 1.0
 Move {
         id: main;
 
-        property int x1: attacker.pokeSprite.anchors.horizontalCenterOffset+10*(1-2*woof.back);
-        property int x2: attacker.pokeSprite.anchors.horizontalCenterOffset-10*(1-2*woof.back);
+        property int x1: attacker.pokeSprite.anchors.horizontalCenterOffset+10*(1-2*fieldPoke.back);
+        property int x2: attacker.pokeSprite.anchors.horizontalCenterOffset-10*(1-2*fieldPoke.back);
 
         property int x0: attacker.pokeSprite.anchors.horizontalCenterOffset;
 

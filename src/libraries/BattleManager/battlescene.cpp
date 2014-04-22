@@ -51,15 +51,10 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
     mView->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
     mView->engine()->rootContext()->setContextProperty("moveInfo", new MoveInfoAccessor(this, data()->gen()));
     mView->engine()->rootContext()->setContextProperty("theme", theme);
-    mView->setSource(QUrl("qml/initial.qml"));
-    mView->setResizeMode(QQuickView::SizeViewToRootObject);
+    mView->setSource(QUrl::fromLocalFile("qml/initial.qml"));
 
     mWidget = QWidget::createWindowContainer(mView);
     mWidget->setAttribute(Qt::WA_DeleteOnClose);
-
-    // Set optimizations not already done in QDeclarativeView
-    mWidget->setAttribute(Qt::WA_OpaquePaintEvent);
-    mWidget->setAttribute(Qt::WA_NoSystemBackground);
 
     connect(mView, SIGNAL(heightChanged(int)), SLOT(updateWidgetSize()));
     connect(mView, SIGNAL(widthChanged(int)), SLOT(updateWidgetSize()));

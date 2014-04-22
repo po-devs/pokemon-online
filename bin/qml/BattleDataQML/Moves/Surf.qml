@@ -26,7 +26,7 @@ Move {
         property real progress: -0.1;
         id: wave;
 
-        source: woof.back ? "../../images/surf-back.png" : "../../images/surf-front.png";
+        source: fieldPoke.back ? "../../images/surf-back.png" : "../../images/surf-front.png";
         parent: main.parent.parent
 
         x: (x0 + (xt-x0)*progress);
@@ -47,7 +47,7 @@ Move {
                 lifeSpan: 750
                 maximumEmitted: params.flames ? 6 : 0
                 velocity: AngleDirection {
-                   angle: woof.back ? -45 : (45+90)
+                   angle: fieldPoke.back ? -45 : (45+90)
                    angleVariation: 30;
                    magnitude: 4;
                    magnitudeVariation: 2;

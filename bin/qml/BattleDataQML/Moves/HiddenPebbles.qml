@@ -59,7 +59,9 @@ Move {
                                       "z": parent.z
                                   },
                                   function(obj){
-                                      finished.connect(function(){obj.destroy()});
+                                      if (obj) {
+                                        finished.connect(function(){obj.destroy()});
+                                      }
                                       if (finish) {
                                           finished();
                                       }

@@ -8,7 +8,7 @@ import "moves.js" as Moves
 import "utilities.js" as Utils
 
 Item {
-    id: woof
+    id: fieldPoke
     property bool back: false
     property FieldPokeData fieldPokemon
     property PokeData pokemon
@@ -25,7 +25,7 @@ Item {
         }
 
         //battle.scene.debug("Using attack " + attack + "\n");
-        Moves.useAttack(woof, attack, target, params);
+        Moves.useAttack(fieldPoke, attack, target, params);
     }
 
     function behind(zdelta) {
@@ -48,9 +48,9 @@ Item {
 
     ProgressBar {
         id: hp
-        parent: woof.parent
-        anchors.horizontalCenter: woof.horizontalCenter
-        y: woof.y - 10 - ((calculateScale(woof.z)-1)*woof.height*0.8);
+        parent: fieldPoke.parent
+        anchors.horizontalCenter: fieldPoke.horizontalCenter
+        y: fieldPoke.y - 10 - ((calculateScale(fieldPoke.z)-1)*fieldPoke.height*0.8);
     }
 
     Text {
@@ -100,9 +100,6 @@ Item {
         return ("00"+i).slice(-3);
     }
 
-    function updateImg() {
-    }
-
     Image {
         property int spriteRef: fieldPokemon.alternateSprite || fieldPokemon.pokemon.numRef;
         property real baseScale: 1;
@@ -110,13 +107,9 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.bottom: parent.bottom;
         transformOrigin: Item.Bottom;
-//        source: fieldPokemon.isShowing ? "image://pokeinfo/pokemon/"+
-//                                         (fieldPokemon.alternateSpriteRef == 0 ? pokemon.numRef :fieldPokemon.alternateSpriteRef) +
-//                                         "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny : ""
         source: fieldPokemon.showing ? "image://pokeinfo/pokemon/"+ spriteRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny+"&cropped=true" : ""
-//        source: "image://pokeinfo/pokemon/"+ pokemon.numRef + "&gender="+pokemon.gender+"&back="+back+"&shiny="+pokemon.shiny
 
-        scale: baseScale * calculateScale(woof.z+z)
+        scale: baseScale * calculateScale(fieldPoke.z+z)
         smooth: false
         visible: !aimg.visible
     }
@@ -138,99 +131,7 @@ Item {
 
         onShownChanged: {
             if (shown) {
-                var s = pokemon.nick + " &nbsp; lv. " + pokemon.level;
-                if (pokemon.gender === 1) {
-                    s += " (M)"
-                } else if (pokemon.gender === 2) {
-                    s += " (F)"
-                }
-
-                s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
-                if (fieldPokemon.type2() !== 18) s += Utils.typeImg(fieldPokemon.type2());
-                s += "<table><tr><td><table>";
-                var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
-                var boost,stat,i;
-
-                for (i = 0; i < 5; i++) {
-                    s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
-                    stat = fieldPokemon.stat(i+1);
-                    boost = fieldPokemon.statBoost(i+1);
-
-                    if (stat === 0) {
-                        s += fieldPokemon.minStat(i+1) + "-" + fieldPokemon.maxStat(i+1) + "</td><td>"
-                    } else {
-                        if (stat === -1) {
-                            s += "???"
-                        } else {
-                            s += stat
-                        }
-                        s += "</td><td>"
-                    }
-                    if (boost > 0) {
-                        s += "(+" + boost + ")"
-                    } else if (boost < 0) {
-                        s += "(" + boost + ")"
-                    }
-                    s += "</td></tr>"
-                }
-
-                for (i = 5; i < 7; i++) {
-                    boost = fieldPokemon.statBoost(i+1);
-                    if (boost !==0) {
-                        s += "<tr><td colspan='2'>" + stats[i] + "</td><td>&nbsp;";
-
-                        if (boost > 0) {
-                            s += "+" + boost;
-                        } else if (boost < 0) {
-                            s += +boost;
-                        }
-
-                        s += "</td></tr>"
-                    }
-                }
-
-                s += "</table></td>"
-
-                if (!battle.scene.isPlayer(spot) && pokemon.move(0).num !== 0) {
-                    s += "<td><br/>"
-                    for (i = 0; i < 4; i++) {
-                        var move = pokemon.move(i).num;
-                        if (move !== 0) {
-                            var type = moveInfo.type(move);
-                            var bold = true || ((type === fieldPokemon.type1() || type === fieldPokemon.type2()) && moveInfo.power(move) > 0);
-                            s += (bold ? "<b>" : "") + "<span style='color: " + theme.typeColor(type) + ";'>" +
-                                    "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span>" + (bold ? "</b>" : "") + "<br/>";
-                        }
-                    }
-                    s += "</td>"
-                }
-
-                s += "</tr>"
-
-                var zone = battle.data.field.zone(spot%2);
-                var hazards = [];
-                if (zone.stealthRocks) {
-                    hazards.push("Stealth Rocks");
-                }
-                if (zone.stickyWeb) {
-                    hazards.push("Sticky Web");
-                }
-                if (zone.spikesLevel > 0) {
-                    hazards.push("Spikes level " + zone.spikesLevel);
-                }
-                if (zone.tspikesLevel > 0) {
-                    hazards.push("Toxic Spikes level " + zone.tspikesLevel);
-                }
-
-                if (hazards.length > 0) {
-                    s += "<tr><td>" + hazards.join(", ") + "</td></tr>";
-                }
-
-                s += "</table>"
-
-                text = s;
-
-                //resetSize();
+                text = getTooltipText();
             }
         }
 
@@ -284,13 +185,13 @@ Item {
         onStatUp: {
             var level = battle.scene.statboostlevel();
             if (level > 0) {
-                Effects.statUp(woof, level);
+                Effects.statUp(fieldPoke, level);
             }
         }
         onStatDown: {
             var level = battle.scene.statboostlevel();
             if (level > 0) {
-                Effects.statDown(woof, level);
+                Effects.statDown(fieldPoke, level);
             }
         }
     }
@@ -305,7 +206,7 @@ Item {
                 anchors.bottomMargin: back ? -40 : 40;
                 anchors.horizontalCenterOffset: back? -40: 40;
                 opacity: calc_opacity(0.7);
-                z: woof.back ? 10 : -10;
+                z: fieldPoke.back ? 10 : -10;
             }
             PropertyChanges {
                 target: substitute
@@ -349,12 +250,12 @@ Item {
             SequentialAnimation {
                 id: anim;
                 ScriptAction {script: {
-                        if (woof.pokemon.numRef===0) {
+                        if (fieldPoke.pokemon.numRef===0) {
                             anim.stop();
                         } else {
-                            //battle.scene.debug("Beginning ko animation for " + woof.pokemon.numRef + "\n");
+                            //battle.scene.debug("Beginning ko animation for " + fieldPoke.pokemon.numRef + "\n");
                             battle.scene.pause();
-                            battle.scene.playCry(woof.pokemon.numRef);
+                            battle.scene.playCry(fieldPoke.pokemon.numRef);
                         }
                     }
                 }
@@ -372,7 +273,7 @@ Item {
                 /* Restores image state */
                 ScriptAction {
                     script: {
-                        //battle.scene.debug("Ending ko animation for " + woof.pokemon.numRef + "\n");
+                        //battle.scene.debug("Ending ko animation for " + fieldPoke.pokemon.numRef + "\n");
                         battle.scene.unpause();
                     }
                 }
@@ -384,7 +285,7 @@ Item {
             SequentialAnimation {
                 PropertyAction { targets: [img, shader]; properties: "opacity"; value: 0 }
                 ScriptAction { script: {
-                        //battle.scene.debug("Beginning sendout animation for " + woof.pokemon.numRef + "\n");
+                        //battle.scene.debug("Beginning sendout animation for " + fieldPoke.pokemon.numRef + "\n");
                         battle.scene.pause();
                         pokeball.trigger(); } }
                 PauseAnimation { duration: 800 }
@@ -392,14 +293,14 @@ Item {
                 PropertyAction { target: img; property: "anchors.bottomMargin"; value: 70}
                 NumberAnimation { target:img; from: 0.5;
                     to: 1.0; property: "baseScale"; duration: 350; easing.type: Easing.InQuad }
-                ScriptAction {script: battle.scene.playCry(woof.pokemon.numRef);}
+                ScriptAction {script: battle.scene.playCry(fieldPoke.pokemon.numRef);}
                 PauseAnimation { duration: 150 }
                 NumberAnimation { target:img; from: 70;
                     to: 0; property: "anchors.bottomMargin"; duration: 400; easing.type: Easing.OutBounce}
                 /* Grace pausing time after a pokemon is sent out*/
                 NumberAnimation {duration: 300}
                 ScriptAction {script: {
-                        //battle.scene.debug("Ending  sendout animation for " + woof.pokemon.numRef + "\n");
+                        //battle.scene.debug("Ending  sendout animation for " + fieldPoke.pokemon.numRef + "\n");
                         battle.scene.unpause();
                     }
                 }
@@ -410,14 +311,14 @@ Item {
             to: "offTheField"
             SequentialAnimation {
                 ScriptAction {script: {
-                        //battle.scene.debug("Beginning sendback animation for " + woof.pokemon.numRef + "\n");
+                        //battle.scene.debug("Beginning sendback animation for " + fieldPoke.pokemon.numRef + "\n");
                         battle.scene.pause();}}
                 NumberAnimation { target: img; property: "baseScale";
                     duration:400; from: 1.0; to: 0.5 ; easing.type: Easing.InQuad }
                 NumberAnimation { property: "opacity";  duration: 200
                     from: 1.0; to: 0; target: img}
                 ScriptAction {script: {img.baseScale = 1;
-                        //battle.scene.debug("Ending sendback animation for " + woof.pokemon.numRef + "\n");
+                        //battle.scene.debug("Ending sendback animation for " + fieldPoke.pokemon.numRef + "\n");
                         battle.scene.unpause();}}
             }
         },
@@ -458,4 +359,110 @@ Item {
             }
         }
     ]
+
+    function getTooltipText () {
+        console.log("poke: " + pokemon);
+        console.log("Field poke: " + fieldPokemon);
+
+        var s = pokemon.nick + " &nbsp; lv. " + pokemon.level;
+
+        if (pokemon.gender === 1) {
+            s += " (M)"
+        } else if (pokemon.gender === 2) {
+            s += " (F)"
+        }
+
+        s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
+        if (fieldPokemon.type2() !== 18) s += Utils.typeImg(fieldPokemon.type2());
+
+        s += "<table><tr><td><table>";
+        var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
+        var boost,stat,i;
+
+        for (i = 0; i < 5; i++) {
+            s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
+            stat = fieldPokemon.stat(i+1);
+            boost = fieldPokemon.statBoost(i+1);
+
+            if (stat === 0) {
+                s += fieldPokemon.minStat(i+1) + "-" + fieldPokemon.maxStat(i+1) + "</td><td>"
+            } else {
+                if (stat === -1) {
+                    s += "???"
+                } else {
+                    s += stat
+                }
+                s += "</td><td>"
+            }
+            if (boost > 0) {
+                s += "(+" + boost + ")"
+            } else if (boost < 0) {
+                s += "(" + boost + ")"
+            }
+            s += "</td></tr>"
+        }
+
+        for (i = 5; i < 7; i++) {
+            boost = fieldPokemon.statBoost(i+1);
+            if (boost !==0) {
+                s += "<tr><td colspan='2'>" + stats[i] + "</td><td>&nbsp;";
+
+                if (boost > 0) {
+                    s += "+" + boost;
+                } else if (boost < 0) {
+                    s += +boost;
+                }
+
+                s += "</td></tr>"
+            }
+        }
+
+        s += "</table></td>"
+
+        console.log("num moves " + pokemon.numMoves());
+        if (!battle.scene.isPlayer(spot) && pokemon.numMoves() > 0 && pokemon.move(0).num !== 0) {
+            s += "<td><br/>"
+            for (i = 0; i < pokemon.numMoves(); i++) {
+                var moveinfo = pokemon.move(i)
+
+                console.log("move info: " + moveinfo);
+                if (moveinfo) {
+                    var move = moveinfo.num;
+                    console.log("move: " + move + ", moveInfo: " + moveInfo)
+                    if (move > 0) {
+                        var type = moveInfo.type(move);
+                        console.log("type: " + type);
+                        s += "<b><span style='color: " + theme.typeColor(type) + ";'>" +
+                                "- " + moveInfo.name(move) + " (" + pokemon.move(i).PP + "/" + pokemon.move(i).totalPP + " PPs)</span></b><br/>";
+                    }
+                }
+            }
+            s += "</td>"
+        }
+
+        s += "</tr>"
+
+        var zone = battle.data.field.zone(spot%2);
+        var hazards = [];
+        if (zone.stealthRocks) {
+            hazards.push("Stealth Rocks");
+        }
+        if (zone.stickyWeb) {
+            hazards.push("Sticky Web");
+        }
+        if (zone.spikesLevel > 0) {
+            hazards.push("Spikes level " + zone.spikesLevel);
+        }
+        if (zone.tspikesLevel > 0) {
+            hazards.push("Toxic Spikes level " + zone.tspikesLevel);
+        }
+
+        if (hazards.length > 0) {
+            s += "<tr><td>" + hazards.join(", ") + "</td></tr>";
+        }
+
+        s += "</table>"
+
+        return s;
+    }
 }

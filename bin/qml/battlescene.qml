@@ -8,6 +8,7 @@ Item {
     id: scene;
     width: bg.width;
     height: bg.height
+
     /* Separate element so that it can have a negative Z and be separate from the rest */
     Image {
         id: bg;

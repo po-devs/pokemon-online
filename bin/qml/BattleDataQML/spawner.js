@@ -11,6 +11,8 @@ function spawn(parent, type, params, callback) {
         obj.finished.connect(function(){callback(obj)});
 
         obj.start();
+    } else {
+        callback(null);
     }
 }
 

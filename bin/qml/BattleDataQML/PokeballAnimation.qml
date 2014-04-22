@@ -9,7 +9,7 @@ FrameAnimation {
     frameCount: 8
     delay: 50
     col: 6
-    scale: calculateScale(woof.z)
+    scale: calculateScale(fieldPoke.z)
 
     function trigger() {
         //console.log("y: " + y + ", x: " + x);
@@ -18,13 +18,13 @@ FrameAnimation {
 
     property bool triggerProp: false
 
-    parent: woof.parent;
+    parent: fieldPoke.parent;
 
-    property int destX: woof.x + (woof.width/2-20);
-    property int destY: woof.y - 20;
+    property int destX: fieldPoke.x + (fieldPoke.width/2-20);
+    property int destY: fieldPoke.y - 20;
 
-    property int deltaX: woof.back ? - 170 : 180
-    property int deltaY: woof.back ? 100 : 20
+    property int deltaX: fieldPoke.back ? - 170 : 180
+    property int deltaY: fieldPoke.back ? 100 : 20
 
     property int sourceX: destX + deltaX;
     property int sourceY: destY + deltaY;

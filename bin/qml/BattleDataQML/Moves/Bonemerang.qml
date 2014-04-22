@@ -10,7 +10,7 @@ Move {
     property int x0: attacker.x+60;
     property int y0: attacker.y+50;
 
-    property int dirx: woof.back? 1 : -1;
+    property int dirx: fieldPoke.back? 1 : -1;
     property int diry: -dirx;
 
     property int xt2: xt + 120*dirx;

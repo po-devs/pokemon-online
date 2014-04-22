@@ -18,15 +18,15 @@ Rectangle {
         if (running) {
             return;
         }
-        if (woof.pokemon.numRef===0 || main.oldValue === woof.pokemon.lifePercent || !woof.fieldPokemon.onTheField) {
-            rectangle1.width = oldValue = woof.pokemon.lifePercent;
+        if (fieldPoke.pokemon.numRef===0 || main.oldValue === fieldPoke.pokemon.lifePercent || !fieldPoke.fieldPokemon.onTheField) {
+            rectangle1.width = oldValue = fieldPoke.pokemon.lifePercent;
             return;
         }
         trigger = !trigger;
     }
 
     Connections {
-        target: woof.pokemon
+        target: fieldPoke.pokemon
         onLifePercentChanged: {
             onLifeChanged();
         }
@@ -36,7 +36,7 @@ Rectangle {
     }
 
     Connections {
-        target: woof;
+        target: fieldPoke;
         onPokemonChanged: {
             onLifeChanged();
         }
@@ -47,25 +47,25 @@ Rectangle {
             id: anim;
             ScriptAction {
                 script: {
-                    //battle.scene.debug("Beginning life animation for " + woof.pokemon.numRef + "\n");
+                    //battle.scene.debug("Beginning life animation for " + fieldPoke.pokemon.numRef + "\n");
                     battle.scene.pause();
                     main.running = true;
                     //battle.scene.debug("Old value: " + main.oldValue);
-                    numanim.duration = Math.floor(Math.abs(woof.pokemon.lifePercent-main.oldValue) * 10);
+                    numanim.duration = Math.floor(Math.abs(fieldPoke.pokemon.lifePercent-main.oldValue) * 10);
                 }
             }
             NumberAnimation {
                 target: rectangle1
                 property: "width"
-                to: woof.pokemon.lifePercent
+                to: fieldPoke.pokemon.lifePercent
                 id: numanim
             }
             PauseAnimation { duration: 100; }
             ScriptAction {
                 script: {
-                    main.oldValue = woof.pokemon.lifePercent;
+                    main.oldValue = fieldPoke.pokemon.lifePercent;
                     rectangle1.width = main.oldValue;
-                    //battle.scene.debug("Ending life animation for " + woof.pokemon.numRef + "\n");
+                    //battle.scene.debug("Ending life animation for " + fieldPoke.pokemon.numRef + "\n");
                     main.running = false;
                     battle.scene.unpause();
                 }
@@ -79,7 +79,7 @@ Rectangle {
         x: 1
         y: 1
         width: 0
-        height: 8
+        height: 7
         color: width >= 50 ? "#1fc42a": (width >= 25 ? "#f8db17" : "#b80202")
         radius: 1
         anchors.top: parent.top
@@ -114,7 +114,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        oldValue = woof.pokemon.lifePercent;
-        rectangle1.width = woof.pokemon.lifePercent;
+        oldValue = fieldPoke.pokemon.lifePercent;
+        rectangle1.width = fieldPoke.pokemon.lifePercent;
     }
 }

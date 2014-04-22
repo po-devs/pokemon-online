@@ -5,6 +5,7 @@
 #include <QVector>
 #include <PokemonInfo/pokemonstructs.h>
 #include <PokemonInfo/battlestructs.h>
+#include <cassert>
 
 class TeamData;
 class ShallowBattlePoke;
@@ -100,8 +101,9 @@ public:
     Q_INVOKABLE int ev(int stat) const;
     const QList<int> &dvs() const { return dd()->dvs();}
     const QList<int> &evs() const { return dd()->evs();}
-    Q_INVOKABLE MoveProxy *move(int slot) {return moves[slot];}
-    const MoveProxy *move(int slot) const {return moves[slot];}
+    Q_INVOKABLE MoveProxy *move(int slot) { assert (slot >= 0 && slot < numMoves()); return moves[slot];}
+    const MoveProxy *move(int slot) const { assert (slot >= 0 && slot < numMoves()); return moves[slot];}
+    Q_INVOKABLE int numMoves() const {return moves.length(); }
     Q_INVOKABLE bool isKoed() const { return d()->ko();}
     Pokemon::gen gen() const;
 
