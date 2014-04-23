@@ -812,6 +812,9 @@ struct AMMotorDrive : public AM {
     }
 
     static void op(int s, int t, BS &b) {
+        if (b.isProtected(s, t))
+            return;
+
         if (type(b,t) == Type::Electric) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             b.sendAbMessage(41,0,s,s,Pokemon::Electric);
@@ -1142,6 +1145,9 @@ struct AMVoltAbsorb : public AM {
     }
 
     static void op(int s, int t, BS &b) {
+        if (b.isProtected(s, t))
+            return;
+
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
             if (!(poke(b, s).value("HealBlockCount").toInt() > 0)) {
                 //HealBlock removes the absorbing effect
@@ -1206,7 +1212,7 @@ struct AMLightningRod : public AM {
     }
 
     static void ob(int s, int t, BS &b) {
-        if (b.gen() <= 4)
+        if (b.gen() <= 4 || b.isProtected(s, t))
             return;
 
         int tp = type(b,t);
@@ -1318,6 +1324,9 @@ struct AMSapSipper : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (b.isProtected(s, t))
+            return;
+
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
