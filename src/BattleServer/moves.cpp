@@ -6391,7 +6391,7 @@ struct MMTechnoBlast : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (!ItemInfo::isDrive(item) && turn(b,s).value("Symbiote").toBool())
+        if (!ItemInfo::isDrive(item) || turn(b,s).value("Symbiote").toBool())
             return;
         if (b.hasWorkingItem(s, item)) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
