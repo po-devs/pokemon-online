@@ -3312,9 +3312,10 @@ struct MMTaunt : public MM
     }
 
     static void mp(int s, int, BS &b) {
-        if (!b.counters(s).hasCounter(BC::Taunt)) {
+        if (!b.counters(s).hasCounter(BC::Taunt) || !b.battleMemory().value("CoatingAttackNow").toBool()) {
             return;
         }
+
         int move = turn(b,s)["MoveChosen"].toInt();
         if (move != NoMove && MoveInfo::Power(move, b.gen()) == 0) {
             turn(b,s)["ImpossibleToMove"] = true;
