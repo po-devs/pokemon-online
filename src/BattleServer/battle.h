@@ -131,7 +131,7 @@ public:
     bool isFlying(int player);
     bool hasFlyingEffect(int player); //returns true if has flying effect outside of flying type
     bool hasGroundingEffect(int player); //returns true for gravity, ingrain, ...
-    bool isProtected(int player, int t);
+    bool isProtected(int slot, int target);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
     void requestSwitch(int player, bool entryEffects=true);

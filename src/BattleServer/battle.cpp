@@ -2815,14 +2815,14 @@ bool BattleSituation::hasGroundingEffect(int player)
             || (gen() >= 3 && pokeMemory(player).value("Rooted").toBool()) || pokeMemory(player).value("SmackedDown").toBool();
 }
 
-bool BattleSituation::isProtected(int player, int t)
+bool BattleSituation::isProtected(int slot, int target)
 {
     // check to see if protected //
-    return pokeMemory(player).value("ProtectiveMoveTurn", -1).toInt() == turn()
-            || (teamMemory(this->player(player)).value("WideGuardUsed", -1).toInt() == turn()
-                && (tmove(t).targets == Move::Opponents
-                    || tmove(t).targets == Move::All
-                    || tmove(t).targets == Move::AllButSelf));
+    return pokeMemory(slot).value("ProtectiveMoveTurn", -1).toInt() == turn()
+            || (teamMemory(player(slot)).value("WideGuardUsed", -1).toInt() == turn()
+                && (tmove(target).targets == Move::Opponents
+                    || tmove(target).targets == Move::All
+                    || tmove(target).targets == Move::AllButSelf));
 }
 
 void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
