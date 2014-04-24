@@ -118,6 +118,7 @@ public:
 
     Q_INVOKABLE void sendChallenge(int id, int clauses, int mode);
     Q_INVOKABLE void acceptChallenge(int cId);
+    Q_INVOKABLE void declineChallenge(int cId);
 
     Q_INVOKABLE PlayerInfo player(int id) const;
     void removePlayer(int id);
