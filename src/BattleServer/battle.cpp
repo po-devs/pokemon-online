@@ -2229,7 +2229,7 @@ void BattleSituation::inflictRecoil(int source, int target)
     // "33" means one-third
     //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
 
-    int damage = std::abs(int(recoil * turnMemory(source).value("DamageInflicted").toInt() / 100));
+    int damage = std::abs(int(recoil * turnMemory(source).value("LastDamageInflicted").toInt() / 100));
 
     if (recoil < 0) {
         inflictDamage(source, damage, source, false);
@@ -3294,6 +3294,8 @@ end:
         if (!sub) {
             /* If there's a sub its already taken care of */
             inc(turnMemory(source)["DamageInflicted"], damage);
+            /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
+            turnMemory(source)["LastDamageInflicted"] = damage;
             pokeMemory(player)["DamageTakenByAttack"] = damage;
             turnMem(player).damageTaken = damage;
             turnMemory(player)["DamageTakenBy"] = source;
@@ -3331,11 +3333,15 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     if (life <= damage) {
         fpoke(player).remove(BasicPokeInfo::Substitute);
         inc(turnMemory(source)["DamageInflicted"], life);
+        /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
+        turnMemory(source)["LastDamageInflicted"] = life;
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
         fpoke(player).substituteLife = life-damage;
         inc(turnMemory(source)["DamageInflicted"], damage);
+        /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
+        turnMemory(source)["LastDamageInflicted"] = damage;
         sendMoveMessage(128, 3, player);
     }
 }
