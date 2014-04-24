@@ -2658,6 +2658,19 @@ void Client::acceptChallenge(int cId)
     }
 }
 
+void Client::declineChallenge(int cId)
+{
+    foreach(ChallengeDialog *d, mychallengeids) {
+        if (d->cid() == cId) {
+            ChallengeInfo c = d->challengeInfo();
+            c.dsc = ChallengeInfo::Refused;
+            relay().sendChallengeStuff(c);
+            closeChallengeWindow(d);
+            break;
+        }
+    }
+}
+
 int Client::freeChallengeId()
 {
     int ret = 0;
