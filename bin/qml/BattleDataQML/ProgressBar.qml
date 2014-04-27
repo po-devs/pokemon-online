@@ -113,6 +113,15 @@ Rectangle {
         }
     }
 
+    Text {
+        z: 4;
+        y: -1;
+        font.pixelSize: 9;
+        font.bold: true;
+        text: (battle.scene.isPlayer(woof.spot) ? woof.pokemon.life + " / " + woof.pokemon.totalLife : "");
+        anchors.horizontalCenter: parent.horizontalCenter;
+    }
+
     Component.onCompleted: {
         oldValue = woof.pokemon.lifePercent;
         rectangle1.width = woof.pokemon.lifePercent;
