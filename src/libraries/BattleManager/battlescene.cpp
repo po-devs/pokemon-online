@@ -92,6 +92,12 @@ void BattleScene::launch() {
     emit launched();
 }
 
+bool BattleScene::newSprites()
+{
+    QSettings s;
+    return s.value("Battle/NewSprites", true).toBool();
+}
+
 BattleScene::~BattleScene()
 {
     delete mOwnProxy;
