@@ -37,12 +37,14 @@ public:
     Q_PROPERTY(bool reversed READ reversed() CONSTANT)
     Q_PROPERTY(int width READ width() CONSTANT)
     Q_PROPERTY(int height READ height() CONSTANT)
+    Q_PROPERTY(bool newSprites READ newSprites() CONSTANT)
 
     /* Should the players be reversed positions in the visual scene? */
     bool reversed();
     int width() const;
     int height() const;
     void launch();
+    bool newSprites();
 
     template <enumClass val, typename... Params>
     bool shouldStartPeeking(param<val>, Params...) {

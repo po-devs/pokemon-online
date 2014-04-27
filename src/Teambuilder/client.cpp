@@ -1465,6 +1465,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
         screenSize->setCheckable(true);
         connect(screenSize, SIGNAL(triggered(bool)), SLOT(changeBattleScreenSize(bool)));
         screenSize->setChecked(globals.value("Battle/AnimatedScreenSize", "712x400").toString() == "712x400");
+
+        QAction *newSprites = newBattleWindow->addAction(tr("Use 3D Models"));
+        newSprites->setCheckable(true);
+        connect(newSprites, SIGNAL(triggered(bool)), SLOT(useNewSprites(bool)));
+        newSprites->setChecked(globals.value("Battle/NewSprites", true).toBool());
+
     }
 
 
@@ -1730,6 +1736,11 @@ void Client::changeBattleScreenSize(bool big)
 void Client::changeBattleWeather(bool everyTurn)
 {
     globals.setValue("Battle/AnimatedWeather", everyTurn ? "always" : "firstTurn");
+}
+
+void Client::useNewSprites(bool use)
+{
+    globals.setValue("Battle/NewSprites", use);
 }
 
 void Client::changeNicknames(bool old)
