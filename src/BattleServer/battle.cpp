@@ -188,6 +188,7 @@ void BattleSituation::initializeEndTurnFunctions()
         21.4 Tailwind ends
         21.5 Lucky Chant ends
         21.6 Water Pledge + Fire Pledge ends, Fire Pledge + Grass Pledge ends, Grass Pledge + Water Pledge ends
+        21.7 Sport Ends (assumed, Gen 6+)
 
         22.0 Gravity ends
 
@@ -3035,8 +3036,8 @@ int BattleSituation::calculateDamage(int p, int t)
         }
     } else {
         QString sport = "SportedEnd" + QString::number(type);
-        if (battleMemory().contains(sport) && battleMemory().value(sport).toInt() > turn()) {
-            power /= 2;
+        if (battleMemory().contains(sport) && battleMemory().value(sport).toInt() > 0) {
+            power = power * 2 / 3;
         }
     }
 

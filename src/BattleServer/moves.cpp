@@ -4370,6 +4370,18 @@ struct MMMudSport : public MM
 {
     MMMudSport() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(21, 7) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int type = turn(b,s)["MudSport_Arg"].toInt();
+        if (b.battleMemory()["SportedEnd"+ QString::number(type)].toInt() > 0 || poke(b,s)["Sported" + QString::number(type)] == true) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int, BS &b) {
@@ -4380,7 +4392,24 @@ struct MMMudSport : public MM
             poke(b,s)["Sported" + QString::number(type)] = true;
             b.battleMemory()["Sported"+ QString::number(type)] = s;
         } else {
-            b.battleMemory()["SportedEnd"+ QString::number(type)] = b.turn() + 5;
+            b.battleMemory()["SportedEnd"+ QString::number(type)] = 5;
+            b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "SportedEnd"+ QString::number(type), &et);
+        }
+    }
+
+    static void et(int s, int, BS &b) {
+        inc(b.battleMemory()["SportedEnd9"], -1);
+        if (b.battleMemory()["SportedEnd9"].toInt() == 0) {
+            b.sendMoveMessage(88,2,s,Pokemon::Water);
+            b.battleMemory().remove("SportedEnd9");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "SportedEnd9");
+        }
+
+        inc(b.battleMemory()["SportedEnd12"], -1);
+        if (b.battleMemory()["SportedEnd12"].toInt() == 0) {
+            b.sendMoveMessage(88,3,s,Pokemon::Ground);
+            b.battleMemory().remove("SportedEnd12");
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "SportedEnd12");
         }
     }
 };
