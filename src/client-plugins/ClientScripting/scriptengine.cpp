@@ -166,7 +166,7 @@ void ScriptEngine::setMoogleScripts()
     }
 
     evaluate(eval(QString("sys.webCall('%1', %2)").arg(
-             "https://raw.github.com/CrystalMoogle/PO-User-Scripts/master/script.js",
+             "https://raw.githubusercontent.com/CrystalMoogle/PO-User-Scripts/master/script.js",
              "sys.changeScript"
              )));
 }

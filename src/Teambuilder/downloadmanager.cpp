@@ -40,7 +40,7 @@ void DownloadManager::loadUpdatesAvailable()
 
     /* If the update information is older than 3 days... */
     if (::time(NULL) - time > 24*3600*3) {
-        download(QString("https://raw.github.com/po-devs/pokemon-online/master/updates/%1").arg(getXmlFileName()),this,SLOT(onUpdateFileDownloaded()));
+        download(QString("https://raw.githubusercontent.com/po-devs/pokemon-online/master/updates/%1").arg(getXmlFileName()),this,SLOT(onUpdateFileDownloaded()));
     } else {
         readAvailableUpdatesFromFile();
     }
