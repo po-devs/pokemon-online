@@ -640,7 +640,10 @@ struct IMAbsorbBulb : public IM
 
     static void ubh(int s, int t, BS &b) {
         int tp = poke(b,s)["ItemArg"].toString().section('_', 0, 0).toInt();
-        if (!b.koed(s) && type(b,t) == tp) {
+        if (b.koed(s) || (b.hasSubstitute(s) && !b.canBypassSub(t))) {
+            return;
+        }
+        if (type(b,t) == tp) {
             int stat = poke(b,s)["ItemArg"].toString().section('_', 1).toInt();
             if (b.hasMaximalStatMod(s, stat))
                 return;
