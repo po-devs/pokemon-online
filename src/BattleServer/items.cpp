@@ -746,7 +746,7 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)))
+        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s)["SendingBack"] == true)
             return;
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
