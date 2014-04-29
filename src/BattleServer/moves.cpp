@@ -6718,7 +6718,7 @@ struct MMBelch :  public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (!poke(b,s).contains("BerryEaten")) {
+        if (!b.battleMemory().value(QString("BerryEaten%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool()) {
             fturn(b,s).add(TM::Failed);
         }
     }
