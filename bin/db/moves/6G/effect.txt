@@ -88,7 +88,7 @@
 104 Raises the user's evasiveness by 1 stage.
 105 Recovers 1/2 of the user's max HP.
 106 Raises the user's Defense by 1 stage.
-107 Raises the user's evasiveness by 1 stage. After using this move at least once, the user takes double damage from, and cannot evade, Body Slam, Dragon Rush, Flying Press, Phantom Force, Shadow Force, Steamroller, and Stomp until it switches out.
+107 Raises the user's evasiveness by 2 stages. After using this move at least once, the user takes double damage from, and cannot evade, Body Slam, Dragon Rush, Flying Press, Phantom Force, Shadow Force, Steamroller, and Stomp until it switches out.
 108 Lowers the target's Accuracy by 1 stage.
 109 Confuses the target.
 110 Raises the user's Defense by 1 stage.
