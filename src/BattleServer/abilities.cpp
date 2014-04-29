@@ -2483,5 +2483,6 @@ void AbilityEffect::init()
     REGISTER_AB(121, Aerilate);
     //122 Sticky Hold message
     REGISTER_AB(123, Klutz);
-    REGISTER_AB(124, Symbiosis)
+    REGISTER_AB(124, Symbiosis);
+    //125 Cheek pouch message
 }
