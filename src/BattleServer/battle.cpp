@@ -2426,6 +2426,10 @@ bool BattleSituation::canGetStatus(int player, int status) {
     if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
+    if (!isFlying(player) && terrainCount > 0 && terrain == Type::Fairy) {
+        //Rest, 2nd part of Yawn, Status Orbs, Effect Spore, Flame Body, Poison Point, Psycho Shift
+        return false;
+    }
     switch (status) {
     case Pokemon::Asleep: {
         if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit)) {
