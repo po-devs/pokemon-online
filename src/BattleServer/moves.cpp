@@ -4056,13 +4056,24 @@ struct MMDefog : public MM
     }
 
     static void uas (int s, int t, BS &b) {
-        if (!b.hasMinimalStatMod(t, Evasion)) {
+        bool dropevade = false;
+        //Evasion drop is blocked by sub. Flags prevent using canBypassSub.
+        if (!b.hasMinimalStatMod(t, Evasion) && (!b.hasSubstitute(t) || (b.gen() >= 6 && b.hasWorkingAbility(s, Ability::Infiltrator)))) {
             b.inflictStatMod(t, Evasion, -1, s);
+            dropevade = true;
         }
 
         bool clear = false;
 
         QVector<int> players = QVector<int>() << b.player(t);
+        //Defog only clears Reflect/Lightscreen from opponent's side, even in 6th gen
+        foreach (int p, players) {
+            BS::context &c = team(b,p);
+
+            if (c.remove("Barrier1Count") + c.remove("Barrier2Count")) {
+                clear = true;
+            }
+        }
         if (b.gen() >= 6) {
             players.push_back(b.opponent(b.player(t)));
         }
@@ -4070,14 +4081,16 @@ struct MMDefog : public MM
         foreach (int p, players) {
             BS::context &c = team(b,p);
 
-            if (c.remove("Barrier1Count") + c.remove("Barrier2Count") + c.remove("Spikes") + c.remove("ToxicSpikes")
-                    + c.remove("StealthRock") + c.remove("MistCount") + c.remove("SafeGuardCount") + c.remove("StickyWeb")) {
+            if (c.remove("Spikes") + c.remove("ToxicSpikes") + c.remove("StealthRock") + c.remove("MistCount") + c.remove("SafeGuardCount") + c.remove("StickyWeb")) {
                 clear = true;
             }
         }
 
         if (clear) {
             b.sendMoveMessage(77,b.gen() >= 6, s, type(b,s), t);
+        } else if (!dropevade){
+            //Let's give feedback if nothing occurs due to no hazards + evade drop blocked by Sub
+            b.notifyFail(s);
         }
     }
 };
