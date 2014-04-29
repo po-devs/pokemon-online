@@ -5074,7 +5074,7 @@ struct MMYawn : public MM {
         int opp = b.player(t);
 
         if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0 || poke(b,t).value("YawnCount").toInt() > 0
-                || (b.terrainCount > 0 && std::abs(b.terrain) == Type::Electric && !b.isFlying(t))) {
+                || (b.terrainCount > 0 && (std::abs(b.terrain) == Type::Electric || std::abs(b.terrain) == Type::Fairy) && !b.isFlying(t))) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -5103,7 +5103,7 @@ struct MMYawn : public MM {
         if (count != 0) {
 
         } else {
-            if (b.poke(s).status() == Pokemon::Fine) {
+            if (b.poke(s).status() == Pokemon::Fine && b.canGetStatus(s, Pokemon::Asleep)) {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                     b.notifyClause(ChallengeInfo::SleepClause);
                 } else {
