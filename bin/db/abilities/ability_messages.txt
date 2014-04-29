@@ -71,3 +71,4 @@
 120 %s is levitating!
 122 %s's Sticky Hold made the attack ineffective!|%s's Sticky Hold prevented item loss!
 124 %s gave its %i to %f!
+125 %s's Cheek Pouch provided extra nutrients to restore HP!

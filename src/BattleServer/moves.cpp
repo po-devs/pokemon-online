@@ -5535,7 +5535,8 @@ struct MMNaturalGift :  public MM
             return;
         }
 
-        b.eatBerry(s);
+        //False is used to prevent Cheek Pouch and Belch from seeing that a berry was eaten but still allow Harvest to work
+        b.eatBerry(s, false);
         //Natural gift gets a 20 BP boost in Gen 6
         tmove(b, s).power = tmove(b, s).power * (ItemInfo::BerryPower(berry) + (b.gen() >= 6 ? 20 : 0));
         tmove(b,s).type = ItemInfo::BerryType(berry);

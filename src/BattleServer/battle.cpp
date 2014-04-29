@@ -3372,6 +3372,7 @@ void BattleSituation::eatBerry(int player, bool show) {
         sendItemMessage(8000,player,0, 0, berry);
 
         if (hasWorkingAbility(player, Ability::CheekPouch)) {
+            sendAbMessage(125,0,player);
             healLife(player, poke(player).totalLifePoints()/3);
         }
 
