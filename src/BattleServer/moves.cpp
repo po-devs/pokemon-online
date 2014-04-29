@@ -4370,17 +4370,31 @@ struct MMMudSport : public MM
 {
     MMMudSport() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int, BS &b) {
+        int type = turn(b,s)["MudSport_Arg"].toInt();
+        QString sport = "Sported" + QString::number(type);
+        QString sportend = "SportedEnd" + QString::number(type);
+        if ((b.battleMemory().contains(sport) && b.pokeMemory(b.battleMemory()[sport].toInt()).value(sport).toBool()) ||
+                (b.battleMemory().contains(sportend) && b.battleMemory().value(sportend).toInt() > b.turn())) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int, BS &b) {
         int move = MM::move(b,s);
         b.sendMoveMessage(88, move == MudSport ? 0 : 1, s, type(b,s));
         int type = turn(b,s)["MudSport_Arg"].toInt();
+
         if (b.gen() <= 5) {
-            poke(b,s)["Sported" + QString::number(type)] = true;
-            b.battleMemory()["Sported"+ QString::number(type)] = s;
+            QString sport = "Sported" + QString::number(type);
+            poke(b,s)[sport] = true;
+            b.battleMemory()[sport] = s;
         } else {
-            b.battleMemory()["SportedEnd"+ QString::number(type)] = b.turn() + 5;
+            QString sport = "SportedEnd" + QString::number(type);
+            b.battleMemory()[sport] = b.turn() + 5;
         }
     }
 };

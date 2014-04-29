@@ -3031,12 +3031,16 @@ int BattleSituation::calculateDamage(int p, int t)
     if (gen() <= 5) {
         QString sport = "Sported" + QString::number(type);
         if (battleMemory().contains(sport) && pokeMemory(battleMemory()[sport].toInt()).value(sport).toBool()) {
-            power /= 2;
+            if (gen() < 5) {
+                power /= 2;
+            } else {
+                power /= 3;
+            }
         }
     } else {
         QString sport = "SportedEnd" + QString::number(type);
         if (battleMemory().contains(sport) && battleMemory().value(sport).toInt() > turn()) {
-            power /= 2;
+            power /= 3;
         }
     }
 
