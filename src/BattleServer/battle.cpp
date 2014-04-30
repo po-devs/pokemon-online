@@ -649,7 +649,7 @@ bool BattleSituation::isMovePossible(int player, int move)
     if (possible) {
         int attack = fpoke(player).moves[move];
 
-        if (attack == Move::Belch && !pokeMemory(player).contains("BerryEaten")) {
+        if (attack == Move::Belch && !(battleMemory().value(QString("BerryEaten%1%2").arg(this->player(player)).arg(currentInternalId(player))).toBool())) {
             return false;
         }
     }
@@ -3375,8 +3375,7 @@ void BattleSituation::eatBerry(int player, bool show) {
             sendAbMessage(125,0,player);
             healLife(player, poke(player).totalLifePoints()/3);
         }
-
-        pokeMemory(player)["BerryEaten"] = true;
+        battleMemory()[QString("BerryEaten%1%2").arg(this->player(player)).arg((currentInternalId(player)))] = true;
     }
 
     disposeItem(player);
@@ -3418,7 +3417,7 @@ void BattleSituation::devourBerry(int p, int berry, int s)
         healLife(s, poke(s).totalLifePoints()/3);
     }
 
-    pokeMemory(p)["BerryEaten"] = true;
+    battleMemory()[QString("BerryEaten%1%2").arg(this->player(p)).arg((currentInternalId(p)))] = true;
 
     /* Restoring initial conditions */
     pokeMemory(p)["ItemArg"] = tempItemStorage;
