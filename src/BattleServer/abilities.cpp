@@ -1525,9 +1525,9 @@ struct AMImposter : public AM
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.randomOpponent(s);
+        int t = b.slot(b.opponent(b.player(s)), b.slotNum(s)); // directly across
 
-        if (t == -1)
+        if (b.koed(t))
             return;
 
         if (fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || b.hasSubstitute(t))
