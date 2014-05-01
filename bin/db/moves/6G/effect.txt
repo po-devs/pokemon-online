@@ -283,7 +283,7 @@
 301 For five turns, the user can only use this attack and cannot switch out. During those five turns, each successful hit doubles the power of this attack. If the user cannot hit with this attack, it won't be locked into it anymore.
 302 Has a 30% chance to cause the target to flinch.
 303 Recovers 1/2 of the user's max HP.
-305 Has a 30% chance to badly poison the target.
+305 Has a 50% chance to badly poison the target.
 306 Has a 50% chance to lower the target's Defense by 1 stage.
 307 On the turn after this move hits, the user can't take any action or switch out.
 308 On the turn after this move hits, the user can't take any action or switch out.
