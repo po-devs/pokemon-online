@@ -797,9 +797,29 @@ struct MMFeint : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (turn(b, t)["DetectUsed"].toBool() == true) {
-            turn(b, t)["DetectUsed"] = false;
-        } else if (b.gen() <= 4){
+        const char *shields[] = {"DetectUsed", "KingsShieldUsed", "SpikyShieldUsed", "CraftyShieldUsed", "MatBlockUsed", "WideGuardUsed", "QuickGuardUsed"};
+        bool remove = false;
+
+        for (int i = 0; i < 7; i++) {
+            //Single Target: Protect/Detect, KingShield, SpikyShield
+            if (i < 3) {
+                if (turn(b,t).value(shields[i]).toBool()) {
+                    turn(b,t).remove(shields[i]);
+                    b.sendMoveMessage(42,i,t);
+                    remove = true;
+                }
+            } else {
+                //Team Target: CraftyShield, Mat Block, WideGuard, QuickGuard
+                if (team(b,b.player(t)).contains(shields[i])) {
+                    team(b,b.player(t)).remove(shields[i]);
+                    b.sendMoveMessage(42,i,t);
+                    remove = true;
+                }
+
+            }
+        }
+
+        if (b.gen() <= 4 && !remove) {
             fturn(b, s).add(TM::Failed);
         }
     }
@@ -1302,7 +1322,7 @@ struct MMBounce : public MM
 
             removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
             if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
-                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
+                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &MMFeint::daf);
                 if (poke(b, b.targetList.front()).value("Minimize").toBool()) {
                     tmove(b, s).accuracy = 0;
                     tmove(b, s).power = tmove(b, s).power * 2;
@@ -1334,7 +1354,7 @@ struct MMBounce : public MM
             if (move == ShadowForce || move == PhantomForce) {
                 addFunction(turn(b,s), "BeforeTargetList", "Bounce", &MMStomp::btl);
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
-                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &uas2);
+                addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &MMFeint::daf);
             } else if (move == SkyDrop) {
                 /* FreeFall sure-hits the foe once it caught it... */
                 tmove(b,s).accuracy = 0;
@@ -1350,13 +1370,6 @@ struct MMBounce : public MM
         /* Airbourne targets don't receive damage */
         if (b.hasType(t, Type::Flying)) {
             tmove(b,s).power = 1;
-        }
-    }
-
-    /* Only called with Shadow Force, breaks protect */
-    static void uas2(int , int t, BS &b) {
-        if (turn(b, t).value("DetectUsed").toBool() == true) {
-            turn(b, t)["DetectUsed"] = false;
         }
     }
 
@@ -1892,12 +1905,10 @@ struct MMFuryCutter : public MM
     }
 
     static void uas(int s, int, BS &b) {
-
         poke(b,s)["FuryCutterCount"] = std::min(poke(b,s)["FuryCutterCount"].toInt() * 2 + 1,b.gen().num == 4 ? 15 : 7);
     }
 
     static void bcd(int s, int, BS &b) {
-
         tmove(b, s).power = tmove(b, s).power * (poke(b,s)["FuryCutterCount"].toInt()+1);
     }
 };
@@ -2342,15 +2353,6 @@ struct MMWideGuard : public MM
             return;
         }
 
-        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
-            if (team(b,target).contains("WideGuardUsed")) {
-                team(b,target).remove("WideGuardUsed");
-                b.sendMoveMessage(169, 1, t, Pokemon::Normal);
-                return;
-            }
-        }
-
-
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
             return;
         }
@@ -2376,7 +2378,7 @@ struct MMQuickGuard : public MM
 
     static void uas(int s, int, BS &b) {
         addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "FastGuard", &dgaf);
-        team(b,b.player(s))["FastGuardUsed"] = b.turn();
+        team(b,b.player(s))["QuickGuardUsed"] = b.turn();
         b.sendMoveMessage(170, 0, s, Pokemon::Normal);
     }
 
@@ -2385,23 +2387,15 @@ struct MMQuickGuard : public MM
             return;
         }
         int target = b.player(t);
-        if (!team(b,target).contains("FastGuardUsed") || team(b,target)["FastGuardUsed"].toInt() != b.turn()) {
+        if (!team(b,target).contains("QuickGuardUsed") || team(b,target)["QuickGuardUsed"].toInt() != b.turn()) {
             return;
-        }
-
-        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
-            if (team(b,target).contains("FastGuardUsed")) {
-                team(b,target).remove("FastGuardUsed");
-                b.sendMoveMessage(170, 1, t, Pokemon::Normal);
-                return;
-            }
         }
 
         if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
             return;
         }
 
-        /* Quick Gard looks at the priority of the move, the raw one.
+        /* Quick Guard looks at the priority of the move, the raw one.
            If the priority was altered by Prankster or whatever,
            that doesn't matter in gen 5
 
@@ -6686,14 +6680,6 @@ struct MMCraftyShield: public MM
             return;
         }
 
-        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
-            if (team(b,target).contains("CraftyShieldUsed")) {
-                team(b,target).remove("CraftyShieldUsed");
-                b.sendMoveMessage(199, 1, t, Pokemon::Dark);
-                return;
-            }
-        }
-
         if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
             return;
         }
@@ -6912,8 +6898,6 @@ struct MMKingsShield: public MM
     }
 };
 
-
-
 struct MMMatBlock : public MM
 {
     MMMatBlock() {
@@ -6943,15 +6927,6 @@ struct MMMatBlock : public MM
             return;
         }
 
-        if (team(b,target) != team(b,b.player(s)) && tmove(b,s).attack == Move::Feint) {
-            if (team(b,target).contains("MatBlockUsed")) {
-                team(b,target).remove("MatBlockUsed");
-                b.sendMoveMessage(207, 1, t, Type::Fighting);
-                return;
-            }
-        }
-
-
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
             return;
         }
@@ -6967,7 +6942,6 @@ struct MMMatBlock : public MM
         b.fail(s, 207, 0, Pokemon::Fighting, t);
     }
 };
-
 
 struct MMMistyTerrain : public MM {
     static const int type = -Type::Fairy;
@@ -7007,7 +6981,6 @@ struct MMMistyTerrain : public MM {
         }
     }
 };
-
 
 struct MMSpikyShield : public MM
 {
@@ -7050,7 +7023,6 @@ struct MMSpikyShield : public MM
         }
     }
 };
-
 
 struct MMStickyWeb : public MM
 {
@@ -7160,7 +7132,6 @@ struct MMRototiller : public MM {
     }
 };
 
-
 struct MMPowder : public MM
 {
     MMPowder() {
@@ -7192,7 +7163,6 @@ struct MMPowder : public MM
         }
     }
 };
-
 
 struct MMMagneticFlux : public MM {
     MMMagneticFlux() {
