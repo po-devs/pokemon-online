@@ -149,7 +149,7 @@ Item {
                 s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
                 if (fieldPokemon.type2() !== 18) s += Utils.typeImg(fieldPokemon.type2());
                 s += "<table><tr><td><table>";
-                var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
+                var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack"), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
                 var boost,stat,i;
 
                 for (i = 0; i < 5; i++) {
