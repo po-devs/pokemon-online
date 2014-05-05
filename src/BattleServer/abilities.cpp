@@ -280,14 +280,26 @@ struct AMDownload : public AM {
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.randomOpponent(s);
+        QList<int> tars = b.revs(s);
+
+        if (tars.length() == 0) {
+            return;
+        }
+
+        int def = 0;
+        int spDef = 0;
+
+        foreach(int t, tars) {
+            def += b.getStat(t, Defense);
+            spDef += b.getStat(t, SpDefense);
+        }
 
         b.sendAbMessage(13,0,s);
 
-        if (t==-1|| b.getStat(t, Defense) >= b.getStat(t, SpDefense)) {
-            b.inflictStatMod(s, SpAttack,1,s);
+        if (def >= spDef) {
+            b.inflictStatMod(s, SpAttack, 1, s);
         } else {
-            b.inflictStatMod(s, Attack,1, s);
+            b.inflictStatMod(s, Attack, 1, s);
         }
     }
 };
