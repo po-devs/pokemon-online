@@ -25,6 +25,7 @@
 32 %f can't use items anymore!|%s can use items again!
 33 %s's Encore ended!|%f received an encore!
 35 %s endured the hit!|%s braced itself!
+42 %f's protection was broken!|%f's King's Shield was broken!|%f's Spiky Shield was broken!|%ts's team's Crafty Shield was broken!|%ts's team's Mat Block was broken!|%ts's team's Wide Guard was broken!|%ts's team's Quick Guard was broken!
 43 %s's Sturdy made the attack fail!|It's a one hit KO!
 45 %s flung its %i!
 46 %s is getting pumped!
