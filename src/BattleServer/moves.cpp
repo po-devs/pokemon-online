@@ -5334,8 +5334,7 @@ struct MMOutrage : public MM
             MoveEffect::setup(poke(b,s)["OutrageMove"].toInt(),s,s,b);
 
             if (b.gen() >= 5) {
-                addFunction(turn(b, s), "AfterAttackSuccessful", "Outrage", &aas);
-                addFunction(turn(b, s), "AttackSomehowFailed", "Outrage", &aas);
+                addFunction(turn(b, s), "AfterAttackFinished", "Outrage", &aas);
             }
         }
     }
