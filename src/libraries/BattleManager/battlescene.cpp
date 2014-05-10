@@ -10,6 +10,7 @@
 #include "battlesceneproxy.h"
 #include "pokemoninfoaccessor.h"
 #include "moveinfoaccessor.h"
+#include "themeaccessor.h"
 #include "proxydatacontainer.h"
 #include "defaulttheme.h"
 #include <Utilities/functions.h>
@@ -18,6 +19,9 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
     : mData(dat), mOwnProxy(new BattleSceneProxy(this)), peeking(false), inmove(false), pauseCount(0), mOptions(options)
 {
     activelyReplaying = false;
+
+    QSettings s;
+    mNewSprites = s.value("Battle/NewSprites", true).toBool();
 
     qmlRegisterType<ProxyDataContainer>("pokemononline.battlemanager.proxies", 1, 0, "BattleData");
     qmlRegisterType<TeamProxy>("pokemononline.battlemanager.proxies", 1, 0, "TeamData");
@@ -58,6 +62,7 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
 
     mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
     mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
+    mWidget->engine()->addImageProvider("themeinfo", new ThemeAccessor(theme));
     mWidget->engine()->rootContext()->setContextProperty("moveInfo", new MoveInfoAccessor(this, data()->gen()));
     mWidget->engine()->rootContext()->setContextProperty("theme", theme);
     mWidget->setSource(QString("qml/initial.qml"));
@@ -94,8 +99,8 @@ void BattleScene::launch() {
 
 bool BattleScene::newSprites()
 {
-    QSettings s;
-    return s.value("Battle/NewSprites", true).toBool();
+    // return value set at the beginning to prevent switching between the two mid-battle, as the scene doesn't handle that well //
+    return mNewSprites;
 }
 
 BattleScene::~BattleScene()

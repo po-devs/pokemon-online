@@ -68,7 +68,7 @@ Item {
         property int forme: img.spriteRef >> 16;
         property bool femaleTry: true;
 
-        source: fieldPokemon.showing ? ("http://pokemon-online.eu/images/pokemon/x-y/" + (battle.scene.newSprites ? "animated/" : "") + (back?"back/":"") + (pokemon.shiny?"shiny/":"")
+        source: fieldPokemon.showing && battle.scene.newSprites ? ("http://pokemon-online.eu/images/pokemon/x-y/animated/" + (back?"back/":"") + (pokemon.shiny?"shiny/":"")
                                         + ((femaleTry && pokemon.gender==2)?"female/":"") + padd(img.spriteRef&0xFFFF) + (forme ? "-"+forme:"") + ".gif") : ""
 
         scale: img.scale
@@ -94,7 +94,7 @@ Item {
             }
         }
 
-        visible: status === Image.Ready
+        visible: battle.scene.newSprites && status === Image.Ready
     }
 
     function padd(i) {

@@ -45,6 +45,7 @@ public:
     int height() const;
     void launch();
     bool newSprites();
+    bool mNewSprites;
 
     template <enumClass val, typename... Params>
     bool shouldStartPeeking(param<val>, Params...) {
