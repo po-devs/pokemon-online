@@ -98,6 +98,10 @@ void PokeSelection::toggleSearchWindow()
     }
     /* Because qt5 doesn't know how to do it itself :( */
     update();
+
+    // repaint pokemonList so it isn't black //
+    ui->pokemonList->scroll(0, 1);
+    ui->pokemonList->scroll(0, -1);
 }
 
 void PokeSelection::show()
