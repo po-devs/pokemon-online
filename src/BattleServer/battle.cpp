@@ -2251,7 +2251,7 @@ void BattleSituation::inflictRecoil(int source, int target)
             if (gen().num < 5 && tmove(source).attack == Move::DreamEater) {
                 if (canHeal(source,HealByMove,Move::DreamEater))
                     healLife(source, damage);
-            } else {
+            } else if (!hasWorkingAbility(source, Ability::MagicGuard)){
                 sendMoveMessage(1,2,source,Pokemon::Poison,target);
                 inflictDamage(source,damage,source,false);
 
@@ -3745,7 +3745,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
         if (pokeMemory(player).contains("PowerTricked") && (stat == 1 || stat == 2)) {
             givenStat = 3 - stat;
         }
-        /* Wonder room: attack & sp attack switched, 5th gen */
+        /* Wonder room: defense & sp defense switched*/
         if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
             stat = 6 - stat;
             givenStat = 6 - givenStat;
