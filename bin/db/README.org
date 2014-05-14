@@ -13,6 +13,6 @@ Follows is a directory by directory description of each database file.
    - %tf :: Foe's team name.
    - %p :: Another pokemon's name other then the name of the acting pokemon
            or the target pokemon.
-   - %q :: ???
-   - %a :: ???
+   - %a :: The name of an ability.
    - %d :: Some digit or digits.
+   - %q :: ???
