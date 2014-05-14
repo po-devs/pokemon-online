@@ -2315,11 +2315,11 @@ void BattleBase::failSilently(int player)
 }
 
 
-void BattleBase::changeTempMove(int player, int slot, int move)
+void BattleBase::changeTempMove(int player, int slot, int move, int pp)
 {
     fpoke(player).moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
-    changePP(player,slot,std::min(MoveInfo::PP(move, gen()), 5));
+    changePP(player,slot,pp);
 }
 
 Pokemon::uniqueId BattleBase::pokenum(int player) {

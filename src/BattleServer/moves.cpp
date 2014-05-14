@@ -4251,7 +4251,10 @@ struct MMMimic : public MM
                break;
            }
         }
-        b.changeTempMove(s, slot, move);
+
+        //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
+        int pp = b.gen() > 4 ? (MoveInfo::PP(move, b.gen()) * 8/5) : 5;
+        b.changeTempMove(s, slot, move, pp);
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
 };
