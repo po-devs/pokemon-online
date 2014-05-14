@@ -3714,10 +3714,8 @@ void BattleSituation::changePP(int player, int move, int PP)
         if (fpoke(player).moves[move] == poke(player).move(move).num()) {
             poke(player).move(move).PP() = PP;
             notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
-        }
-        else {
-            fpoke(player).pps[move] = std::min(fpoke(player).pps[move], quint8(5));
-            notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), fpoke(player).pps[move]);
+        } else {
+            notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), quint8(PP));
         }
     } else {
         BattleBase::changePP(player, move, PP);
