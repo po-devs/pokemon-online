@@ -3306,7 +3306,8 @@ struct MMTaunt : public MM
     }
 
     static void mp(int s, int, BS &b) {
-        if (!b.counters(s).hasCounter(BC::Taunt) || !b.battleMemory().value("CoatingAttackNow").toBool()) {
+        /* Taunt doesn't count when bouncing a move */
+        if (!b.counters(s).hasCounter(BC::Taunt) || b.battleMemory().value("CoatingAttackNow").toBool()) {
             return;
         }
 
