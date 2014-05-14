@@ -277,11 +277,18 @@ struct AMCuteCharm : public AM {
 struct AMDownload : public AM {
     AMDownload() {
         functions["UponSetup"] = &us;
+        //Gen 4 Functions below
+        functions["EndTurn6.2"] = &et;
+        functions["BeforeTargetList"] = &et;
     }
 
     static void us(int s, int , BS &b) {
-        QList<int> tars = b.revs(s);
+        //Prevents multiple boosts from occurring
+        if (poke(b,s).value("Downloaded").toBool()) {
+            return;
+        }
 
+        QList<int> tars = b.allRevs(s);
         if (tars.length() == 0) {
             return;
         }
@@ -290,17 +297,30 @@ struct AMDownload : public AM {
         int spDef = 0;
 
         foreach(int t, tars) {
+            if (b.gen() > 4 && b.koed(t))
+                continue;
             def += b.getStat(t, Defense);
             spDef += b.getStat(t, SpDefense);
         }
 
-        b.sendAbMessage(13,0,s);
+        //If there are no opposing pokemon, no boost is applied. The loop above already checked gen differences
+        if (def == 0 && spDef == 0)
+            return;
 
+        b.sendAbMessage(13,0,s);
+        poke(b,s)["Downloaded"] = true;
         if (def >= spDef) {
             b.inflictStatMod(s, SpAttack, 1, s);
         } else {
             b.inflictStatMod(s, Attack, 1, s);
         }
+    }
+
+    static void et (int s, int, BS &b) {
+        //Download can resolve at the end of the turn and after an attack, if somehow it didn't activate sooner
+        if (b.gen() > 4)
+            return;
+        us(s,0,b);
     }
 };
 
