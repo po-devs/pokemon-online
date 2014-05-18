@@ -800,7 +800,6 @@
 668:0 Pyroar
 669:0 Flabébé
 670:0 Floette
-670:1 Floette-EF
 671:0 Florges
 672:0 Skiddo
 673:0 Gogoat
@@ -858,6 +857,3 @@
 716:1 Xerneas-A
 717:0 Yveltal
 718:0 Zygarde
-719:0 Diancie
-720:0 Hoopa
-721:0 Volcanion
