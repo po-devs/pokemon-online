@@ -1870,13 +1870,35 @@ void BattleBase::inflictConfusedDamage(int player)
 {
     notify(All, StatusMessage, player, qint8(HurtConfusion));
 
-    tmove(player).type = Pokemon::Curse;
-    tmove(player).power = 40;
-    tmove(player).attack = Move::NoMove;
-    turnMem(player).typeMod = 0;
-    turnMem(player).stab = 2;
-    tmove(player).category = Move::Physical;
-    int damage = calculateDamage(player, player);
+    //tmove(player).type = Pokemon::Curse;
+    //tmove(player).power = 40;
+    //tmove(player).attack = Move::NoMove;
+    //turnMem(player).typeMod = 0;
+    //turnMem(player).stab = 2;
+    //tmove(player).category = Move::Physical;
+
+    int power = 40;
+    int level = fpoke(player).level;
+    int att = fpoke(player).stats[Attack] *getStatBoost(player, Attack);
+    int def = fpoke(player).stats[Defense] *getStatBoost(player, Defense);
+
+    //Gen 4 Confuse gets boosted by Helping Hand (1.5x)
+    if (gen() == 4 && turnMemory(player).contains("HelpingHand")) {
+        power = 60;
+    }
+
+    int randnum;
+    int damage;
+    if (gen().num == 1) {
+        randnum = randint(38) + 217;
+        damage = (((std::min(((level * 2 / 5) + 2) * power, 65535) *
+                   att / def) / 50) + 2) * randnum/255;
+    } else {
+        randnum = randint(16) + 85;
+        damage = (((std::min(((level * 2 / 5) + 2) * power, 65535) *
+                   att / 50) / def))*randnum/100;
+    }
+
     inflictDamage(player, damage, player, true, gen() <= 1); //in RBY the damage is to the sub
 }
 
