@@ -164,7 +164,7 @@ Item {
         radius: 5
 
         Image {
-            source: "file:///" + theme.trainerSpritePath(battle.data.avatar(playerBack))
+            source: "image://themeinfo/avatar/" + battle.data.avatar(playerBack)
             anchors.centerIn: parent
         }
     }
@@ -187,7 +187,7 @@ Item {
         radius: 5
 
         Image {
-            source: "file:///" + theme.trainerSpritePath(battle.data.avatar(playerFront))
+            source: "image://themeinfo/avatar/" + battle.data.avatar(playerFront)
             anchors.centerIn: parent
         }
     }
