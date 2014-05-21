@@ -1219,6 +1219,10 @@ struct AMLightningRod : public AM {
     }
 
     static void gtc(int s, int t, BS &b) {
+        if (turn(b,t).value("TargetChanged").toBool()) {
+            return;
+        }
+
         if (type(b,t) != poke(b,s)["AbilityArg"].toInt()) {
             return;
         }

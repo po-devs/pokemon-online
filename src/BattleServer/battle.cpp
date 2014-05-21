@@ -1542,14 +1542,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         goto trueend;
     }
 
+    //Follow Me takes priority over abilities
+    callbeffects(player,player, "GeneralTargetChange");
+
     /* Lightning Rod & Storm Drain */
     foreach(int poke, sortedBySpeed()) {
         if (poke != player) {
             callaeffects(poke, player, "GeneralTargetChange");
         }
     }
-
-    callbeffects(player,player, "GeneralTargetChange");
 
     targetList.clear();
 

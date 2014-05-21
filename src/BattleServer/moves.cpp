@@ -2117,17 +2117,25 @@ struct MMFollowMe : public MM
 
     struct FM : public QSet<int> {
         FM() {
-                //Follow Me prevents attraction by all 2-Turn moves
-                (*this) << NoMove << Bounce << Dig << Dive << Fly << FocusPunch << Geomancy << IceBurn
-                                  << ShadowForce << SkullBash << SkyAttack << SkyDrop << SolarBeam << RazorWind
-                                  << FreezeShock << PhantomForce;
+            //Follow Me prevents attraction by all 2-Turn moves
+            (*this) << NoMove << Bounce << Dig << Dive << Fly << FocusPunch << Geomancy << IceBurn
+                              << ShadowForce << SkullBash << SkyAttack << SkyDrop << SolarBeam << RazorWind
+                              << FreezeShock << PhantomForce;
 
         }
     };
     static FM forbidden_moves;
 
     static void gtc(int s, int, BS &b) {
+        /* Explanation of Variables
+         * s = Pokemon attacking
+         * tar = Target initially selected
+         * target = User of Follow Me/Rage Powder
+         */
         int tar = b.opponent(b.player(s));
+        if (turn(b,s).value("TargetChanged").toBool()) {
+            return;
+        }
 
         if (team(b, tar)["FollowMeTurn"] != b.turn())
             return;
@@ -2146,7 +2154,13 @@ struct MMFollowMe : public MM
             return;
         }
 
-        if (tmove(b,s).flags & Move::PowderFlag) {
+        //Sky Drop clears the redirect
+        if (b.linked(tar, "FreeFalled")) {
+            return;
+        }
+
+        int move = MM::move(b,target);
+        if (move == Move::RagePowder && b.gen() >= 6) {
             if (b.hasType(s, Type::Grass) || b.hasWorkingAbility(s, Ability::Overcoat) || b.hasWorkingItem(s, Item::SafetyGoggles)) {
                 return; //Rage powder doesn't affect them
             }
