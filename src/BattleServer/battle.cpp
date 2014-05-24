@@ -1915,7 +1915,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                         if (hasType(target, Type::Ground)) {
                             fail = true;
                         } else if (gen() >= 6 && hasType(target, Type::Electric) &&
-                                   !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb))) {
+                                   !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb) || hasWorkingAbility(target, Ability::MotorDrive))) {
                             fail = true;
                         }
                     }
