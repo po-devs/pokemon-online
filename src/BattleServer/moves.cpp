@@ -2020,7 +2020,7 @@ struct MMFling : public MM
 {
     MMFling() {
         functions["DetermineAttackFailure"] = &daf;
-        functions["OnFoeOnAttack"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
         functions["BeforeTargetList"] = &btl;
         functions["AttackSomehowFailed"] = &asf;
     }
@@ -2051,6 +2051,10 @@ struct MMFling : public MM
 
     static void uas (int s, int t, BS &b) {
         int item = b.poke(s).item();
+        if (b.hasSubstitute(t) && !b.canBypassSub(t)) {
+            b.disposeItem(s);
+            return;
+        }
         if (!b.koed(t)) {
             bool isEmbargoed = poke(b, t).value("Embargoed").toBool();
             if (!ItemInfo::isBerry(item)) {
