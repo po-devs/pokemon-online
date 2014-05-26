@@ -1585,6 +1585,10 @@ struct MMDoomDesire : public MM
         {
             b.removeEndTurnEffect(BS::SlotEffect, s, "DoomDesire");
 
+            //Invulnerable Check needed to interact with DB files for proper move execution.
+            if(poke(b,s).value("Invulnerable").toBool()) {
+                slot(b,s)["DoomDesireFailed"] = true;
+            }
             if (slot(b,s)["DoomDesireFailed"].toBool()) {
                 int move = slot(b,s)["DoomDesireMove"].toInt();
                 b.sendMoveMessage(29,0,s,MoveInfo::Type(move, b.gen()),s,move);

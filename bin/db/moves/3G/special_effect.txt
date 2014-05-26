@@ -2,7 +2,7 @@
 12 43#Guillotine
 13 104-0#razor wind
 18 107#whirlwind
-19 13-3_16*2_239*2_327_87_542_479#Fly
+19 13-3_16*2_239*2_327_87_542_479_248_353#Fly
 20 10#bind-inflict damage every turn
 23 126#stomp
 26 64#jump kick
@@ -28,7 +28,7 @@
 83 10#Fire spin
 87 152#Thunder
 90 43#Fissure
-91 13-1_89*2_222*2#Dig
+91 13-1_89*2_222*2_248_353#Dig
 99 102#rage
 101 91#night shade
 102 81#mimic
@@ -151,7 +151,7 @@
 288 54#grudge
 289 118#snatch
 290 110#secret power
-291 13-2_57*2#dive
+291 13-2_57*2_248_353#dive
 293 17#camouflage
 300 88-12#mud sport
 301 66#ice ball
@@ -166,7 +166,7 @@
 329 43#sheer cold
 335 12#block, aka mean look
 338 11#frenzy plant
-340 13-0_16*2_239*2_327_87_542_479#bounce
+340 13-0_16*2_239*2_327_87_542_479_353_248#bounce
 343 23#covet
 346 88-9#water sport
 353 29#doom desire
