@@ -152,6 +152,19 @@ Item {
                 var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack"), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
                 var boost,stat,i;
 
+                s += "<tr><td>HP</td><td>&nbsp;"
+
+
+                if (battle.scene.isPlayer(woof.spot)) {
+                    s += pokemon.life + "</td><td>/" + pokemon.totalLife;
+                } else {
+                    var min = fieldPokemon.minStat(0)
+                    var max = fieldPokemon.maxStat(0)
+                    s += Math.floor(min * pokemon.lifePercent/100) + "/" + min + "-</td><td>" + Math.floor(max * pokemon.lifePercent/100) + "/" + max
+                }
+
+                s += "</td></tr>";
+
                 for (i = 0; i < 5; i++) {
                     s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
                     stat = fieldPokemon.stat(i+1);
@@ -219,8 +232,8 @@ Item {
                 if (zone.spikesLevel > 0) {
                     hazards.push("Spikes level " + zone.spikesLevel);
                 }
-                if (zone.tspikesLevel > 0) {
-                    hazards.push("Toxic Spikes level " + zone.tspikesLevel);
+                if (zone.toxicSpikesLevel > 0) {
+                    hazards.push("Toxic Spikes level " + zone.toxicSpikesLevel);
                 }
 
                 if (hazards.length > 0) {
