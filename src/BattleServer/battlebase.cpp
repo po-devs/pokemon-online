@@ -2341,6 +2341,11 @@ void BattleBase::changeTempMove(int player, int slot, int move, int pp)
 {
     fpoke(player).moves[slot] = move;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempMove), quint8(slot), quint16(move));
+    //In case a move ever has less than the PP we are giving it.
+    int minpp = MoveInfo::PP(move, gen());
+    if (minpp < pp) {
+        pp = minpp;
+    }
     changePP(player,slot,pp);
 }
 
