@@ -49,6 +49,7 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
     connect(ui->pokemonList, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(finish()));
     connect(ui->changeSpecies, SIGNAL(clicked()), SLOT(finish()));
     connect(ui->pokemonFrame, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
+    connect(ui->advSearch, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
 }
 
 void PokeSelection::toggleSearchWindow()

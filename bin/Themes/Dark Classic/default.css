@@ -437,6 +437,10 @@ PokeEdit QLabel {
     color: white;
 }
 
+PokeEdit QProgressBar {
+    color: white;
+}
+
 TeamMenu QRadioButton, TeamMenu QCheckBox, TeamMenu QGroupBox {
     color: white;
 }
@@ -477,6 +481,11 @@ PokeSelection QPushButton#altForme {
 PokeSelection QPushButton#changeSpecies {
     color: white;
     background: #3975b8;
+}
+
+PokeSelection QPushButton#advSearch {
+    color: white;
+    background: #885EAD;
 }
 
 /**** box ****/
