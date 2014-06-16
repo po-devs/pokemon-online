@@ -8,7 +8,7 @@
 10 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
 11 %s must recharge!
 12 %f can no longer escape!
-13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!
+13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!|But %s is too heavy to be lifted...
 14 %s shattered %tf's team protections!
 16 %s stole and ate %f's %i!
 17 %s transformed into the %t type!

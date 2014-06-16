@@ -1842,8 +1842,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     }
                     callaeffects(target, player, "UponOffensiveDamageReceived");
                     callieffects(target, player, "UponBeingHit");
-                    /*This allows many items and effects to be triggered by Knock off
-                     *The only mechanical error now is Red Card/Eject button not activating */
+                    /*This allows Knock off to work*/
                     calleffects(player, target, "KnockOff");
                 }
 
