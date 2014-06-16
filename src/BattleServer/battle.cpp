@@ -1797,12 +1797,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1) {
-                    testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
                         continue;
                     }
+                    testCritical(player, target);
                     int damage = calculateDamage(player, target);
                     inflictDamage(target, damage, player, true);
                     hitcount += 1;
