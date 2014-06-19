@@ -1967,9 +1967,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             calleffects(player, target, "AfterAttackSuccessful");
         }
-        //Will-O-Wisp shouldn't thaw target. Scald thaws target in Gen 6
+        //Will-O-Wisp shouldn't thaw target. Scald thaws target in Gen 6. Hidden Power doesn't thaw before Gen 4
         if (poke(target).status() == Pokemon::Frozen) {
-            if ((tmove(player).type == Type::Fire && tmove(player).power > 0) || (attack == Move::Scald && gen() >= 6)) {
+            if ((tmove(player).type == Type::Fire && tmove(player).power > 0 && !(gen().num < 4 && attack == Move::HiddenPower)) || (attack == Move::Scald && gen() >= 6)) {
                 unthaw(target);
             }
         }
