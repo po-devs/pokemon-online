@@ -1110,12 +1110,13 @@ void BattleSituation::sendBack(int player, bool silent)
 
                 if (koed(player)) {
                     Mechanics::removeFunction(turnMemory(player),"UponSwitchIn","BatonPass");
+                    //If a Pokemon is KOed with Pursuit when it is being sent back, we don't want to display the sending back message, so we override whatever was already defined.
+                    silent = true;
                     break;
                 }
             }
         }
     }
-
     BattleBase::sendBack(player, silent);
 
     if (!koed(player)) {
