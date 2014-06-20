@@ -7145,14 +7145,20 @@ struct MMRototiller : public MM {
         }
     }
     static void uas(int s, int, BS &b) {
+        bool boosted = false;
         if (tmove(b,s).power == 0) {
             foreach (int p, b.sortedBySpeed())
             {
                 if (b.hasType(p, Type::Grass) && !b.isFlying(p)) {
                     b.inflictStatMod(p, Attack, 1, s);
                     b.inflictStatMod(p, SpAttack, 1, s);
+                    boosted = true;
                 }
             }
+        }
+        //If nothing happens, the user should get feedback.
+        if (!boosted) {
+            b.notify(BS::All, BattleCommands::Failed, s);
         }
     }
 };
