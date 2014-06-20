@@ -1973,11 +1973,13 @@ struct MMBeatUp : public MM {
     }
 
     static void bh(int s, int, BS &b) {
-        if (b.poke(b.player(s), b.repeatCount()).status() != Pokemon::Fine) {
-            turn(b,s)["HitCancelled"] = true;
-        } else {
-            tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id, b.gen()).baseAttack()/10);
-            //turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
+        for (int i = 0; i < 6; i++) {
+            if (b.poke(b.player(s), b.repeatCount()).status() == Pokemon::Fine || b.isOut(s, i)) {
+                tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id, b.gen()).baseAttack()/10);
+                //turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
+            } else {
+                turn(b,s)["HitCancelled"] = true;
+            }
         }
     }
 };
