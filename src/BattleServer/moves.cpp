@@ -3440,7 +3440,7 @@ struct MMGyroBall : public MM
     static void bcd (int s, int t, BS &b) {
         bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
 
-        int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
+        int bp = 1 + 25 * b.getBoostedStat(speed ? s : t,Speed) / b.getBoostedStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
         tmove(b, s).power = tmove(b, s).power * bp;
