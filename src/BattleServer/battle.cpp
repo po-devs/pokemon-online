@@ -1851,7 +1851,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callaeffects(player, target, "AfterKoing");
 
                 /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-                applyMoveStatMods(player, target);
+                /* In Gen 2, KOing a pokemon won't provide any beneficial boosts*/
+                if (gen() > 2 || !koed(target)) {
+                    applyMoveStatMods(player, target);
+                }
 
                 /* For berries that activate after taking damage */
                 callieffects(target, target, "TestPinch");
