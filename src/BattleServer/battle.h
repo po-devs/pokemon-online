@@ -75,7 +75,7 @@ public:
     /* Does not do extra operations,just a setter */
     virtual void changeStatus(int team, int poke, int status) { BattleBase::changeStatus(team, poke, status);}
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
-    bool canGetStatus(int player, int status);
+    bool canGetStatus(int target, int status);
     bool canHeal(int s, int part, int focus);
     bool canBypassSub(int t);
     void symbiosisPass(int s);
