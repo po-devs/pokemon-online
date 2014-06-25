@@ -3101,6 +3101,10 @@ int BattleSituation::calculateDamage(int p, int t)
         damage /= 2;
     }
 
+    if (std::abs(terrain) == Type::Grass && (attackused == Move::Bulldoze || attackused == Move::Earthquake || attackused == Move::Magnitude) && !isFlying(oppPlayer)) {
+        damage /= 2;
+    }
+
     /* Light screen / Reflect */
     if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::Infiltrator) &&
          (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
