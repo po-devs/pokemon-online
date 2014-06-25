@@ -6724,12 +6724,9 @@ struct MMCraftyShield: public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
-            return;
-        }
-
+        /*Note: Flags should not be used for Crafty Shield because all moves (bar Perish Song) that can bypass Protect are blocked by Crafty Shield*/
         /* Blocks status moves */
-        if (tmove(b,s).category != Move::Other || b.player(t) == b.player(s)) {
+        if (tmove(b,s).category != Move::Other || b.player(t) == b.player(s) || tmove(b,s).attack == Move::PerishSong) {
             return;
         }
 
