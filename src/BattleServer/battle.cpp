@@ -2422,41 +2422,55 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     applyingMoveStatMods = false;
 }
 
-bool BattleSituation::canGetStatus(int player, int status) {
-    if (!BattleBase::canGetStatus(player, status)) {
-        //sendMoveMessage(31,0,player);
+bool BattleSituation::canGetStatus(int target, int status) {
+    if (!BattleBase::canGetStatus(target, status)) {
+        //sendMoveMessage(31,0,target);
         return false;
     }
-    if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
+    if (hasWorkingAbility(target, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(target).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
-    if (!isFlying(player) && terrainCount > 0 && terrain == Type::Fairy) {
+    if (!isFlying(target) && terrainCount > 0 && terrain == Type::Fairy) {
         //Rest, 2nd part of Yawn, Status Orbs, Effect Spore, Flame Body, Poison Point, Psycho Shift
         return false;
     }
+
+    //Veils
+    for (int i_ = 0; i_ < numberPerSide(); i_++) {
+        int i = slot(player(target), i_);
+
+        if (!koed(i) && hasWorkingAbility(i, poke(i).ability())) {
+            if (pokeMemory(i)["AbilityArg"].toString().startsWith("Veil_")) {
+                if (hasType(target,pokeMemory(i)["AbilityArg"].toString().mid(5).toInt())) {
+                    sendAbMessage(104,1,target,i,pokeMemory(i)["AbilityArg"].toString().mid(5).toInt(),ability(i));
+                    return false;
+                }
+            }
+        }
+    }
     switch (status) {
     case Pokemon::Asleep: {
-        if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit)) {
+        if (hasWorkingAbility(target, Ability::Insomnia) || hasWorkingAbility(target, Ability::VitalSpirit)) {
             return false;
         }
-        if (hasWorkingTeamAbility(player, Ability::SweetVeil)){
-            sendAbMessage(112,0,player);
+        if (hasWorkingTeamAbility(target, Ability::SweetVeil)){
+            sendAbMessage(112,0,target);
             return false;
         }
         if (isThereUproar()) {
-            //sendMoveMessage(141,4,player); //Needs to remove "But it failed" from Rest first
+            //sendMoveMessage(141,4,target); //Needs to remove "But it failed" from Rest first
             return false;
         }
-        if (!isFlying(player) && terrainCount > 0 && terrain == Type::Electric) {
-            sendMoveMessage(201,2,player);
+        if (!isFlying(target) && terrainCount > 0 && terrain == Type::Electric) {
+            sendMoveMessage(201,2,target);
             return false;
         }
         return true;
     }
-    case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
-    case Pokemon::Frozen: return !hasWorkingAbility(player, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
-    case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
+    case Pokemon::Burnt: return !hasWorkingAbility(target, Ability::WaterVeil);
+    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
+    case Pokemon::Paralysed: return (gen() < 6 || !hasType(target, Type::Electric)) && !hasWorkingAbility(target, Ability::Limber);
+    case Pokemon::Poisoned: return (gen() < 3 || !hasType(target, Pokemon::Steel)) && !hasWorkingAbility(target, Ability::Immunity);
     default:
         return false;
     }
