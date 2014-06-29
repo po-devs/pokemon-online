@@ -66,6 +66,7 @@ static QScriptValue userInfoTo(QScriptEngine *e, const UserInfo& info) {
     v.setProperty("ip", info.ip);
     v.setProperty("auth", info.auth);
     v.setProperty("date", info.date);
+    v.setProperty("os", info.os);
     return v;
 }
 static void userInfoFrom(const QScriptValue &v, UserInfo& info) {
@@ -74,6 +75,7 @@ static void userInfoFrom(const QScriptValue &v, UserInfo& info) {
     info.name = v.property("ip").toString();
     info.auth = v.property("auth").toInt32();
     info.date = v.property("date").toString();
+    info.os = v.property("os").toString();
 }
 
 Q_DECLARE_METATYPE(QColor)
