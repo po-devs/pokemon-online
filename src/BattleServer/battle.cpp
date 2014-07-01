@@ -1797,12 +1797,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1) {
-                    testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
                         continue;
                     }
+                    testCritical(player, target);
                     int damage = calculateDamage(player, target);
                     inflictDamage(target, damage, player, true);
                     hitcount += 1;
@@ -1842,8 +1842,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     }
                     callaeffects(target, player, "UponOffensiveDamageReceived");
                     callieffects(target, player, "UponBeingHit");
-                    /*This allows many items and effects to be triggered by Knock off
-                     *The only mechanical error now is Red Card/Eject button not activating */
+                    /*This allows Knock off to work*/
                     calleffects(player, target, "KnockOff");
                 }
 

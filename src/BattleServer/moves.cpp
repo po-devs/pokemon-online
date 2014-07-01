@@ -1303,6 +1303,11 @@ struct MMBounce : public MM
                 b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
                 fturn(b,s).add(TM::Failed);
             }
+            //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs.
+            if (b.gen() >= 6 && move(b,s) == Move::SkyDrop && b.weight(t) >= 200) {
+                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                b.fail(s, 13, 7, Pokemon::Flying, t);
+            }
         } else {
             /* Second part of the move */
             if (move(b,s) == Move::SkyDrop) {
