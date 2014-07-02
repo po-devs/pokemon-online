@@ -124,7 +124,7 @@
 123 Revives a fainted Pokemon with 50% of its HP.
 124 Revives all fainted Pokemon with all of their HP.
 125 Increases the holder's critical hit ratio by 1 stage.
-126 Every time the holder's attacks, restores its HP by 12.5% of the damage dealt to the opponent.
+126 Every time the holder attacks, restores its HP by 12.5% of the damage dealt to the opponent.
 127 Pure salt that can be discovered deep inside the Shoal Cave. A maniac will buy it for a high price.
 128 A pretty seashell that can be found deep inside the Shoal Cave. A maniac will buy it for a high price.
 129 Guarantees that the holder can always escape from wild Pokemon.

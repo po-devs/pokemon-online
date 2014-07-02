@@ -1952,19 +1952,27 @@ struct MMBeatUp : public MM {
 
     static void cad(int s, int t, BS &b) {
         int source = b.player(s);
-        int def = PokemonInfo::Stat(b.poke(t).num(), b.gen(), Defense,b.poke(t).level(),0,0);
+        //int def = PokemonInfo::Stat(b.poke(t).num(), b.gen(), Defense,b.poke(t).level(),0,0);
+        int def = PokemonInfo::BaseStats(b.poke(t).num(), b.gen()).baseDefense();
         for (int i = 0; i < 6; i++) {
             PokeBattle &p = b.poke(source,i);
             if (p.status() == Pokemon::Fine || i == b.slotNum(s)) {
-                int att = PokemonInfo::Stat(p.num(), b.gen(), Attack,p.level(),0,0);
+                //int att = PokemonInfo::Stat(p.num(), b.gen(), Attack,p.level(),0,0);
+                int att = PokemonInfo::BaseStats(p.num(), b.gen()).baseAttack();
                 int damage = (((((p.level() * 2 / 5) + 2) * 10 * att / 50) / def) + 2) * (b.randint(255-217) + 217)*100/255/100;
                 b.sendMoveMessage(7,0,s,Pokemon::Dark,t,0,p.nick());
                 if (b.hasSubstitute(t))
                     b.inflictSubDamage(t,damage,t);
                 else
                     b.inflictDamage(t,damage,t,true);
+
                 if (!fpoke(b, t).substitute()) {
-                    fpoke(b, t).remove(BS::BasicPokeInfo::HadSubstitute);
+                    if (b.gen() < 3 && fpoke(b,t).is(BS::BasicPokeInfo::HadSubstitute)){
+                        //In GSC, Beat up ends when a sub is broken
+                        break;
+                    } else {
+                        fpoke(b, t).remove(BS::BasicPokeInfo::HadSubstitute);
+                    }
                 }
             }
             if (b.koed(t))
@@ -1973,11 +1981,17 @@ struct MMBeatUp : public MM {
     }
 
     static void bh(int s, int, BS &b) {
-        if (b.poke(b.player(s), b.repeatCount()).status() != Pokemon::Fine) {
-            turn(b,s)["HitCancelled"] = true;
-        } else {
-            tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id, b.gen()).baseAttack()/10);
-            //turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
+        for (int i = 0; i < 6; i++) {
+            if (b.poke(b.player(s), b.repeatCount()).status() == Pokemon::Fine || b.isOut(s, i)) {
+                if (b.gen() < 5) {
+                    tmove(b,s).power = 10;
+                } else {
+                    tmove(b,s).power = 5 + (PokemonInfo::BaseStats(fpoke(b,s).id, b.gen()).baseAttack()/10);
+                    //turn(b,s)["UnboostedAttackStat"] = b.poke(s, b.repeatCount()).normalStat(Attack);
+                }
+            } else {
+                turn(b,s)["HitCancelled"] = true;
+            }
         }
     }
 };
@@ -3445,7 +3459,7 @@ struct MMGyroBall : public MM
     static void bcd (int s, int t, BS &b) {
         bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
 
-        int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
+        int bp = 1 + 25 * b.getBoostedStat(speed ? s : t,Speed) / b.getBoostedStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
         tmove(b, s).power = tmove(b, s).power * bp;
@@ -6710,12 +6724,9 @@ struct MMCraftyShield: public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) && tmove(b,s).attack != Move::Feint) {
-            return;
-        }
-
+        /*Note: Flags should not be used for Crafty Shield because all moves (bar Perish Song) that can bypass Protect are blocked by Crafty Shield*/
         /* Blocks status moves */
-        if (tmove(b,s).category != Move::Other || b.player(t) == b.player(s)) {
+        if (tmove(b,s).category != Move::Other || b.player(t) == b.player(s) || tmove(b,s).attack == Move::PerishSong) {
             return;
         }
 
@@ -7150,14 +7161,20 @@ struct MMRototiller : public MM {
         }
     }
     static void uas(int s, int, BS &b) {
+        bool boosted = false;
         if (tmove(b,s).power == 0) {
             foreach (int p, b.sortedBySpeed())
             {
                 if (b.hasType(p, Type::Grass) && !b.isFlying(p)) {
                     b.inflictStatMod(p, Attack, 1, s);
                     b.inflictStatMod(p, SpAttack, 1, s);
+                    boosted = true;
                 }
             }
+        }
+        //If nothing happens, the user should get feedback.
+        if (!boosted) {
+            b.notify(BS::All, BattleCommands::Failed, s);
         }
     }
 };

@@ -62,7 +62,7 @@
 99 %s's Healer cured %f's status!
 102 %s makes %tf's team too nervous to eat Berries!
 103 %s is radiating a %t aura!
-104 %f's %a prevents stats changes to affect %s!
+104 %f's %a prevents %s's stats from being lowered!|%f's %a prevents %s's status from changing!
 107 %s had its type changed to %t!
 112 %s surrounded itself with a veil of sweetness!|%s surrounded itself with an aromatic veil!
 115 %s's Gooey slows down %f!
