@@ -1485,6 +1485,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     //Just for truant
     callaeffects(player, player, "DetermineAttackPossible");
+    /*Normalize, Aerilate, etc. Needs to be higher than "MovesPossible" to allow proper interaction with Ion Deluge*/
+    callaeffects(player, player, "MoveSettings");
+
     if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
         goto trueend;
     }
@@ -1915,7 +1918,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Steel)) {
                         fail = true;
                     } else if (attack == Move::ThunderWave) {
-                        if (hasType(target, Type::Ground)) {
+                        //Thunderwave is affected by immunities in all forms of battle
+                        if (ineffective(rawTypeEff(type, target))) {
                             fail = true;
                         } else if (gen() >= 6 && hasType(target, Type::Electric) &&
                                    !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb) || hasWorkingAbility(target, Ability::MotorDrive))) {
