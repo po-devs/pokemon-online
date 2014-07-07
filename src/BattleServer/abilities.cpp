@@ -857,7 +857,7 @@ struct AMMotorDrive : public AM {
 
 struct AMNormalize : public AM {
     AMNormalize() {
-        functions["BeforeTargetList"] = &btl;
+        functions["MoveSettings"] = &btl;
     }
 
     static void btl(int s, int, BS &b) {
