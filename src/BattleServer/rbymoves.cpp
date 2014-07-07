@@ -935,13 +935,16 @@ struct RBYTransform : public MM
 
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
-        po.type1 = PokemonInfo::Type1(num, b.gen());
-        po.type2 = PokemonInfo::Type2(num, b.gen());
+        //For Type changing moves
+        po.types = b.getTypes(t);
+        //po.type1 = PokemonInfo::Type1(num, b.gen());
+        //po.type2 = PokemonInfo::Type2(num, b.gen());
 
         b.changeSprite(s, num);
 
         for (int i = 0; i < 4; i++) {
             b.changeTempMove(s,i,b.move(t,i));
+            if (b.move(t,i) == Move::NoMove) { continue; }
             b.changePP(s, i, 5);
         }
 
