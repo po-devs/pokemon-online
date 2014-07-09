@@ -3270,21 +3270,28 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
             /* Endure & Focus Sash */
             if (survivalFactor) {
-                //Gen 5: sturdy
+                //Sturdy
                 if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
                     callaeffects(player, source, "UponSelfSurvival");
 
                 if (turnMemory(player).contains("SurviveReason"))
                     goto end;
 
-                //If it's not an ability it may be false swipe or endure
-                if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
+                //False Swipe/Hold Back
+                if (turnMemory(player).contains("CannotBeKoedBy") && turnMemory(player)["CannotBeKoedBy"].toInt() == source)
                     calleffects(player, source, "UponSelfSurvival");
 
                 if (turnMemory(player).contains("SurviveReason"))
                     goto end;
 
-                //Or, ultimately, it's an item
+                //Endure
+                if (turnMemory(player).value("CannotBeKoed").toBool() && source != player)
+                    calleffects(player, source, "UponSelfSurvival");
+
+                if (turnMemory(player).contains("SurviveReason"))
+                    goto end;
+
+                //Focus Items
                 callieffects(player, source, "UponSelfSurvival");
 
 end:
