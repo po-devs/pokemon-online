@@ -2132,14 +2132,17 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
+    bool works = !pokeMemory(player).value("AbilityNullified").toBool();
+
     if (gen() <= 2)
+        return false;
+
+    if (ability(player) != ab)
         return false;
 
     /* Illusion and Unburden ignore Mold Breaker  */
     if (ab == Ability::Illusion || ab == Ability::Unburden)
-        return true;
-    if (ability(player) != ab)
-        return false;
+        return works;
 
     if (attacking()) {
         // Mold Breaker
@@ -2149,7 +2152,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
             return false;
         }
     }
-    return !pokeMemory(player).value("AbilityNullified").toBool();
+    return works;
 }
 
 bool BattleSituation::hasWorkingTeamAbility(int play, int ability)
