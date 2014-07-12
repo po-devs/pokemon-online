@@ -796,6 +796,8 @@
 666:15 Vivillon-Savannah
 666:16 Vivillon-Sun
 666:17 Vivillon-Tundra
+666:18 Vivillon-Fancy
+666:19 Vivillon-Pokeball
 667:0 Litleo
 668:0 Pyroar
 669:0 Flabébé
@@ -857,3 +859,4 @@
 716:1 Xerneas-A
 717:0 Yveltal
 718:0 Zygarde
+719:0 Diancie
