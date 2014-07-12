@@ -941,15 +941,24 @@ struct MMAromaTherapy : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int s, int, BS &b) {
+    static void uas(int s, int t, BS &b) {
         int move = MM::move(b,s);
         int player = b.player(s);
         b.sendMoveMessage(3, (move == Aromatherapy) ? 0 : 1, s, type(b,s));
-        for (int i = 0; i < 6; i++) {
-            //SoundProof blocks healbell but not aromatherapy
-            //In gen 5 heal bell cures Pokemon with SoundProof
-            if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen().num == 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
-                b.changeStatus(player,i,Pokemon::Fine);
+        for (int i = 0; i < 6; i++) {           
+            if (b.poke(player,i).status() != Pokemon::Fine) {
+                //SoundProof blocks healbell but not aromatherapy prior to Gen 5
+                if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen() >= 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
+                    //Prior to Gen 6 Heal bell doesn't work if a sub is out
+                    if (b.gen() < 6 && b.hasSubstitute(b.slot(player, i)) && move == HealBell) {
+                        continue;
+                    }
+                    b.changeStatus(player,i,Pokemon::Fine);
+                    //Gen 5 and higher list out the pokemon that were cured
+                    if (b.gen() >=5) {
+                        b.sendMoveMessage(3, 2, s, type(b,s), t, 0, b.poke(player,i).nick());
+                    }
+                }
             }
         }
     }

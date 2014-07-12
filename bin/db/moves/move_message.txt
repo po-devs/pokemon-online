@@ -1,7 +1,7 @@
 ﻿0 
 1 %f had its energy drained!|%s devoured %f's dreams!|%s sucked up the Liquid Ooze!
 2 %s surrounded itself with a veil of water!|Aqua ring restored %s's HP!
-3 A soothing aroma wafted through the area!|A bell chimed!
+3 A soothing aroma wafted through the area!|A bell chimed!|%q was cured of its status!
 7 %q attacked!
 8 %s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
 9 %s is storing energy!|%s unleashed energy!
