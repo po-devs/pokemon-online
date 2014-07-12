@@ -190,6 +190,7 @@ void BattleSituation::initializeEndTurnFunctions()
         21.6 Water Pledge + Fire Pledge ends, Fire Pledge + Grass Pledge ends, Grass Pledge + Water Pledge ends
 
         22.0 Gravity ends
+        22.1 Sports End (Gen6+ only)
 
         23.0 Trick Room ends
 

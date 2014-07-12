@@ -4425,6 +4425,9 @@ struct MMMudSport : public MM
         functions["DetermineAttackFailure"] = &daf;
     }
 
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(22, 1);
+    }
     static void daf(int s, int, BS &b) {
         int type = turn(b,s)["MudSport_Arg"].toInt();
         QString sport = "Sported" + QString::number(type);
@@ -4447,6 +4450,21 @@ struct MMMudSport : public MM
         } else {
             QString sport = "SportedEnd" + QString::number(type);
             b.battleMemory()[sport] = b.turn() + 5;
+            if (move == MudSport) {
+                slot(b,s)["MudSport"] = b.turn() + 5;
+            } else {
+                slot(b,s)["WaterSport"] = b.turn() + 5;
+            }
+            b.addEndTurnEffect(BS::SlotEffect, bracket(b.gen()), s, "MudSport", &et);
+        }
+    }
+
+    static void et (int s, int, BS &b) {
+        if (b.turn() == slot(b,s).value("MudSport")) {
+            b.sendMoveMessage(88, 2, s, Pokemon::Ground);
+        }
+        if (b.turn() == slot(b,s).value("WaterSport")) {
+            b.sendMoveMessage(88, 3, s, Pokemon::Water);
         }
     }
 };

@@ -58,7 +58,7 @@
 84 %s identified %f!
 86 %ts's team became shrouded in mist!|%ts's Mist wore off!|The mist prevents %f from having its stats lowered!
 87 %s regained health!|%s regained a lot of health!|%s regained little health!
-88 Electric's power has been weakened!|Fire's power has been weakened!
+88 Electric's power has been weakened!|Fire's power has been weakened!|The effects of Mud Sport have worn off!|The effects of Water Sport have worn off!
 92 %s began having a nightmare!|%s is locked in a nightmare!
 93 %s calmed down!|%s became confused due to fatigue!
 94 The battlers shared their pain!
