@@ -2025,7 +2025,7 @@ void Client::battleStarted(int battleId, const Battle &battle, const TeamBattle 
 
         battleStarted(battleId, battle);
 
-        call("onBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
+        call("onScriptedBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
     } else {
         //We reconnected probably, and our team changed
         mybattles[battleId]->updateTeam(team);
@@ -2041,6 +2041,8 @@ void Client::battleStarted(int bid, const Battle &battle)
     foreach(Channel *c, mychannels) {
         c->battleStarted(bid, battle);
     }
+
+    call("onBattleStarted(int,int,int,QString,int)", bid, battle.id1, battle.id2, battle.tier, battle.mode);
 }
 
 
@@ -2121,6 +2123,8 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 
     updateState(winner);
     updateState(loser);
+
+    call("onBattleFinished(int,int,int,int)", battleid, winner, loser, res);
 }
 
 void Client::battleCommand(int battleid, const QByteArray &command)
