@@ -54,7 +54,10 @@ public:
     int onPlayerLeaveChan(int id, int chan);
     int beforeChallengeReceived(int challengeId, int oppId, QString tier, int clauses);
     int afterChallengeReceived(int challengeId, int oppId, QString tier, int clauses);
-    void onBattleStarted(BaseBattleWindowInterface *w);
+    int onBattleStarted(int id, int player1, int player2, const QString &tier, int mode);
+    int onBattleFinished(int id, int winner, int loser, int result);
+    void onScriptedBattleStarted(BaseBattleWindowInterface *w);
+
 
     /* Prevents the event from happening.
        For exemple, if called in 'beforeChatMessage', the message won't appear.

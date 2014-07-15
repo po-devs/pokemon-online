@@ -194,12 +194,14 @@ QHash<QString, OnlineClientPlugin::Hook> ScriptEngine::getHooks()
     ret.insert("onPlayerLeaveChan(int,int)", (Hook)(&ScriptEngine::onPlayerLeaveChan));
     ret.insert("beforeChallengeReceived(int,int,QString,int)", (Hook)(&ScriptEngine::beforeChallengeReceived));
     ret.insert("afterChallengeReceived(int,int,QString,int)", (Hook)(&ScriptEngine::afterChallengeReceived));
-    ret.insert("onBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onBattleStarted));
+    ret.insert("onBattleStarted(int,int,int,QString,int)",(Hook)(&ScriptEngine::onBattleStarted));
+    ret.insert("onBattleFinished(int,int,int,int)", (Hook)(&ScriptEngine::onBattleFinished));
+    ret.insert("onScriptedBattleStarted(BaseBattleWindowInterface*)",(Hook)(&ScriptEngine::onScriptedBattleStarted));
 
     return ret;
 }
 
-void ScriptEngine::onBattleStarted(BaseBattleWindowInterface *w)
+void ScriptEngine::onScriptedBattleStarted(BaseBattleWindowInterface *w)
 {
     if (battleScript.length() == 0) {
         return;
@@ -391,6 +393,18 @@ int ScriptEngine::beforeChallengeReceived(int challengeId, int oppId, QString ti
 int ScriptEngine::afterChallengeReceived(int challengeId, int oppId, QString tier, int clauses)
 {
     return makeSEvent("afterChallengeReceived", challengeId, oppId, tier, clauses);
+}
+
+int ScriptEngine::onBattleStarted(int id, int player1, int player2, const QString &tier, int mode)
+{
+    makeEvent("onBattleStarted", id, player1, player2, tier, mode);
+    return true;
+}
+
+int ScriptEngine::onBattleFinished(int id, int winner, int loser, int result)
+{
+    makeEvent("onBattleFinished", id, winner, loser, result);
+    return true;
 }
 
 void ScriptEngine::stepEvent()
