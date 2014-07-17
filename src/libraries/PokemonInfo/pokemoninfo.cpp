@@ -1146,7 +1146,7 @@ QPixmap PokemonInfo::Picture(const QString &url)
     return ret;
 }
 
-QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiney, bool back, bool mod)
+QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int gender, bool shiny, bool back, bool mod)
 {
     QString archives[] = {path("%1G/sprites").arg(gen.num), path("%1G/sprites.zip").arg(gen.num)};
     QString archive = getArchive(archives, mod);
@@ -1156,15 +1156,15 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     if (gen.num == 1)
         file = QString("yellow/%2%1.png").arg(pokeid.toString(), back?"back/":"");
     else if (gen.num == 2)
-        file = QString("crystal/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
+        file = QString("crystal/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiny?"shiny/":"");
     else if (gen.num ==3)
-        file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiney?"shiny/":"");
+        file = QString("firered-leafgreen/%2%4%1.png").arg(pokeid.toString(), back?"back/":"", shiny?"shiny/":"");
     else if (gen.num == 4)
-        file = QString("heartgold-soulsilver/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
+        file = QString("heartgold-soulsilver/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiny?"shiny/":"");
     else if (gen.num == 5)
-        file = QString("black-white/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
+        file = QString("black-white/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiny?"shiny/":"");
     else
-        file = QString("x-y/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiney?"shiny/":"");
+        file = QString("x-y/%2%4%3%1.png").arg(pokeid.toString(), back?"back/":"", (gender==Pokemon::Female)?"female/":"", shiny?"shiny/":"");
 
     QPixmap ret;
 
@@ -1176,28 +1176,23 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
-        /* temporary fix until we have all gen 6 sprites */
-        if (gen.num == 6 && PokemonInfo::Exists(pokeid, Pokemon::gen(5,1))) {
-            return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
-        }
-
         if (gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiney, back);
+            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiny, back);
         }
         if (mod) {
-            return PokemonInfo::Picture(pokeid, gen, gender, shiney, back, false);
+            return PokemonInfo::Picture(pokeid, gen, gender, shiny, back, false);
         }
-        if (shiney) {
+        if (shiny) {
             return PokemonInfo::Picture(pokeid, gen, gender, false, back);
         }
         if (gen.num == 1) {
-            return PokemonInfo::Picture(pokeid, 2, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 2, gender, shiny, back);
         } else if (gen.num == 2) {
-            return PokemonInfo::Picture(pokeid, 3, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 3, gender, shiny, back);
         } else if (gen.num == 3) {
-            return PokemonInfo::Picture(pokeid, 4, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 4, gender, shiny, back);
         } else if (gen.num == 4 || gen.num == 6) {
-            return PokemonInfo::Picture(pokeid, 5, gender, shiney, back);
+            return PokemonInfo::Picture(pokeid, 5, gender, shiny, back);
         }
         return ret;
     }
