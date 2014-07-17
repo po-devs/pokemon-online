@@ -152,7 +152,7 @@
 169 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out. This move fails if the target is already trapped by a permanent trapping move.
 170 During the turn after this move is used, ensures that the user's attack will hit the target without fail.
 171 Fails unless the target is asleep. Until the target switches out or wakes up, the target loses 1/4 of its max HP at the end of each turn.
-172 Has a 10% chance to burn the target. Defrosts the user if it is frozen.
+172 Has a 10% chance to burn the target. Thaws the user if it is frozen.
 173 Has a 30% chance to cause the target to flinch. Fails unless the user is asleep.
 174 If the user is not a Ghost-type, lowers the user's Speed by 1 stage and raises the user's Attack and Defense by 1 stage. If the user is a Ghost-type, damages the user for 1/2 of its max HP, and causes the target to lose 1/4 of its max HP per turn until it switches out.
 175 This attack's power is 20 if the user's current HP is 67.1875% of its max or higher, 40 if between 34.375% and 67.1874%, 80 if between 20.3125% and 34.374%, 100 if between 9.375% and 20.3124%, 150 if between 3.125% and 9.374%, and 200 if lower than 3.125%.
@@ -201,7 +201,7 @@
 218 This attack's power is equal to (255-User's happiness)*2/5, rounded down, with a minimum of 1.
 219 Protects Pokémon on the user's side from status problems for five turns.
 220 Sets the user's and the target's HP to the average of their current HP, but not higher than their max HP.
-221 Has a 50% chance to burn the target. Defrosts the user if it is frozen.
+221 Has a 50% chance to burn the target. Thaws the user if it is frozen.
 222 This attack's power is 10 (5% chance), 30 (10%), 50 (20%), 70 (30%), 90 (20%), 110 (10%), or 150 (5%) (Magnitude 4 through 10, respectively). This attack's power is doubled if the target is using Dig.
 223 Confuses the target.
 225 Has a 30% chance to paralyze the target.
@@ -371,7 +371,7 @@
 391 Switches the user's stat changes with the target's.
 392 Until the user switches out, the user recovers 1/16 of its max HP at the end of each turn.
 393 For five turns, or until the user switches out, the user is immune to Ground moves. Fails if the user is under the effects of Ingrain or if the user's ability is Levitate.
-394 Has a 10% chance to burn the target. The user takes recoil damage equal to 1/3 of HP lost by the target from this attack. Defrosts the user if it is frozen.
+394 Has a 10% chance to burn the target. The user takes recoil damage equal to 1/3 of HP lost by the target from this attack. Thaws the user if it is frozen.
 395 Has a 30% chance to paralyze the target.
 396 Cannot be evaded.
 397 Raises the user's Speed by 2 stages.
@@ -474,7 +474,7 @@
 500 This attack's power is increased by 20 for every stage the user's stats are raised.
 501 Protects the user's team from moves with positive priority, but fails if the user acts last in the turn it is used. Priority level 3.
 502 In double and triple battles, switches the user's position with the ally on the opposite side of the field. Priority level 1.
-503 Has a 30% chance to burn the target.
+503 Has a 30% chance to burn the target. Thaws the user and the target if either is frozen.
 504 Raises the user's Attack, Special Attack and Speed by 2 stages, but lowers the user's Defense and Special Defense by 1 stage.
 505 Recovers 1/2 of the target's max HP.
 506 This attack's power is doubled if the target has a major status condition.
@@ -529,7 +529,7 @@
 555 Lowers the target's Special Attack by 1 stage.
 556 Has a 30% chance to cause the target to flinch.
 557 Lowers the user's Speed, Defense and Special Defense by 1 stage.
-558 This attack's power is doubled if another Pokémon has used Fusion Bolt in the same turn. Defrosts the user if it is frozen.
+558 This attack's power is doubled if another Pokémon has used Fusion Bolt in the same turn. Thaws the user if it is frozen.
 559 This attack's power is doubled if another Pokémon has used Fusion Flare in the same turn.
 560 Lowers the target's Attack by 1 stage. Priority level 1.
 562 Protects the user's party from all Other category moves, but fails if the user acts last in the turn it is used. Priority level 3.
