@@ -5,7 +5,7 @@
 7 %q attacked!
 8 %s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
 9 %s is storing energy!|%s unleashed energy!
-10 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
+10 %s was hurt by %m!|%s is freed from %m!|%s's attack continues!|%f became trapped by swirling magma!
 11 %s must recharge!
 12 %f can no longer escape!
 13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!
