@@ -19,9 +19,14 @@ AvatarDialog::AvatarDialog(QWidget *parent, int current) :
     QGridLayout *layout = new QGridLayout;
     QWidget *w = new QWidget;
 
-    QDesktopWidget *mydesk = QApplication::desktop();
+    int sxpad = 64;
+    int xpad = (parent->width() > 900 + sxpad * 2 ? (parent->width() - 900) / 2 : sxpad);
+    int ypad = 64;
 
-    setGeometry(32, 64, mydesk->width() - 64, mydesk->height() - 128);
+    QPoint g = parent->mapToGlobal(QPoint(0, 0));
+    QRect rect = QRect(g.x() + xpad, g.y() + ypad, parent->width() - xpad * 2, parent->height() - ypad * 2);
+
+    setGeometry(rect);
 
     int perRow = qMax(geometry().width() / 96 - 2, 1);
 
@@ -58,11 +63,13 @@ AvatarDialog::~AvatarDialog()
 void AvatarDialog::avatarClicked()
 {
     QPushButton *b = dynamic_cast<QPushButton *>(sender());
-    b->setChecked(true);
 
     if (current != b) {
+        b->setChecked(true);
         current->setChecked(false);
         current = b;
+    } else {
+        on_btn_ok_clicked();
     }
 }
 
