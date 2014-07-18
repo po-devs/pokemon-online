@@ -3532,7 +3532,7 @@ QString ScriptEngine::protocolVersion(int id)
 
 int ScriptEngine::version(int id)
 {
-    if (!testPlayer("protocolVersion", id)) {
+    if (!testPlayer("version", id)) {
         return 0;
     }
 
