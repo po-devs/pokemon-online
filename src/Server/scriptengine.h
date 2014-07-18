@@ -433,6 +433,7 @@ public:
     Q_INVOKABLE int getClauses(const QString &tier);
     Q_INVOKABLE QString serverVersion();
     Q_INVOKABLE QString protocolVersion(int id);
+    Q_INVOKABLE int version(int id);
     Q_INVOKABLE bool isServerPrivate();
 
     /* Internal use only */

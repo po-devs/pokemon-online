@@ -3530,6 +3530,15 @@ QString ScriptEngine::protocolVersion(int id)
     return QString("%1.%2").arg(v.version).arg(v.subversion);
 }
 
+int ScriptEngine::version(int id)
+{
+    if (!testPlayer("protocolVersion", id)) {
+        return 0;
+    }
+
+    return myserver->player(id)->loginInfo()->clientVersion;
+}
+
 bool ScriptEngine::isServerPrivate()
 {
     return myserver->isPrivate();
