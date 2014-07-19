@@ -146,51 +146,52 @@ Item {
         }
     }
 
-    Rectangle {
-        z: 500 // this appears to be in front, and the other in the back. just a little perspective thing
-        anchors.left: parent.left
-        anchors.leftMargin: 10
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 36
+    /* Doesn't look good right now, so commented out */
+//    Rectangle {
+//        z: 500 // this appears to be in front, and the other in the back. just a little perspective thing
+//        anchors.left: parent.left
+//        anchors.leftMargin: 10
+//        anchors.bottom: parent.bottom
+//        anchors.bottomMargin: 36
 
-        width: 96
-        height: 96
+//        width: 96
+//        height: 96
 
-        color: "#8888FF"
-        opacity: 0.7
+//        color: "#8888FF"
+//        opacity: 0.7
 
-        border.width: 1
-        border.color: "#0000FF"
-        radius: 5
+//        border.width: 1
+//        border.color: "#0000FF"
+//        radius: 5
 
-        Image {
-            source: "image://themeinfo/avatar/" + battle.data.avatar(playerBack)
-            anchors.centerIn: parent
-        }
-    }
+//        Image {
+//            source: "image://themeinfo/avatar/" + battle.data.avatar(playerBack)
+//            anchors.centerIn: parent
+//        }
+//    }
 
-    Rectangle {
-        z: -100
-        anchors.right: parent.right
-        anchors.rightMargin: 10
-        anchors.top: parent.top
-        anchors.topMargin: 35
+//    Rectangle {
+//        z: -100
+//        anchors.right: parent.right
+//        anchors.rightMargin: 10
+//        anchors.top: parent.top
+//        anchors.topMargin: 35
 
-        width: 96
-        height: 96
+//        width: 96
+//        height: 96
 
-        color: "#FF8888"
-        opacity: 0.7
+//        color: "#FF8888"
+//        opacity: 0.7
 
-        border.width: 1
-        border.color: "#FF0000"
-        radius: 5
+//        border.width: 1
+//        border.color: "#FF0000"
+//        radius: 5
 
-        Image {
-            source: "image://themeinfo/avatar/" + battle.data.avatar(playerFront)
-            anchors.centerIn: parent
-        }
-    }
+//        Image {
+//            source: "image://themeinfo/avatar/" + battle.data.avatar(playerFront)
+//            anchors.centerIn: parent
+//        }
+//    }
 
     Team {
         id: team1
