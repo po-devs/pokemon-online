@@ -137,7 +137,7 @@ void BaseBattleWindow::init()
     mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 2);
     saveLogs->setChecked(saveLog);
     mylayout->addWidget(musicOn = new QCheckBox(tr("Music")), 1, 1, 1, 2);
-    mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 2, 1, 2);
+    mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 2, 1, 1);
 
     QSettings s;
     musicOn->setChecked(s.value("BattleAudio/PlayMusic").toBool() || s.value("play_battle_cries").toBool());
