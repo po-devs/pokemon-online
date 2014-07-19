@@ -81,8 +81,10 @@ Item {
         onCurrentFrameChanged: shader.grab();
         onStatusChanged: if (status === Image.Ready) {
                              shader.image = aimg;
+                             playing = true;
                          } else {
                              shader.image = img;
+                             playing = true;
                              if (status!=Image.Loading &&pokemon.gender==2&&femaleTry) {
                                 femaleTry=false;
                              }
