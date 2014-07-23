@@ -950,7 +950,7 @@ struct MMAromaTherapy : public MM
                 //SoundProof blocks healbell but not aromatherapy prior to Gen 5
                 if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen() >= 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
                     //Prior to Gen 6 Heal bell doesn't work if a sub is out
-                    if (b.gen() < 6 && b.hasSubstitute(b.slot(player, i)) && move == HealBell) {
+                    if (b.gen() < 6 && b.isOut(player, i) && b.hasSubstitute(b.slot(player, i)) && move == HealBell) {
                         continue;
                     }
                     b.changeStatus(player,i,Pokemon::Fine);
