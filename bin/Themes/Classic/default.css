@@ -432,9 +432,15 @@ PokeEdit QLabel {
     color: white;
 }
 
-PokeEdit QProgressBar {
+PokeEdit QProgressBar[style="QWindowsVistaStyle"], QProgressBar[style="QWindowsXPStyle"], QProgressBar[style="QWindowsStyle"] {
     color: white;
 }
+
+/* In case a better color is ever found
+PokeEdit QProgressBar[style="QFusionStyle"] {
+    color: black;
+}
+*/
 
 TeamMenu QRadioButton, TeamMenu QCheckBox, TeamMenu QGroupBox {
     color: white;
