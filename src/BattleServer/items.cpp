@@ -587,7 +587,7 @@ struct IMEviolite : public IM
     }
 
     static void sm(int s, int, BS &b) {
-        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum)) {
+        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum) && b.poke(s).num() != Pokemon::Floette_EF) {
             turn(b,s)["Stat2ItemModifier"] = 10;
             turn(b,s)["Stat4ItemModifier"] = 10;
         }
