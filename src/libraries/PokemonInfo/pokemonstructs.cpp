@@ -1160,6 +1160,22 @@ QString Team::exportToTxt() const
 
             ret += "\n";
 
+            ret += "IVs: ";
+
+            bool started1 = false;
+            for (int n = 0; n < 6; n++) {
+                if(p.DV(n) != 31) {
+                    if(started1) {
+                        ret += " / ";
+                    }
+                    started1 = true;
+
+                    ret += QString ("%1 %2").arg(p.DV(n)).arg(stats[n]);
+                }
+            }
+
+            ret += "\n";
+
             ret += NatureInfo::Name(p.nature()) + " Nature";
 
             int up = NatureInfo::StatBoosted(p.nature());
