@@ -393,7 +393,6 @@ QStringList&& SecurityManager::userList()
 
         q.exec("select name from trainers");
 
-        QStringList ret;
         while (q.next()) {
             ret.push_back(q.value(0).toString());
         }
