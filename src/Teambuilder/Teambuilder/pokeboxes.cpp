@@ -339,8 +339,8 @@ void PokeBoxes::setCurrentTeamPoke(PokeTeam *p)
     *currentPokeTeam() = *p;
 
     if (p->gen() != team().team().gen()) {
-        p->setGen(team().team().gen());
-        p->runCheck();
+        currentPokeTeam()->setGen(team().team().gen());
+        currentPokeTeam()->runCheck();
     }
 }
 
