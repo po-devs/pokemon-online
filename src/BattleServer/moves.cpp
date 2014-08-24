@@ -1307,15 +1307,16 @@ struct MMBounce : public MM
 
     static void daf(int s, int t, BS &b) {
         if (!poke(b,s).value("Invulnerable").toBool()) {
-            /* First part of the move */
-            if (b.hasSubstitute(t) && move(b,s) == Move::SkyDrop) {
-                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
-                fturn(b,s).add(TM::Failed);
-            }
-            //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs.
-            if (b.gen() >= 6 && move(b,s) == Move::SkyDrop && b.weight(t) >= 200) {
-                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
-                b.fail(s, 13, 7, Pokemon::Flying, t);
+            if (move(b,s) == Move::SkyDrop) {
+                /* First part of the move */
+                if (b.hasSubstitute(t)) {
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                    fturn(b,s).add(TM::Failed);
+                } else if (b.gen() >= 6  && b.weight(t) >= 2000) {
+                    //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs. Remember floating point precision! 200.0 = 2000
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                    b.fail(s, 13, 7, Pokemon::Flying, t);
+                }
             }
         } else {
             /* Second part of the move */
