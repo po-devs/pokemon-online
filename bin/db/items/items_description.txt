@@ -9,9 +9,9 @@
 8 Increases power of super-effective moves used by the holder by 20%.
 9 When an attack would knock out the holder, it has a 10% chance to resist with 1 HP instead.
 10 When an attack would knock out the holder from full health, it will always resist with 1 HP instead. Consumed after use.
-11 Ensures that the holder will move last. If held by a Snorlax when breeding, the egg will hatch into a Munchlax.
+11 Ensures that the holder will move last in its priority bracket. If held by a Snorlax when breeding, the egg will hatch into a Munchlax.
 12 Increases the holder's Smartness stat in contests.
-13 Ensures that the holder will move last.
+13 Ensures that the holder will move last in its priority bracket.
 14 Increases the holder's evasion by 10%. If held by a Wobbuffet when breeding, the egg will hatch into a Wynaut.
 15 Restores the holder's HP by 6.125% of its max at the end of each turn.
 16 When the holder participates in a trainer battle, doubles the amount of money received at the end of it. If held by a Chansey or Blissey when breeding, the egg will hatch into a Happiny.
