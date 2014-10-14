@@ -16,3 +16,4 @@
 5:0 Black/White
 5:1 Black/White 2
 6:0 X/Y
+6:1 Omega Ruby/Alpha Sapphire
