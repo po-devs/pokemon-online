@@ -18,9 +18,11 @@
 13:0 Weedle
 14:0 Kakuna
 15:0 Beedrill
+15:1 Mega Beedrill
 16:0 Pidgey
 17:0 Pidgeotto
 18:0 Pidgeot
+18:1 Mega Pidgeot
 19:0 Rattata
 20:0 Raticate
 21:0 Spearow
@@ -84,6 +86,7 @@
 78:0 Rapidash
 79:0 Slowpoke
 80:0 Slowbro
+80:1 Mega Slowbro
 81:0 Magnemite
 82:0 Magneton
 83:0 Farfetch'd
@@ -183,6 +186,7 @@
 170:0 Chinchou
 171:0 Lanturn
 172:0 Pichu
+172:1 Spiky Pichu
 173:0 Cleffa
 174:0 Igglybuff
 175:0 Togepi
@@ -220,6 +224,7 @@
 206:0 Dunsparce
 207:0 Gligar
 208:0 Steelix
+108:1 Mega Steelix
 209:0 Snubbull
 210:0 Granbull
 211:0 Qwilfish
@@ -270,6 +275,7 @@
 252:0 Treecko
 253:0 Grovyle
 254:0 Sceptile
+254:1 Mega Sceptile
 255:0 Torchic
 256:0 Combusken
 257:0 Blaziken
@@ -277,6 +283,7 @@
 258:0 Mudkip
 259:0 Marshtomp
 260:0 Swampert
+260:1 Mega Swampert
 261:0 Poochyena
 262:0 Mightyena
 263:0 Zigzagoon
@@ -320,6 +327,7 @@
 300:0 Skitty
 301:0 Delcatty
 302:0 Sableye
+302:1 Mega Sableye
 303:0 Mawile
 303:1 Mega Mawile
 304:0 Aron
@@ -341,10 +349,12 @@
 317:0 Swalot
 318:0 Carvanha
 319:0 Sharpedo
+319:1 Mega Sharpedo
 320:0 Wailmer
 321:0 Wailord
 322:0 Numel
 323:0 Camerupt
+323:1 Mega Camerupt
 324:0 Torkoal
 325:0 Spoink
 326:0 Grumpig
@@ -356,6 +366,7 @@
 332:0 Cacturne
 333:0 Swablu
 334:0 Altaria
+334:1 Mega Altaria
 335:0 Zangoose
 336:0 Seviper
 337:0 Lunatone
@@ -386,6 +397,7 @@
 360:0 Wynaut
 361:0 Snorunt
 362:0 Glalie
+362:1 Mega Glalie
 363:0 Spheal
 364:0 Sealeo
 365:0 Walrein
@@ -397,9 +409,11 @@
 371:0 Bagon
 372:0 Shelgon
 373:0 Salamence
+373:1 Mega Salamence
 374:0 Beldum
 375:0 Metang
 376:0 Metagross
+376:1 Mega Metagross
 377:0 Regirock
 378:0 Regice
 379:0 Registeel
@@ -408,8 +422,11 @@
 381:0 Latios
 381:1 Mega Latios
 382:0 Kyogre
+382:1 Primal Kyogre
 383:0 Groudon
+384:1 Primal Groudon
 384:0 Rayquaza
+384:1 Mega Rayquaza
 385:0 Jirachi
 386:0 Deoxys
 387:0 Turtwig
@@ -454,6 +471,7 @@
 426:0 Drifblim
 427:0 Buneary
 428:0 Lopunny
+428:1 Mega Lopunny
 429:0 Mismagius
 430:0 Honchkrow
 431:0 Glameow
@@ -504,6 +522,7 @@
 473:0 Mamoswine
 474:0 Porygon-Z
 475:0 Gallade
+475:1 Mega Gallade
 476:0 Probopass
 477:0 Dusknoir
 478:0 Froslass
@@ -625,6 +644,7 @@
 529:0 Drilbur
 530:0 Excadrill
 531:0 Audino
+531:1 Mega Audino
 532:0 Timburr
 533:0 Gurdurr
 534:0 Conkeldurr
@@ -861,3 +881,4 @@
 717:0 Yveltal
 718:0 Zygarde
 719:0 Diancie
+719:1 Mega Diancie
