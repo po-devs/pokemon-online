@@ -17,10 +17,12 @@
 12:0 Butterfree
 13:0 Weedle
 14:0 Kakuna
-15:0 Beedrill
+15:0:H Beedrill
+15:1:M Mega Beedrill
 16:0 Pidgey
 17:0 Pidgeotto
-18:0 Pidgeot
+18:0:H Pidgeot
+18:1:M Mega Pidgeot
 19:0 Rattata
 20:0 Raticate
 21:0 Spearow
@@ -83,7 +85,8 @@
 77:0 Ponyta
 78:0 Rapidash
 79:0 Slowpoke
-80:0 Slowbro
+80:0:H Slowbro
+80:1:M Mega Slowbro
 81:0 Magnemite
 82:0 Magneton
 83:0 Farfetch'd
@@ -220,7 +223,8 @@
 205:0 Forretress
 206:0 Dunsparce
 207:0 Gligar
-208:0 Steelix
+208:0:H Steelix
+108:1:M Mega Steelix
 209:0 Snubbull
 210:0 Granbull
 211:0 Qwilfish
@@ -270,14 +274,16 @@
 251:0 Celebi
 252:0 Treecko
 253:0 Grovyle
-254:0 Sceptile
+254:0:H Sceptile
+254:1:M Mega Sceptile
 255:0 Torchic
 256:0 Combusken
 257:0:H Blaziken
 257:1:M Mega Blaziken
 258:0 Mudkip
 259:0 Marshtomp
-260:0 Swampert
+260:0:H Swampert
+260:1:M Mega Swampert
 261:0 Poochyena
 262:0 Mightyena
 263:0 Zigzagoon
@@ -320,7 +326,8 @@
 299:0 Nosepass
 300:0 Skitty
 301:0 Delcatty
-302:0 Sableye
+302:0:H Sableye
+302:1:M Mega Sableye
 303:0:H Mawile
 303:1:M Mega Mawile
 304:0 Aron
@@ -341,11 +348,13 @@
 316:0 Gulpin
 317:0 Swalot
 318:0 Carvanha
-319:0 Sharpedo
+319:0:H Sharpedo
+319:1:M Mega Sharpedo
 320:0 Wailmer
 321:0 Wailord
 322:0 Numel
-323:0 Camerupt
+323:0:H Camerupt
+323:1:M Mega Camerupt
 324:0 Torkoal
 325:0 Spoink
 326:0 Grumpig
@@ -356,7 +365,8 @@
 331:0 Cacnea
 332:0 Cacturne
 333:0 Swablu
-334:0 Altaria
+334:0:H Altaria
+334:1:M Mega Altaria
 335:0 Zangoose
 336:0 Seviper
 337:0 Lunatone
@@ -386,7 +396,8 @@
 359:1:M Mega Absol
 360:0 Wynaut
 361:0 Snorunt
-362:0 Glalie
+362:0:H Glalie
+362:1:M Mega Glalie
 363:0 Spheal
 364:0 Sealeo
 365:0 Walrein
@@ -397,10 +408,12 @@
 370:0 Luvdisc
 371:0 Bagon
 372:0 Shelgon
-373:0 Salamence
+373:0:H Salamence
+373:1:M Mega Salamence
 374:0 Beldum
 375:0 Metang
-376:0 Metagross
+376:0:H Metagross
+376:1:M Mega Metagross
 377:0 Regirock
 378:0 Regice
 379:0 Registeel
@@ -408,9 +421,12 @@
 380:1:M Mega Latias
 381:0:H Latios
 381:1:M Mega Latios
-382:0 Kyogre
-383:0 Groudon
-384:0 Rayquaza
+382:0:H Kyogre
+382:1:M Primal Kyogre
+383:0:H Groudon
+384:1:M Primal Groudon
+384:0:H Rayquaza
+384:1:M Mega Rayquaza
 385:0 Jirachi
 386:0 Deoxys
 387:0 Turtwig
@@ -454,7 +470,8 @@
 425:0 Drifloon
 426:0 Drifblim
 427:0 Buneary
-428:0 Lopunny
+428:0:H Lopunny
+428:1:M Mega Lopunny
 429:0 Mismagius
 430:0 Honchkrow
 431:0 Glameow
@@ -504,7 +521,8 @@
 472:0 Gliscor
 473:0 Mamoswine
 474:0 Porygon-Z
-475:0 Gallade
+475:0:H Gallade
+475:1:M Mega Gallade
 476:0 Probopass
 477:0 Dusknoir
 478:0 Froslass
@@ -625,7 +643,8 @@
 528:0 Swoobat
 529:0 Drilbur
 530:0 Excadrill
-531:0 Audino
+531:0:H Audino
+531:1:M Mega Audino
 532:0 Timburr
 533:0 Gurdurr
 534:0 Conkeldurr
@@ -861,6 +880,7 @@
 716:1 Xerneas-A
 717:0 Yveltal
 718:0 Zygarde
-719:0 Diancie
+719:0:H Diancie
+719:1:M Mega Diancie
 720:0 Hoopa
 721:0 Volcanion
