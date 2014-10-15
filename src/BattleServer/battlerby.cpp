@@ -397,7 +397,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         calculateTypeModStab();
 
         int typemod = turnMem(player).typeMod;
-        if (tmove(player).power > 1 && typemod < -50 && attack != Move::Bind && attack != Move::Wrap) {
+        if (typemod < -50 && ((tmove(player).power > 1 && attack != Move::Bind && attack != Move::Wrap) || (MoveInfo::isOHKO(attack, gen())))) {
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(0));
             calleffects(player,target,"AttackSomehowFailed");
