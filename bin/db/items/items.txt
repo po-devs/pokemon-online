@@ -370,3 +370,23 @@
 2026 Garchompite
 2027 Lucarionite
 2028 Abomasite
+2029 Sceptilite
+2030 Swampertite
+2031 Beedrillite
+2032 Pidgeotite
+2033 Slowbronite
+2034 Steelixite
+2035 Sablite
+2036 Sharpedonite
+2037 Cameruptite
+2038 Altarianite
+2039 Glalitite
+2040 Salamencite
+2041 Metagronite
+2042 Rayquazite
+2043 Lopunnite
+2044 Galladite
+2045 Audinite
+2046 Diancite
+2047 Red Orb
+2048 Blue Orb
