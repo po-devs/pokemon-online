@@ -224,7 +224,7 @@
 206:0 Dunsparce
 207:0 Gligar
 208:0 Steelix
-108:1 Mega Steelix
+208:1 Mega Steelix
 209:0 Snubbull
 210:0 Granbull
 211:0 Qwilfish
