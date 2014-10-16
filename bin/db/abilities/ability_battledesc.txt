@@ -41,7 +41,7 @@
 40 Prevents a Pokémon with this ability from becoming Frozen.
 41 Prevents a Pokémon with this ability from becoming Burned.
 42 Prevents Steel-type opponents, that are not also Ghost-type, from switching out or running away as long as a Pokémon with this ability is on the field.
-43 Makes a Pokémon with this ability immune to Boomburst, Bug Buzz, Chatter, Confide, Disarming Voice, Echoed Voice, Grass Whistle, Growl, Heal Bell (only while on the field), Hyper Voice, Metal Sound, Noble Roar, Parting Shot, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar.
+43 Makes a Pokémon with this ability immune to Boomburst, Bug Buzz, Chatter, Confide, Disarming Voice, Echoed Voice, Grass Whistle, Growl, Hyper Voice, Metal Sound, Noble Roar, Parting Shot, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar.
 44 Makes a Pokémon with this ability regain 1/16 its max HP every turn during Rain Dance.
 45 Summons Sandstorm for 5 turns when a Pokémon with this ability enters the field.
 46 Makes opponent Pokémon use 2 PP instead of 1 when they target a Pokémon with this ability.
