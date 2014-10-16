@@ -383,11 +383,14 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
 {
     QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
 
-    static const QString weatherAbilityMessage[4] = {
+    static const QString weatherAbilityMessage[7] = {
         tr("%1's Snow Warning whipped up a hailstorm!"),
         tr("%1's Drizzle made it rain!"),
         tr("%1's Sand Stream whipped up a sandstorm!"),
-        tr("%1's Drought intensified the sun's rays!")
+        tr("%1's Drought intensified the sun's rays!"),
+        tr("%1's Desolate Land turned the sunlight extremely harsh!"),
+        tr("%1's Primordial Sea causes a heavy rain to fall!"),
+        tr("%1's Delta Stream stirs up a mysterious air current to protect Flying-type Pokémon!"),
     };
 
     static const QString weatherRegularMessage[4] = {
@@ -413,6 +416,9 @@ void BattleClientLog::onContinueWeather(int weather)
     case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm rages."),c)); break;
     case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight is strong."),c)); break;
     case Weather::Rain: printHtml("Weather", toColor(tr("Rain continues to fall."),c)); break;
+    case Weather::StrongSun: printHtml("Weather", toColor(tr("The intense sunlight continues to shine."),c)); break;
+    case Weather::StrongRain: printHtml("Weather", toColor(tr("The heavy downpour continues."),c)); break;
+    case Weather::StrongWinds: printHtml("Weather", toColor(tr("A mysterious air current is protecting Flying-type Pokémon."),c)); break;
     }
 }
 

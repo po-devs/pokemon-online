@@ -1598,7 +1598,11 @@ namespace Move
         HyperspaceHole,
         HoldHands,
         ThousandArrows,
-        ThousandWaves
+        ThousandWaves,
+        OriginPulse,
+        PrecipiceBlades,
+        DragonAscent,
+        HyperspaceFury
     };
 }
 
@@ -1829,7 +1833,10 @@ namespace Ability
         BulletProof,
         GrassPelt,
         Magician,
-        Symbiosis
+        Symbiosis,
+        DesolateLand,
+        PrimordialSea,
+        DeltaStream
     };
 }
 
@@ -2182,7 +2189,10 @@ namespace Weather {
         Hail = 1,
         Rain = 2,
         SandStorm = 3,
-        Sunny = 4
+        Sunny = 4,
+        StrongSun = 5,
+        StrongRain = 6,
+        StrongWinds = 7
     };
 }
 

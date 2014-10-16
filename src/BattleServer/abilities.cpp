@@ -2372,7 +2372,20 @@ struct AMSymbiosis : public AM
     }
 };
 
+struct AMStrongWeather : public AM
+{
+    AMStrongWeather() {
+        functions["UponSetup"] = &us;
+    }
 
+    //Messages- Sun, Rain, Wind
+    //0-2 = Set up
+    //3-5 = Other Weather fails
+    //6-7 or 8 = Attacks affected
+    static void us (int s, int , BS &b) {
+
+    }
+};
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -2530,4 +2543,5 @@ void AbilityEffect::init()
     REGISTER_AB(123, Klutz);
     REGISTER_AB(124, Symbiosis);
     //125 Cheek pouch message
+    REGISTER_AB(126, StrongWeather);
 }

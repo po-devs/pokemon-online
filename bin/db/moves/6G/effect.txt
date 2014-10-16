@@ -584,3 +584,5 @@
 615 The user and an ally hold hands. This makes them very happy.
 616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
 617 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
+620 Lowers the user's Defense and Special Defense by 1 stage.
+621 Cannot be evaded.

@@ -72,3 +72,4 @@
 122 %s's Sticky Hold made the attack ineffective!|%s's Sticky Hold prevented item loss!
 124 %s gave its %i to %f!
 125 %s's Cheek Pouch provided extra nutrients to restore HP!
+126 %'s Desolate Land turned the sunlight extremely harsh!|%'s Primordial Sea causes a heavy rain to fall!|%'s Delta Stream stirs up a mysterious air current to protect Flying-type Pokémon!|The extremely harsh sunlight was not lessened at all!|There is no relief from this heavy rain!|The strong winds prevent the atmospheric conditions from changing!|The Water-Type attack evaporated in the harsh sunlight.|The Fire-Type attack fizzled out in the heavy rain!
