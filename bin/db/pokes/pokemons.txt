@@ -30,6 +30,11 @@
 23:0 Ekans
 24:0 Arbok
 25:0 Pikachu
+25:1 Pikachu Rock Star
+25:2 Pikachu Belle
+25:3 Pikachu Pop Star
+25:4 Pikachu Ph. D
+25:5 Pikachu Libre
 26:0 Raichu
 27:0 Sandshrew
 28:0 Sandslash
@@ -882,5 +887,6 @@
 718:0 Zygarde
 719:0:H Diancie
 719:1:M Mega Diancie
-720:0 Hoopa
+720:0:H Hoopa
+720:1:M Mega Hoopa
 721:0 Volcanion
