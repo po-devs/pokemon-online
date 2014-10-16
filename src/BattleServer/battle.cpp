@@ -2720,7 +2720,7 @@ bool BattleSituation::isWeatherWorking(int weather) {
         return false;
 
     //Air lock & Cloud nine
-
+    //TODO: Figure out ORAS Weather & Airlock/Cloud Nine interaction
     for (int i = 0; i < numberOfSlots(); i++)  {
         if (!koed(i) && (hasWorkingAbility(i, Ability::AirLock) || hasWorkingAbility(i, Ability::CloudNine))) {
             return false;

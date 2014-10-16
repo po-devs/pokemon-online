@@ -187,3 +187,6 @@
 186 Boosts Defense by 50% in Grassy Terrain.
 187 Steals attacking Pokémon's held item on contact.
 188 Transfers held item to partner after the partner consumes their item.
+189 The Pokémon creates intense sunlight if it appears in battle that lasts until the Pokémon leaves the battle.
+190 The Pokémon creates a heavy rain if it appears in battle that lasts until the Pokémon leaves the battle.
+191 The Pokémon stirs up strong winds that eliminate the effects of weather and prevents weather changes until the Pokémon leaves the battle.

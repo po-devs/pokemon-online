@@ -616,3 +616,7 @@
 615 Hold Hands
 616 Thousand Arrows
 617 Thousand Waves
+618 Origin Pulse
+619 Precipice Blades
+620 Dragon Ascent
+621 Hyperspace Fury

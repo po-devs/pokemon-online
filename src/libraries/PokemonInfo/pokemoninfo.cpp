@@ -2708,6 +2708,9 @@ QString TypeInfo::weatherName(int weather)
     case Rain: return QObject::tr("rain");
     case SandStorm: return QObject::tr("sandstorm");
     case Sunny: return QObject::tr("sunny");
+    case StrongSun: return QObject::tr("intense sun");
+    case StrongRain: return QObject::tr("heavy rain");
+    case StrongWinds: return QObject::tr("strong winds");
     default: return QObject::tr("normal", "weather");
     }
 }

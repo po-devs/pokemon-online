@@ -429,7 +429,10 @@ private:
         Hail = 1,
         Rain = 2,
         SandStorm = 3,
-        Sunny = 4
+        Sunny = 4,
+        StrongSun = 5,
+        StrongRain = 6,
+        StrongWinds = 7
     };
 
     static QHash<int, QString> m_Names;
