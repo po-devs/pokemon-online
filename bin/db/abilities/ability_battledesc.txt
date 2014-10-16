@@ -187,3 +187,6 @@
 186 Raises the Defense of a Pokémon with this ability by 50% while Grassy Terrain is in effect.
 187 When a Pokémon with this ability uses an attacking move and it is holding no item, steals the opponent's held item.
 188 When a partner of a Pokémon with this ability consumes an item in battle, transfers the item held by the Pokémon with this ability to it.
+189 Summons intense sunlight that lasts until the Pokémon leaves the battle. Water-type attacks, Sunny Day, Rain Dance, Sandstorm, and Hail fail upon use. Drought, Drizzle, Sand Stream, and Snow Warning will not activate.
+189 Summons heavy rain that lasts until the Pokémon leaves the battle. Fire-type attacks, Sunny Day, Rain Dance, Sandstorm, and Hail fail upon use. Drought, Drizzle, Sand Stream, and Snow Warning will not activate.
+190 Negates all weather effects and prevents weather from changing until the Pokémon leaves the battle. All Flying-type Pokémon take normal damage from super-effective attacks.

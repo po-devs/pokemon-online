@@ -153,3 +153,6 @@
 186 119#Grass Pelt
 187 116#Magician
 188 124#Symbiosis
+189 126-5#Desolate Land
+190 126-6#Primordial Sea
+191 126-7#Delta Stream
