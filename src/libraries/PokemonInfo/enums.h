@@ -909,7 +909,7 @@ namespace Pokemon
         Gourgeist_S = Gourgeist + (1 << 16),
         Gourgeist_L = Gourgeist + (2 << 16),
         Gourgeist_XL = Gourgeist + (3 << 16),
-        Floette_EF = Floette + (1 << 16)
+        Floette_EF = Floette + (5 << 16)
     };
 }
 
