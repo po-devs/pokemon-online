@@ -1727,6 +1727,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
+        if (tmove(player).type == Type::Water && isWeatherWorking(StrongSun)) {
+            sendAbMessage(126, 6, player, player, TypeInfo::TypeForWeather(StrongSun));
+            continue;
+        }
+        if (tmove(player).type == Type::Fire && isWeatherWorking(StrongRain)) {
+            sendAbMessage(126, 7, player, player, TypeInfo::TypeForWeather(StrongRain));
+            continue;
+        }
 
         if (tmove(player).power > 0)
         {
@@ -1949,7 +1957,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notify(All, Failed, player);
                 continue;
             }
-
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
             calleffects(player, target, "DetermineAttackFailure");
@@ -2080,7 +2087,12 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
                     typeeff *= -1;
                 }
             }
-
+            if (typeeff > 0) {
+                // Delta Stream reduces SE effectiveness to Neutral on flying types
+                if (def == Type::Flying && isWeatherWorking(StrongWinds)) {
+                    typeeff -= 1;
+                }
+            }
             if (typeeff < -50) {
                 /* Check for grounded flying types */
                 if (type == Type::Ground && hasGroundingEffect(target)) {
@@ -2720,7 +2732,6 @@ bool BattleSituation::isWeatherWorking(int weather) {
         return false;
 
     //Air lock & Cloud nine
-    //TODO: Figure out ORAS Weather & Airlock/Cloud Nine interaction
     for (int i = 0; i < numberOfSlots(); i++)  {
         if (!koed(i) && (hasWorkingAbility(i, Ability::AirLock) || hasWorkingAbility(i, Ability::CloudNine))) {
             return false;
@@ -3145,13 +3156,13 @@ int BattleSituation::calculateDamage(int p, int t)
             }
         }
     }
-    if (isWeatherWorking(Sunny)) {
+    if (isWeatherWorking(Sunny) || isWeatherWorking(StrongSun)) {
         if (type == Type::Fire) {
             damage = damage * 3 /2;
         } else if (type == Type::Water) {
             damage /= 2;
         }
-    } else if (isWeatherWorking(Rain)) {
+    } else if (isWeatherWorking(Rain) || isWeatherWorking(StrongRain)) {
         if (type == Type::Water) {
             damage = damage * 3/2;
         } else if (type == Type::Fire) {
@@ -3624,6 +3635,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     /* For free fall */
     if (gen() >= 5)
         callpeffects(player, player, "AfterBeingKoed");
+    callaeffects(player, player, "UponKoed");
+    //for Strong Weather
 }
 
 void BattleSituation::requestSwitchIns()

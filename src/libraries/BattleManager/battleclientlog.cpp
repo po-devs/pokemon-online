@@ -431,6 +431,9 @@ void BattleClientLog::onEndWeather(int weather)
     case Weather::SandStorm: printHtml("Weather", toColor(tr("The sandstorm subsided."),c)); break;
     case Weather::Sunny: printHtml("Weather", toColor(tr("The sunlight faded."),c)); break;
     case Weather::Rain: printHtml("Weather", toColor(tr("The rain stopped."),c)); break;
+    case Weather::StrongRain: printHtml("Weather", toColor(tr("The heavy rain has lifted!"),c)); break;
+    case Weather::StrongSun: printHtml("Weather", toColor(tr("The harsh sunlight faded."),c)); break;
+    case Weather::StrongWinds: printHtml("Weather", toColor(tr("The mysterious air current has dissipated!"),c)); break;
     }
 }
 

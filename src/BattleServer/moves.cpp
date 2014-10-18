@@ -3497,6 +3497,9 @@ struct MMWeather : public MM
     static void daf(int s, int, BS &b) {
         if (b.weather == turn(b,s)["Weather_Arg"].toInt())
             fturn(b,s).add(TM::Failed);
+        if (b.weather == BS::StrongSun || b.weather == BS::StrongRain || b.weather == BS::StrongWinds) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int, BS &b) {
