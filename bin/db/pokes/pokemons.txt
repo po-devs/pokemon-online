@@ -30,11 +30,11 @@
 23:0 Ekans
 24:0 Arbok
 25:0 Pikachu
-25:1 Pikachu Rock Star
-25:2 Pikachu Belle
-25:3 Pikachu Pop Star
-25:4 Pikachu Ph. D
-25:5 Pikachu Libre
+25:1 Pikachu-Rock
+25:2 Pikachu-Belle
+25:3 Pikachu-Pop
+25:4 Pikachu-PhD
+25:5 Pikachu-Libre
 26:0 Raichu
 27:0 Sandshrew
 28:0 Sandslash
@@ -426,10 +426,10 @@
 380:1:M Mega Latias
 381:0:H Latios
 381:1:M Mega Latios
-382:0:H Kyogre
-382:1:M Primal Kyogre
-383:0:H Groudon
-384:1:M Primal Groudon
+382:0 Kyogre
+382:1 Primal Kyogre
+383:0 Groudon
+384:1 Primal Groudon
 384:0:H Rayquaza
 384:1:M Mega Rayquaza
 385:0 Jirachi
@@ -908,6 +908,6 @@
 718:0 Zygarde
 719:0:H Diancie
 719:1:M Mega Diancie
-720:0:H Hoopa
-720:1:M Mega Hoopa
+720:0 Hoopa
+720:1 Hoopa-B
 721:0 Volcanion
