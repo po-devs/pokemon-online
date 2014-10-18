@@ -2701,6 +2701,9 @@ int TypeInfo::TypeForWeather(int weather) {
     case Rain: return Type::Water;
     case SandStorm: return Type::Rock;
     case Sunny: return Type::Fire;
+    case StrongSun: return Type::Fire;
+    case StrongRain: return Type::Water;
+    case StrongWinds: return Type::Flying;
     default: return Type::Normal;
     }
 }

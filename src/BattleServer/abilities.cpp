@@ -172,13 +172,26 @@ struct AMChlorophyll : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        int w = b.weather;
+        //slightly awkward, but no need to edit all the ability files :D
+        switch (w) {
+        case BS::StrongRain: w = BS::Rain; break;
+        case BS::StrongSun : w = BS::Sunny; break;
+        default: w = b.weather;
+        }
+        if (b.isWeatherWorking(w) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        int w = b.weather;
+        switch (w) {
+        case BS::StrongRain: w = BS::Rain; break;
+        case BS::StrongSun : w = BS::Sunny; break;
+        default: w = b.weather;
+        }
+        if (b.isWeatherWorking(w) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["WeatherSpecialed"] = true;
         }
     }
@@ -342,8 +355,11 @@ struct AMDrizzle : public AM {
     static void us (int s, int , BS &b) {
         int w = poke(b,s)["AbilityArg"].toInt();
         if (w != b.weather) {
-            int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
-            b.sendAbMessage(14,w-1,s,s,type);
+            if (b.weather == BS::StrongSun || b.weather == BS::StrongRain || b.weather == BS::StrongWinds) {
+                b.sendAbMessage(126, b.weather-2, s, s, TypeInfo::TypeForWeather(b.weather));
+                return;
+            }
+            b.sendAbMessage(14,w-1,s,s,TypeInfo::TypeForWeather(w));
 
             if (b.gen() >= 6) {
                 if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
@@ -2376,14 +2392,39 @@ struct AMStrongWeather : public AM
 {
     AMStrongWeather() {
         functions["UponSetup"] = &us;
+        functions["UponSwitchOut"] = &uso;
+        functions["UponKoed"] = &uso;
     }
 
     //Messages- Sun, Rain, Wind
     //0-2 = Set up
     //3-5 = Other Weather fails
-    //6-7 or 8 = Attacks affected
+    //6-7 = Attacks affected
     static void us (int s, int , BS &b) {
-
+        int w = poke(b,s)["AbilityArg"].toInt();
+        if (w != b.weather) {
+            b.sendAbMessage(126,w-5,s,s,TypeInfo::TypeForWeather(w));
+            b.callForth(w, -1);
+        }
+    }
+    static void uso (int s, int , BS &b) {
+        bool otheruser = false;
+        //we need to make sure there's no other users of the current weather...
+        foreach(int i, b.sortedBySpeed()) {
+            if (i == s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i,Ability::DesolateLand) || b.hasWorkingAbility(i,Ability::PrimordialSea) || b.hasWorkingAbility(i,Ability::DeltaStream)) {
+                if (b.weather == poke(b,s)["AbilityArg"].toInt()) {
+                    otheruser = true;
+                }
+            }
+        }
+        //make sure it is actually our weather being used
+        if (b.weather == poke(b,s)["AbilityArg"].toInt() && !otheruser) {
+            b.notify(BS::All, BattleCommands::WeatherMessage, s, qint8(BS::EndWeather), qint8(b.weather));
+            b.callForth(BS::NormalWeather, -1);
+        }
     }
 };
 /* Events:
