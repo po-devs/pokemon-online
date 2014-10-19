@@ -85,7 +85,7 @@
 84 Restores 200 HP to a Pokemon.
 85 Cures a pokemon of being Frozen.
 86 Increases a Pokemon's Defense EVs by 10, but won't raise them above 100.
-87 Adds a 10% chance to flinch the target to all of the holder's moves that do not already have an added effect. Affected by Serene Grace. If held by Poliwhirl during a trade, makes it evolve into Poliwrath. If held by Slowpoke during a trade, makes it evolve into Slowking.
+87 Adds a 10% chance to flinch the target to all of the holder's moves that cannot already cause flinching. Affected by Serene Grace. If held by Poliwhirl during a trade, makes it evolve into Poliwrath. If held by Slowpoke during a trade, makes it evolve into Slowking.
 88 Cures a Pokemon of any major status condition.
 89 Evolves Gloom into Vileplume, Weepinbell into Victreebel, Exeggcute into Exeggutor, Nuzleaf into Shiftry and Pansage into Simisage.
 90 Restores 80 HP to a Pokemon.
@@ -116,7 +116,7 @@
 115 Increases a move's max PP by 1/5 of its original max, up to a total of 8/5.
 116 Increases a Pokemon's Attack EVs by 10, but won't raise them above 100.
 117 Increases a Pokemon's level by 1.
-118 Adds a 10% chance to flinch the target to all of the holder's moves that do not already have an added effect. Affected by Serene Grace. If held by Gligar at night while it levels up, makes it evolve into Gliscor.
+118 Adds a 10% chance to flinch the target to all of the holder's moves that cannot already cause flinching. Affected by Serene Grace. If held by Gligar at night while it levels up, makes it evolve into Gliscor.
 119 A toy flute made from red glass. A maniac will buy it for a high price.
 120 A small red shard. It appears to be from some sort of implement made long ago.
 121 When used, prevents wild encounters for 100 steps.

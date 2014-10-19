@@ -1,5 +1,5 @@
 ﻿0
-1 Gives all attacks used by a Pokémon with this ability a 10% chance to flinch the opponent Pokémon. If a Pokémon with this ability is the first in your belt, decreases the chance of a wild encounter.
+1 Adds a 10% chance to flinch the opponent Pokémon to all of the moves used by a Pokémon with this ability that cannot already cause flinching. If a Pokémon with this ability is the first in your belt, decreases the chance of a wild encounter.
 2 Summons Rain Dance for 5 turns when a Pokémon with this ability enters the field.
 3 Raises the Speed of a Pokémon with this ability by one stage every turn.
 4 Prevents moves from being a critical hit when targetting a Pokémon with this ability.
@@ -187,6 +187,6 @@
 186 Raises the Defense of a Pokémon with this ability by 50% while Grassy Terrain is in effect.
 187 When a Pokémon with this ability uses an attacking move and it is holding no item, steals the opponent's held item.
 188 When a partner of a Pokémon with this ability consumes an item in battle, transfers the item held by the Pokémon with this ability to it.
-189 Summons intense sunlight that lasts until the Pokémon leaves the battle. Water-type attacks, Sunny Day, Rain Dance, Sandstorm, and Hail fail upon use. Drought, Drizzle, Sand Stream, and Snow Warning will not activate.
-189 Summons heavy rain that lasts until the Pokémon leaves the battle. Fire-type attacks, Sunny Day, Rain Dance, Sandstorm, and Hail fail upon use. Drought, Drizzle, Sand Stream, and Snow Warning will not activate.
-190 Negates all weather effects and prevents weather from changing until the Pokémon leaves the battle. All Flying-type Pokémon take normal damage from super-effective attacks.
+189 Summons the extremely harsh sunlight weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Fire moves by 50%, and causes Water moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning. Makes all Pokémon immune to being frozen.
+189 Summons the heavy rain weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Water moves by 50%, and causes Fire moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
+190 Summons the strong winds weather condition for as long as a Pokémon with this ability stays on the field. Causes moves of a type that is normally super-effective against Flying to only deal normal damage against Flying. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
