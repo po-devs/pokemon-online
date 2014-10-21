@@ -340,6 +340,8 @@
 339 Cures a Pokemon of any major status condition.
 340 If held by Spritzee during a trade, makes it evolve into Aromatisse.
 341 If held by Swirlix during a trade, makes it evolve into Slurpuff.
+342 Causes Groudon to undergo Primal Reversion during battle.
+343 Causes Kyogre to undergo Primal Reversion during battle.
 1000 Increases power of Normal-type moves used by the holder by 10%.
 1001 Increases power of Normal-type moves used by the holder by 10%.
 2001 Enables Venusaur to Mega Evolve during battle.
@@ -370,3 +372,20 @@
 2026 Enables Garchomp to Mega Evolve during battle.
 2027 Enables Lucario to Mega Evolve during battle.
 2028 Enables Abomasnow to Mega Evolve during battle.
+2029 Enables Sceptile to Mega Evolve during battle.
+2030 Enables Swampert to Mega Evolve during battle.
+2031 Enables Beedrill to Mega Evolve during battle.
+2032 Enables Pidgeot to Mega Evolve during battle.
+2033 Enables Slowbro to Mega Evolve during battle.
+2034 Enables Steelix to Mega Evolve during battle.
+2035 Enables Sableye to Mega Evolve during battle.
+2036 Enables Sharpedo to Mega Evolve during battle.
+2037 Enables Camerupt to Mega Evolve during battle.
+2038 Enables Altaria to Mega Evolve during battle.
+2039 Enables Glalie to Mega Evolve during battle.
+2040 Enables Salamence to Mega Evolve during battle.
+2041 Enables Metagross to Mega Evolve during battle.
+2042 Enables Lopunny to Mega Evolve during battle.
+2043 Enables Gallade to Mega Evolve during battle.
+2044 Enables Audino to Mega Evolve during battle.
+2045 Enables Diancie to Mega Evolve during battle.
