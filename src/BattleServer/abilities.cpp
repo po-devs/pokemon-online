@@ -2163,7 +2163,7 @@ struct AMMegaLauncher : public AM {
     }
 
     static void bpm (int s, int t, BS &b) {
-        if (s != t && tmove(b,s).flags & Move::PulsingFlag) {
+        if (s != t && tmove(b,s).flags & Move::LaunchFlag) {
             b.chainBp(s, 10);
         }
     }

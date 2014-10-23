@@ -935,12 +935,13 @@ namespace Move
         SoundFlag = 256, //Is the move blocked with SoundProof
         FlyingFlag = 512, //Is the move an invulnerable move (shadow force/...)? not used by PO yet
         UnthawingFlag = 1024, // Does the user of this move unthaw when frozen?
-        PulsingFlag = 2048, // Can this move reach targets far across in triples?
+        FarReachFlag = 2048, // Can this move reach targets far across in triples?
         HealingFlag = 4096, //Can this move be blocked with Heal Block
         MischievousFlag = 8192, // Can this move bypass substitute?
         BiteFlag = 16384,//Strong jaw moves
         PowderFlag = 32768, //Powder moves
-        BallFlag = 65536
+        BallFlag = 65536, //Ball moves for Bulletproof
+        LaunchFlag = 131072 //Moves that get boosted by Mega Launcher
     };
 
     enum Target

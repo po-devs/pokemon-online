@@ -2430,6 +2430,11 @@ bool ItemInfo::isMegaStone(int itemnum)
     return itemnum >= 2000 && itemnum < 3000;
 }
 
+bool ItemInfo::isPrimalStone(int itemnum)
+{
+    return itemnum == 342 || itemnum == 343;
+}
+
 bool ItemInfo::isDrive(int itemnum)
 {
     return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
