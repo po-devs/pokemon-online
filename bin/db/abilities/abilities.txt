@@ -12,7 +12,7 @@
 11 Water Absorb
 12 Oblivious
 13 Cloud Nine
-14 Compoundeyes
+14 Compound Eyes
 15 Insomnia
 16 Color Change
 17 Immunity
@@ -29,7 +29,7 @@
 28 Synchronize
 29 Clear Body
 30 Natural Cure
-31 Lightningrod
+31 Lightning Rod
 32 Serene Grace
 33 Swift Swim
 34 Chlorophyll
