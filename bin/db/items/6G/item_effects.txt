@@ -229,7 +229,9 @@
 333 43#Weakness Policy
 334 36-14_1#Snowball
 335 36-10_4#Luminous Moss
-2001 66-3:1
+342 67-383:1#Red Orb
+343 67-382:1#Blue Orb
+2001 66-3:1#2001+ are Megastones
 2002 66-6:1
 2003 66-6:2
 2004 66-9:1

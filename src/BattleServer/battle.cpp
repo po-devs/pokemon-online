@@ -983,7 +983,15 @@ void BattleSituation::callEntryEffects(int player)
            So All those must be taken in account when changing something to
            how the items are set up. */
         callieffects(player, player, "UponSetup");
-        if (gen() >= 3)
+
+        //primal reversion! Happens after stealth rock/other hazards
+        bool primal = false;
+        if (ItemInfo::isPrimalStone(poke(player).item()) && ItemInfo::MegaStoneForme(poke(player).item()).original() == poke(player).num()) {
+            sendItemMessage(67, player, 0, 0, 0, ItemInfo::MegaStoneForme(poke(player).item()).toPokeRef());
+            changeForme(slot(player), slotNum(player), ItemInfo::MegaStoneForme(poke(player).item()));
+            primal = true;
+        }
+        if (gen() >= 3 && !primal)
             acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
@@ -3522,7 +3530,8 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     if (ItemInfo::isDrive(item) && poke.num().original() == Pokemon::Genesect) {
         return false;
     }
-    if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == poke.num().original()) {
+    //primalstones using MegaStoneForme function because lazy
+    if ((ItemInfo::isMegaStone(item) || ItemInfo::isPrimalStone(item)) && ItemInfo::MegaStoneForme(item).original() == poke.num().original()) {
         return false;
     }
     /* Knock off */
