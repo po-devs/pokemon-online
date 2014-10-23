@@ -179,7 +179,7 @@ struct AMChlorophyll : public AM {
         case BS::StrongSun : w = BS::Sunny; break;
         default: w = b.weather;
         }
-        if (b.isWeatherWorking(w) && poke(b,s)["AbilityArg"].toInt() == w) {
+        if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
@@ -191,7 +191,7 @@ struct AMChlorophyll : public AM {
         case BS::StrongSun : w = BS::Sunny; break;
         default: w = b.weather;
         }
-        if (b.isWeatherWorking(w) && poke(b,s)["AbilityArg"].toInt() == w) {
+        if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["WeatherSpecialed"] = true;
         }
     }
