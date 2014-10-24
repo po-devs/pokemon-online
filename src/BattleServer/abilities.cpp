@@ -2401,6 +2401,7 @@ struct AMStrongWeather : public AM
         functions["UponSetup"] = &us;
         functions["UponSwitchOut"] = &uso;
         functions["UponKoed"] = &uso;
+        functions["OnLoss"] = &uso;
     }
 
     //Messages- Sun, Rain, Wind
