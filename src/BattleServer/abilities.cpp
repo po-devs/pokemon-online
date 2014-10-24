@@ -730,7 +730,14 @@ struct AMIceBody : public AM {
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        int w = b.weather;
+        //same as chloro
+        switch (w) {
+        case BS::StrongRain: w = BS::Rain; break;
+        case BS::StrongSun : w = BS::Sunny; break;
+        default: w = b.weather;
+        }
+        if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
             if (b.canHeal(s,BS::HealByAbility,b.ability(s))) {
                 b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
