@@ -3524,7 +3524,7 @@ struct MMThunder : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation:StrongRain)) {
+        if (b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation::StrongRain)) {
             tmove(b, s).accuracy = 0;
         } else if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             tmove(b, s).accuracy = tmove(b, s).accuracy * 5 / 7;
@@ -4576,7 +4576,7 @@ struct MMRazorWind : public MM
     static void ms(int s, int, BS &b) {
         if (!poke(b,s).contains("ReleaseTurn") || poke(b,s)["ReleaseTurn"].toInt() != b.turn()) {
             int mv = move(b,s);
-            if (mv == SolarBeam && b.isWeatherWorking(BS::Sunny) || mv == SolarBeam && b.isWeatherWorking(BS::Sunny))
+            if (mv == SolarBeam && b.isWeatherWorking(BS::Sunny) || mv == SolarBeam && b.isWeatherWorking(BS::StrongSun))
                 return;
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s), s, move(b,s));
@@ -4590,7 +4590,7 @@ struct MMRazorWind : public MM
                 b.sendItemMessage(11,s);
                 b.disposeItem(s);
 
-                if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.weather != BS:StrongSun b.isWeatherWorking(b.weather)) {
+                if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.weather != BS:StrongSun && b.isWeatherWorking(b.weather)) {
                     tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
