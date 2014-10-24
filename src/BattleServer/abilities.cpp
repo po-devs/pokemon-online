@@ -401,12 +401,12 @@ struct AMDrySkin : public AM {
     }
 
     static void ws (int s, int , BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain)) {
+        if (b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation::StrongRain)) {
             if (b.canHeal(s, BS::HealByEffect,0)) {
                 b.sendAbMessage(15,0,s,s,Pokemon::Water);
                 b.healLife(s, b.poke(s).totalLifePoints()/8);
             }
-        } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        } else if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             b.sendAbMessage(15,1,s,s,Pokemon::Fire);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
         }
@@ -474,7 +474,7 @@ struct AMFlowerGift : public AM {
         if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Cherrim)
             return;
 
-        if (b.weather == BS::Sunny) {
+        if (b.weather == BS::Sunny || b.weather == BS::StrongSun) {
             if (b.pokenum(s).subnum != 1) b.changeAForme(s, 1);
         } else {
             if (b.pokenum(s).subnum != 0) b.changeAForme(s, 0);
@@ -685,7 +685,7 @@ struct AMHydration : public AM {
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain) && b.poke(s).status() != Pokemon::Fine) {
+        if ((b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation::StrongRain)) && b.poke(s).status() != Pokemon::Fine) {
             b.sendAbMessage(29,0,s,s,Pokemon::Water);
             b.healStatus(s, b.poke(s).status());
         }
@@ -824,7 +824,7 @@ struct AMLeafGuard  : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny) && turn(b,s)["StatModType"].toString() == "Status") {
+        if ((b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) && turn(b,s)["StatModType"].toString() == "Status") {
             if (b.canSendPreventSMessage(s,t))
                 b.sendAbMessage(37,0,s,s,0,b.ability(s));
             b.preventStatMod(s,t);
@@ -1036,13 +1036,13 @@ struct AMSolarPower : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             turn(b,s)["Stat3AbilityModifier"] = 10;
         }
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        if (b.isWeatherWorking(BattleSituation::Sunny)|| b.isWeatherWorking(BattleSituation::StrongSun)) {
             b.sendAbMessage(56,0,s,s,Pokemon::Fire);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/8,s,false);
         }
