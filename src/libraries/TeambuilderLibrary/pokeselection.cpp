@@ -49,6 +49,7 @@ PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *poke
     connect(ui->pokemonList, SIGNAL(pokemonActivated(Pokemon::uniqueId)), SLOT(finish()));
     connect(ui->changeSpecies, SIGNAL(clicked()), SLOT(finish()));
     connect(ui->pokemonFrame, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
+    connect(ui->advSearch, SIGNAL(clicked()), SLOT(toggleSearchWindow()));
 }
 
 void PokeSelection::toggleSearchWindow()
@@ -98,6 +99,10 @@ void PokeSelection::toggleSearchWindow()
     }
     /* Because qt5 doesn't know how to do it itself :( */
     update();
+
+    // repaint pokemonList so it isn't black //
+    ui->pokemonList->scroll(0, 1);
+    ui->pokemonList->scroll(0, -1);
 }
 
 void PokeSelection::show()

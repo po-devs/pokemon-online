@@ -54,7 +54,7 @@ Item {
     }
 
     Rectangle {
-        z: -100
+        z: 500
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.bottom: parent.bottom
@@ -65,14 +65,14 @@ Item {
 
         border.width: 2
         radius: 5
-        border.color: "#b04924"
+        border.color: "#6890f0"
         color: "transparent"
 
         Rectangle {
             z: -10
             anchors.fill: parent
             anchors.rightMargin: (300-battle.data.team(playerBack).time) * parent.width/300
-            color: "#ecb6a3"
+            color: Qt.lighter(parent.border.color)
             radius: parent.radius
             opacity: 0.7
         }
@@ -81,6 +81,21 @@ Item {
             anchors.centerIn: parent
             text: battle.data.team(playerBack).name
             color: Qt.darker(parent.border.color, 3)
+        }
+
+        MouseArea {
+            id: mouseAreaBack
+            anchors.fill: parent
+            hoverEnabled: true
+        }
+
+        Tooltip {
+            shown: mouseAreaBack.containsMouse
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            x: 2
+            width: parent.width - 4
+            text: Math.floor(battle.data.team(playerBack).time / 60) + ":" + (battle.data.team(playerBack).time % 60 < 10 ? "0" : "") + battle.data.team(playerBack).time % 60;
         }
     }
 
@@ -97,14 +112,14 @@ Item {
         opacity: 0.7
         border.width: 2
         radius: 5
-        border.color: "#6890f0"
+        border.color: "#b04924"
         color: "transparent"
 
         Rectangle {
             z: -10
             anchors.fill: parent
             anchors.rightMargin: (300-battle.data.team(playerFront).time) * parent.width/300
-            color: Qt.lighter(parent.border.color)
+            color: "#ecb6a3"
             radius: parent.radius
             opacity: 0.7
         }
@@ -114,7 +129,69 @@ Item {
             text: battle.data.team(playerFront).name
             color: Qt.darker(parent.border.color, 5)
         }
+
+        MouseArea {
+            id: mouseAreaFront
+            anchors.fill: parent
+            hoverEnabled: true
+        }
+
+        Tooltip {
+            shown: mouseAreaFront.containsMouse
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            x: 2
+            width: parent.width - 4
+            text: Math.floor(battle.data.team(playerFront).time / 60) + ":" + (battle.data.team(playerFront).time % 60 < 10 ? "0" : "") + battle.data.team(playerFront).time % 60;
+        }
     }
+
+    /* Doesn't look good right now, so commented out */
+//    Rectangle {
+//        z: 500 // this appears to be in front, and the other in the back. just a little perspective thing
+//        anchors.left: parent.left
+//        anchors.leftMargin: 10
+//        anchors.bottom: parent.bottom
+//        anchors.bottomMargin: 36
+
+//        width: 96
+//        height: 96
+
+//        color: "#8888FF"
+//        opacity: 0.7
+
+//        border.width: 1
+//        border.color: "#0000FF"
+//        radius: 5
+
+//        Image {
+//            source: "image://themeinfo/avatar/" + battle.data.avatar(playerBack)
+//            anchors.centerIn: parent
+//        }
+//    }
+
+//    Rectangle {
+//        z: -100
+//        anchors.right: parent.right
+//        anchors.rightMargin: 10
+//        anchors.top: parent.top
+//        anchors.topMargin: 35
+
+//        width: 96
+//        height: 96
+
+//        color: "#FF8888"
+//        opacity: 0.7
+
+//        border.width: 1
+//        border.color: "#FF0000"
+//        radius: 5
+
+//        Image {
+//            source: "image://themeinfo/avatar/" + battle.data.avatar(playerFront)
+//            anchors.centerIn: parent
+//        }
+//    }
 
     Team {
         id: team1

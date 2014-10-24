@@ -656,7 +656,7 @@ namespace Pokemon
         Emboar,
         Oshawott,
         Dewott,
-        Sammurott,
+        Samurott,
         Patrat,
         Watchog,
         Lillipup,
@@ -702,7 +702,7 @@ namespace Pokemon
         Cottonee,
         Whimsicott,
         Petilil,
-        Liligant,
+        Lilligant,
         Basculin,
         Sandile,
         Krokorok,
@@ -751,10 +751,10 @@ namespace Pokemon
         Joltik,
         Galvantula,
         Ferroseed,
-        Ferrotorn,
+        Ferrothorn,
         Klink,
         Klang,
-        Klinkklang,
+        Klinklang,
         Tynamo,
         Eelektrik,
         Eelektross,
@@ -872,7 +872,9 @@ namespace Pokemon
         Xerneas,
         Yveltal,
         Zygarde,
-		Diancie,
+        Diancie,
+        Hoopa,
+        Volcanion,
         // Base forms end here.
         Rotom_C = Rotom + (1 << 16),
         Rotom_H = Rotom + (2 << 16),
@@ -1591,7 +1593,12 @@ namespace Move
         Celebrate,
         HoldBack,
         DiamondStorm,
-        LightOfRuin
+        LightOfRuin,
+        SteamEruption,
+        HyperspaceHole,
+        HoldHands,
+        ThousandArrows,
+        ThousandWaves
     };
 }
 

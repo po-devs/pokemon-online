@@ -649,7 +649,7 @@ bool BattleSituation::isMovePossible(int player, int move)
     if (possible) {
         int attack = fpoke(player).moves[move];
 
-        if (attack == Move::Belch && !pokeMemory(player).contains("BerryEaten")) {
+        if (attack == Move::Belch && !(battleMemory().value(QString("BerryEaten%1%2").arg(this->player(player)).arg(currentInternalId(player))).toBool())) {
             return false;
         }
     }
@@ -1110,12 +1110,13 @@ void BattleSituation::sendBack(int player, bool silent)
 
                 if (koed(player)) {
                     Mechanics::removeFunction(turnMemory(player),"UponSwitchIn","BatonPass");
+                    //If a Pokemon is KOed with Pursuit when it is being sent back, we don't want to display the sending back message, so we override whatever was already defined.
+                    silent = true;
                     break;
                 }
             }
         }
     }
-
     BattleBase::sendBack(player, silent);
 
     if (!koed(player)) {
@@ -1471,7 +1472,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     turnMem(player).add(TurnMemory::HasMoved);
-    if (gen() >= 5) {
+    if (gen() >= 5 && !battleMemory().value("CoatingAttackNow").toBool()) {
         counters(player).decreaseCounters();
     }
 
@@ -1484,6 +1485,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     //Just for truant
     callaeffects(player, player, "DetermineAttackPossible");
+    /*Normalize, Aerilate, etc. Needs to be higher than "MovesPossible" to allow proper interaction with Ion Deluge*/
+    callaeffects(player, player, "MoveSettings");
+
     if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
         goto trueend;
     }
@@ -1542,14 +1546,15 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         goto trueend;
     }
 
+    //Follow Me takes priority over abilities
+    callbeffects(player,player, "GeneralTargetChange");
+
     /* Lightning Rod & Storm Drain */
     foreach(int poke, sortedBySpeed()) {
         if (poke != player) {
             callaeffects(poke, player, "GeneralTargetChange");
         }
     }
-
-    callbeffects(player,player, "GeneralTargetChange");
 
     targetList.clear();
 
@@ -1796,12 +1801,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 }
 
                 if (tmove(player).power > 1) {
-                    testCritical(player, target);
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
                         continue;
                     }
+                    testCritical(player, target);
                     int damage = calculateDamage(player, target);
                     inflictDamage(target, damage, player, true);
                     hitcount += 1;
@@ -1841,8 +1846,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     }
                     callaeffects(target, player, "UponOffensiveDamageReceived");
                     callieffects(target, player, "UponBeingHit");
-                    /*This allows many items and effects to be triggered by Knock off
-                     *The only mechanical error now is Red Card/Eject button not activating */
+                    /*This allows Knock off to work*/
                     calleffects(player, target, "KnockOff");
                 }
 
@@ -1850,7 +1854,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callaeffects(player, target, "AfterKoing");
 
                 /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-                applyMoveStatMods(player, target);
+                /* In Gen 2, KOing a pokemon won't provide any beneficial boosts*/
+                if (gen() > 2 || !koed(target)) {
+                    applyMoveStatMods(player, target);
+                }
 
                 /* For berries that activate after taking damage */
                 callieffects(target, target, "TestPinch");
@@ -1901,14 +1908,31 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             /* Needs to be called before opponentblock because lightning rod / twave */
             int type = tmove(player).type; /* move type */
+            if (target != player) {
+                bool fail = false;
+                //Poison can't be poisoned regardless of Sleuthed status
+                if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) {
+                    fail = true;
+                } else if (!pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()) {
+                    //RawTypeEffect is useless here because Inverted will never create an "ineffective" scenario.
+                    if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Steel)) {
+                        fail = true;
+                    } else if (attack == Move::ThunderWave) {
+                        //Thunderwave is affected by immunities in all forms of battle
+                        if (ineffective(rawTypeEff(type, target))) {
+                            fail = true;
+                        } else if (gen() >= 6 && hasType(target, Type::Electric) &&
+                                   !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb) || hasWorkingAbility(target, Ability::MotorDrive))) {
+                            fail = true;
+                        }
+                    }
+                }
 
-            if ( target != player &&
-                 ((Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) ||
-                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
-                   && ineffective(rawTypeEff(type, target)) && !pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()))){
-                //sendMoveMessage(31,0,target);
-                notify(All, Failed, player);
-                continue;
+                if (fail) {
+                    sendMoveMessage(31,0,target); //It doesn't affect X...
+                    //notify(All, Failed, player);
+                    continue;
+                }
             }
 
             /* Needs to be called before DetermineAttackFailure because
@@ -1950,8 +1974,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
             calleffects(player, target, "AfterAttackSuccessful");
         }
-        if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-            unthaw(target);
+        //Will-O-Wisp shouldn't thaw target. Scald thaws target in Gen 6. Hidden Power doesn't thaw before Gen 4
+        if (poke(target).status() == Pokemon::Frozen) {
+            if ((tmove(player).type == Type::Fire && tmove(player).power > 0 && !(gen().num < 4 && attack == Move::HiddenPower)) || (attack == Move::Scald && gen() >= 6)) {
+                unthaw(target);
+            }
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
@@ -2105,14 +2132,17 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
+    bool works = !pokeMemory(player).value("AbilityNullified").toBool();
+
     if (gen() <= 2)
+        return false;
+
+    if (ability(player) != ab)
         return false;
 
     /* Illusion and Unburden ignore Mold Breaker  */
     if (ab == Ability::Illusion || ab == Ability::Unburden)
-        return true;
-    if (ability(player) != ab)
-        return false;
+        return works;
 
     if (attacking()) {
         // Mold Breaker
@@ -2122,7 +2152,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
             return false;
         }
     }
-    return !pokeMemory(player).value("AbilityNullified").toBool();
+    return works;
 }
 
 bool BattleSituation::hasWorkingTeamAbility(int play, int ability)
@@ -2210,7 +2240,7 @@ void BattleSituation::inflictRecoil(int source, int target)
     // "33" means one-third
     //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
 
-    int damage = std::abs(int(recoil * turnMemory(source).value("DamageInflicted").toInt() / 100));
+    int damage = std::abs(int(recoil * turnMemory(source).value("LastDamageInflicted").toInt() / 100));
 
     if (recoil < 0) {
         inflictDamage(source, damage, source, false);
@@ -2232,7 +2262,7 @@ void BattleSituation::inflictRecoil(int source, int target)
             if (gen().num < 5 && tmove(source).attack == Move::DreamEater) {
                 if (canHeal(source,HealByMove,Move::DreamEater))
                     healLife(source, damage);
-            } else {
+            } else if (!hasWorkingAbility(source, Ability::MagicGuard)){
                 sendMoveMessage(1,2,source,Pokemon::Poison,target);
                 inflictDamage(source,damage,source,false);
 
@@ -2399,37 +2429,55 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     applyingMoveStatMods = false;
 }
 
-bool BattleSituation::canGetStatus(int player, int status) {
-    if (!BattleBase::canGetStatus(player, status)) {
-        //sendMoveMessage(31,0,player);
+bool BattleSituation::canGetStatus(int target, int status) {
+    if (!BattleBase::canGetStatus(target, status)) {
+        //sendMoveMessage(31,0,target);
         return false;
     }
-    if (hasWorkingAbility(player, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(player).attack == Move::Rest && gen().num == 4))
+    if (hasWorkingAbility(target, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(target).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
+    if (!isFlying(target) && terrainCount > 0 && terrain == Type::Fairy) {
+        //Rest, 2nd part of Yawn, Status Orbs, Effect Spore, Flame Body, Poison Point, Psycho Shift
+        return false;
+    }
+
+    //Veils
+    for (int i_ = 0; i_ < numberPerSide(); i_++) {
+        int i = slot(player(target), i_);
+
+        if (!koed(i) && hasWorkingAbility(i, poke(i).ability())) {
+            if (pokeMemory(i)["AbilityArg"].toString().startsWith("Veil_")) {
+                if (hasType(target,pokeMemory(i)["AbilityArg"].toString().mid(5).toInt())) {
+                    sendAbMessage(104,1,target,i,pokeMemory(i)["AbilityArg"].toString().mid(5).toInt(),ability(i));
+                    return false;
+                }
+            }
+        }
+    }
     switch (status) {
     case Pokemon::Asleep: {
-        if (hasWorkingAbility(player, Ability::Insomnia) || hasWorkingAbility(player, Ability::VitalSpirit)) {
+        if (hasWorkingAbility(target, Ability::Insomnia) || hasWorkingAbility(target, Ability::VitalSpirit)) {
             return false;
         }
-        if (hasWorkingTeamAbility(player, Ability::SweetVeil)){
-            sendAbMessage(112,0,player);
+        if (hasWorkingTeamAbility(target, Ability::SweetVeil)){
+            sendAbMessage(112,0,target);
             return false;
         }
         if (isThereUproar()) {
-            //sendMoveMessage(141,4,player); //Needs to remove "But it failed" from Rest first
+            //sendMoveMessage(141,4,target); //Needs to remove "But it failed" from Rest first
             return false;
         }
-        if (!isFlying(player) && terrainCount > 0 && terrain == Type::Electric) {
-            sendMoveMessage(201,2,player);
+        if (!isFlying(target) && terrainCount > 0 && terrain == Type::Electric) {
+            sendMoveMessage(201,2,target);
             return false;
         }
         return true;
     }
-    case Pokemon::Burnt: return !hasWorkingAbility(player, Ability::WaterVeil);
-    case Pokemon::Frozen: return !hasWorkingAbility(player, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
-    case Pokemon::Paralysed: return (gen() < 6 || !hasType(player, Type::Electric)) && !hasWorkingAbility(player, Ability::Limber);
-    case Pokemon::Poisoned: return (gen() < 3 || !hasType(player, Pokemon::Steel)) && !hasWorkingAbility(player, Ability::Immunity);
+    case Pokemon::Burnt: return !hasWorkingAbility(target, Ability::WaterVeil);
+    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
+    case Pokemon::Paralysed: return (gen() < 6 || !hasType(target, Type::Electric)) && !hasWorkingAbility(target, Ability::Limber);
+    case Pokemon::Poisoned: return (gen() < 3 || !hasType(target, Pokemon::Steel)) && !hasWorkingAbility(target, Ability::Immunity);
     default:
         return false;
     }
@@ -2796,6 +2844,16 @@ bool BattleSituation::hasGroundingEffect(int player)
             || (gen() >= 3 && pokeMemory(player).value("Rooted").toBool()) || pokeMemory(player).value("SmackedDown").toBool();
 }
 
+bool BattleSituation::isProtected(int slot, int target)
+{
+    // check to see if protected //
+    return pokeMemory(slot).value("ProtectiveMoveTurn", -1).toInt() == turn()
+            || (teamMemory(player(slot)).value("WideGuardUsed", -1).toInt() == turn()
+                && (tmove(target).targets == Move::Opponents
+                    || tmove(target).targets == Move::All
+                    || tmove(target).targets == Move::AllButSelf));
+}
+
 void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
 {
     if (poke(player).status() == status) {
@@ -2971,13 +3029,14 @@ int BattleSituation::calculateDamage(int p, int t)
     if (turnMemory(p).value("GemActivated").toBool()) {
         gen() < 6 ? chainBp(p, 10) : chainBp(p, 6);
     }
-    callaeffects(p,t,"BasePowerModifier");
-    callaeffects(t,p,"BasePowerFoeModifier");
 
     /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
     if (attackused == Move::Acrobatics && poke.item() == Item::NoItem) {
         tmove(p).power *= 2;
     }
+
+    callaeffects(p,t,"BasePowerModifier");
+    callaeffects(t,p,"BasePowerFoeModifier");
 
     int power = tmove(p).power;
     int type = tmove(p).type;
@@ -3001,12 +3060,16 @@ int BattleSituation::calculateDamage(int p, int t)
     if (gen() <= 5) {
         QString sport = "Sported" + QString::number(type);
         if (battleMemory().contains(sport) && pokeMemory(battleMemory()[sport].toInt()).value(sport).toBool()) {
-            power /= 2;
+            if (gen() < 5) {
+                power /= 2;
+            } else {
+                power /= 3;
+            }
         }
     } else {
         QString sport = "SportedEnd" + QString::number(type);
         if (battleMemory().contains(sport) && battleMemory().value(sport).toInt() > turn()) {
-            power /= 2;
+            power /= 3;
         }
     }
 
@@ -3042,6 +3105,10 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     if (std::abs(terrain) == Type::Fairy && type == Type::Dragon && !isFlying(oppPlayer)) {
+        damage /= 2;
+    }
+
+    if (std::abs(terrain) == Type::Grass && (attackused == Move::Bulldoze || attackused == Move::Earthquake || attackused == Move::Magnitude) && !isFlying(oppPlayer)) {
         damage /= 2;
     }
 
@@ -3228,21 +3295,28 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
             /* Endure & Focus Sash */
             if (survivalFactor) {
-                //Gen 5: sturdy
+                //Sturdy
                 if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
                     callaeffects(player, source, "UponSelfSurvival");
 
                 if (turnMemory(player).contains("SurviveReason"))
                     goto end;
 
-                //If it's not an ability it may be false swipe or endure
-                if (turnMemory(player).contains("CannotBeKoedAt") && turnMemory(player)["CannotBeKoedAt"].toInt() == attackCount())
+                //False Swipe/Hold Back
+                if (turnMemory(player).contains("CannotBeKoedBy") && turnMemory(player)["CannotBeKoedBy"].toInt() == source)
                     calleffects(player, source, "UponSelfSurvival");
 
                 if (turnMemory(player).contains("SurviveReason"))
                     goto end;
 
-                //Or, ultimately, it's an item
+                //Endure
+                if (turnMemory(player).value("CannotBeKoed").toBool() && source != player)
+                    calleffects(player, source, "UponSelfSurvival");
+
+                if (turnMemory(player).contains("SurviveReason"))
+                    goto end;
+
+                //Focus Items
                 callieffects(player, source, "UponSelfSurvival");
 
 end:
@@ -3264,6 +3338,8 @@ end:
         if (!sub) {
             /* If there's a sub its already taken care of */
             inc(turnMemory(source)["DamageInflicted"], damage);
+            /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
+            turnMemory(source)["LastDamageInflicted"] = damage;
             pokeMemory(player)["DamageTakenByAttack"] = damage;
             turnMem(player).damageTaken = damage;
             turnMemory(player)["DamageTakenBy"] = source;
@@ -3301,11 +3377,15 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
     if (life <= damage) {
         fpoke(player).remove(BasicPokeInfo::Substitute);
         inc(turnMemory(source)["DamageInflicted"], life);
+        /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
+        turnMemory(source)["LastDamageInflicted"] = life;
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
         fpoke(player).substituteLife = life-damage;
         inc(turnMemory(source)["DamageInflicted"], damage);
+        /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
+        turnMemory(source)["LastDamageInflicted"] = damage;
         sendMoveMessage(128, 3, player);
     }
 }
@@ -3328,10 +3408,10 @@ void BattleSituation::eatBerry(int player, bool show) {
         sendItemMessage(8000,player,0, 0, berry);
 
         if (hasWorkingAbility(player, Ability::CheekPouch)) {
+            sendAbMessage(125,0,player);
             healLife(player, poke(player).totalLifePoints()/3);
         }
-
-        pokeMemory(player)["BerryEaten"] = true;
+        battleMemory()[QString("BerryEaten%1%2").arg(this->player(player)).arg((currentInternalId(player)))] = true;
     }
 
     disposeItem(player);
@@ -3373,7 +3453,7 @@ void BattleSituation::devourBerry(int p, int berry, int s)
         healLife(s, poke(s).totalLifePoints()/3);
     }
 
-    pokeMemory(p)["BerryEaten"] = true;
+    battleMemory()[QString("BerryEaten%1%2").arg(this->player(p)).arg((currentInternalId(p)))] = true;
 
     /* Restoring initial conditions */
     pokeMemory(p)["ItemArg"] = tempItemStorage;
@@ -3670,10 +3750,8 @@ void BattleSituation::changePP(int player, int move, int PP)
         if (fpoke(player).moves[move] == poke(player).move(move).num()) {
             poke(player).move(move).PP() = PP;
             notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
-        }
-        else {
-            fpoke(player).pps[move] = std::min(fpoke(player).pps[move], quint8(5));
-            notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), fpoke(player).pps[move]);
+        } else {
+            notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), quint8(PP));
         }
     } else {
         BattleBase::changePP(player, move, PP);
@@ -3701,7 +3779,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
         if (pokeMemory(player).contains("PowerTricked") && (stat == 1 || stat == 2)) {
             givenStat = 3 - stat;
         }
-        /* Wonder room: attack & sp attack switched, 5th gen */
+        /* Wonder room: defense & sp defense switched*/
         if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
             stat = 6 - stat;
             givenStat = 6 - givenStat;

@@ -52,7 +52,8 @@ SOURCES += main.cpp \
     downloadmanager.cpp \
     Teambuilder/teambuilderwidget.cpp \
     Teambuilder/pokedex.cpp \
-    Teambuilder/pokedexpokeselection.cpp
+    Teambuilder/pokedexpokeselection.cpp \
+    Teambuilder/avatardialog.cpp
 
 HEADERS += mainwindow.h \
     client.h \
@@ -106,7 +107,8 @@ HEADERS += mainwindow.h \
     teambuilderinterface.h \
     Teambuilder/pokedex.h \
     Teambuilder/pokedexpokeselection.h \
-    ../Shared/config.h
+    ../Shared/config.h \
+    Teambuilder/avatardialog.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
@@ -136,7 +138,8 @@ FORMS += Teambuilder/trainermenu.ui \
     loadwindow.ui \
     loadline.ui \
     Teambuilder/pokedex.ui \
-    Teambuilder/pokedexpokeselection.ui
+    Teambuilder/pokedexpokeselection.ui \
+    Teambuilder/avatardialog.ui
 
 RC_FILE = myapp.rc
 

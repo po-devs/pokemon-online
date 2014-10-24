@@ -68,7 +68,7 @@ Item {
         property int forme: img.spriteRef >> 16;
         property bool femaleTry: true;
 
-        source: fieldPokemon.showing ? ("http://pokemon-online.eu/images/pokemon/x-y/animated/" + (back?"back/":"") + (pokemon.shiny?"shiny/":"")
+        source: fieldPokemon.showing && battle.scene.newSprites ? ("http://pokemon-online.eu/images/pokemon/x-y/animated/" + (back?"back/":"") + (pokemon.shiny?"shiny/":"")
                                         + ((femaleTry && pokemon.gender==2)?"female/":"") + padd(img.spriteRef&0xFFFF) + (forme ? "-"+forme:"") + ".gif") : ""
 
         scale: img.scale
@@ -81,8 +81,10 @@ Item {
         onCurrentFrameChanged: shader.grab();
         onStatusChanged: if (status === Image.Ready) {
                              shader.image = aimg;
+                             playing = true;
                          } else {
                              shader.image = img;
+                             playing = true;
                              if (status!=Image.Loading &&pokemon.gender==2&&femaleTry) {
                                 femaleTry=false;
                              }
@@ -94,7 +96,7 @@ Item {
             }
         }
 
-        visible: status === Image.Ready
+        visible: battle.scene.newSprites && status === Image.Ready
     }
 
     function padd(i) {
@@ -149,8 +151,21 @@ Item {
                 s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
                 if (fieldPokemon.type2() !== 18) s += Utils.typeImg(fieldPokemon.type2());
                 s += "<table><tr><td><table>";
-                var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack."), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
+                var stats = [qsTr("Attack"), qsTr("Defense"), qsTr("Sp. Attack"), qsTr("Sp. Defense"), qsTr("Speed"), qsTr("Accuracy"), qsTr("Evasion")];
                 var boost,stat,i;
+
+                s += "<tr><td>HP</td><td>&nbsp;"
+
+
+                if (battle.scene.isPlayer(woof.spot)) {
+                    s += pokemon.life + "</td><td>/" + pokemon.totalLife;
+                } else {
+                    var min = fieldPokemon.minStat(0)
+                    var max = fieldPokemon.maxStat(0)
+                    s += Math.floor(min * pokemon.lifePercent/100) + "/" + min + "-</td><td>" + Math.floor(max * pokemon.lifePercent/100) + "/" + max
+                }
+
+                s += "</td></tr>";
 
                 for (i = 0; i < 5; i++) {
                     s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
@@ -219,8 +234,8 @@ Item {
                 if (zone.spikesLevel > 0) {
                     hazards.push("Spikes level " + zone.spikesLevel);
                 }
-                if (zone.tspikesLevel > 0) {
-                    hazards.push("Toxic Spikes level " + zone.tspikesLevel);
+                if (zone.toxicSpikesLevel > 0) {
+                    hazards.push("Toxic Spikes level " + zone.toxicSpikesLevel);
                 }
 
                 if (hazards.length > 0) {

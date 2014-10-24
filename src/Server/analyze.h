@@ -1,5 +1,5 @@
 /**
- * See network protocol here: http://wiki.pokemon-online.eu/view/Network_Protocol_v2
+ * See network protocol here: https://github.com/po-devs/pokemon-online/wiki/Network-Protocol
 */
 
 #ifndef ANALYZE_H

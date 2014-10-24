@@ -882,6 +882,10 @@ void Client::togglePMLogs(bool b) {
     LogManager::obj()->changeLogSaving(PMLog, b);
 }
 
+void Client::toggleChangeNamePM(bool b) {
+    globals.setValue("PMs/ChangeNameEvents", b);
+}
+
 void Client::ignoreServerVersion(bool b)
 {
     QString key  = QString("ignore_version_%1_%2").arg(serverVersion.version).arg(serverVersion.subversion);
@@ -1386,6 +1390,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(pm_reject, SIGNAL(triggered(bool)), SLOT(toggleIncomingPM(bool)));
     pm_reject->setChecked(globals.value("PMs/RejectIncoming").toBool());
 
+    QAction * pm_changename = pmMenu->addAction(tr("Enable change name message in PMs"));
+    pm_changename->setCheckable(true);
+    connect(pm_changename, SIGNAL(triggered(bool)), SLOT(toggleChangeNamePM(bool)));
+    pm_changename->setChecked(globals.value("PMs/ChangeNameEvent").toBool());
+
     QMenu * sortMenu = menuActions->addMenu(tr("&Sort players"));
 
     QAction *sortByTier = sortMenu->addAction(tr("Sort players by &tiers"));
@@ -1465,6 +1474,12 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
         screenSize->setCheckable(true);
         connect(screenSize, SIGNAL(triggered(bool)), SLOT(changeBattleScreenSize(bool)));
         screenSize->setChecked(globals.value("Battle/AnimatedScreenSize", "712x400").toString() == "712x400");
+
+        QAction *newSprites = newBattleWindow->addAction(tr("Use 3D Models"));
+        newSprites->setCheckable(true);
+        connect(newSprites, SIGNAL(triggered(bool)), SLOT(useNewSprites(bool)));
+        newSprites->setChecked(globals.value("Battle/NewSprites", true).toBool());
+
     }
 
 
@@ -1730,6 +1745,11 @@ void Client::changeBattleScreenSize(bool big)
 void Client::changeBattleWeather(bool everyTurn)
 {
     globals.setValue("Battle/AnimatedWeather", everyTurn ? "always" : "firstTurn");
+}
+
+void Client::useNewSprites(bool use)
+{
+    globals.setValue("Battle/NewSprites", use);
 }
 
 void Client::changeNicknames(bool old)
@@ -2014,7 +2034,7 @@ void Client::battleStarted(int battleId, const Battle &battle, const TeamBattle 
 
         battleStarted(battleId, battle);
 
-        call("onBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
+        call("onScriptedBattleStarted(BaseBattleWindowInterface*)", static_cast<BaseBattleWindowInterface*>(mybattle));
     } else {
         //We reconnected probably, and our team changed
         mybattles[battleId]->updateTeam(team);
@@ -2030,6 +2050,8 @@ void Client::battleStarted(int bid, const Battle &battle)
     foreach(Channel *c, mychannels) {
         c->battleStarted(bid, battle);
     }
+
+    call("onBattleStarted(int,int,int,QString,int)", bid, battle.id1, battle.id2, battle.tier, battle.mode);
 }
 
 
@@ -2110,6 +2132,8 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 
     updateState(winner);
     updateState(loser);
+
+    call("onBattleFinished(int,int,int,int)", battleid, winner, loser, res);
 }
 
 void Client::battleCommand(int battleid, const QByteArray &command)
@@ -2651,6 +2675,19 @@ void Client::acceptChallenge(int cId)
         if (d->cid() == cId) {
             ChallengeInfo c = d->challengeInfo();
             c.dsc = ChallengeInfo::Accepted;
+            relay().sendChallengeStuff(c);
+            closeChallengeWindow(d);
+            break;
+        }
+    }
+}
+
+void Client::declineChallenge(int cId)
+{
+    foreach(ChallengeDialog *d, mychallengeids) {
+        if (d->cid() == cId) {
+            ChallengeInfo c = d->challengeInfo();
+            c.dsc = ChallengeInfo::Refused;
             relay().sendChallengeStuff(c);
             closeChallengeWindow(d);
             break;

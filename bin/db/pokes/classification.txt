@@ -718,3 +718,5 @@
 717 Destruction Pokémon
 718 Order Pokémon
 719 Jewel Pokémon
+720 Mischief Pokemon
+721 Steam Pokemon

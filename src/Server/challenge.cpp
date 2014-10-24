@@ -68,12 +68,16 @@ validCheckOk:
     source->addChallenge(this, false);
     dest->addChallenge(this, true);
 
-    //desc.rated = s->allowThroughChallenge && s->canHaveRatedBattle(source->id(), dest->id(), c.clauses & ChallengeInfo::ChallengeCup, false, false);
+    if (c.desttier == source->team(c.team).tier) {
+        desc.rated = s->allowThroughChallenge && s->canHaveRatedBattle(source->id(), dest->id(), source->team(c.team), source->team(c.team), false, false);
+    } else {
+        desc.rated = false;
+    }
 
     desc.gen = source->team(c.team).gen;
 
     ChallengeInfo d = c;
-    d.rated = false;
+    d.rated = desc.rated;
     d.opp = source->id();
     d.dsc = ChallengeInfo::Sent;
     d.team = 0;

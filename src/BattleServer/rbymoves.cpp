@@ -184,12 +184,13 @@ struct RBYBind : public MM
             }
             initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
         }
+        turn(b,s)["TellPlayers"] = false;
     }
 
     static void cad(int s, int t, BS &b) {
         if (poke(b,t).contains("Bound")) {
             turn(b,s)["CustomDamage"] = poke(b,s)["BindDamage"];
-            //b.sendMoveMessage(10, 0, t, type(b,s), s, move(b,s));
+            b.sendMoveMessage(10, 2, s);
         }
     }
 
@@ -228,7 +229,8 @@ struct RBYBind : public MM
             poke(b,s).remove("BindCount");
             poke(b,t).remove("Bound");
             removeFunction(poke(b,s), "TurnSettings", "Bind");
-            b.sendMoveMessage(10, 1, t, type(b,s), s, move(b,s));
+            //RBY doesn't notify when Wrap ends
+            //b.sendMoveMessage(10, 1, t, type(b,s), s, move(b,s));
         }
     }
 };
@@ -935,13 +937,16 @@ struct RBYTransform : public MM
 
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
-        po.type1 = PokemonInfo::Type1(num, b.gen());
-        po.type2 = PokemonInfo::Type2(num, b.gen());
+        //For Type changing moves
+        po.types = b.getTypes(t);
+        //po.type1 = PokemonInfo::Type1(num, b.gen());
+        //po.type2 = PokemonInfo::Type2(num, b.gen());
 
         b.changeSprite(s, num);
 
         for (int i = 0; i < 4; i++) {
             b.changeTempMove(s,i,b.move(t,i));
+            if (b.move(t,i) == Move::NoMove) { continue; }
             b.changePP(s, i, 5);
         }
 

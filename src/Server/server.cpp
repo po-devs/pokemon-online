@@ -497,7 +497,7 @@ void Server::loadRatedBattlesSettings()
     QSettings s("config", QSettings::IniFormat);
     allowRatedWithSameIp = !s.value("Battles/ForceUnratedForSameIP").toBool();
     diffIpsForRatedBattles = s.value("Battles/ConsecutiveFindBattlesWithDifferentIPs").toInt();
-    allowThroughChallenge = s.value("Battles/RatedThroughChallenge").toInt();
+    allowThroughChallenge = s.value("Battles/RatedThroughChallenge").toBool();
 
     TierMachine::obj()->loadDecaySettings();
 }

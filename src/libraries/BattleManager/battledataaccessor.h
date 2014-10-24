@@ -57,6 +57,7 @@ public:
     ~PokeProxy();
 
     Q_PROPERTY(QString nick READ nickname NOTIFY pokemonReset)
+    Q_PROPERTY(QString pokeName READ pokeName NOTIFY pokemonReset)
     Q_PROPERTY(int status READ status NOTIFY statusChanged)
     Q_PROPERTY(Pokemon::uniqueId num READ num NOTIFY numChanged)
     Q_PROPERTY(bool shiny READ shiny NOTIFY pokemonReset)
@@ -65,6 +66,7 @@ public:
     Q_PROPERTY(int numRef READ numRef STORED false NOTIFY numChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
     Q_PROPERTY(int lifePercent READ lifePercent STORED false NOTIFY lifeChanged)
+    Q_PROPERTY(int totalLife READ totalLife NOTIFY pokemonReset)
     Q_PROPERTY(int happiness READ happiness NOTIFY pokemonReset)
     Q_PROPERTY(int item READ item NOTIFY itemChanged)
     Q_PROPERTY(int nature READ nature NOTIFY pokemonReset)
@@ -82,6 +84,7 @@ public:
     Q_ENUMS(Status)
 
     QString nickname() const {return d()->nick();}
+    QString pokeName() const {return PokemonInfo::Name(d()->num());}
     int status() const {return d()->status();}
     Pokemon::uniqueId num() const {return d()->num();}
     bool shiny() const {return d()->shiny();}

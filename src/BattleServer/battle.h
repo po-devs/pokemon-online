@@ -75,7 +75,7 @@ public:
     /* Does not do extra operations,just a setter */
     virtual void changeStatus(int team, int poke, int status) { BattleBase::changeStatus(team, poke, status);}
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
-    bool canGetStatus(int player, int status);
+    bool canGetStatus(int target, int status);
     bool canHeal(int s, int part, int focus);
     bool canBypassSub(int t);
     void symbiosisPass(int s);
@@ -131,6 +131,7 @@ public:
     bool isFlying(int player);
     bool hasFlyingEffect(int player); //returns true if has flying effect outside of flying type
     bool hasGroundingEffect(int player); //returns true for gravity, ingrain, ...
+    bool isProtected(int slot, int target);
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
     void requestSwitch(int player, bool entryEffects=true);

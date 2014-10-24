@@ -145,6 +145,8 @@ public:
     bool beforeFindBattle(int src);
     void afterFindBattle(int src);
 
+    void battleConnectionLost();
+    
     /* Imports a module with a given name */
     Q_INVOKABLE QScriptValue import(const QString &fileName);
     /* Functions called in scripts */
@@ -431,6 +433,7 @@ public:
     Q_INVOKABLE int getClauses(const QString &tier);
     Q_INVOKABLE QString serverVersion();
     Q_INVOKABLE QString protocolVersion(int id);
+    Q_INVOKABLE int version(int id);
     Q_INVOKABLE bool isServerPrivate();
 
     /* Internal use only */
@@ -548,7 +551,6 @@ signals:
     void clearTheChat();
 public slots:
     void changeScript(const QString &script, const bool triggerStartUp = false);
-    void battleConnectionLost();
 
 private slots:
     void timer();

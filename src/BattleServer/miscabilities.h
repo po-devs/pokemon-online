@@ -12,7 +12,7 @@ struct AMFlashFire : public AM {
     }
 
     static void op(int s, int t, BS &b) {
-        if (b.gen() <= 4 && b.poke(s).status() == Pokemon::Frozen) {
+        if ((b.gen() <= 4 && b.poke(s).status() == Pokemon::Frozen) || b.isProtected(s, t)) {
             return;
         }
         if (type(b,t) == Pokemon::Fire && (b.gen() >= 4 || tmove(b,t).power > 0) ) {

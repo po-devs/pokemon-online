@@ -1,14 +1,14 @@
 ﻿0 
 1 %f had its energy drained!|%s devoured %f's dreams!|%s sucked up the Liquid Ooze!
-2 %s surrounded itself with a veil of water!|Aqua ring restored %s's HP.
-3 A soothing aroma wafted through the area!|A bell chimed!
+2 %s surrounded itself with a veil of water!|Aqua ring restored %s's HP!
+3 A soothing aroma wafted through the area!|A bell chimed!|%q was cured of its status!
 7 %q attacked!
 8 %s hasn't enough energy left!|%s cut its own HP and maximized its Attack!
 9 %s is storing energy!|%s unleashed energy!
-10 %s was hurt by %m!|%s is freed from %m!|%f became trapped by swirling magma!
+10 %s was hurt by %m!|%s is freed from %m!|%s's attack continues!|%f became trapped by swirling magma!
 11 %s must recharge!
 12 %f can no longer escape!
-13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!
+13 %s sprang up!|%s burrowed its way under the ground!|%s hid underwater!|%s flew high up!|%s vanished instantly!|%s took %f in the air!|%s can't attack while in the air!|But %s is too heavy to be lifted...
 14 %s shattered %tf's team protections!
 16 %s stole and ate %f's %i!
 17 %s transformed into the %t type!
@@ -25,6 +25,7 @@
 32 %f can't use items anymore!|%s can use items again!
 33 %s's Encore ended!|%f received an encore!
 35 %s endured the hit!|%s braced itself!
+42 %f's protection was broken!|%f's King's Shield was broken!|%f's Spiky Shield was broken!|%ts's team's Crafty Shield was broken!|%ts's team's Mat Block was broken!|%ts's team's Wide Guard was broken!|%ts's team's Quick Guard was broken!
 43 %s's Sturdy made the attack fail!|It's a one hit KO!
 45 %s flung its %i!
 46 %s is getting pumped!
@@ -45,7 +46,7 @@
 67 %s sealed the opponent's move(s)!|%s cannot use the sealed %m!
 68 %s levitated with electromagnetism!|%s electromagnetism wore off!
 70 %s knocked off %f's %i!
-72 It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed.
+72 It doesn't affect %s...|%f was seeded!|%s's health is sapped by leech seed!
 73 Reflect raised %ts's team defense!|Light Screen raised %ts's team special defense!|Reflect raised %ts's team defense slightly!|Light Screen raised %ts's team special defense slightly!|%ts's reflect wore off!|%ts's light screen wore off!
 74 %s took aim at %f!
 75 %ts's team is protected from critical hits!|%ts's Lucky Chant wore off!
@@ -61,7 +62,7 @@
 92 %s began having a nightmare!|%s is locked in a nightmare!
 93 %s calmed down!|%s became confused due to fatigue!
 94 The battlers shared their pain!
-95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d.
+95 All Pokémon hearing the song will faint in three turns!|%s's perish count fell to %d!
 96 %s's present healed %f some HP!
 97 %s copied %f's stat changes!
 98 %s moved its status onto %f!
@@ -83,7 +84,7 @@
 124 Pointed stones float in the air around %tf's team!|Pointed stones dug into %s!
 125 %s stockpiled %d!
 127 %s is hit with recoil!
-128 %s already has a substitute.|%s's substitute faded!|%f's substitute blocked %m!|%s's substitute took the damage!|%s made a substitute!
+128 %s already has a substitute!|%s's substitute faded!|%f's substitute blocked %m!|%s's substitute took the damage!|%s made a substitute!
 131 %s swallowed!
 132 %s switched items with %f!|%s obtained one %i!
 133 A tailwind started blowing behind %ts's team!|%ts's team tailwind petered out!
@@ -101,7 +102,7 @@
 151 %s planted its roots!|%s absorbed nutrients with its roots!
 155 %s and %f had their power shared!|%s and %f had their defenses shared!
 156 %s cancelled the items' effects!|The items are now working again!
-157 %s transformed into the %t type!
+157 %s transformed into the %t type!|%t type was added to %s!
 158 %f gained %a!
 160 %f's %i burned!
 162 %s gave %f its %i!
@@ -118,10 +119,10 @@
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
 190 %f took the kind offer!
 199 %ts's team is protected by Crafty Shield!|%ts's team Crafty Shield was broken!
-201 The terrain became electrified!|Electricity on the terrain faded away.|Electric Terrain prevents %s from falling asleep!
+201 The terrain became electrified!|Electricity on the terrain faded away!|Electric Terrain prevents %s from falling asleep!
 202 %f became electrified!
-203 Pokemon can no longer flee!|Fairy Lock's effect disappeared.
-205 The terrain became grassy!|Grass on the terrain faded away.|The Grassy Terrain heals the Pokemon on the field
+203 Pokemon can no longer flee!|Fairy Lock's effect disappeared!
+205 The terrain became grassy!|Grass on the terrain faded away!|The Grassy Terrain heals the Pokemon on the field!
 206 %s shielded itself against damage!
 207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
 208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!

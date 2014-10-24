@@ -26,7 +26,8 @@ SOURCES += \
     datacontainer.cpp \
     regularbattlescene.cpp \
     moveinfoaccessor.cpp \
-    zoneproxy.cpp
+    zoneproxy.cpp \
+    themeaccessor.cpp
 
 HEADERS +=\
     command.h \
@@ -62,7 +63,8 @@ HEADERS +=\
     ../PokemonInfo/pokemoninfo.h \
     ../PokemonInfo/battlestructs.h \
     moveinfoaccessor.h \
-    zoneproxy.h
+    zoneproxy.h \
+    themeaccessor.h
 
 OTHER_FILES += \
     ../../../bin/qml/battlescene.qml \

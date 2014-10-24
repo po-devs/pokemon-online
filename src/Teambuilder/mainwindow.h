@@ -59,6 +59,7 @@ private slots:
     void openPluginConfiguration();
     void changeTheme();
     void changeUserThemeFolder();
+    void reloadThemes();
 
     void updateDataReady(const QString &data, bool error);
     void changeLogReady(const QString &data, bool error);

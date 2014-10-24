@@ -118,6 +118,7 @@ public:
 
     Q_INVOKABLE void sendChallenge(int id, int clauses, int mode);
     Q_INVOKABLE void acceptChallenge(int cId);
+    Q_INVOKABLE void declineChallenge(int cId);
 
     Q_INVOKABLE PlayerInfo player(int id) const;
     void removePlayer(int id);
@@ -275,6 +276,7 @@ public slots:
     void changeBattleLogger(bool logger);
     void changeBattleScreenSize(bool big);
     void changeBattleWeather(bool everyTurn);
+    void useNewSprites(bool use);
     void changeNicknames(bool old);
     void enableLadder(bool);
     void sortPlayersByTiers(bool);
@@ -300,6 +302,7 @@ public slots:
     void togglePMTabs(bool);
     void togglePMNotifications(bool);
     void togglePMLogs(bool);
+    void toggleChangeNamePM(bool);
     void movePlayerList(bool);
     void useOldShortcuts(bool);
     void ignoreServerVersion(bool);
@@ -512,6 +515,19 @@ private:
         foreach(OnlineClientPlugin *p, plugins) {
             if (hooks[p].contains(f)) {
                 ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3, T4)>(hooks[p][f])))(arg1, arg2, arg3, arg4);
+            }
+        }
+
+        return ret;
+    }
+
+    template<class T1, class T2, class T3, class T4, class T5>
+    bool call(const QString &f, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+    {
+        bool ret = true;
+        foreach(OnlineClientPlugin *p, plugins) {
+            if (hooks[p].contains(f)) {
+                ret &= (*p.*(reinterpret_cast<int (OnlineClientPlugin::*)(T1, T2, T3, T4, T5)>(hooks[p][f])))(arg1, arg2, arg3, arg4, arg5);
             }
         }
 

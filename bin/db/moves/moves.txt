@@ -611,3 +611,8 @@
 610 Hold Back
 611 Diamond Storm
 612 Light of Ruin
+613 Steam Eruption
+614 Hyperspace Hole
+615 Hold Hands
+616 Thousand Arrows
+617 Thousand Waves

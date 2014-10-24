@@ -11,6 +11,7 @@
 #include "Teambuilder/trainermenu.h"
 #include "ui_trainermenu.h"
 #include "Teambuilder/teamimporter.h"
+#include "Teambuilder/avatardialog.h"
 
 TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)
@@ -42,6 +43,7 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     //connect(ui->pokemonButtons, SIGNAL(doubleClicked(int)), SIGNAL(editPoke(int)));
     connect(ui->pokemonButtons, SIGNAL(clicked(int)), SIGNAL(editPoke(int))); //I prefer double click, but for newbies...
     connect(ui->teambuilderLabel, SIGNAL(clicked()), SLOT(openTeam()));
+    connect(ui->avatarSelect, SIGNAL(clicked()), SLOT(openAvatarDialog()));
 
     loadProfileList();
     setupData();
@@ -62,6 +64,17 @@ void TrainerMenu::changeCurrentTeam(int t)
 void TrainerMenu::openTeam()
 {
     emit editPoke(ui->pokemonButtons->currentSlot());
+}
+
+void TrainerMenu::openAvatarDialog()
+{
+    AvatarDialog *a = new AvatarDialog(this, ui->avatarNumber->value());
+    connect(a, SIGNAL(selectionFinished(int)), SLOT(setAvatarPixmap(int)));
+
+    a->setAttribute(Qt::WA_DeleteOnClose, true);
+    a->setWindowFlags(Qt::Popup);
+
+    a->show();
 }
 
 void TrainerMenu::on_teamName_textEdited()
@@ -212,6 +225,12 @@ void TrainerMenu::setAvatarPixmap()
     team().profile().info().avatar = ui->avatarNumber->value();
 }
 
+void TrainerMenu::setAvatarPixmap(int number)
+{
+    ui->avatarNumber->setValue(number);
+    setAvatarPixmap();
+}
+
 void TrainerMenu::setTiers(const QStringList &tiers) {
     QCompleter *m_completer = new QCompleter(tiers);
     m_completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -337,7 +356,7 @@ void TrainerMenu::on_colorButton_clicked()
 {
     QColor c = QColorDialog::getColor(team().color());
 
-    if (c.isValid() && (c.lightness() > 140 || c.green() > 180)) {
+    if (!c.isValid() || (c.isValid() && (c.lightness() > 140 || c.green() > 180))) { // So they can click cancel without their colour disappearing!
         return;
     }
 

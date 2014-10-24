@@ -277,18 +277,50 @@ struct AMCuteCharm : public AM {
 struct AMDownload : public AM {
     AMDownload() {
         functions["UponSetup"] = &us;
+        //Gen 4 Functions below
+        functions["EndTurn6.2"] = &et;
+        functions["BeforeTargetList"] = &et;
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.randomOpponent(s);
+        //Prevents multiple boosts from occurring
+        if (poke(b,s).value("Downloaded").toBool()) {
+            return;
+        }
+
+        QList<int> tars = b.allRevs(s);
+        if (tars.length() == 0) {
+            return;
+        }
+
+        int def = 0;
+        int spDef = 0;
+
+        foreach(int t, tars) {
+            if (b.gen() > 4 && b.koed(t))
+                continue;
+            def += b.getStat(t, Defense);
+            spDef += b.getStat(t, SpDefense);
+        }
+
+        //If there are no opposing pokemon, no boost is applied. The loop above already checked gen differences
+        if (def == 0 && spDef == 0)
+            return;
 
         b.sendAbMessage(13,0,s);
-
-        if (t==-1|| b.getStat(t, Defense) >= b.getStat(t, SpDefense)) {
-            b.inflictStatMod(s, SpAttack,1,s);
+        poke(b,s)["Downloaded"] = true;
+        if (def >= spDef) {
+            b.inflictStatMod(s, SpAttack, 1, s);
         } else {
-            b.inflictStatMod(s, Attack,1, s);
+            b.inflictStatMod(s, Attack, 1, s);
         }
+    }
+
+    static void et (int s, int, BS &b) {
+        //Download can resolve at the end of the turn and after an attack, if somehow it didn't activate sooner
+        if (b.gen() > 4)
+            return;
+        us(s,0,b);
     }
 };
 
@@ -371,6 +403,11 @@ struct AMEffectSpore : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
+        if (b.gen() >= 6) {
+            //Considered a Powder "move"
+            if (b.hasType(t, Pokemon::Grass) || b.hasWorkingItem(t, Item::SafetyGoggles) || b.hasWorkingAbility(t, Ability::Overcoat))
+                return;
+        }
         if (b.poke(t).status() == Pokemon::Fine && b.coinflip(30, 100)) {
             switch (b.randint(3)) {
             case 0:
@@ -471,18 +508,19 @@ struct AMForeCast : public AM {
         if (weather != BS::Hail && weather != BS::Rain && weather != BS::Sunny) {
             weather = BS::NormalWeather;
         }
-
-        if (weather == b.poke(s).num().subnum)
-            return;
+        //To allow the type reset every turn. Also allows Castform to actually Transform properly with the added mechanic
+        //if (weather == b.poke(s).num().subnum)
+        //  return;
 
         b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
     }
 
     static void ol(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum != Pokemon::Castform)
+        //Gens 3 and 4 lock Castform into it's current form. Gens 5 on revert it back to the default form
+        if (b.pokenum(s).pokenum != Pokemon::Castform || b.gen() < 5)
             return;
         if (b.pokenum(s).subnum != 0) {
-            b.changeAForme(s, 0);
+            b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, 0));
         }
     }
 };
@@ -806,6 +844,9 @@ struct AMMotorDrive : public AM {
     }
 
     static void op(int s, int t, BS &b) {
+        if (b.isProtected(s, t))
+            return;
+
         if (type(b,t) == Type::Electric) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             b.sendAbMessage(41,0,s,s,Pokemon::Electric);
@@ -816,7 +857,7 @@ struct AMMotorDrive : public AM {
 
 struct AMNormalize : public AM {
     AMNormalize() {
-        functions["BeforeTargetList"] = &btl;
+        functions["MoveSettings"] = &btl;
     }
 
     static void btl(int s, int, BS &b) {
@@ -1136,6 +1177,9 @@ struct AMVoltAbsorb : public AM {
     }
 
     static void op(int s, int t, BS &b) {
+        if (b.isProtected(s, t))
+            return;
+
         if (type(b,t) == poke(b,s)["AbilityArg"].toInt() && (b.gen() >= 4 || tmove(b,t).power > 0) ) {
             if (!(poke(b, s).value("HealBlockCount").toInt() > 0)) {
                 //HealBlock removes the absorbing effect
@@ -1175,6 +1219,10 @@ struct AMLightningRod : public AM {
     }
 
     static void gtc(int s, int t, BS &b) {
+        if (turn(b,t).value("TargetChanged").toBool()) {
+            return;
+        }
+
         if (type(b,t) != poke(b,s)["AbilityArg"].toInt()) {
             return;
         }
@@ -1200,7 +1248,7 @@ struct AMLightningRod : public AM {
     }
 
     static void ob(int s, int t, BS &b) {
-        if (b.gen() <= 4)
+        if (b.gen() <= 4 || b.isProtected(s, t))
             return;
 
         int tp = type(b,t);
@@ -1312,6 +1360,9 @@ struct AMSapSipper : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
+        if (b.isProtected(s, t))
+            return;
+
         int tp = type(b,t);
 
         if (tp == poke(b,s)["AbilityArg"].toInt()) {
@@ -1510,9 +1561,9 @@ struct AMImposter : public AM
     }
 
     static void us(int s, int , BS &b) {
-        int t = b.randomOpponent(s);
+        int t = b.slot(b.opponent(b.player(s)), b.slotNum(s)); // directly across
 
-        if (t == -1)
+        if (b.koed(t))
             return;
 
         if (fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || b.hasSubstitute(t))
@@ -2276,7 +2327,7 @@ struct AMLevitate : public AM
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (type(b,t) == Type::Ground && b.isFlying(s)) {
+        if (type(b,t) == Type::Ground && b.isFlying(s) && move(b,t) != Move::Sand_Attack) {
             turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
 
             b.sendAbMessage(120, 0, s);
@@ -2477,5 +2528,6 @@ void AbilityEffect::init()
     REGISTER_AB(121, Aerilate);
     //122 Sticky Hold message
     REGISTER_AB(123, Klutz);
-    REGISTER_AB(124, Symbiosis)
+    REGISTER_AB(124, Symbiosis);
+    //125 Cheek pouch message
 }

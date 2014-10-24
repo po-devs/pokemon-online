@@ -471,7 +471,7 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
     tooltips.resize(nslots);
     items.resize(nslots);
 
-    scene.setSceneRect(0,0,257,145);
+    scene.setSceneRect(0,0,321,181);
     scene.addItem(new QGraphicsPixmapItem(theme->pic(QString("battle_fields/%1.png").arg((rand()%11)+1))));
 
     for (int i = 0; i < nslots; i++) {
@@ -507,16 +507,17 @@ void GraphicsZone::updatePos(int spot)
 
     if (player == myself()) {
         if (!info()->multiples()) {
-            items[spot]->setPos(50 - width/2, 146 - height);
+            items[spot]->setPos(75 - width/2, 182 - height);
         } else {
-            items[spot]->setPos(info()->slotNum(spot)*60, 146-height);
+            items[spot]->setPos(info()->slotNum(spot)*75, 182-height);
         }
     } else {
         if (!info()->multiples()) {
-            items[spot]->setPos(184 - width/2, 96 - height);
+            items[spot]->setPos(235 - width/2, 115 - height);
         } else {
-            int base = 257-80-(info()->numberOfSlots()/2 - 1)*60;
-            items[spot]->setPos(base + info()->slotNum(spot)*60, 96-height);
+            //Triples has really erratic placing at some points still in 6G.
+            int base = 321-90-(info()->numberOfSlots()/2 - 1)*60;
+            items[spot]->setPos(base + info()->slotNum(spot)*60, 120-height);
         }
     }
 }

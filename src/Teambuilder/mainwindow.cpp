@@ -299,7 +299,7 @@ void MainEngine::loadStyleSheet()
 
 void MainEngine::openThemesForum()
 {
-    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/forumdisplay.php?92-Themes"));
+    QDesktopServices::openUrl(QUrl("http://pokemon-online.eu/forums/themes.92/"));
 }
 
 void MainEngine::changeStyle()
@@ -681,6 +681,7 @@ void MainEngine::rebuildThemeMenu()
 
     themeMenu->addSeparator();
     themeMenu->addAction(tr("Reload &StyleSheet"), this, SLOT(loadStyleSheet()), tr("Ctrl+D", "Reload Stylesheet"));
+    themeMenu->addAction(tr("Reload &Themes"), this, SLOT(reloadThemes()));
     themeMenu->addSeparator();
     themeMenu->addAction(tr("&Get more themes..."), this, SLOT(openThemesForum()));
 }
@@ -693,6 +694,11 @@ void MainEngine::changeUserThemeFolder()
     if (dir != "") {
         s.setValue("Themes/Directory", dir + "/");
     }
+    rebuildThemeMenu();
+}
+
+void MainEngine::reloadThemes()
+{
     rebuildThemeMenu();
 }
 

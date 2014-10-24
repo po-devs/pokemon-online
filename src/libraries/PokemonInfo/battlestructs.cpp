@@ -530,8 +530,8 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
                     continue;
                 }
                 if (MoveInfo::Power(movenum, gen) > 0 && movenum != Move::NaturalGift && movenum != Move::Snore && movenum != Move::Fling
-                        && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::Synchronoise && movenum != Move::FalseSwipe
-                        && movenum != Move::Feint) {
+                        && !MoveInfo::isOHKO(movenum, gen) && movenum != Move::DreamEater && movenum != Move::Synchronoise && movenum != Move::HoldBack
+                        && movenum != Move::FalseSwipe && movenum != Move::Feint) {
                     if (count > 4 || MoveInfo::Power(movenum, gen) > 50) {
                         off++;
                     }
@@ -559,13 +559,19 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus) {
             p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
         }
-        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Giratina) {
-            p.num() = Pokemon::uniqueId(Pokemon::Giratina, p.item() == Item::GriseousOrb);
-        }
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
             p.num() = Pokemon::uniqueId(Pokemon::Genesect, ItemInfo::DriveForme(p.item()));
         }
-        //Maybe Castform, Cherrim, Darmanitan, Aegislash
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Giratina) {
+            p.num() = Pokemon::uniqueId(Pokemon::Giratina, p.item() == Item::GriseousOrb);
+            //Now we have to verify the Ability generated is legal on this Giratina Forme, otherwise it needs to be fixed. This is best way to fix.
+            if (p.num() == Pokemon::Giratina && p.ability() == Ability::Levitate) {
+                p.ability() = Ability::Pressure;
+            }
+            if (p.num() == Pokemon::Giratina_O && p.ability() == Ability::Pressure) {
+                p.ability() = Ability::Levitate;
+            }
+        }
 
         p.updateStats(gen);
         p.nick() = PokemonInfo::Name(p.num());

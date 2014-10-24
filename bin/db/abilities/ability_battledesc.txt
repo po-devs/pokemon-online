@@ -41,7 +41,7 @@
 40 Prevents a Pokémon with this ability from becoming Frozen.
 41 Prevents a Pokémon with this ability from becoming Burned.
 42 Prevents Steel-type opponents, that are not also Ghost-type, from switching out or running away as long as a Pokémon with this ability is on the field.
-43 Makes a Pokémon with this ability immune to Boomburst, Bug Buzz, Chatter, Confide, Disarming Voice, Echoed Voice, Grass Whistle, Growl, Heal Bell (only while on the field), Hyper Voice, Metal Sound, Noble Roar, Parting Shot, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar.
+43 Makes a Pokémon with this ability immune to Boomburst, Bug Buzz, Chatter, Confide, Disarming Voice, Echoed Voice, Grass Whistle, Growl, Hyper Voice, Metal Sound, Noble Roar, Parting Shot, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar.
 44 Makes a Pokémon with this ability regain 1/16 its max HP every turn during Rain Dance.
 45 Summons Sandstorm for 5 turns when a Pokémon with this ability enters the field.
 46 Makes opponent Pokémon use 2 PP instead of 1 when they target a Pokémon with this ability.
@@ -140,7 +140,7 @@
 139 Each turn, has a 50% chance to regenerate the Berry consumed by a Pokémon with this ability. Chance is 100% during Sunny Day.
 140 Makes a Pokémon with this ability immune to damage from its partners.
 141 Each turn, raises one random stat of a Pokémon with this ability by two stages, and lowers a different random stat by one stage, including Evasion and Accuracy.
-142 Prevents a Pokémon with this ability from taking damage from weather effects, and from being affected by Cotton Spore, Poison Powder, Powder, Rage Powder, Sleep Powder, Spore, and Stun Spore.
+142 Prevents a Pokémon with this ability from taking damage from weather effects, and from being affected by Cotton Spore, Poison Powder, Powder, Rage Powder, Sleep Powder, Spore, Stun Spore, and Effect Spore.
 143 Has a 20% chance to Poison the target of a contact move used by a Pokémon with this ability.
 144 Recovers up to 1/3 max HP of a Pokémon with this ability when it leaves the field.
 145 Prevents a Pokémon with this ability from having its Defense lowered by the opponent.

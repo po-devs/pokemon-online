@@ -28,6 +28,7 @@ public slots:
     void updateCurrentTeamAndNotify();
     void importTeam(const QString &team);
     void openImportDialog();
+    void openAvatarDialog();
     void openTeam();
 
 signals:
@@ -46,6 +47,7 @@ private slots:
     void on_saveProfile_clicked();
     void on_colorButton_clicked();
     void setAvatarPixmap();
+    void setAvatarPixmap(int);
     void on_deleteProfile_clicked();
     void changeCurrentTeam(int);
     void on_addTeam_clicked();

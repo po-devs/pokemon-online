@@ -587,7 +587,7 @@ struct IMEviolite : public IM
     }
 
     static void sm(int s, int, BS &b) {
-        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum)) {
+        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum) && b.poke(s).num() != Pokemon::Floette_EF) {
             turn(b,s)["Stat2ItemModifier"] = 10;
             turn(b,s)["Stat4ItemModifier"] = 10;
         }
@@ -640,7 +640,10 @@ struct IMAbsorbBulb : public IM
 
     static void ubh(int s, int t, BS &b) {
         int tp = poke(b,s)["ItemArg"].toString().section('_', 0, 0).toInt();
-        if (!b.koed(s) && type(b,t) == tp) {
+        if (b.koed(s) || (b.hasSubstitute(s) && !b.canBypassSub(t))) {
+            return;
+        }
+        if (type(b,t) == tp) {
             int stat = poke(b,s)["ItemArg"].toString().section('_', 1).toInt();
             if (b.hasMaximalStatMod(s, stat))
                 return;
@@ -746,7 +749,8 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)))
+        //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, or during a switch where pursuit is used
+        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool())
             return;
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];

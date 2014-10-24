@@ -44,7 +44,7 @@ Item {
 
     Tooltip {
         shown: mouseArea.containsMouse
-        text: pokemon.numRef === 0 ? "" : pokemon.nick + " - " + pokemon.lifePercent + "%"
+        text: pokemon.numRef === 0 ? "" : pokemon.nick + (pokemon.nick !== pokemon.pokeName ? " (" + pokemon.pokeName + ")" : "") + " - " + pokemon.lifePercent + "%"
     }
 
     MouseArea {
