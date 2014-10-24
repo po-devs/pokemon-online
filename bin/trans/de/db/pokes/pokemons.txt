@@ -21,8 +21,8 @@
 15:1 Mega-Bibor
 16:0 Taubsi
 17:0 Tauboga
-18:0 Tauboss
-18:1:H Mega-Tauboss
+18:0:H Tauboss
+18:1 Mega-Tauboss
 19:0 Ratzfratz
 20:0 Rattikarl
 21:0 Habitak
