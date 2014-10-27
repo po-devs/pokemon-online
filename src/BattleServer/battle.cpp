@@ -3771,7 +3771,12 @@ int BattleSituation::getBoostedStat(int player, int stat)
     if (stat == Attack && turnMemory(player).contains("CustomAttackStat")) {
         return turnMemory(player)["CustomAttackStat"].toInt();
     } else if (stat == Attack && turnMemory(player).contains("UnboostedAttackStat")) {
-        return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
+        if (gen() > 2) {
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
+        } else {
+            //Gen 2 returns same calculated stat as Gen 1
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * (floor(100*getStatBoost(player, Attack))/100);
+        }
     } else{
         int givenStat = stat;
         /* Not sure on the order here... haha. */
@@ -3784,7 +3789,13 @@ int BattleSituation::getBoostedStat(int player, int stat)
             stat = 6 - stat;
             givenStat = 6 - givenStat;
         }
-        return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
+        if (gen() > 2) {
+            return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
+        } else {
+            //Gen 2 returns same calculated stat as Gen 1
+            return fpoke(player).stats[givenStat] * (floor(100*getStatBoost(player, stat))/100);
+        }
+
     }
 }
 
