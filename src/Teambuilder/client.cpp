@@ -1425,6 +1425,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(list_right, SIGNAL(triggered(bool)), SLOT(movePlayerList(bool)));
     list_right->setChecked(globals.value("Client/UserListAtRight").toBool());
 
+    QAction *displayTIs = menuActions->addAction(tr("Display TIs"));
+    displayTIs->setCheckable(true);
+    connect(displayTIs, SIGNAL(triggered(bool)), SLOT(displayTrainerInfo(bool)));
+    displayTIs->setChecked(globals.value("Client/DisplayTIs").toBool());
+
     QAction *oldShortcuts = menuActions->addAction(tr("Use old shortcuts"));
     oldShortcuts->setCheckable(true);
     connect(oldShortcuts, SIGNAL(triggered(bool)), SLOT(useOldShortcuts(bool)));
@@ -2941,4 +2946,8 @@ void Client::showExitWarning()
     } else {
         emit done();
     }
+}
+
+void Client::displayTrainerInfo(bool b) {
+    globals.setValue("Client/DisplayTIs", b);
 }
