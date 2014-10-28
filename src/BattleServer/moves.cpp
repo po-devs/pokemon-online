@@ -6197,7 +6197,8 @@ struct MMFirePledge : public MM
 
         b.sendMoveMessage(178, 1, s, 0, i);
         turn(b,s)["AttackStat"] = b.getStat(s, SpAttack) + b.getStat(i, SpAttack, 1);
-        tmove(b,s).power *= 2;
+        fturn(b,s).stab = 2;
+        tmove(b,s).power *= 3;
     }
 
     static void uas(int s, int t, BS &b);
