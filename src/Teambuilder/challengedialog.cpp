@@ -55,7 +55,14 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
     ui->name->setText(info.name);
     ui->avatar->setPixmap(Theme::TrainerSprite(info.avatar));
     ui->avatar->setFixedSize(Theme::TrainerSprite(1).size());
-    ui->description->setText(info.info);
+
+    QSettings s;
+
+    if (s.value("Client/DisplayTIs").toBool()) {
+        ui->description->setText(info.info);
+    } else {
+        ui->description->setText("");
+    }
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
