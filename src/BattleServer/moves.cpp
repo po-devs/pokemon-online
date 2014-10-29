@@ -4345,9 +4345,18 @@ struct MMMirrorMove : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int , BS &b) {
-        if(!poke(b,s).contains("MirrorMoveMemory")) {
+    static void daf(int s, int t, BS &b) {
+        if (!poke(b,s).contains("MirrorMoveMemory") || (b.gen().num == 2 && !poke(b,t).contains("LastMoveUsedTurn"))) {
             fturn(b,s).add(TM::Failed);
+        }
+
+        if (b.gen().num == 2) {
+            for (int i = 0; i < 4; i++) {
+                if (b.move(s,i) == poke(b,s)["MirrorMoveMemory"].toInt()) {
+                        fturn(b,s).add(TM::Failed);
+                }
+            }
+
         }
     }
 
