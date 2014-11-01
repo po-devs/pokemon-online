@@ -182,7 +182,7 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
 
             savePokemon(b.poke(i,j), lead, dir);
 
-            if (b.rating(i) > 1000 && ranked_ptr) {
+            if (b.rating(i) > 1100 && ranked_ptr) {
                 ranked_ptr->addUsage(b.poke(i,j).num());
             }
         }
