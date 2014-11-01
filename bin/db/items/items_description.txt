@@ -389,3 +389,5 @@
 2043 Enables Gallade to Mega Evolve during battle.
 2044 Enables Audino to Mega Evolve during battle.
 2045 Enables Diancie to Mega Evolve during battle.
+2046 Enables Latias to Mega Evolve during battle.
+2047 Enables Latios to Mega Evolve during battle.

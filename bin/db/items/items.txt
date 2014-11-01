@@ -389,3 +389,5 @@
 2043 Galladite
 2044 Audinite
 2045 Diancite
+2046 Latiasite
+2047 Latiosite
