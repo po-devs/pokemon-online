@@ -340,6 +340,8 @@
 339 Lumiose Galette
 340 Sachet
 341 Whipped Dream
+342 Red Orb
+343 Blue Orb
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
@@ -370,3 +372,20 @@
 2026 Garchompite
 2027 Lucarionite
 2028 Abomasite
+2029 Sceptilite
+2030 Swampertite
+2031 Beedrillite
+2032 Pidgeotite
+2033 Slowbronite
+2034 Steelixite
+2035 Sablite
+2036 Sharpedonite
+2037 Cameruptite
+2038 Altarianite
+2039 Glalitite
+2040 Salamencite
+2041 Metagronite
+2042 Lopunnite
+2043 Galladite
+2044 Audinite
+2045 Diancite

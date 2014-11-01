@@ -610,9 +610,13 @@
 609 0
 610 1
 611 1
-612 1#Light of Ruin
-613 1#Steam Eruption
-614 1#Hyperspace Hole
+612 1
+613 1
+614 1
 615 0
-616 1#Thousand Arrows
-617 1#Thousand Waves
+616 1
+617 1
+618 1
+619 1
+620 1
+621 1

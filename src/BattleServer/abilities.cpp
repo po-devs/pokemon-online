@@ -172,13 +172,26 @@ struct AMChlorophyll : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        int w = b.weather;
+        //slightly awkward, but no need to edit all the ability files :D
+        switch (w) {
+        case BS::StrongRain: w = BS::Rain; break;
+        case BS::StrongSun : w = BS::Sunny; break;
+        default: w = b.weather;
+        }
+        if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["Stat5AbilityModifier"] = 20;
         }
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        int w = b.weather;
+        switch (w) {
+        case BS::StrongRain: w = BS::Rain; break;
+        case BS::StrongSun : w = BS::Sunny; break;
+        default: w = b.weather;
+        }
+        if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["WeatherSpecialed"] = true;
         }
     }
@@ -342,8 +355,11 @@ struct AMDrizzle : public AM {
     static void us (int s, int , BS &b) {
         int w = poke(b,s)["AbilityArg"].toInt();
         if (w != b.weather) {
-            int type = (w == BS::Hail ? Type::Ice : (w == BS::Sunny ? Type::Fire : (w == BS::SandStorm ? Type::Rock : Type::Water)));
-            b.sendAbMessage(14,w-1,s,s,type);
+            if (b.weather == BS::StrongSun || b.weather == BS::StrongRain || b.weather == BS::StrongWinds) {
+                b.sendAbMessage(126, b.weather-2, s, s, TypeInfo::TypeForWeather(b.weather));
+                return;
+            }
+            b.sendAbMessage(14,w-1,s,s,TypeInfo::TypeForWeather(w));
 
             if (b.gen() >= 6) {
                 if (weather_items.contains(w) && b.hasWorkingItem(s,weather_items[w])) {
@@ -385,12 +401,12 @@ struct AMDrySkin : public AM {
     }
 
     static void ws (int s, int , BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain)) {
+        if (b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation::StrongRain)) {
             if (b.canHeal(s, BS::HealByEffect,0)) {
                 b.sendAbMessage(15,0,s,s,Pokemon::Water);
                 b.healLife(s, b.poke(s).totalLifePoints()/8);
             }
-        } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        } else if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             b.sendAbMessage(15,1,s,s,Pokemon::Fire);
             b.inflictDamage(s, b.poke(s).totalLifePoints()/8, s, false);
         }
@@ -458,7 +474,7 @@ struct AMFlowerGift : public AM {
         if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Cherrim)
             return;
 
-        if (b.weather == BS::Sunny) {
+        if (b.weather == BS::Sunny || b.weather == BS::StrongSun) {
             if (b.pokenum(s).subnum != 1) b.changeAForme(s, 1);
         } else {
             if (b.pokenum(s).subnum != 0) b.changeAForme(s, 0);
@@ -669,7 +685,7 @@ struct AMHydration : public AM {
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain) && b.poke(s).status() != Pokemon::Fine) {
+        if ((b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation::StrongRain)) && b.poke(s).status() != Pokemon::Fine) {
             b.sendAbMessage(29,0,s,s,Pokemon::Water);
             b.healStatus(s, b.poke(s).status());
         }
@@ -714,7 +730,14 @@ struct AMIceBody : public AM {
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
+        int w = b.weather;
+        //same as chloro
+        switch (w) {
+        case BS::StrongRain: w = BS::Rain; break;
+        case BS::StrongSun : w = BS::Sunny; break;
+        default: w = b.weather;
+        }
+        if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
             turn(b,s)["WeatherSpecialed"] = true; //to prevent being hit by the weather
             if (b.canHeal(s,BS::HealByAbility,b.ability(s))) {
                 b.sendAbMessage(32,0,s,s,TypeInfo::TypeForWeather(poke(b,s)["AbilityArg"].toInt()),b.ability(s));
@@ -808,7 +831,7 @@ struct AMLeafGuard  : public AM {
     }
 
     static void psc(int s, int t, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny) && turn(b,s)["StatModType"].toString() == "Status") {
+        if ((b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) && turn(b,s)["StatModType"].toString() == "Status") {
             if (b.canSendPreventSMessage(s,t))
                 b.sendAbMessage(37,0,s,s,0,b.ability(s));
             b.preventStatMod(s,t);
@@ -1020,13 +1043,13 @@ struct AMSolarPower : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             turn(b,s)["Stat3AbilityModifier"] = 10;
         }
     }
 
     static void ws(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        if (b.isWeatherWorking(BattleSituation::Sunny)|| b.isWeatherWorking(BattleSituation::StrongSun)) {
             b.sendAbMessage(56,0,s,s,Pokemon::Fire);
             b.inflictDamage(s,b.poke(s).totalLifePoints()/8,s,false);
         }
@@ -2163,7 +2186,7 @@ struct AMMegaLauncher : public AM {
     }
 
     static void bpm (int s, int t, BS &b) {
-        if (s != t && tmove(b,s).flags & Move::PulsingFlag) {
+        if (s != t && tmove(b,s).flags & Move::LaunchFlag) {
             b.chainBp(s, 10);
         }
     }
@@ -2372,7 +2395,46 @@ struct AMSymbiosis : public AM
     }
 };
 
+struct AMStrongWeather : public AM
+{
+    AMStrongWeather() {
+        functions["UponSetup"] = &us;
+        functions["UponSwitchOut"] = &uso;
+        functions["UponKoed"] = &uso;
+        functions["OnLoss"] = &uso;
+    }
 
+    //Messages- Sun, Rain, Wind
+    //0-2 = Set up
+    //3-5 = Other Weather fails
+    //6-7 = Attacks affected
+    static void us (int s, int , BS &b) {
+        int w = poke(b,s)["AbilityArg"].toInt();
+        if (w != b.weather) {
+            b.sendAbMessage(126,w-5,s,s,TypeInfo::TypeForWeather(w));
+            b.callForth(w, -1);
+        }
+    }
+    static void uso (int s, int , BS &b) {
+        bool otheruser = false;
+        //we need to make sure there's no other users of the current weather...
+        foreach(int i, b.sortedBySpeed()) {
+            if (i == s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i,Ability::DesolateLand) || b.hasWorkingAbility(i,Ability::PrimordialSea) || b.hasWorkingAbility(i,Ability::DeltaStream)) {
+                if (b.weather == poke(b,s)["AbilityArg"].toInt()) {
+                    otheruser = true;
+                }
+            }
+        }
+        //make sure it is actually our weather being used
+        if (b.weather == poke(b,s)["AbilityArg"].toInt() && !otheruser) {
+            b.notify(BS::All, BattleCommands::WeatherMessage, s, qint8(BS::EndWeather), qint8(b.weather));
+            b.callForth(BS::NormalWeather, -1);
+        }
+    }
+};
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -2530,4 +2592,5 @@ void AbilityEffect::init()
     REGISTER_AB(123, Klutz);
     REGISTER_AB(124, Symbiosis);
     //125 Cheek pouch message
+    REGISTER_AB(126, StrongWeather);
 }

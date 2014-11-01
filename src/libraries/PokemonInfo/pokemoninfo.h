@@ -358,6 +358,7 @@ public:
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
     static bool isMegaStone(int itemnum);
+    static bool isPrimalStone(int itemnum);
     static bool isDrive(int itemnum);
     static bool isMail(int itemnum);
     static bool isGem(int itemnum);
@@ -429,7 +430,10 @@ private:
         Hail = 1,
         Rain = 2,
         SandStorm = 3,
-        Sunny = 4
+        Sunny = 4,
+        StrongSun = 5,
+        StrongRain = 6,
+        StrongWinds = 7
     };
 
     static QHash<int, QString> m_Names;
