@@ -426,10 +426,10 @@
 380:1:M Mega Latias
 381:0:H Latios
 381:1:M Mega Latios
-382:0 Kyogre
-382:1 Primal Kyogre
-383:0 Groudon
-384:1 Primal Groudon
+382:0:H Kyogre
+382:1:M Primal Kyogre
+383:0:H Groudon
+383:1:M Primal Groudon
 384:0:H Rayquaza
 384:1:M Mega Rayquaza
 385:0 Jirachi

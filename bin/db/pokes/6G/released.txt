@@ -1,4 +1,4 @@
-0:0 Missingno
+﻿0:0 Missingno
 1:0 Bulbasaur
 2:0 Ivysaur
 3:0 Venusaur
@@ -424,7 +424,7 @@
 382:0 Kyogre
 382:1 Primal Kyogre
 383:0 Groudon
-384:1 Primal Groudon
+383:1 Primal Groudon
 384:0 Rayquaza
 384:1 Mega Rayquaza
 385:0 Jirachi
