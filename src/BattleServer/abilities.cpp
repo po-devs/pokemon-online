@@ -2423,7 +2423,7 @@ struct AMStrongWeather : public AM
                 continue;
             }
             if (b.hasWorkingAbility(i,Ability::DesolateLand) || b.hasWorkingAbility(i,Ability::PrimordialSea) || b.hasWorkingAbility(i,Ability::DeltaStream)) {
-                if (b.weather == poke(b,s)["AbilityArg"].toInt()) {
+                if (b.weather == poke(b,i)["AbilityArg"].toInt()) {
                     otheruser = true;
                 }
             }
