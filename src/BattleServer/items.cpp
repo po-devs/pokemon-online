@@ -1044,6 +1044,19 @@ struct IMAssaultVest : public IM {
     }
 };
 
+struct IMPrimalOrb : public IM {
+    IMPrimalOrb() {
+        functions["UponSetup"] = &us;
+    }
+    static void us(int s, int, BS &b) {
+        if (ItemInfo::MegaStoneForme(b.poke(s).item()).original() == b.poke(s).num()) {
+            b.sendItemMessage(67, s);
+            b.changeForme(b.player(s), b.slotNum(s), ItemInfo::MegaStoneForme(b.poke(s).item()));
+            turn(b,s)["PrimalForme"] = true;
+        }
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -1082,7 +1095,8 @@ void ItemEffect::init()
     REGISTER_ITEM(40, BerserkGene);
     REGISTER_ITEM(41, AssaultVest);
     REGISTER_ITEM(42, SafetyGoggles);
-    REGISTER_ITEM(43, WeaknessPolicy)
+    REGISTER_ITEM(43, WeaknessPolicy);
+    REGISTER_ITEM(67, PrimalOrb);
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);

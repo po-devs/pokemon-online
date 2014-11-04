@@ -984,14 +984,7 @@ void BattleSituation::callEntryEffects(int player)
            how the items are set up. */
         callieffects(player, player, "UponSetup");
 
-        //primal reversion! Happens after stealth rock/other hazards
-        bool primal = false;
-        if (ItemInfo::isPrimalStone(poke(player).item()) && ItemInfo::MegaStoneForme(poke(player).item()).original() == poke(player).num()) {
-            sendItemMessage(67, player, 0, 0, 0, ItemInfo::MegaStoneForme(poke(player).item()).toPokeRef());
-            changeForme(slot(player), slotNum(player), ItemInfo::MegaStoneForme(poke(player).item()));
-            primal = true;
-        }
-        if (gen() >= 3 && !primal)
+        if (gen() >= 3 && !turnMemory(player).contains("PrimalForme"))
             acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
