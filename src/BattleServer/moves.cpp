@@ -5169,7 +5169,8 @@ struct MMYawn : public MM {
             return;
         }
         if (b.hasWorkingAbility(t, Ability::Insomnia) || b.hasWorkingAbility(t, Ability::VitalSpirit)) {
-            b.fail(s, 144, 2, 0, t);
+            b.sendAbMessage(33,6,t,t,0,b.ability(t));
+            b.failSilently(s);
         }
         if (b.sleepClause() && b.currentForcedSleepPoke[b.player(t)] != -1) {
             b.notifyClause(ChallengeInfo::SleepClause);
@@ -5202,6 +5203,8 @@ struct MMYawn : public MM {
                         b.currentForcedSleepPoke[b.player(s)] = b.currentInternalId(s);
                     }
                 }
+            } else if (b.hasWorkingAbility(s, Ability::Insomnia) || b.hasWorkingAbility(s, Ability::VitalSpirit)) {
+                b.sendAbMessage(33,Pokemon::Asleep,s,s,0,b.ability(s));
             }
             b.removeEndTurnEffect(BS::PokeEffect, s, "Yawn");
             poke(b,s).remove("YawnCount");
