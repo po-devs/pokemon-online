@@ -2199,7 +2199,7 @@ struct AMProtean : public AM {
     }
 
     static void aaf (int s, int, BS &b) {
-        if (type(b,s) != Pokemon::Curse) {
+        if (type(b,s) != Pokemon::Curse && (poke(b, s)["BlastBurnTurn"].toInt() == 0)) {
             b.setType(s, type(b,s));
             b.sendAbMessage(107,0,s,0,type(b,s));
         }
