@@ -2488,7 +2488,7 @@ bool BattleSituation::canGetStatus(int target, int status) {
         return true;
     }
     case Pokemon::Burnt: return !hasWorkingAbility(target, Ability::WaterVeil);
-    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
+    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny) && !isWeatherWorking(StrongSun);
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(target, Type::Electric)) && !hasWorkingAbility(target, Ability::Limber);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(target, Pokemon::Steel)) && !hasWorkingAbility(target, Ability::Immunity);
     default:
