@@ -399,18 +399,33 @@ struct MMCharge : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(12, 1) ;
+    }
+
     static void uas(int s, int, BS &b) {
-        poke(b, s)["Charged"] = true;
+        poke(b, s)["ChargedTurn"] = b.turn();
         addFunction(poke(b,s), "BeforeCalculatingDamage", "Charge", &bcd);
         b.sendMoveMessage(18, 0, s, type(b,s));
+        if (b.gen().num == 4) {
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Charge", &et);
+        }
     }
 
     static void bcd(int s, int, BS &b) {
-        if (poke(b,s)["Charged"] == true && tmove(b,s).type == Type::Electric) {
+        if (b.gen().num == 3 && move(b,s) == Move::HiddenPower) {
+            return;
+        }
+        if (poke(b,s)["ChargedTurn"].toInt()+1 == b.turn() && tmove(b,s).type == Type::Electric) {
             if (tmove(b, s).power > 0) {
                 tmove(b, s).power = tmove(b, s).power * 2;
-                poke(b, s)["Charged"] = false;
             }
+        }
+    }
+
+    static void et (int s, int, BS &b) {
+        if (poke(b,s)["ChargedTurn"].toInt()+1 == b.turn()) {
+            b.inflictStatMod(s, SpDefense, -1, s);
         }
     }
 };
