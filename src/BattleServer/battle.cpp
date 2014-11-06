@@ -2157,12 +2157,15 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     if (ab == Ability::Illusion || ab == Ability::Unburden)
         return works;
 
+    /* Weather abilities shouldn't be effected at all, bug elsewhere, but fix here for now... */
+    if (ab == Ability::DeltaStream || ab == Ability::PrimordialSea || ab == Ability::DesolateLand) {
+        return works;
+    }
     if (attacking()) {
         // Mold Breaker
         if (heatOfAttack() && player == attacked() && player != attacker() &&
                 (hasWorkingAbility(attacker(), ability(attacker()))
-                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))
-                 && ability(attacked()) != Ability::DeltaStream && ability(attacked()) != Ability::PrimordialSea && ability(attacked()) != Ability::DesolateLand) {
+                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
             return false;
         }
     }
