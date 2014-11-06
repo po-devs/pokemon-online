@@ -2161,7 +2161,8 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         // Mold Breaker
         if (heatOfAttack() && player == attacked() && player != attacker() &&
                 (hasWorkingAbility(attacker(), ability(attacker()))
-                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
+                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))
+                 && ability(attacked()) != Ability::DeltaStream && ability(attacked()) != Ability::PrimordialSea && ability(attacked()) != Ability::DesolateLand) {
             return false;
         }
     }
