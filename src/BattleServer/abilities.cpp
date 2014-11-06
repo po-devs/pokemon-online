@@ -1764,7 +1764,15 @@ struct AMMagicBounce : public AM
         b.battleMemory().remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
-            and don't cause any such data to be stored in that memory */
+            and don't cause any such data to be stored in that memory
+
+            If the original pokemon is no longer on the field we skip this step (Read: Parting Shot + Mega Evolve + Magic Bounce)
+            Doesn't matter what move the pokemon last used if it switches out because pokememory is cleared.
+        */
+        if (turn(b,target).contains("UTurnSuccess")) {
+            return;
+        }
+
         turn(b,target) = ctx;
         tmove(b,target) = info;
         fturn(b,target) = turnMem;
