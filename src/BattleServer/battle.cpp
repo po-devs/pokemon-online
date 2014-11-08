@@ -2862,12 +2862,24 @@ bool BattleSituation::hasGroundingEffect(int player)
 
 bool BattleSituation::isProtected(int slot, int target)
 {
-    // check to see if protected //
-    return pokeMemory(slot).value("ProtectiveMoveTurn", -1).toInt() == turn()
-            || (teamMemory(player(slot)).value("WideGuardUsed", -1).toInt() == turn()
-                && (tmove(target).targets == Move::Opponents
-                    || tmove(target).targets == Move::All
-                    || tmove(target).targets == Move::AllButSelf));
+    /* check to see if protected. order is important: wide guard > endure > protect */
+    if ((teamMemory(player(slot)).value("WideGuardUsed", -1).toInt() == turn()
+         && (tmove(target).targets == Move::Opponents
+             || tmove(target).targets == Move::All
+             || tmove(target).targets == Move::AllButSelf))) {
+        return true;
+    }
+
+    /*Endure shares code with Protect, but it is not considered "protected" as far as abilities go*/
+    if (turnMemory(slot).value("CannotBeKoed").toBool()) {
+        return false;
+    }
+
+    if (pokeMemory(slot).value("ProtectiveMoveTurn", -1).toInt() == turn()) {
+        return true;
+    }
+
+    return false;
 }
 
 void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
