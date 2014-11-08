@@ -1805,11 +1805,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     fpoke(target).add(BasicPokeInfo::HadSubstitute);
                 }
 
-                if (tmove(player).power > 1 && repeatCount() == 0) {
+                /*Gyro Ball needs a special exclusion here to display tooltips correctly because BP is still registered as "1" through the next 2 checks.
+                 * The actual BP isn't calculated until after a crit is determined otherwise the incorrect speed stat and modifiers are used.*/
+                if ((tmove(player).power > 1  || tmove(player).attack == Move::GyroBall) && repeatCount() == 0) {
                     notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                 }
 
-                if (tmove(player).power > 1) {
+                if (tmove(player).power > 1 || tmove(player).attack == Move::GyroBall) {
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
@@ -2987,6 +2989,7 @@ void BattleSituation::makePokemonLast(int t)
 int BattleSituation::calculateDamage(int p, int t)
 {
     callaeffects(p,t,"DamageFormulaStart");
+    calleffects(p,t,"DamageFormulaStart");
 
     context &move = turnMemory(p);
     PokeBattle &poke = this->poke(p);
