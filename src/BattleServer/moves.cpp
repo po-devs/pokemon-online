@@ -174,7 +174,7 @@ struct MMAssurance : public MM
 
     static void bcd(int s, int t, BS &b) {
         if (turn(b,t).contains("DamageTaken") || (team(b, b.player(t)).contains("LastKoedTurn") && team(b, b.player(t))["LastKoedTurn"].toInt() == b.turn() - 1)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
@@ -442,9 +442,13 @@ struct MMConversion : public MM
         if (b.gen().num == 1) {
             return;
         }
+        int ctype;
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
+                if (b.gen() >= 6) { /*Always changes to type of opponent's first (valid) move*/
+                    ctype = MoveInfo::Type(b.move(s,i), b.gen());
+                }
                 break;
             }
             if (i == 3) {
@@ -452,6 +456,7 @@ struct MMConversion : public MM
                 return;
             }
         }
+
         if (fpoke(b,s).type2 != Pokemon::Curse) {
             /* It means the pokemon has two types, i.e. conversion always works */
             QList<int> poss;
@@ -460,7 +465,11 @@ struct MMConversion : public MM
                     poss.push_back(b.move(s,i));
                 }
             }
-            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+            if (b.gen() >= 6) {
+                turn(b,s)["ConversionType"] = ctype;
+            } else {
+                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+            }
         } else {
             QList<int> poss;
             for (int i = 0; i < 4; i++) {
@@ -471,7 +480,11 @@ struct MMConversion : public MM
             if (poss.size() == 0) {
                 fturn(b, s).add(TM::Failed);
             } else {
-                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+                if (b.gen() >= 6) {
+                    turn(b,s)["ConversionType"] = ctype;
+                } else {
+                    turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+                }
             }
         }
     }
@@ -1543,7 +1556,7 @@ struct MMCounter : public MM
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
-                    && fturn(b, s).damageTaken > 0) {
+                && fturn(b, s).damageTaken > 0) {
                 turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
                 turn(b,s)["CounterTarget"] = t;
             }
@@ -1554,11 +1567,11 @@ struct MMCounter : public MM
 
     static void daf (int s, int t, BS &b) {
         if (!turn(b,s).contains("CounterDamage")) {
-             if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
-                     && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
-                 turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
-                 return;
-             }
+            if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
+                && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
+                turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
+                return;
+            }
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -3687,7 +3700,7 @@ struct MMHealBlock: public MM
     static void msp(int s, int, BS &b) {
         for (int i = 0; i < 4; i++) {
             if ((MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
-                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
+                 || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
@@ -3695,8 +3708,7 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if((tmove(b,s).flags & Move::HealingFlag
-                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
+        if((tmove(b,s).flags & Move::HealingFlag || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
             b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
@@ -4322,10 +4334,10 @@ struct MMMimic : public MM
         int slot = fpoke(b,s).lastMoveSlot;
         //Following check is needed to make sure "Mimic" is replaced, and not other moves, like Sleep Talk.
         for(int i = 0; i < 4; i++) {
-           if (b.move(s,i) == Move::Mimic) {
-               slot = i;
-               break;
-           }
+            if (b.move(s,i) == Move::Mimic) {
+                slot = i;
+                break;
+            }
         }
 
         //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
@@ -4377,7 +4389,7 @@ struct MMMirrorMove : public MM
         if (b.gen().num == 2) {
             for (int i = 0; i < 4; i++) {
                 if (b.move(s,i) == poke(b,s)["MirrorMoveMemory"].toInt()) {
-                        fturn(b,s).add(TM::Failed);
+                    fturn(b,s).add(TM::Failed);
                 }
             }
 
@@ -5347,10 +5359,10 @@ struct MMSecretPower : public MM {
 
     static void ms(int s, int, BS &b) {
         if (b.gen().num == 5) {
-                tmove(b,s).classification = Move::OffensiveStatChangingMove;
-                tmove(b,s).rateOfStat = 30 << 16;
-                tmove(b,s).statAffected = Accuracy << 16;
-                tmove(b,s).boostOfStat = uchar(-1) << 16;
+            tmove(b,s).classification = Move::OffensiveStatChangingMove;
+            tmove(b,s).rateOfStat = 30 << 16;
+            tmove(b,s).statAffected = Accuracy << 16;
+            tmove(b,s).boostOfStat = uchar(-1) << 16;
         } else {
             if (b.terrain != 0) {
                 int type = std::abs(b.terrain);
