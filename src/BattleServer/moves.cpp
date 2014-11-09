@@ -1529,11 +1529,11 @@ struct MMCounter : public MM
             return;
         }
 
-        if (fturn(b, s).damageTaken <= 0) {
+        if (poke(b,s)["DamageTakenByAttack"].toInt() <= 0) {
             return;
         }
 
-        turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
+        turn(b,s)["CounterDamage"] = 2 * poke(b,s)["DamageTakenByAttack"].toInt();
         turn(b,s)["CounterTarget"] = source;
     }
 
@@ -1543,8 +1543,8 @@ struct MMCounter : public MM
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
-                    && fturn(b, s).damageTaken > 0) {
-                turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
+                    && poke(b,s)["DamageTakenByAttack"].toInt() > 0) {
+                turn(b,s)["CounterDamage"] = 2 * poke(b,s)["DamageTakenByAttack"].toInt();
                 turn(b,s)["CounterTarget"] = t;
             }
         }
@@ -3298,7 +3298,7 @@ struct MMMetalBurst : public MM
     }
 
     static void daf (int s, int, BS &b) {
-        int dam = fturn(b,s).damageTaken;
+        int dam = poke(b,s)["DamageTakenByAttack"].toInt();
         if (dam == 0) {
             fturn(b,s).add(TM::Failed);
             return;
