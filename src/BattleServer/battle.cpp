@@ -1840,15 +1840,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 heatOfAttack() = false;
                 if (hitting) {
-                    if (tmove(player).flags & Move::ContactFlag) {
-                        if (!sub) {
-                            callieffects(target, player, "UponPhysicalAssault");
-                            callaeffects(target,player,"UponPhysicalAssault");
-                            calleffects(target,player,"UponPhysicalAssault");
-                        }
-                        callaeffects(player,target,"OnPhysicalAssault");
-                    }
-
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
                         callaeffects(player, target, "OnHitting");
@@ -3317,10 +3308,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
             }
         }
 
-        if (hp <= 0) {
-            koPoke(player, source, straightattack);
-        } else {
-
+        if (hp > 0) {
             /* Endure & Focus Sash */
             if (survivalFactor) {
                 //Sturdy
@@ -3350,14 +3338,34 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 end:
                 turnMemory(player).remove("SurviveReason");
             }
+        }
+        if(hp <= 0) {
+            changeHp(player, 0);
+        } else {
+            changeHp(player, hp);
+        }
 
-            if (straightattack) {
-                notify(this->player(player), StraightDamage,player, qint16(damage));
-                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+        if (straightattack) {
+            notify(this->player(player), StraightDamage,player, qint16(damage));
+            notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+
+            if (player != source && !sub) {
+                callpeffects(player, source, "UponOffensiveDamageReceived");
+                callieffects(player, source, "UponOffensiveDamageReceived");
             }
 
+            if (tmove(source).flags & Move::ContactFlag) {
+                if (!sub) {
+                    callieffects(player, source, "UponPhysicalAssault");
+                    callaeffects(player,source,"UponPhysicalAssault");
+                    calleffects(player,source,"UponPhysicalAssault");
+                }
+                callaeffects(source,player,"OnPhysicalAssault");
+            }
+        }
 
-            changeHp(player, hp);
+        if (hp <= 0) {
+            koPoke(player, source, straightattack);
         }
     }
 
@@ -3380,8 +3388,6 @@ end:
         }
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
-            callpeffects(player, source, "UponOffensiveDamageReceived");
-            callieffects(player, source, "UponOffensiveDamageReceived");
         }
     }
 
@@ -3625,17 +3631,8 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
-    if (poke(player).ko()) {
+    if (turnMem(player).flags & TM::WasKoed) {
         return;
-    }
-
-    qint16 damage = poke(player).lifePoints();
-
-    changeHp(player, 0);
-
-    if (straightattack) {
-        notify(this->player(player), StraightDamage,player, qint16(damage));
-        notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
     }
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
