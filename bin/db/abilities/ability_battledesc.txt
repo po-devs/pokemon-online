@@ -165,7 +165,7 @@
 164 Prevents opponent abilities from hindering moves used by a Pokémon with this ability.
 165 Changes all Normal-type moves used by a Pokémon with this Ability to Flying-type, and boosts their power by 30%.
 166 Makes Dark Aura and Fairy Aura reduce by 1/4 the power of their respective type as long as a Pokémon with this ability is on the field.
-167 Restores the HP of a Pokémon with this ability by 30% when it eats a Berry.
+167 Restores the HP of a Pokémon with this ability by 1/3 when it eats a Berry.
 168 Boosts the power of all Dark-type moves used by any Pokémon on the field by 1/3.
 169 Boosts the power of all Fairy-type moves used by any Pokémon on the field by 1/3.
 170 Prevents the stats of Grass-type partners of a Pokémon with this ability from being lowered by the opponent.
