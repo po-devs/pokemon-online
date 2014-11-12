@@ -4809,7 +4809,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
+        if (b.koed(t) || fpoke(b,s).flags & BS::BasicPokeInfo::Transformed || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
