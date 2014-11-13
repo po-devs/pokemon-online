@@ -154,26 +154,29 @@ public:
 
     enum WeatherM
     {
-	ContinueWeather,
-	EndWeather,
-	HurtWeather
+        ContinueWeather,
+        EndWeather,
+        HurtWeather
     };
 
     enum Weather
     {
-	NormalWeather = 0,
-	Hail = 1,
-	Rain = 2,
-	SandStorm = 3,
-	Sunny = 4
+        NormalWeather = 0,
+        Hail = 1,
+        Rain = 2,
+        SandStorm = 3,
+        Sunny = 4,
+        StrongSun = 5,
+        StrongRain = 6,
+        StrongWinds = 7
     };
 
     enum HealBlockBlock
     {
-    HealByEffect = 2, //Effects like Aqua Ring, Leech Seed
-    HealByMove = 3, //Direct use of a move
-    HealByItem = 4, //Held Items
-    HealByAbility = 5 //Abilities
+        HealByEffect = 2, //Effects like Aqua Ring, Leech Seed
+        HealByMove = 3, //Direct use of a move
+        HealByItem = 4, //Held Items
+        HealByAbility = 5 //Abilities
     };
 
 private:

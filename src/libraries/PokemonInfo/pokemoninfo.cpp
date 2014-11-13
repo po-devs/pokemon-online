@@ -2430,6 +2430,11 @@ bool ItemInfo::isMegaStone(int itemnum)
     return itemnum >= 2000 && itemnum < 3000;
 }
 
+bool ItemInfo::isPrimalStone(int itemnum)
+{
+    return itemnum == 342 || itemnum == 343;
+}
+
 bool ItemInfo::isDrive(int itemnum)
 {
     return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
@@ -2696,6 +2701,9 @@ int TypeInfo::TypeForWeather(int weather) {
     case Rain: return Type::Water;
     case SandStorm: return Type::Rock;
     case Sunny: return Type::Fire;
+    case StrongSun: return Type::Fire;
+    case StrongRain: return Type::Water;
+    case StrongWinds: return Type::Flying;
     default: return Type::Normal;
     }
 }
@@ -2708,6 +2716,9 @@ QString TypeInfo::weatherName(int weather)
     case Rain: return QObject::tr("rain");
     case SandStorm: return QObject::tr("sandstorm");
     case Sunny: return QObject::tr("sunny");
+    case StrongSun: return QObject::tr("intense sun");
+    case StrongRain: return QObject::tr("heavy rain");
+    case StrongWinds: return QObject::tr("strong winds");
     default: return QObject::tr("normal", "weather");
     }
 }

@@ -481,7 +481,7 @@ int BattleBase::countBackUp(int player) const
 
 bool BattleBase::canTarget(int attack, int attacker, int defender) const
 {
-    if (MoveInfo::Flags(attack, gen()) & Move::PulsingFlag) {
+    if (MoveInfo::Flags(attack, gen()) & Move::FarReachFlag) {
         return true;
     }
 

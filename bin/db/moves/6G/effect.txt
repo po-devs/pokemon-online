@@ -144,7 +144,7 @@
 161 Has a 20% chance to either burn, freeze, or paralyze the target.
 162 Deals damage to the target equal to half of its current HP, but not less than 1.
 163 The critical hit chance for this move is raised by 1 stage.
-164 Creates a decoy using 1/4 of user's max HP. The decoy takes damage for the user, and vanishes once it has lost the expended HP. The decoy will nullify almost all status and stat altering moves and abilities aimed at the user, except for Attract, Encore, Imprison, Play Nice, Taunt, Torment, and Synchronize. Can be Baton Passed, but the decoy won't stop damage from Spikes and Stealth Rock, status from Toxic Spikes, or Speed drop from Sticky Web. The decoy disappears when the user is switched.
+164 Creates a decoy using 1/4 of user's max HP. The decoy takes damage for the user, and vanishes once it has lost the expended HP. The decoy will nullify almost all status and stat altering moves and abilities aimed at the user, except for Attract, Encore, Heal Bell, Imprison, Play Nice, Taunt, Torment, and Synchronize. Additionally, all sound-based moves will bypass the decoy entirely: Boomburst, Bug Buzz, Chatter, Confide, Disarming Voice, Echoed Voice, Grass Whistle, Growl, Heal Bell, Hyper Voice, Metal Sound, Noble Roar, Parting Shot, Perish Song, Relic Song, Roar, Round, Screech, Sing, Snarl, Snore, Supersonic, and Uproar. Can be Baton Passed, but the decoy won't stop damage from Spikes and Stealth Rock, status from Toxic Spikes, or Speed drop from Sticky Web. The decoy disappears when the user is switched.
 165 This attack always hits for neutral damage. If this attack is successful, the user loses 1/4 of its max HP.
 166 Permanently replaces this move with the last move used by the target with full PP, but fails if that move is Struggle, Sketch, Chatter, or any move the user knows, or if Transform is in effect for user.
 167 Hits three times, and stops if a hit misses. For each successive hit in the same turn, the power of this move increases by 10.
@@ -181,7 +181,7 @@
 198 Multi-hit attack, attacks two to five times in a turn. 37.5% chance for 2 or 3 hits; 12.5% chance for 4 or 5 hits.
 199 During the turn after this move is used, ensures that the user's attack will hit the target without fail.
 200 Rampage attack. For two or three turns, the user repeatedly uses this attack and can't take any other action. At the end of the duration, the user becomes confused. If the user can't attack during the rampage, or if this attack has no effect on the target, the user calms down without being confused. If the user uses this attack while being asleep, the user won't go into a rampage.
-201 Weather move, lasts for five turns. At the end of every turn except the last, damages all Pokémon on the field that aren't Ground, Rock, or Steel-type for 1/16 of their max HP. Boosts the Special Defense of all Rock-type Pokémon by 50%.
+201 Summons the sandstorm weather condition for five turns. At the end of every turn except the last, damages all Pokémon on the field that aren't Ground, Rock, or Steel-type for 1/16 of their max HP. Boosts the Special Defense of all Rock-type Pokémon by 50%.
 202 The user is healed for 1/2 of the HP lost by the target from this attack.
 203 Makes the user survive any attack with at least 1 HP, but fails if the user acts last in the turn it is used. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
 204 Lowers the target's Attack by 2 stages.
@@ -219,8 +219,8 @@
 237 This attack's type is equal to (X * 15 / 63), rounded down, where X is 0, plus 1 if the user's HP IV is odd, plus 2 if its Attack IV is odd, plus 4 if its Defense IV is odd, plus 8 if its Speed IV is odd, plus 16 if its Special Attack IV is odd, plus 32 if its Special Defense IV is odd, and the type is selected from this list: 0 = Fighting; 1 = Flying; 2 = Poison; 3 = Ground; 4 = Rock; 5 = Bug; 6 = Ghost; 7 = Steel; 8 = Fire; 9 = Water; 10 = Grass; 11 = Electric; 12 = Psychic; 13 = Ice; 14 = Dragon; 15 = Dark.
 238 The critical hit chance for this move is raised by 1 stage.
 239 Has a 20% chance to cause the target to flinch. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
-240 Weather move, lasts for five turns. Boosts the power of Water moves by 50%, and halves the power of Fire moves.
-241 Weather move, lasts for five turns. Boosts the power of Fire moves by 50%, and halves the power of Water moves. Makes all Pokémon immune to being frozen.
+240 Summons the rain weather condition for five turns. Boosts the power of Water moves by 50%, and halves the power of Fire moves.
+241 Summons the harsh sunlight weather condition for five turns. Boosts the power of Fire moves by 50%, and halves the power of Water moves. Makes all Pokémon immune to being frozen.
 242 Has a 20% chance to lower the target's Defense by 1 stage.
 243 The target of this move is the last of the opponent's Pokémon to have damaged the user with a special move this turn. Deals damage to the target equal to two times the damage the target dealt to the user with their last special attack. Priority level -5.
 244 Changes the user's stat stages to be the same as the target's.
@@ -237,7 +237,7 @@
 255 This attack's power is equal to 100 times the user's Stockpile count. After using this move, resets user's Stockpile count to 0 and lowers user's Defense and Special Defense by the amount the user gained with Stockpile.
 256 Recovers the user's HP according to the its Stockpile count: 1/4 of max HP if it's 1; half of max HP if it's 2; and all HP if it's 3. After using this move, resets user's Stockpile count to 0 and lowers user's Defense and Special Defense by the amount the user gained with Stockpile.
 257 Has a 10% chance to burn the target.
-258 Weather move, lasts for five turns. At the end of every turn except the last, damages all Pokémon on the field that aren't Ice-type for 1/16 of their max HP.
+258 Summons the hail weather condition for five turns. At the end of every turn except the last, damages all Pokémon on the field that aren't Ice-type for 1/16 of their max HP.
 259 Until the target switches out, the target cannot use the same move twice in a row.
 260 Raises the target's Special Attack by 2 stages, but confuses it.
 261 Burns the target.
@@ -489,9 +489,9 @@
 515 The user faints after using this attack. The target loses the same HP the user had before using this attack.
 516 Gives the user's held item to the target.
 517 Burns the target.
-518 If an ally is about to use Fire Pledge or Grass Pledge when this attack is used, this attack does nothing, and the other Pledge attack is immediately used with tripled power. If this attack is used in such a way after Fire Pledge, it creates a rainbow over the user's side of the field for 4 turns, doubling the chances of added effects happening for the user's team. If this attack is used in such a way after Grass Pledge, it creates a swamp on the opponent's side of the field for 4 turns, halving the Speed of all of the opponent's Pokémon.
-519 If an ally is about to use Water Pledge or Grass Pledge when this attack is used, this attack does nothing, and the other Pledge attack is immediately used with tripled power. If this attack is used in such a way after Water Pledge, it creates a rainbow over the user's side of the field for 4 turns, doubling the chances of added effects happening for the user's team. If this attack is used in such a way after Grass Pledge, it creates a sea of fire on the opponent's side of the field, damaging all of the opponent's Pokémon that are not Fire-type for 1/8 of their max HP at the end of each turn.
-520 If an ally is about to use Water Pledge or Fire Pledge when this attack is used, this attack does nothing, and the other Pledge attack is immediately used with tripled power. If this attack is used in such a way after Water Pledge, it creates a swamp on the opponent's side of the field for 4 turns, halving the Speed of all of the opponent's Pokémon. If this attack is used in such a way after Fire Pledge, it creates a sea of fire on the opponent's side of the field, damaging all of the opponent's Pokémon that are not Fire-type for 1/8 of their max HP at the end of each turn.
+518 If attempting to use this move on the same turn as an ally uses Fire Pledge, the faster Pokémon will do nothing, while the slower Pokémon will move immediately after and use this move with tripled power. If this attack is used in such a way, it cannot gain STAB even if the user is Water-type, and it creates a rainbow over the user's side of the field for 4 turns, doubling the chances of added effects happening for the user's team.
+519 If attempting to use this move on the same turn as an ally uses Grass Pledge, the faster Pokémon will do nothing, while the slower Pokémon will move immediately after and use this move with tripled power. If this attack is used in such a way, it cannot gain STAB even if the user is Fire-type, and it creates a sea of fire on the opponent's side of the field for 4 turns, damaging all of the opponent's Pokémon that are not Fire-type for 1/8 of their max HP at the end of each turn.
+520 If attempting to use this move on the same turn as an ally uses Water Pledge, the faster Pokémon will do nothing, while the slower Pokémon will move immediately after and use this move with tripled power. If this attack is used in such a way, it cannot gain STAB even if the user is Grass-type, and it creates a swamp on the opponent's side of the field for 4 turns, halving the Speed of all of the opponent's Pokémon.
 521 Immediately after using this attack, the user switches out for a chosen Pokémon in its party.
 522 Lowers the target's Special Attack by 1 stage.
 523 Lowers the target's Speed by 1 stage.
@@ -578,9 +578,11 @@
 609 Congratulates you on your special day!
 610 Cannot bring the target to 0 HP.
 611 Has a 50% chance to raise the user's Defense by 1 stage.
-612 The user takes recoil damage equal to 1/3 of HP lost by the target from this attack.
+612 The user takes recoil damage equal to 1/2 of HP lost by the target from this attack.
 613 Has a 30% chance to burn the target.
 614 Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.
 615 The user and an ally hold hands. This makes them very happy.
 616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
 617 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
+620 Lowers the user's Defense and Special Defense by 1 stage.
+621 Lowers the user's Defense by 1 stage. Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.

@@ -1,0 +1,19 @@
+﻿1:0 Rouge/Bleue
+1:1 Jaune
+1:2 Stadium
+1:3 Stadium mit Tradebacks
+2:0 Or/Agent
+2:1 Cristal
+2:2 Stadium 2
+3:0 Rubis/Saphir
+3:1 Colosseum
+3:2 Rouge Feu/Vert Feuille
+3:3 Émeraude
+3:4 XD
+4:0 Diamant/Perle
+4:1 Platine
+4:2 Or HeartGold/Argent SoulSilver
+5:0 Noire/Blanche
+5:1 Noire/Blanche 2
+6:0 X/Y
+6:1 Eubis Oméga/Saphir Alpha

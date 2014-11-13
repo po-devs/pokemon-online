@@ -174,7 +174,7 @@ struct MMAssurance : public MM
 
     static void bcd(int s, int t, BS &b) {
         if (turn(b,t).contains("DamageTaken") || (team(b, b.player(t)).contains("LastKoedTurn") && team(b, b.player(t))["LastKoedTurn"].toInt() == b.turn() - 1)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
@@ -399,18 +399,33 @@ struct MMCharge : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(12, 1) ;
+    }
+
     static void uas(int s, int, BS &b) {
-        poke(b, s)["Charged"] = true;
+        poke(b, s)["ChargedTurn"] = b.turn();
         addFunction(poke(b,s), "BeforeCalculatingDamage", "Charge", &bcd);
         b.sendMoveMessage(18, 0, s, type(b,s));
+        if (b.gen().num == 4) {
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Charge", &et);
+        }
     }
 
     static void bcd(int s, int, BS &b) {
-        if (poke(b,s)["Charged"] == true && tmove(b,s).type == Type::Electric) {
+        if (b.gen().num == 3 && move(b,s) == Move::HiddenPower) {
+            return;
+        }
+        if (poke(b,s)["ChargedTurn"].toInt()+1 == b.turn() && tmove(b,s).type == Type::Electric) {
             if (tmove(b, s).power > 0) {
                 tmove(b, s).power = tmove(b, s).power * 2;
-                poke(b, s)["Charged"] = false;
             }
+        }
+    }
+
+    static void et (int s, int, BS &b) {
+        if (poke(b,s)["ChargedTurn"].toInt()+1 == b.turn()) {
+            b.inflictStatMod(s, SpDefense, -1, s);
         }
     }
 };
@@ -427,9 +442,13 @@ struct MMConversion : public MM
         if (b.gen().num == 1) {
             return;
         }
+        int ctype;
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
+                if (b.gen() >= 6) { /*Always changes to type of opponent's first (valid) move*/
+                    ctype = MoveInfo::Type(b.move(s,i), b.gen());
+                }
                 break;
             }
             if (i == 3) {
@@ -437,6 +456,7 @@ struct MMConversion : public MM
                 return;
             }
         }
+
         if (fpoke(b,s).type2 != Pokemon::Curse) {
             /* It means the pokemon has two types, i.e. conversion always works */
             QList<int> poss;
@@ -445,7 +465,11 @@ struct MMConversion : public MM
                     poss.push_back(b.move(s,i));
                 }
             }
-            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+            if (b.gen() >= 6) {
+                turn(b,s)["ConversionType"] = ctype;
+            } else {
+                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+            }
         } else {
             QList<int> poss;
             for (int i = 0; i < 4; i++) {
@@ -456,7 +480,11 @@ struct MMConversion : public MM
             if (poss.size() == 0) {
                 fturn(b, s).add(TM::Failed);
             } else {
-                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+                if (b.gen() >= 6) {
+                    turn(b,s)["ConversionType"] = ctype;
+                } else {
+                    turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+                }
             }
         }
     }
@@ -941,22 +969,27 @@ struct MMAromaTherapy : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int s, int, BS &b) {
         int move = MM::move(b,s);
         int player = b.player(s);
         b.sendMoveMessage(3, (move == Aromatherapy) ? 0 : 1, s, type(b,s));
-        for (int i = 0; i < 6; i++) {           
+        for (int i = 0; i < 6; i++) {
+            int si = b.slot(player,i);
+            //Allied Sap Sippers gets attack boost from Aromatherapy, regardless if anyone is cured
+            if (move == Aromatherapy && b.gen() >= 6 && b.isOut(player, i) && b.hasWorkingAbility(si, Ability::SapSipper)) {
+                b.inflictStatMod(si,Attack,1,si);
+            }
             if (b.poke(player,i).status() != Pokemon::Fine) {
                 //SoundProof blocks healbell but not aromatherapy prior to Gen 5
                 if (!b.poke(player,i).ko() && (move == Aromatherapy || (b.gen() >= 5 && move == HealBell) || b.poke(player,i).ability() != Ability::Soundproof)) {
                     //Prior to Gen 6 Heal bell doesn't work if a sub is out
-                    if (b.gen() < 6 && b.hasSubstitute(b.slot(player, i)) && move == HealBell) {
+                    if (b.gen() < 6 && b.isOut(player, i) && b.hasSubstitute(si) && move == HealBell) {
                         continue;
                     }
                     b.changeStatus(player,i,Pokemon::Fine);
                     //Gen 5 and higher list out the pokemon that were cured
                     if (b.gen() >=5) {
-                        b.sendMoveMessage(3, 2, s, type(b,s), t, 0, b.poke(player,i).nick());
+                        b.sendMoveMessage(3, 2, si, type(b,s));
                     }
                 }
             }
@@ -1307,15 +1340,16 @@ struct MMBounce : public MM
 
     static void daf(int s, int t, BS &b) {
         if (!poke(b,s).value("Invulnerable").toBool()) {
-            /* First part of the move */
-            if (b.hasSubstitute(t) && move(b,s) == Move::SkyDrop) {
-                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
-                fturn(b,s).add(TM::Failed);
-            }
-            //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs.
-            if (b.gen() >= 6 && move(b,s) == Move::SkyDrop && b.weight(t) >= 200) {
-                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
-                b.fail(s, 13, 7, Pokemon::Flying, t);
+            if (move(b,s) == Move::SkyDrop) {
+                /* First part of the move */
+                if (b.hasSubstitute(t)) {
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                    fturn(b,s).add(TM::Failed);
+                } else if (b.gen() >= 6  && b.weight(t) >= 2000) {
+                    //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs. Remember floating point precision! 200.0 = 2000
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                    b.fail(s, 13, 7, Pokemon::Flying, t);
+                }
             }
         } else {
             /* Second part of the move */
@@ -1522,7 +1556,7 @@ struct MMCounter : public MM
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
-                    && fturn(b, s).damageTaken > 0) {
+                && fturn(b, s).damageTaken > 0) {
                 turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
                 turn(b,s)["CounterTarget"] = t;
             }
@@ -1533,11 +1567,11 @@ struct MMCounter : public MM
 
     static void daf (int s, int t, BS &b) {
         if (!turn(b,s).contains("CounterDamage")) {
-             if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
-                     && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
-                 turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
-                 return;
-             }
+            if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
+                && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
+                turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
+                return;
+            }
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -2364,7 +2398,8 @@ struct MMMetronome : public MM
             (*this) << Move::IceBurn << Move::FreezeShock << Move::Quash << Move::QuickGuard << Move::RelicSong << Move::SecretSword
                                      << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
                                      << Move::Bestow << Move::NaturePower << Move::Snore << Move::HyperspaceHole << Move::SteamEruption << Move::LightOfRuin
-                                     << Move::DiamondStorm << Move::ThousandArrows << Move::ThousandWaves << Move::HoldHands << Move::Celebrate << Move::HappyHour;
+                                     << Move::DiamondStorm << Move::ThousandArrows << Move::ThousandWaves << Move::HoldHands << Move::Celebrate << Move::HappyHour
+                                     << Move::PrecipiceBlades << Move::OriginPulse << Move::DragonAscent << Move::HyperspaceFury;
         }
         bool contains(int move, Pokemon::gen gen) const {
             if (gen <= 4) {
@@ -3462,13 +3497,13 @@ struct MMBoostSwap : public MM
 struct MMGyroBall : public MM
 {
     MMGyroBall() {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["DamageFormulaStart"] = &bcd;
     }
 
     static void bcd (int s, int t, BS &b) {
         bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
 
-        int bp = 1 + 25 * b.getBoostedStat(speed ? s : t,Speed) / b.getBoostedStat(speed ? t : s,Speed);
+        int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
         bp = std::max(2,std::min(bp,150));
 
         tmove(b, s).power = tmove(b, s).power * bp;
@@ -3495,6 +3530,9 @@ struct MMWeather : public MM
     static void daf(int s, int, BS &b) {
         if (b.weather == turn(b,s)["Weather_Arg"].toInt())
             fturn(b,s).add(TM::Failed);
+        if (b.weather == BS::StrongSun || b.weather == BS::StrongRain || b.weather == BS::StrongWinds) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int, BS &b) {
@@ -3519,9 +3557,9 @@ struct MMThunder : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.isWeatherWorking(BattleSituation::Rain)) {
+        if (b.isWeatherWorking(BattleSituation::Rain) || b.isWeatherWorking(BattleSituation::StrongRain)) {
             tmove(b, s).accuracy = 0;
-        } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        } else if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             tmove(b, s).accuracy = tmove(b, s).accuracy * 5 / 7;
         }
     }
@@ -3662,7 +3700,7 @@ struct MMHealBlock: public MM
     static void msp(int s, int, BS &b) {
         for (int i = 0; i < 4; i++) {
             if ((MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
-                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
+                 || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
@@ -3670,8 +3708,7 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if((tmove(b,s).flags & Move::HealingFlag
-                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
+        if((tmove(b,s).flags & Move::HealingFlag || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
             b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
@@ -4297,10 +4334,10 @@ struct MMMimic : public MM
         int slot = fpoke(b,s).lastMoveSlot;
         //Following check is needed to make sure "Mimic" is replaced, and not other moves, like Sleep Talk.
         for(int i = 0; i < 4; i++) {
-           if (b.move(s,i) == Move::Mimic) {
-               slot = i;
-               break;
-           }
+            if (b.move(s,i) == Move::Mimic) {
+                slot = i;
+                break;
+            }
         }
 
         //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
@@ -4344,9 +4381,18 @@ struct MMMirrorMove : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int , BS &b) {
-        if(!poke(b,s).contains("MirrorMoveMemory")) {
+    static void daf(int s, int t, BS &b) {
+        if (!poke(b,s).contains("MirrorMoveMemory") || (b.gen().num == 2 && !poke(b,t).contains("LastMoveUsedTurn"))) {
             fturn(b,s).add(TM::Failed);
+        }
+
+        if (b.gen().num == 2) {
+            for (int i = 0; i < 4; i++) {
+                if (b.move(s,i) == poke(b,s)["MirrorMoveMemory"].toInt()) {
+                    fturn(b,s).add(TM::Failed);
+                }
+            }
+
         }
     }
 
@@ -4415,7 +4461,7 @@ struct MMMoonlight : public MM
 
         if (weather == BattleSituation::NormalWeather || !b.isWeatherWorking(weather)) {
             tmove(b,s).healing = 50;
-        } else if (b.isWeatherWorking(BattleSituation::Sunny)) {
+        } else if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
             if (b.gen().num == 2) {
                 tmove(b,s).healing = 100;
             } else {
@@ -4571,7 +4617,7 @@ struct MMRazorWind : public MM
     static void ms(int s, int, BS &b) {
         if (!poke(b,s).contains("ReleaseTurn") || poke(b,s)["ReleaseTurn"].toInt() != b.turn()) {
             int mv = move(b,s);
-            if (mv == SolarBeam && b.isWeatherWorking(BS::Sunny))
+            if (mv == SolarBeam && (b.isWeatherWorking(BS::Sunny) || b.isWeatherWorking(BS::StrongSun)))
                 return;
 
             b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s), s, move(b,s));
@@ -4585,7 +4631,7 @@ struct MMRazorWind : public MM
                 b.sendItemMessage(11,s);
                 b.disposeItem(s);
 
-                if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
+                if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.weather != BS::StrongSun && b.isWeatherWorking(b.weather)) {
                     tmove(b, s).power = tmove(b, s).power / 2;
                 }
             } else {
@@ -4763,7 +4809,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
+        if (b.koed(t) || fpoke(b,s).flags & BS::BasicPokeInfo::Transformed || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5155,7 +5201,8 @@ struct MMYawn : public MM {
             return;
         }
         if (b.hasWorkingAbility(t, Ability::Insomnia) || b.hasWorkingAbility(t, Ability::VitalSpirit)) {
-            b.fail(s, 144, 2, 0, t);
+            b.sendAbMessage(33,6,t,t,0,b.ability(t));
+            b.failSilently(s);
         }
         if (b.sleepClause() && b.currentForcedSleepPoke[b.player(t)] != -1) {
             b.notifyClause(ChallengeInfo::SleepClause);
@@ -5188,6 +5235,8 @@ struct MMYawn : public MM {
                         b.currentForcedSleepPoke[b.player(s)] = b.currentInternalId(s);
                     }
                 }
+            } else if (b.hasWorkingAbility(s, Ability::Insomnia) || b.hasWorkingAbility(s, Ability::VitalSpirit)) {
+                b.sendAbMessage(33,Pokemon::Asleep,s,s,0,b.ability(s));
             }
             b.removeEndTurnEffect(BS::PokeEffect, s, "Yawn");
             poke(b,s).remove("YawnCount");
@@ -5310,10 +5359,10 @@ struct MMSecretPower : public MM {
 
     static void ms(int s, int, BS &b) {
         if (b.gen().num == 5) {
-                tmove(b,s).classification = Move::OffensiveStatChangingMove;
-                tmove(b,s).rateOfStat = 30 << 16;
-                tmove(b,s).statAffected = Accuracy << 16;
-                tmove(b,s).boostOfStat = uchar(-1) << 16;
+            tmove(b,s).classification = Move::OffensiveStatChangingMove;
+            tmove(b,s).rateOfStat = 30 << 16;
+            tmove(b,s).statAffected = Accuracy << 16;
+            tmove(b,s).boostOfStat = uchar(-1) << 16;
         } else {
             if (b.terrain != 0) {
                 int type = std::abs(b.terrain);
@@ -5420,7 +5469,7 @@ struct MMUproar : public MM {
             foreach (int i, b.sortedBySpeed()) {
                 if (b.poke(i).status() == Pokemon::Asleep) {
                     b.sendMoveMessage(141,3,i);
-                    b.changeStatus(i, Pokemon::Normal);
+                    b.changeStatus(i, Pokemon::Fine);
                 }
             }
             b.addUproarer(s);
@@ -5447,7 +5496,7 @@ struct MMUproar : public MM {
             foreach (int i, b.sortedBySpeed()) {
                 if (b.poke(i).status() == Pokemon::Asleep) {
                     b.sendMoveMessage(141,3,i);
-                    b.changeStatus(i, Pokemon::Normal);
+                    b.changeStatus(i, Pokemon::Fine);
                 }
             }
         } else {
@@ -6196,7 +6245,8 @@ struct MMFirePledge : public MM
 
         b.sendMoveMessage(178, 1, s, 0, i);
         turn(b,s)["AttackStat"] = b.getStat(s, SpAttack) + b.getStat(i, SpAttack, 1);
-        tmove(b,s).power *= 2;
+        fturn(b,s).stab = 2;
+        tmove(b,s).power *= 3;
     }
 
     static void uas(int s, int t, BS &b);
@@ -6632,7 +6682,7 @@ struct MMGrowth : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.gen() >= 5 && b.isWeatherWorking(BS::Sunny))
+        if (b.gen() >= 5 && (b.isWeatherWorking(BS::Sunny) || b.isWeatherWorking(BS::StrongSun)))
             tmove(b,s).boostOfStat *= 2;
     }
 };

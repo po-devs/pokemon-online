@@ -397,7 +397,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         calculateTypeModStab();
 
         int typemod = turnMem(player).typeMod;
-        if (tmove(player).power > 1 && typemod < -50 && attack != Move::Bind && attack != Move::Wrap) {
+        if (typemod < -50 && ((tmove(player).power > 1 && attack != Move::Bind && attack != Move::Wrap) || (MoveInfo::isOHKO(attack, gen())))) {
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(0));
             calleffects(player,target,"AttackSomehowFailed");
@@ -767,7 +767,7 @@ void BattleRBY::changeTempMove(int player, int slot, int move)
 
 int BattleRBY::getBoostedStat(int p, int stat)
 {
-    return poke(p).normalStat(stat) * getStatBoost(p, stat);
+    return poke(p).normalStat(stat) * (floor(100*getStatBoost(p, stat))/100);
 }
 
 bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
@@ -785,7 +785,7 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
         notify(All, StatChange, player, qint8(stat), qint8(-malus), !tell);
         changeStatMod(player, stat, std::max(boost-malus, -6));
     } else {
-        //fixme: can't decrease message
+        notify(All, CappedStat, player, qint8(stat), false);
     }
 
     if (poke(player).status() == Pokemon::Burnt && stat == Attack) {
@@ -806,6 +806,8 @@ bool BattleRBY::gainStatMod(int player, int stat, int bonus, int , bool tell)
     if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
+    } else {
+        notify(All, CappedStat, player, qint8(stat), true);
     }
 
     fpoke(player).stats[stat] = getBoostedStat(player, stat);

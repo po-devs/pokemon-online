@@ -933,8 +933,15 @@ bool Team::importFromTxt(const QString &file1)
             nickname = first[0];
         }
 
-        static QStringList bef = QStringList() << "Porygonz" << "Deoxys-f" << "Deoxys-e" << "Deoxys-l";
-        static QStringList aft = QStringList() << "Porygon-Z" << "Deoxys-A" << "Deoxys-S" << "Deoxys-D";
+        static QStringList bef = QStringList() << "Porygonz" << "Deoxys-f" << "Deoxys-e" << "Deoxys-l" << "Rotom-Mow" << "Rotom-Heat" << "Rotom-Frost" << "Rotom-Wash" << "Rotom-Fan"
+                                               << "Tornadus-Therian" << "Landorus-Therian" << "Thundurus-Therian" << "Shaymin-Sky" << "Kyurem-Black" << "Kyurem-White"
+                                               << "Giratina-Origin" << "Keldeo-Resolute" << "Wormadam-Sandy" << "Wormadam-Trash" << "Pumpkaboo-Small" << "Pumpkaboo-Large" << "Pumpkaboo-Super"
+                                               << "Gourgeist-Small" << "Gourgeist-Large" << "Gourgeist-Super";
+
+        static QStringList aft = QStringList() << "Porygon-Z" << "Deoxys-A" << "Deoxys-S" << "Deoxys-D" << "Rotom-C" << "Rotom-H" << "Rotom-F" << "Rotom-W" << "Rotom-S"
+                                               << "Tornadus-T" << "Landorus-T" << "Thundurus-T" << "Shaymin-S" << "Kyurem-B" << "Kyurem-W"
+                                               << "Giratina-O" << "Keldeo-R" << "Wormadam-S" << "Wormadam-T" << "Pumpkaboo-S" << "Pumpkaboo-L" << "Pumpkaboo-XL"
+                                               << "Gourgeist-S" << "Gourgeist-L" << "Gourgeist-XL";
 
         if (bef.contains(pokestring)) {
             pokestring = aft[bef.indexOf(pokestring)];
@@ -989,7 +996,7 @@ bool Team::importFromTxt(const QString &file1)
                 } else if (key == "Shiny") {
                     p.shiny() = true;
                 } else if (key == "EVs" || key == "IVs") {
-                    QStringList evList = pokeDetail[2].split(": ")[1].split("/");
+                    QStringList evList = pokeDetail[i].split(": ")[1].split("/");
 
                     foreach(QString ev, evList) {
                         QStringList ev2 = ev.trimmed().split(' ');
@@ -1152,6 +1159,22 @@ QString Team::exportToTxt() const
             }
 
             ret += "\n";
+
+            QString IV = "";
+            bool started1 = false;
+            for (int n = 0; n < 6; n++) {
+                if(p.DV(n) != 31) {
+                    if(started1) {
+                        IV += " / ";
+                    }
+                    started1 = true;
+
+                    IV += QString ("%1 %2").arg(p.DV(n)).arg(stats[n]);
+                }
+            }
+            if(IV.size() > 0) {
+                ret += "IVs: " + IV + "\n";
+            }
 
             ret += NatureInfo::Name(p.nature()) + " Nature";
 

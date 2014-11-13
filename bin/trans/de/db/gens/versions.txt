@@ -16,3 +16,4 @@
 5:0 Schwarz/Weiß
 5:1 Schwarz/Weiß 2
 6:0 X/Y
+6:1 Omega Rubin/Alpha Saphir

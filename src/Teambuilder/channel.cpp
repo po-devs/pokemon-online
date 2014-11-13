@@ -92,7 +92,7 @@ void Channel::showContextMenu(const QPoint &requested)
         int myauth = client->ownAuth();
 
         if (myauth > 0) {
-            createIntMapper(menu->addAction(tr("&Control Panel")), SIGNAL(triggered()), client, SLOT(controlPanel(int)), item->id());
+            createIntMapper(menu->addAction(tr("Control &Panel")), SIGNAL(triggered()), client, SLOT(controlPanel(int)), item->id());
 
             int otherauth = client->player(item->id()).auth;
 
@@ -100,7 +100,7 @@ void Channel::showContextMenu(const QPoint &requested)
                 menu->addSeparator();
                 createIntMapper(menu->addAction(tr("&Kick")), SIGNAL(triggered()), client, SLOT(kick(int)), item->id());
                 menu->addSeparator();
-				QMenu* tempbanMenu = new QMenu(tr("&Ban for..."));
+                QMenu* tempbanMenu = new QMenu(tr("Ban &For..."));
                 createIntMapper(tempbanMenu->addAction(tr("60 minutes")), SIGNAL(triggered()), client, SLOT(tempban60(int)), item->id());
                 createIntMapper(tempbanMenu->addAction(tr("24 hours")), SIGNAL(triggered()), client, SLOT(tempban1440(int)), item->id());
 				menu->addMenu(tempbanMenu);

@@ -12,8 +12,8 @@ WebServerConfig::WebServerConfig(WebServerPlugin *parent) :
     ui->port->setText(QString::number(master->port));
     ui->password->setText(master->pass);
 
-    connect(this, SIGNAL(accepted()), SLOT(close()));
-    connect(this, SIGNAL(rejected()), SLOT(close()));
+    connect(ui->buttonBox, SIGNAL(accepted()), SLOT(close()));
+    connect(ui->buttonBox, SIGNAL(rejected()), SLOT(close()));
 }
 
 WebServerConfig::~WebServerConfig()

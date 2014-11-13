@@ -302,8 +302,10 @@ public slots:
     void togglePMTabs(bool);
     void togglePMNotifications(bool);
     void togglePMLogs(bool);
+    void toggleChangeNamePM(bool);
     void movePlayerList(bool);
     void useOldShortcuts(bool);
+    void displayTrainerInfo(bool b);
     void ignoreServerVersion(bool);
     void versionDiff(const ProtocolVersion &v, int level);
     void serverNameReceived(const QString &sName);

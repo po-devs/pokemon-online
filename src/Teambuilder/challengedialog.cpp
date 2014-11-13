@@ -55,7 +55,14 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
     ui->name->setText(info.name);
     ui->avatar->setPixmap(Theme::TrainerSprite(info.avatar));
     ui->avatar->setFixedSize(Theme::TrainerSprite(1).size());
-    ui->description->setText(info.info);
+
+    QSettings s;
+
+    if (s.value("Client/DisplayTIs").toBool()) {
+        ui->description->setText(info.info);
+    } else {
+        ui->description->setText("");
+    }
 
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         clauses[i] = new QCheckBox(ChallengeInfo::clause(i));
@@ -68,7 +75,7 @@ void ChallengeDialog::setPlayerInfo(const PlayerInfo &info)
     int cpt = 0;
     tierGroup = new QButtonGroup(this);
     foreach(QString s, info.ratings.keys()) {
-        TierRatingButton *b = new TierRatingButton(s, info.flags[PlayerInfo::LadderEnabled] ? info.ratings[s] : -1);
+        TierRatingButton *b = new TierRatingButton(s, info.flags[PlayerInfo::LadderEnabled] ? qint16(info.ratings[s]) : -32769);
         b->setProperty("tier", s);
 
         if (cpt == 0) {

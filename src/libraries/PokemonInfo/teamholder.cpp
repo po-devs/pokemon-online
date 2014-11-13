@@ -7,7 +7,7 @@ QStringList Profile::getProfileList(const QString &path)
 {
     QDir profilesPath(path);
     QStringList profilesList;
-    foreach(const QString &name, profilesPath.entryList(QStringList("*.xml"))) {
+    foreach(const QString &name, profilesPath.entryList(QStringList() << "*.xml", QDir::Files | QDir::Hidden)) {
         profilesList.append(QUrl::fromPercentEncoding(name.section(".", 0, -2).toUtf8()));
     }
     return profilesList;

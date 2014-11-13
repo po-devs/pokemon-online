@@ -983,7 +983,8 @@ void BattleSituation::callEntryEffects(int player)
            So All those must be taken in account when changing something to
            how the items are set up. */
         callieffects(player, player, "UponSetup");
-        if (gen() >= 3)
+
+        if (gen() >= 3 && !turnMemory(player).contains("PrimalForme"))
             acquireAbility(player, poke(player).ability(), true);
         calleffects(player, player, "AfterSwitchIn");
     }
@@ -1727,6 +1728,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
+        if (tmove(player).type == Type::Water && isWeatherWorking(StrongSun)) {
+            sendAbMessage(126, 6, player, player, TypeInfo::TypeForWeather(StrongSun));
+            continue;
+        }
+        if (tmove(player).type == Type::Fire && isWeatherWorking(StrongRain)) {
+            sendAbMessage(126, 7, player, player, TypeInfo::TypeForWeather(StrongRain));
+            continue;
+        }
 
         if (tmove(player).power > 0)
         {
@@ -1796,11 +1805,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     fpoke(target).add(BasicPokeInfo::HadSubstitute);
                 }
 
-                if (tmove(player).power > 1 && repeatCount() == 0) {
+                /*Gyro Ball needs a special exclusion here to display tooltips correctly because BP is still registered as "1" through the next 2 checks.
+                 * The actual BP isn't calculated until after a crit is determined otherwise the incorrect speed stat and modifiers are used.*/
+                if ((tmove(player).power > 1  || tmove(player).attack == Move::GyroBall) && repeatCount() == 0) {
                     notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                 }
 
-                if (tmove(player).power > 1) {
+                if (tmove(player).power > 1 || tmove(player).attack == Move::GyroBall) {
                     calleffects(player, target, "BeforeHitting");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
@@ -1949,7 +1960,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                 notify(All, Failed, player);
                 continue;
             }
-
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
             calleffects(player, target, "DetermineAttackFailure");
@@ -2080,7 +2090,12 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
                     typeeff *= -1;
                 }
             }
-
+            if (typeeff > 0) {
+                // Delta Stream reduces SE effectiveness to Neutral on flying types
+                if (def == Type::Flying && isWeatherWorking(StrongWinds)) {
+                    typeeff -= 1;
+                }
+            }
             if (typeeff < -50) {
                 /* Check for grounded flying types */
                 if (type == Type::Ground && hasGroundingEffect(target)) {
@@ -2144,6 +2159,10 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     if (ab == Ability::Illusion || ab == Ability::Unburden)
         return works;
 
+    /* Weather abilities shouldn't be effected at all, bug elsewhere, but fix here for now... */
+    if (ab == Ability::DeltaStream || ab == Ability::PrimordialSea || ab == Ability::DesolateLand) {
+        return works;
+    }
     if (attacking()) {
         // Mold Breaker
         if (heatOfAttack() && player == attacked() && player != attacker() &&
@@ -2475,7 +2494,7 @@ bool BattleSituation::canGetStatus(int target, int status) {
         return true;
     }
     case Pokemon::Burnt: return !hasWorkingAbility(target, Ability::WaterVeil);
-    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny);
+    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny) && !isWeatherWorking(StrongSun);
     case Pokemon::Paralysed: return (gen() < 6 || !hasType(target, Type::Electric)) && !hasWorkingAbility(target, Ability::Limber);
     case Pokemon::Poisoned: return (gen() < 3 || !hasType(target, Pokemon::Steel)) && !hasWorkingAbility(target, Ability::Immunity);
     default:
@@ -2720,7 +2739,6 @@ bool BattleSituation::isWeatherWorking(int weather) {
         return false;
 
     //Air lock & Cloud nine
-
     for (int i = 0; i < numberOfSlots(); i++)  {
         if (!koed(i) && (hasWorkingAbility(i, Ability::AirLock) || hasWorkingAbility(i, Ability::CloudNine))) {
             return false;
@@ -2846,12 +2864,24 @@ bool BattleSituation::hasGroundingEffect(int player)
 
 bool BattleSituation::isProtected(int slot, int target)
 {
-    // check to see if protected //
-    return pokeMemory(slot).value("ProtectiveMoveTurn", -1).toInt() == turn()
-            || (teamMemory(player(slot)).value("WideGuardUsed", -1).toInt() == turn()
-                && (tmove(target).targets == Move::Opponents
-                    || tmove(target).targets == Move::All
-                    || tmove(target).targets == Move::AllButSelf));
+    /* check to see if protected. order is important: wide guard > endure > protect */
+    if ((teamMemory(player(slot)).value("WideGuardUsed", -1).toInt() == turn()
+         && (tmove(target).targets == Move::Opponents
+             || tmove(target).targets == Move::All
+             || tmove(target).targets == Move::AllButSelf))) {
+        return true;
+    }
+
+    /*Endure shares code with Protect, but it is not considered "protected" as far as abilities go*/
+    if (turnMemory(slot).value("CannotBeKoed").toBool()) {
+        return false;
+    }
+
+    if (pokeMemory(slot).value("ProtectiveMoveTurn", -1).toInt() == turn()) {
+        return true;
+    }
+
+    return false;
 }
 
 void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
@@ -2959,6 +2989,7 @@ void BattleSituation::makePokemonLast(int t)
 int BattleSituation::calculateDamage(int p, int t)
 {
     callaeffects(p,t,"DamageFormulaStart");
+    calleffects(p,t,"DamageFormulaStart");
 
     context &move = turnMemory(p);
     PokeBattle &poke = this->poke(p);
@@ -3145,13 +3176,13 @@ int BattleSituation::calculateDamage(int p, int t)
             }
         }
     }
-    if (isWeatherWorking(Sunny)) {
+    if (isWeatherWorking(Sunny) || isWeatherWorking(StrongSun)) {
         if (type == Type::Fire) {
             damage = damage * 3 /2;
         } else if (type == Type::Water) {
             damage /= 2;
         }
-    } else if (isWeatherWorking(Rain)) {
+    } else if (isWeatherWorking(Rain) || isWeatherWorking(StrongRain)) {
         if (type == Type::Water) {
             damage = damage * 3/2;
         } else if (type == Type::Fire) {
@@ -3511,7 +3542,8 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     if (ItemInfo::isDrive(item) && poke.num().original() == Pokemon::Genesect) {
         return false;
     }
-    if (ItemInfo::isMegaStone(item) && ItemInfo::MegaStoneForme(item).original() == poke.num().original()) {
+    //primalstones using MegaStoneForme function because lazy
+    if ((ItemInfo::isMegaStone(item) || ItemInfo::isPrimalStone(item)) && ItemInfo::MegaStoneForme(item).original() == poke.num().original()) {
         return false;
     }
     /* Knock off */
@@ -3624,6 +3656,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     /* For free fall */
     if (gen() >= 5)
         callpeffects(player, player, "AfterBeingKoed");
+    callaeffects(player, player, "UponKoed");
+    //for Strong Weather
 }
 
 void BattleSituation::requestSwitchIns()
@@ -3771,7 +3805,12 @@ int BattleSituation::getBoostedStat(int player, int stat)
     if (stat == Attack && turnMemory(player).contains("CustomAttackStat")) {
         return turnMemory(player)["CustomAttackStat"].toInt();
     } else if (stat == Attack && turnMemory(player).contains("UnboostedAttackStat")) {
-        return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
+        if (gen() > 2) {
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
+        } else {
+            //Gen 2 returns same calculated stat as Gen 1
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * (floor(100*getStatBoost(player, Attack))/100);
+        }
     } else{
         int givenStat = stat;
         /* Not sure on the order here... haha. */
@@ -3784,7 +3823,13 @@ int BattleSituation::getBoostedStat(int player, int stat)
             stat = 6 - stat;
             givenStat = 6 - givenStat;
         }
-        return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
+        if (gen() > 2) {
+            return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
+        } else {
+            //Gen 2 returns same calculated stat as Gen 1
+            return fpoke(player).stats[givenStat] * (floor(100*getStatBoost(player, stat))/100);
+        }
+
     }
 }
 

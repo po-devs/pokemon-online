@@ -656,7 +656,7 @@ namespace Pokemon
         Emboar,
         Oshawott,
         Dewott,
-        Sammurott,
+        Samurott,
         Patrat,
         Watchog,
         Lillipup,
@@ -702,7 +702,7 @@ namespace Pokemon
         Cottonee,
         Whimsicott,
         Petilil,
-        Liligant,
+        Lilligant,
         Basculin,
         Sandile,
         Krokorok,
@@ -751,10 +751,10 @@ namespace Pokemon
         Joltik,
         Galvantula,
         Ferroseed,
-        Ferrotorn,
+        Ferrothorn,
         Klink,
         Klang,
-        Klinkklang,
+        Klinklang,
         Tynamo,
         Eelektrik,
         Eelektross,
@@ -909,7 +909,7 @@ namespace Pokemon
         Gourgeist_S = Gourgeist + (1 << 16),
         Gourgeist_L = Gourgeist + (2 << 16),
         Gourgeist_XL = Gourgeist + (3 << 16),
-        Floette_EF = Floette + (1 << 16)
+        Floette_EF = Floette + (5 << 16)
     };
 }
 
@@ -935,12 +935,13 @@ namespace Move
         SoundFlag = 256, //Is the move blocked with SoundProof
         FlyingFlag = 512, //Is the move an invulnerable move (shadow force/...)? not used by PO yet
         UnthawingFlag = 1024, // Does the user of this move unthaw when frozen?
-        PulsingFlag = 2048, // Can this move reach targets far across in triples?
+        FarReachFlag = 2048, // Can this move reach targets far across in triples?
         HealingFlag = 4096, //Can this move be blocked with Heal Block
         MischievousFlag = 8192, // Can this move bypass substitute?
         BiteFlag = 16384,//Strong jaw moves
         PowderFlag = 32768, //Powder moves
-        BallFlag = 65536
+        BallFlag = 65536, //Ball moves for Bulletproof
+        LaunchFlag = 131072 //Moves that get boosted by Mega Launcher
     };
 
     enum Target
@@ -1598,7 +1599,11 @@ namespace Move
         HyperspaceHole,
         HoldHands,
         ThousandArrows,
-        ThousandWaves
+        ThousandWaves,
+        OriginPulse,
+        PrecipiceBlades,
+        DragonAscent,
+        HyperspaceFury
     };
 }
 
@@ -1829,7 +1834,10 @@ namespace Ability
         BulletProof,
         GrassPelt,
         Magician,
-        Symbiosis
+        Symbiosis,
+        DesolateLand,
+        PrimordialSea,
+        DeltaStream
     };
 }
 
@@ -2182,7 +2190,10 @@ namespace Weather {
         Hail = 1,
         Rain = 2,
         SandStorm = 3,
-        Sunny = 4
+        Sunny = 4,
+        StrongSun = 5,
+        StrongRain = 6,
+        StrongWinds = 7
     };
 }
 

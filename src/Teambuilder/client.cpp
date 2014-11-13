@@ -882,6 +882,10 @@ void Client::togglePMLogs(bool b) {
     LogManager::obj()->changeLogSaving(PMLog, b);
 }
 
+void Client::toggleChangeNamePM(bool b) {
+    globals.setValue("PMs/ChangeNameEvents", b);
+}
+
 void Client::ignoreServerVersion(bool b)
 {
     QString key  = QString("ignore_version_%1_%2").arg(serverVersion.version).arg(serverVersion.subversion);
@@ -1386,6 +1390,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(pm_reject, SIGNAL(triggered(bool)), SLOT(toggleIncomingPM(bool)));
     pm_reject->setChecked(globals.value("PMs/RejectIncoming").toBool());
 
+    QAction * pm_changename = pmMenu->addAction(tr("Enable change name message in PMs"));
+    pm_changename->setCheckable(true);
+    connect(pm_changename, SIGNAL(triggered(bool)), SLOT(toggleChangeNamePM(bool)));
+    pm_changename->setChecked(globals.value("PMs/ChangeNameEvent").toBool());
+
     QMenu * sortMenu = menuActions->addMenu(tr("&Sort players"));
 
     QAction *sortByTier = sortMenu->addAction(tr("Sort players by &tiers"));
@@ -1415,6 +1424,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     list_right->setCheckable(true);
     connect(list_right, SIGNAL(triggered(bool)), SLOT(movePlayerList(bool)));
     list_right->setChecked(globals.value("Client/UserListAtRight").toBool());
+
+    QAction *displayTIs = menuActions->addAction(tr("Display TIs"));
+    displayTIs->setCheckable(true);
+    connect(displayTIs, SIGNAL(triggered(bool)), SLOT(displayTrainerInfo(bool)));
+    displayTIs->setChecked(globals.value("Client/DisplayTIs").toBool());
 
     QAction *oldShortcuts = menuActions->addAction(tr("Use old shortcuts"));
     oldShortcuts->setCheckable(true);
@@ -2932,4 +2946,8 @@ void Client::showExitWarning()
     } else {
         emit done();
     }
+}
+
+void Client::displayTrainerInfo(bool b) {
+    globals.setValue("Client/DisplayTIs", b);
 }

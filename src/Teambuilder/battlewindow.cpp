@@ -1230,7 +1230,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
     case Move::ChosenTarget:
         for (int i = 0; i < num; i++) {
             if (i != slot &&
-                    ((MoveInfo::Flags(move, gen) & Move::PulsingFlag) || data.areAdjacent(i, slot)))
+                    ((MoveInfo::Flags(move, gen) & Move::FarReachFlag) || data.areAdjacent(i, slot)))
                 pokes[i]->setEnabled(true);
         }
         break;
