@@ -186,7 +186,6 @@
 170:0 Chinchou
 171:0 Lanturn
 172:0 Pichu
-172:1 Spiky Pichu
 173:0 Cleffa
 174:0 Igglybuff
 175:0 Togepi
