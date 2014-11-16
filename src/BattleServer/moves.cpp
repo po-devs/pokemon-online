@@ -1799,7 +1799,9 @@ struct MMEncore : public MM
                     if (b.move(t, i) == mv) {
                         MoveEffect::unsetup(move(b,t), t, b);
                         b.choice(t).setAttackSlot(i);
-                        b.choice(t).setTarget(b.randomValidOpponent(t));
+                        if(b.gen() <= 4) {
+                            b.choice(t).setTarget(b.randomValidOpponent(t));
+                        }
                         MoveEffect::setup(mv, t, s, b);
                         break;
                     }
