@@ -588,7 +588,7 @@ struct RBYLeechSeed : public MM
     static void daf(int s, int t, BS &b) {
         if (b.hasType(t, Type::Grass) || b.poke(t).hasStatus(Pokemon::Seeded)) {
             b.failSilently(s);
-            b.sendMoveMessage(72, 0, s, Type::Grass);
+            b.sendMoveMessage(72, 0, t, Type::Grass);
         }
     }
 
