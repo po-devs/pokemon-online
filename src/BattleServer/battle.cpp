@@ -4061,7 +4061,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     BattleBase::storeChoice(b);
 
     /* If the move is encored, a random target is picked. */
-    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
+    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore) && gen() <= 4)
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
