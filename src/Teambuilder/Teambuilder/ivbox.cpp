@@ -1,3 +1,4 @@
+#include <QMessageBox>
 #include <PokemonInfo/pokemonstructs.h>
 #include <PokemonInfo/pokemoninfo.h>
 #include <TeambuilderLibrary/theme.h>
@@ -132,6 +133,19 @@ void IvBox::changeIV(int newValue)
 
 void IvBox::updateIVs()
 {
+    if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+        int numFlawless = 6;
+        for (int i = 0; i < 6; i++) {
+            if(poke().DV(i) < 31) {
+                numFlawless--;
+                if(numFlawless < 3) {
+                    poke().setDV(i, 31);
+                    numFlawless++;
+                }
+            }
+        }
+    }
+
     for(int i = 0; i < 6; i++) {
         updateIV(i);
     }
@@ -167,9 +181,21 @@ void IvBox::updateHiddenPowerSelection()
     foreach(QStringList s, possibilities) {
         int c = ui->hpchoice->rowCount();
         ui->hpchoice->insertRow(c);
-
-        for (int i = 0; i < 6; i++) {
-            ui->hpchoice->setItem(c, i, new QTableWidgetItem(s[i]));
+        if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+            int numFlawless = 0;
+            for (int i = 0; i < 6; i++) {
+                if(s[i].toInt() == 31) {
+                    numFlawless++;
+                }
+            }
+            if(numFlawless < 3) {
+                ui->hpchoice->removeRow(c);
+            }
+        }
+        if(ui->hpchoice->rowCount() == c + 1) {
+            for (int i = 0; i < 6; i++) {
+                ui->hpchoice->setItem(c, i, new QTableWidgetItem(s[i]));
+            }
         }
     }
 }
@@ -194,7 +220,24 @@ void IvBox::changeHiddenPower(int newType)
     if (poke().gen() > 2) {
         QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(newType, poke().gen());
 
+        if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+            foreach(QStringList s, possibilities) {
+                int numFlawless = 0;
+                for (int i = 0; i < 6; i++) {
+                    if(s[i].toInt() == 31) {
+                        numFlawless++;
+                    }
+                }
+                if(numFlawless < 3) {
+                    possibilities.removeAt(possibilities.indexOf(s));
+                }
+            }
+        }
+
         if (possibilities.size() == 0) {
+            QMessageBox::information(NULL, tr("Impossible type"), tr("%1 can't have Hidden Power type %2.").arg(PokemonInfo::Name(poke().num().pokenum), ui->hiddenPowerType->currentText()));
+            int type = calculateHiddenPowerType();
+            ui->hiddenPowerType->setCurrentIndex(type - 1);
             return;
         }
 

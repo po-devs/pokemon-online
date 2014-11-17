@@ -206,9 +206,26 @@ void PokeBattle::init(PokePersonal &poke)
 		return;
     }
 
-    dvs().clear();
-    for (int i = 0; i < 6; i++) {
-        dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(p.gen() <= 2? 15: 31));
+    dvs().clear();   
+    if(poke.num().pokenum == Pokemon::Xerneas || poke.num().pokenum == Pokemon::Yveltal || poke.num().pokenum == Pokemon::Zygarde) {
+        int numFlawless = 6;
+        for (int i = 0; i < 6; i++) {
+            if(poke.DV(i) < 31) {
+                numFlawless--;
+                if(numFlawless < 3) {
+                    dvs() << quint8(31);
+                    numFlawless++;
+                } else {
+                    dvs() << std::max(poke.DV(i), quint8(0));
+                }
+            } else {
+                dvs() << quint8(31);
+            }
+        }
+    } else {
+        for (int i = 0; i < 6; i++) {
+            dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(p.gen() <= 2? 15: 31));
+        }
     }
 
     evs().clear();
