@@ -124,6 +124,26 @@ void IvBox::updateStat(int stat)
 void IvBox::changeIV(int newValue)
 {
     int stat = sender()->property("ivstat").toInt();
+
+    if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+        int numFlawless = 6;
+        for (int i = 0; i < 6; i++) {
+            if(i == stat) {
+                if(newValue < 31) {
+                    numFlawless--;
+                }
+            } else if(poke().DV(i) < 31) {
+                numFlawless--;
+            }
+        }
+        if(numFlawless < 3) {
+            newValue = 31;
+            QMessageBox::information(NULL, tr("Invalid IVs"), tr("%1 must have at least 3 flawless IVs.").arg(PokemonInfo::Name(poke().num().pokenum)));
+            m_ivchangers[stat]->setValue(31);
+        }
+    }
+
+
     if(poke().DV(stat) != newValue) {
         poke().setDV(stat, newValue);
         updateIVs();
@@ -133,19 +153,6 @@ void IvBox::changeIV(int newValue)
 
 void IvBox::updateIVs()
 {
-    if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
-        int numFlawless = 6;
-        for (int i = 0; i < 6; i++) {
-            if(poke().DV(i) < 31) {
-                numFlawless--;
-                if(numFlawless < 3) {
-                    poke().setDV(i, 31);
-                    numFlawless++;
-                }
-            }
-        }
-    }
-
     for(int i = 0; i < 6; i++) {
         updateIV(i);
     }

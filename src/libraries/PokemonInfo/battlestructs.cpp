@@ -214,7 +214,6 @@ void PokeBattle::init(PokePersonal &poke)
                 numFlawless--;
                 if(numFlawless < 3) {
                     dvs() << quint8(31);
-                    numFlawless++;
                 } else {
                     dvs() << std::max(poke.DV(i), quint8(0));
                 }
