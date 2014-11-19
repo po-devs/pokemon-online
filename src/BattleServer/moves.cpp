@@ -442,7 +442,7 @@ struct MMConversion : public MM
         if (b.gen().num == 1) {
             return;
         }
-        int ctype;
+        int ctype = Pokemon::Curse;
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
@@ -498,6 +498,9 @@ struct MMConversion : public MM
         }
         else {
             int type = turn(b,s)["ConversionType"].toInt();
+            if (type == Pokemon::Curse) {
+                fturn(b,s).add(TM::Failed);
+            }
             b.setType(s, type);
             b.sendMoveMessage(19, 0, s, type, s);
         }
@@ -1431,7 +1434,7 @@ struct MMBounce : public MM
         b.changeSprite(s, 0);
 
         if (b.linked(s, "FreeFalledPokemon")) {
-            int t = b.linker(s, "FreeFalledPokemon");;
+            int t = b.linker(s, "FreeFalledPokemon");
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
             poke(b,s).remove("FreeFalledPokemonBy");
@@ -1443,7 +1446,7 @@ struct MMBounce : public MM
         b.changeSprite(s, 0);
 
         if (b.linked(s, "FreeFalledPokemon")) {
-            int t = b.linker(s, "FreeFalledPokemon");;
+            int t = b.linker(s, "FreeFalledPokemon");
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
             poke(b,s).remove("FreeFalledPokemonBy");
