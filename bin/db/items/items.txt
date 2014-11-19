@@ -378,13 +378,13 @@
 2032 Pidgeotite
 2033 Slowbronite
 2034 Steelixite
-2035 Sablite
+2035 Sablenite
 2036 Sharpedonite
 2037 Cameruptite
 2038 Altarianite
 2039 Glalitite
 2040 Salamencite
-2041 Metagronite
+2041 Metagrossite
 2042 Lopunnite
 2043 Galladite
 2044 Audinite
