@@ -330,8 +330,6 @@ struct IMLifeOrb : public IM
                 /* In VGC 2011 (gen 5), the user of the Life Orb wins instead of losing with the Self KO Clause */
                 if (b.gen() <= 4)
                     b.selfKoer() = s;
-                else
-                    b.selfKoer() = turn(b,s).value("LOTarget").toInt();
             }
         }
     }

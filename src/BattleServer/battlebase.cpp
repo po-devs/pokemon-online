@@ -702,6 +702,9 @@ void BattleBase::notifyKO(int player)
 {
     changeStatus(player,Pokemon::Koed);
     notify(All, Ko, player);
+    if(gen() >= 5) {
+        selfKoer() = opponent(player);
+    }
 }
 
 void BattleBase::notifyMiss(bool multiTar, int player, int target)
@@ -2065,6 +2068,8 @@ void BattleBase::healDamage(int player, int target)
     } else if (healing < 0){
         notify(All, Recoil, player, true);
         inflictDamage(player, -poke(player).totalLifePoints() * healing / 100, player);
+        if(gen() <= 4)
+            selfKoer() = player;
     }
 }
 

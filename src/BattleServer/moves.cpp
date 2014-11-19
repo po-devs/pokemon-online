@@ -2769,10 +2769,6 @@ struct MMLeechSeed : public MM
         } else {
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
             b.inflictDamage(s2, damage,s2,false);
-
-            if (b.gen() >= 5 && b.koed(s2)) {
-                b.selfKoer() = s2;
-            }
         }
     }
 };
