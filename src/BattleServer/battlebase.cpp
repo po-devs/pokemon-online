@@ -2068,6 +2068,8 @@ void BattleBase::healDamage(int player, int target)
     } else if (healing < 0){
         notify(All, Recoil, player, true);
         inflictDamage(player, -poke(player).totalLifePoints() * healing / 100, player);
+        if(gen() <= 4)
+            selfKoer() = player;
     }
 }
 
