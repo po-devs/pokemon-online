@@ -165,7 +165,7 @@
 164 Makes moves ignore targets' abilities if they could hinder or prevent them.
 165 Changes Normal-type moves into Flying-type, and boosts their power by 30%.
 166 Reverses the effects of Aura abilities.
-167 Restores 30% HP when eating a berry.
+167 Restores 1/3 HP when eating a berry.
 168 Boost the power of Dark-type moves used by all Pokémon by 1/3
 169 Boost the power of Fairy-type moves used by all Pokémon by 1/3
 170 Prevents Grass-type partners from having stats reduced by the opponent.

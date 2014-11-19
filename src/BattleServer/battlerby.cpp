@@ -243,7 +243,7 @@ void BattleRBY::personalEndTurn(int player)
 
     if (poke(player).hasStatus(Pokemon::Seeded)) {
         //Leech Seed increases toxic count by 1
-        if (poke(player).status() == Pokemon::Poisoned) {
+        if (poke(player).status() == Pokemon::Poisoned && poke(player).statusCount() != 0) {
             poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
         }
         int source = opponent(player);
