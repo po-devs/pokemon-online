@@ -702,6 +702,9 @@ void BattleBase::notifyKO(int player)
 {
     changeStatus(player,Pokemon::Koed);
     notify(All, Ko, player);
+    if(gen() >= 5) {
+        selfKoer() = opponent(player);
+    }
 }
 
 void BattleBase::notifyMiss(bool multiTar, int player, int target)
