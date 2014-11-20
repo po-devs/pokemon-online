@@ -35,6 +35,7 @@
 25:3 Pikachu Pop Star
 25:4 Pikachu Ph. D
 25:5 Pikachu Libre
+25:6 Pikachu Cosplay
 26:0 Raichu
 27:0 Sandshrew
 28:0 Sandslash

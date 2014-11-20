@@ -915,7 +915,8 @@ namespace Pokemon
         Pikachu_Belle = Pikachu + (2 << 16),
         Pikachu_PopStar = Pikachu + (3 << 16),
         Pikachu_PhD = Pikachu + (4 << 16),
-        Pikachu_Libre = Pikachu + (5 << 16)
+        Pikachu_Libre = Pikachu + (5 << 16),
+        Pikachu_Cosplay = Pikachu + (6 << 16)
     };
 }
 
