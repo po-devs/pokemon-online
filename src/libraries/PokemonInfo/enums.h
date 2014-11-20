@@ -916,7 +916,9 @@ namespace Pokemon
         Pikachu_PopStar = Pikachu + (3 << 16),
         Pikachu_PhD = Pikachu + (4 << 16),
         Pikachu_Libre = Pikachu + (5 << 16),
-        Pikachu_Cosplay = Pikachu + (6 << 16)
+        Pikachu_Cosplay = Pikachu + (6 << 16),
+        //only mega because of different mega evo method
+        Rayquaza_Mega = Rayquaza + (1 << 16)
     };
 }
 
