@@ -47,6 +47,10 @@ void PokeMovesDb::init()
                 && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa)
             continue;
 
+        if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
+            continue;
+        }
+
         MovesPerPoke p;
         p.init(id);
         pokes[id] = p;
@@ -115,6 +119,9 @@ void PokeMovesDb::save()
                             && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa) {
                         continue;
                     }
+                    if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
+                        continue;
+                    }
                     if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
                         continue;
                     }
@@ -170,6 +177,9 @@ void PokeMovesDb::save()
             foreach (Pokemon::uniqueId id, ids) {
                 if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
                         && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa) {
+                    continue;
+                }
+                if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
                     continue;
                 }
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -258,6 +268,9 @@ MainWindow::MainWindow(QWidget *parent) :
         if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
                 && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa)
             continue;
+        if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
+            continue;
+        }
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
     }
