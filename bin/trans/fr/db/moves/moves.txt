@@ -609,3 +609,14 @@
 608 Étrennes
 609 Célébration
 610 Retenue
+611 Orage Adamantin
+612 Lumière du Néant
+613 Jet de Vapeur
+614 TrouDimensionnel
+615 Mains Jointes
+616 Myria-Flèches
+617 Myria-Vagues
+618 Onde Originelle
+619 Lame Pangéenne
+620 Draco Ascension
+621 Hyperspace Fury
