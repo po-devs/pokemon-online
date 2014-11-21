@@ -6203,6 +6203,9 @@ struct MMFirePledge : public MM
             if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Fire) {
                 /* Here you go with the special effect */
                 turn(b,s)["PledgeEffectActivater"] = i;//ref here
+                if(turn(b, i)["MadeAPledge"] == Pokemon::Water) {
+                    tmove(b, s).type = Pokemon::Water;
+                }
                 return;
             }
         }
@@ -6287,6 +6290,9 @@ struct MMGrassPledge : public MM
             if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Grass) {
                 /* Here you go with the special effect */
                 turn(b,s)["PledgeEffectActivater"] = i;//ref here
+                if(turn(b, i)["MadeAPledge"] == Pokemon::Fire) {
+                    tmove(b, s).type = Pokemon::Fire;
+                }
                 return;
             }
         }
@@ -6349,6 +6355,9 @@ struct MMWaterPledge : public MM
             if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Water) {
                 /* Here you go with the special effect */
                 turn(b,s)["PledgeEffectActivater"] = i;//ref here
+                if(turn(b, i)["MadeAPledge"] == Pokemon::Grass) {
+                    tmove(b, s).type = Pokemon::Grass;
+                }
                 return;
             }
         }
