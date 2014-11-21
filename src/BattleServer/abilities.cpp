@@ -803,7 +803,7 @@ struct AMIntimidate : public AM {
             if (!b.areAdjacent(s, t)) {
                 continue;
             }
-            if (b.hasSubstitute(t)) {
+            if (b.hasSubstitute(t) || (b.gen().num == 4 && turn(b, t)["HadSubstitute"] == true)) {
                 b.sendAbMessage(34,1,s,t);
             } else {
                 b.sendAbMessage(34,0,s,t);

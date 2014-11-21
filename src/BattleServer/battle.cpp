@@ -3404,6 +3404,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 
     if (life <= damage) {
         fpoke(player).remove(BasicPokeInfo::Substitute);
+        turnMemory(player)["HadSubstitute"] = true;
         inc(turnMemory(source)["DamageInflicted"], life);
         /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
         turnMemory(source)["LastDamageInflicted"] = life;
