@@ -1616,7 +1616,7 @@ struct AMImposter : public AM
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
         //For Type changing moves
-        po.types = QVector<int> () << b.getTypes(t);
+        po.types = QVector<int> () << b.getTypes(t, true);
         //po.type1 = PokemonInfo::Type1(num, b.gen());
         //po.type2 = PokemonInfo::Type2(num, b.gen());
         //po.types = QVector<int>() << po.type1 << po.type2;

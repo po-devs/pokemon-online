@@ -2760,12 +2760,12 @@ int BattleSituation::getType(int player, int slot) const
     return types[slot-1];
 }
 
-QVector<int> BattleSituation::getTypes(int player) const
+QVector<int> BattleSituation::getTypes(int player, bool transform) const
 {
     QVector<int> ret;
 
     foreach(int type, fpoke(player).types) {
-        if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool()) {
+        if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool() && !transform) {
             continue;
         }
         if (type == Pokemon::Curse) {

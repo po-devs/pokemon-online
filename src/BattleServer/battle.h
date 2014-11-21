@@ -122,7 +122,7 @@ public:
     bool isWeatherWorking(int weather);
     bool isSeductionPossible(int seductor, int naiveone);
     int getType(int player, int slot) const;
-    QVector<int> getTypes(int player) const;
+    QVector<int> getTypes(int player, bool transform=false) const;
     void addType(int player, int type);
     void setType(int player, int type);
     int rawTypeEff(int type, int player);
