@@ -18,10 +18,14 @@ QString escapeHtml(const QString & toConvert)
     ret.replace("&", "&amp;");
     ret.replace("<", "&lt;");
     ret.replace(">", "&gt;");
+    ret.replace("'", "&apos;");
     ret.replace(QRegExp("\\b((?:https?|ftp)://\\S+)", Qt::CaseInsensitive), "<a href='\\1'>\\1</a>");
-    /* Revert &amp;'s to &'s in URLs */
+    /* Revert escaped characters to normal in URLs since they're all used...*/
     ret.replace(QRegExp("&amp;(?=[^\\s<]*</a>)"), "&");
-
+    ret.replace(QRegExp("&lt;(?=[^\\s<]*</a>)"), "<");
+    ret.replace(QRegExp("&gt;(?=[^\\s<]*</a>)"), ">");
+    //work around to broken links
+    ret.replace(QRegExp("&apos;(?=[^\\s<]*</a>)"), "%27");
     return ret;
 }
 
