@@ -2376,7 +2376,7 @@ QPixmap ItemInfo::HeldItem()
 {
     QPixmap ret;
 
-    QString archive = path("Items.zip");
+    QString archive = path("items.zip");
 
     QString file = QString("helditem.png");
 
