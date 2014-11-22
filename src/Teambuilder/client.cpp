@@ -2234,6 +2234,13 @@ void Client::awayChanged(int id, bool away)
         printLine(IdleEvent, id, tr("%1 is active and ready for battles.").arg(name(id)));
     }
 
+    if (id == ownId()) {
+        //if done by server scripts then the option won't change
+        //this makes sure it will be
+        goaway->setChecked(away);
+        globals.setValue("Client/Idle", away);
+    }
+
     playerInfo(id).changeState(PlayerInfo::Away, away);
     updateState(id);
 }
