@@ -134,6 +134,7 @@ void Channel::anchorClicked(const QUrl &url)
         QString path = url.path();
         if(path.leftRef(5) == "join/") {
             QString cname = path.mid(5);
+            cname.replace("&gt;", ">").replace("&amp;", "&").replace("&apos;", "'");
             client->join(cname);
             client->activateChannel(cname);
         } else if (path == "reconnect") {
@@ -637,6 +638,7 @@ QString Channel::addChannelLinks(const QString &line2)
         QString longestChannelName;
         foreach(QString name, client->m_channelNames)
         {
+            name = escapeHtml(name);
             QString channelName = line.midRef(pos, name.length()).toString();
             bool res=channelName.toLower() == name.toLower();
             if(res && longestName.size() < channelName.size()) {
@@ -646,7 +648,7 @@ QString Channel::addChannelLinks(const QString &line2)
         }
         if(!longestName.isNull())
         {
-            QString html = QString("<a href=\"po:join/%1\">#%2</a>").arg(longestName, longestChannelName);
+            QString html = QString("<a href=\'po:join/%1\'>#%2</a>").arg(longestName, longestChannelName);
             line.replace(pos-1, longestName.length()+1, html);
             pos += html.length()-1;
         }
