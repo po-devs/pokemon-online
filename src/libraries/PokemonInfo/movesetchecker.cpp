@@ -352,7 +352,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             }
             if(moves3.size() == 4) {
                 if (invalid_moves) {
-                    *invalid_moves = moves;
+                    *invalid_moves->insert(moves.toList().value(0));
                 }
                 if (error) {
                     *error = QObject::tr("%1 can't have 4 moves learned from a previous evolution.")
