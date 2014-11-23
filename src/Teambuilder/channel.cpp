@@ -131,7 +131,7 @@ void Channel::anchorClicked(const QUrl &url)
 
     // study the URL scheme
     if (url.scheme()=="po") {
-        QString path = url.path();
+        QString path = url.toString(QUrl::RemoveScheme);
         if(path.leftRef(5) == "join/") {
             QString cname = path.mid(5);
             cname.replace("&gt;", ">").replace("&amp;", "&").replace("&apos;", "'");
