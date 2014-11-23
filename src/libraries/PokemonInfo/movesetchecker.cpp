@@ -337,6 +337,31 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             }
         }
 
+        /* Pokemon that require knowing a certain move to evolve can't have
+          4 other moves from their preevolution except in gen 6 */
+        if (PokemonInfo::MoveEvolution(pokeid.pokenum) && gen < 6) {
+            QSet<int> moves3 = moves;
+            moves3.subtract(PokemonInfo::dreamWorldMoves(pokeid, g));
+            moves3.subtract(PokemonInfo::EggMoves(pokeid, g));
+            moves3.subtract(PokemonInfo::SpecialMoves(pokeid, g));
+            if(moves3.size() >= 1) {
+                QSet<int> moves4;
+                moves4 = PokemonInfo::EggMoves(pokeid, g);
+                moves4.unite(PokemonInfo::dreamWorldMoves(pokeid, g));
+                moves3.unite(moves4.intersect(moves));
+            }
+            if(moves3.size() == 4) {
+                if (invalid_moves) {
+                    *invalid_moves = moves;
+                }
+                if (error) {
+                    *error = QObject::tr("%1 can't have 4 moves learned from a previous evolution.")
+                            .arg(PokemonInfo::Name(pokeid));
+                }
+                return false;
+            }
+        }
+
         if (!nobreeding) {
             /* If there's a pre evo move and an old gen move, you must check the pre evo has the combination in the old gen */
             QSet<int> moves3 = moves;
