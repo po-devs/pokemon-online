@@ -124,6 +124,7 @@ public:
     int getType(int player, int slot) const;
     QVector<int> getTypes(int player, bool transform=false) const;
     void addType(int player, int type);
+    void removeType(int player, int type);
     void setType(int player, int type);
     int rawTypeEff(int type, int player);
     PokeFraction effFraction(int typeeff);

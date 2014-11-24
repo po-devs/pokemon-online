@@ -5870,7 +5870,12 @@ struct MMSoak : public MM {
             b.setType(t, type);
             b.sendMoveMessage(157, 0, t, type, t);
         } else {
+            if (poke(b,t).contains("ForestTrick")) {
+                int oldtype = poke(b,t).value("ForestTrick").toInt();
+                b.removeType(t, oldtype);
+            }
             b.addType(t, type);
+            poke(b,t)["ForestTrick"] = type;
             b.sendMoveMessage(157, 1, t, type, t);
         }
     }

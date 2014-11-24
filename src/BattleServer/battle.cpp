@@ -2797,6 +2797,14 @@ void BattleSituation::addType(int player, int type)
     fpoke(player).types.push_back(type);
 }
 
+void BattleSituation::removeType(int player, int type)
+{
+    int t = fpoke(player).types.indexOf(type);
+    if (t != -1) {
+        fpoke(player).types.remove(t);
+    }
+}
+
 int BattleSituation::rawTypeEff(int atttype, int player)
 {
     int typemod = 0;
