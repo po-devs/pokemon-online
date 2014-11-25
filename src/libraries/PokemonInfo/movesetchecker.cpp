@@ -339,15 +339,21 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
         /* Pokemon that require knowing a certain move to evolve can't have
           4 other moves from their preevolution except in gen 6 */
-        if (PokemonInfo::MoveEvolution(pokeid.pokenum) && gen < 6) {
+        if (PokemonInfo::MoveEvolution(pokeid.pokenum)) {
             QSet<int> moves3 = moves;
             moves3.subtract(PokemonInfo::dreamWorldMoves(pokeid, g));
             moves3.subtract(PokemonInfo::EggMoves(pokeid, g));
             moves3.subtract(PokemonInfo::SpecialMoves(pokeid, g));
+            if(g >= 6) {
+                moves3.subtract(PokemonInfo::PreEvoMoves(pokeid, g));
+            }
             if(moves3.size() >= 1) {
                 QSet<int> moves4;
                 moves4 = PokemonInfo::EggMoves(pokeid, g);
                 moves4.unite(PokemonInfo::dreamWorldMoves(pokeid, g));
+                if(g >= 6) {
+                    moves4.unite(PokemonInfo::PreEvoMoves(pokeid, g));
+                }
                 moves3.unite(moves4.intersect(moves));
             }
             if(moves3.size() == 4) {
@@ -355,7 +361,8 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                     *invalid_moves->insert(moves.toList().value(0));
                 }
                 if (error) {
-                    *error = QObject::tr("%1 can't have 4 moves learned from a previous evolution.")
+                    *error = QObject::tr(gen >= 6 ? "%1 can't have 4 moves which are learned from a previous evolution in a past generation or learned by breeding."
+                                                  :"%1 can't have 4 moves learned from a previous evolution.")
                             .arg(PokemonInfo::Name(pokeid));
                 }
                 return false;
