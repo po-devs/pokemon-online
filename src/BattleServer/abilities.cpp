@@ -2417,12 +2417,19 @@ struct AMStrongWeather : public AM
         if (w != b.weather) {
             b.sendAbMessage(126,w-5,s,s,TypeInfo::TypeForWeather(w));
             b.callForth(w, -1);
-            b.battleMemory()["CurrentWeatherUser"] = b.team(b.player(s)).internalId(b.poke(s));
+            b.battleMemory()["CurrentWeatherUser"] = QString::number(b.team(b.player(s)).internalId(b.poke(s))) + "_" + QString::number(b.player(s));
             //save original weather user for later
         }
     }
     static void uso (int s, int , BS &b) {
-        if (b.team(b.player(s)).internalId(b.poke(s)) == b.battleMemory()["CurrentWeatherUser"].toInt()) {
+        int user = -1;
+        int p = -1;
+        if (b.battleMemory().contains("CurrentWeatherUser")) {
+            QStringList args = b.battleMemory().value("CurrentWeatherUser").toString().split('_');
+            user = args[0].toInt();
+            p = args[1].toInt();
+        }
+        if (b.team(b.player(s)).internalId(b.poke(s)) == user && b.player(s) == p) {
             b.notify(BS::All, BattleCommands::WeatherMessage, s, qint8(BS::EndWeather), qint8(b.weather));
             b.callForth(BS::NormalWeather, -1);
             b.battleMemory().remove("CurrentWeatherUser");
