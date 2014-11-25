@@ -118,6 +118,7 @@ public:
     static QList<int> Evos(int pokenum);
     static QList<int> DirectEvos(int pokenum);
     static bool HasEvolutions(int pokenum);
+    static bool MoveEvolution(int pokenum);
 
     // Will always return base form (subnum 0).
     static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);

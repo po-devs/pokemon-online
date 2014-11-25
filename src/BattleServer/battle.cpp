@@ -2261,8 +2261,6 @@ void BattleSituation::inflictRecoil(int source, int target)
             /* In VGC 2011 (gen 5), the user of the recoil move wins instead of losing with the Self KO Clause */
             if (gen() <= 4)
                 selfKoer() = source;
-            else
-                selfKoer() = target;
         }
     } else  {
         if (hasWorkingItem(source, Item::BigRoot)) /* Big root */ {
@@ -2276,12 +2274,6 @@ void BattleSituation::inflictRecoil(int source, int target)
             } else if (!hasWorkingAbility(source, Ability::MagicGuard)){
                 sendMoveMessage(1,2,source,Pokemon::Poison,target);
                 inflictDamage(source,damage,source,false);
-
-                /* Self KO Clause! */
-                if (koed(source)) {
-                    if (gen() >= 5)
-                        selfKoer() = target;
-                }
             }
         } else {
             if (canHeal(source,HealByMove,tmove(source).attack)) {
@@ -2714,9 +2706,6 @@ void BattleSituation::endTurnWeather()
 
                     //In GSC, the damage is 1/8, otherwise 1/16
                     inflictDamage(i, poke(i).totalLifePoints()*(gen() > 2 ? 1 : 2)/16, i, false);
-                    if (gen() >= 5) {
-                        testWin();
-                    }
                 }
             }
         }
@@ -3376,6 +3365,10 @@ end:
             }
         }
 
+        if(tmove(source).recoil > 0 && hasWorkingAbility(player, Ability::LiquidOoze)) {
+            inflictRecoil(source, player);
+        }
+
         if (hp <= 0) {
             koPoke(player, source, straightattack);
         }
@@ -3394,7 +3387,9 @@ end:
         }
 
         if (damage > 0 || (damage == 0 && survivalFactor)) {
-            inflictRecoil(source, player);
+            if(tmove(source).recoil < 0 || !hasWorkingAbility(player, Ability::LiquidOoze)) {
+                inflictRecoil(source, player);
+            }
             callieffects(source,player, "UponDamageInflicted");
             calleffects(source, player, "UponDamageInflicted");
         }
@@ -3646,6 +3641,8 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     if (turnMem(player).flags & TM::WasKoed) {
         return;
     }
+
+    changeHp(player, 0);
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         callaeffects(player, source, "BeforeBeingKoed");
