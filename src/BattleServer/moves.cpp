@@ -3575,7 +3575,7 @@ struct MMWeatherBall : public MM
     static void ms (int s, int, BS &b) {
         int weather = b.weather;
 
-        if (weather != BattleSituation::NormalWeather && b.isWeatherWorking(weather)) {
+        if (weather != BattleSituation::NormalWeather && weather != BattleSituation::StrongWinds && b.isWeatherWorking(weather)) {
             tmove(b, s).power = tmove(b, s).power * 2;
             tmove(b,s).type = TypeInfo::TypeForWeather(weather);
         }

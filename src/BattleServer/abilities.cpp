@@ -2417,22 +2417,25 @@ struct AMStrongWeather : public AM
         if (w != b.weather) {
             b.sendAbMessage(126,w-5,s,s,TypeInfo::TypeForWeather(w));
             b.callForth(w, -1);
-            b.battleMemory()["CurrentWeatherUser"] = QString::number(b.team(b.player(s)).internalId(b.poke(s))) + "_" + QString::number(b.player(s));
-            //save original weather user for later
         }
     }
     static void uso (int s, int , BS &b) {
-        int user = -1;
-        int p = -1;
-        if (b.battleMemory().contains("CurrentWeatherUser")) {
-            QStringList args = b.battleMemory().value("CurrentWeatherUser").toString().split('_');
-            user = args[0].toInt();
-            p = args[1].toInt();
+        bool otheruser = false;
+        //we need to make sure there's no other users of the current weather...
+        foreach(int i, b.sortedBySpeed()) {
+            if (i == s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i,Ability::DesolateLand) || b.hasWorkingAbility(i,Ability::PrimordialSea) || b.hasWorkingAbility(i,Ability::DeltaStream)) {
+                if (b.weather == poke(b,i)["AbilityArg"].toInt()) {
+                    otheruser = true;
+                }
+            }
         }
-        if (b.team(b.player(s)).internalId(b.poke(s)) == user && b.player(s) == p) {
+        //make sure it is actually our weather being used
+        if (b.weather == poke(b,s)["AbilityArg"].toInt() && !otheruser) {
             b.notify(BS::All, BattleCommands::WeatherMessage, s, qint8(BS::EndWeather), qint8(b.weather));
             b.callForth(BS::NormalWeather, -1);
-            b.battleMemory().remove("CurrentWeatherUser");
         }
     }
 };
