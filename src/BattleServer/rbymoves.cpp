@@ -956,6 +956,8 @@ struct RBYTransform : public MM
         for (int i = 0; i < 8; i++) {
             po.boosts[i] = pt.boosts[i];
         }
+
+        fpoke(b,s).flags |= BS::BasicPokeInfo::Transformed;
     }
 };
 
