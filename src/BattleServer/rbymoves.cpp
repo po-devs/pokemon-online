@@ -183,8 +183,8 @@ struct RBYBind : public MM
                 turn(b,b.opponent(s)) ["ForceBind"] = true;
             }
             initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
+            turn(b,s)["TellPlayers"] = false;
         }
-        turn(b,s)["TellPlayers"] = false;
     }
 
     static void cad(int s, int t, BS &b) {
