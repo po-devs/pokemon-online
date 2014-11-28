@@ -174,7 +174,7 @@ struct MMAssurance : public MM
 
     static void bcd(int s, int t, BS &b) {
         if (turn(b,t).contains("DamageTaken") || (team(b, b.player(t)).contains("LastKoedTurn") && team(b, b.player(t))["LastKoedTurn"].toInt() == b.turn() - 1)) {
-                    tmove(b, s).power = tmove(b, s).power * 2;
+            tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
 };
@@ -442,9 +442,13 @@ struct MMConversion : public MM
         if (b.gen().num == 1) {
             return;
         }
+        int ctype = Pokemon::Curse;
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(b.move(s,i), b.gen()) != Type::Curse) {
+                if (b.gen() >= 6) { /*Always changes to type of opponent's first (valid) move*/
+                    ctype = MoveInfo::Type(b.move(s,i), b.gen());
+                }
                 break;
             }
             if (i == 3) {
@@ -452,6 +456,7 @@ struct MMConversion : public MM
                 return;
             }
         }
+
         if (fpoke(b,s).type2 != Pokemon::Curse) {
             /* It means the pokemon has two types, i.e. conversion always works */
             QList<int> poss;
@@ -460,7 +465,11 @@ struct MMConversion : public MM
                     poss.push_back(b.move(s,i));
                 }
             }
-            turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+            if (b.gen() >= 6) {
+                turn(b,s)["ConversionType"] = ctype;
+            } else {
+                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+            }
         } else {
             QList<int> poss;
             for (int i = 0; i < 4; i++) {
@@ -471,7 +480,11 @@ struct MMConversion : public MM
             if (poss.size() == 0) {
                 fturn(b, s).add(TM::Failed);
             } else {
-                turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+                if (b.gen() >= 6) {
+                    turn(b,s)["ConversionType"] = ctype;
+                } else {
+                    turn(b,s)["ConversionType"] = MoveInfo::Type(poss[b.randint(poss.size())], b.gen());
+                }
             }
         }
     }
@@ -485,6 +498,9 @@ struct MMConversion : public MM
         }
         else {
             int type = turn(b,s)["ConversionType"].toInt();
+            if (type == Pokemon::Curse) {
+                fturn(b,s).add(TM::Failed);
+            }
             b.setType(s, type);
             b.sendMoveMessage(19, 0, s, type, s);
         }
@@ -1418,7 +1434,7 @@ struct MMBounce : public MM
         b.changeSprite(s, 0);
 
         if (b.linked(s, "FreeFalledPokemon")) {
-            int t = b.linker(s, "FreeFalledPokemon");;
+            int t = b.linker(s, "FreeFalledPokemon");
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
             poke(b,s).remove("FreeFalledPokemonBy");
@@ -1430,7 +1446,7 @@ struct MMBounce : public MM
         b.changeSprite(s, 0);
 
         if (b.linked(s, "FreeFalledPokemon")) {
-            int t = b.linker(s, "FreeFalledPokemon");;
+            int t = b.linker(s, "FreeFalledPokemon");
             b.changeSprite(t, 0);
             poke(b,t).remove("FreeFalledBy");
             poke(b,s).remove("FreeFalledPokemonBy");
@@ -1529,11 +1545,11 @@ struct MMCounter : public MM
             return;
         }
 
-        if (poke(b,s)["DamageTakenByAttack"].toInt() <= 0) {
+        if (fturn(b, s).damageTaken <= 0) {
             return;
         }
 
-        turn(b,s)["CounterDamage"] = 2 * poke(b,s)["DamageTakenByAttack"].toInt();
+        turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
         turn(b,s)["CounterTarget"] = source;
     }
 
@@ -1543,8 +1559,8 @@ struct MMCounter : public MM
             int t = b.slot(b.opponent(b.player(s)));
 
             if (b.hasMoved(t) && TypeInfo::Category(MoveInfo::Type(move(b, t), 2)) == turn(b,s)["Counter_Arg"].toInt()
-                    && poke(b,s)["DamageTakenByAttack"].toInt() > 0) {
-                turn(b,s)["CounterDamage"] = 2 * poke(b,s)["DamageTakenByAttack"].toInt();
+                && fturn(b, s).damageTaken > 0) {
+                turn(b,s)["CounterDamage"] = 2 * fturn(b,s).damageTaken;
                 turn(b,s)["CounterTarget"] = t;
             }
         }
@@ -1554,11 +1570,11 @@ struct MMCounter : public MM
 
     static void daf (int s, int t, BS &b) {
         if (!turn(b,s).contains("CounterDamage")) {
-             if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
-                     && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
-                 turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
-                 return;
-             }
+            if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal))
+                && (fpoke(b,t).lastMoveUsed == Move::Fissure || fpoke(b,t).lastMoveUsed == Move::HornDrill)) {
+                turn(b,s)["CounterDamage"] = b.poke(t).totalLifePoints();
+                return;
+            }
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1799,7 +1815,9 @@ struct MMEncore : public MM
                     if (b.move(t, i) == mv) {
                         MoveEffect::unsetup(move(b,t), t, b);
                         b.choice(t).setAttackSlot(i);
-                        b.choice(t).setTarget(b.randomValidOpponent(t));
+                        if(b.gen() <= 4) {
+                            b.choice(t).setTarget(b.randomValidOpponent(t));
+                        }
                         MoveEffect::setup(mv, t, s, b);
                         break;
                     }
@@ -2751,10 +2769,6 @@ struct MMLeechSeed : public MM
         } else {
             b.sendMoveMessage(1,2,s2,Pokemon::Poison,s);
             b.inflictDamage(s2, damage,s2,false);
-
-            if (b.gen() >= 5 && b.koed(s2)) {
-                b.selfKoer() = s2;
-            }
         }
     }
 };
@@ -3298,7 +3312,7 @@ struct MMMetalBurst : public MM
     }
 
     static void daf (int s, int, BS &b) {
-        int dam = poke(b,s)["DamageTakenByAttack"].toInt();
+        int dam = fturn(b,s).damageTaken;
         if (dam == 0) {
             fturn(b,s).add(TM::Failed);
             return;
@@ -3561,7 +3575,7 @@ struct MMWeatherBall : public MM
     static void ms (int s, int, BS &b) {
         int weather = b.weather;
 
-        if (weather != BattleSituation::NormalWeather && b.isWeatherWorking(weather)) {
+        if (weather != BattleSituation::NormalWeather && weather != BattleSituation::StrongWinds && b.isWeatherWorking(weather)) {
             tmove(b, s).power = tmove(b, s).power * 2;
             tmove(b,s).type = TypeInfo::TypeForWeather(weather);
         }
@@ -3687,7 +3701,7 @@ struct MMHealBlock: public MM
     static void msp(int s, int, BS &b) {
         for (int i = 0; i < 4; i++) {
             if ((MoveInfo::Flags(b.move(s, i), b.gen()) & Move::HealingFlag
-                    || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
+                 || (b.gen() >= 6 && MoveInfo::Recoil(b.move(s,i), b.gen()) > 0 )) && b.move(s,i) != Move::HealPulse) {
                 turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
             }
         }
@@ -3695,8 +3709,7 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if((tmove(b,s).flags & Move::HealingFlag
-                || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
+        if((tmove(b,s).flags & Move::HealingFlag || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
             b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
@@ -4322,10 +4335,10 @@ struct MMMimic : public MM
         int slot = fpoke(b,s).lastMoveSlot;
         //Following check is needed to make sure "Mimic" is replaced, and not other moves, like Sleep Talk.
         for(int i = 0; i < 4; i++) {
-           if (b.move(s,i) == Move::Mimic) {
-               slot = i;
-               break;
-           }
+            if (b.move(s,i) == Move::Mimic) {
+                slot = i;
+                break;
+            }
         }
 
         //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
@@ -4377,7 +4390,7 @@ struct MMMirrorMove : public MM
         if (b.gen().num == 2) {
             for (int i = 0; i < 4; i++) {
                 if (b.move(s,i) == poke(b,s)["MirrorMoveMemory"].toInt()) {
-                        fturn(b,s).add(TM::Failed);
+                    fturn(b,s).add(TM::Failed);
                 }
             }
 
@@ -4797,7 +4810,7 @@ struct MMSketch : public MM
     static void daf(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
         /* Struggle, chatter */
-        if (b.koed(t) || move == Struggle || move == Chatter || move == Sketch || move == 0) {
+        if (b.koed(t) || fpoke(b,s).flags & BS::BasicPokeInfo::Transformed || move == Struggle || move == Chatter || move == Sketch || move == 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5347,10 +5360,10 @@ struct MMSecretPower : public MM {
 
     static void ms(int s, int, BS &b) {
         if (b.gen().num == 5) {
-                tmove(b,s).classification = Move::OffensiveStatChangingMove;
-                tmove(b,s).rateOfStat = 30 << 16;
-                tmove(b,s).statAffected = Accuracy << 16;
-                tmove(b,s).boostOfStat = uchar(-1) << 16;
+            tmove(b,s).classification = Move::OffensiveStatChangingMove;
+            tmove(b,s).rateOfStat = 30 << 16;
+            tmove(b,s).statAffected = Accuracy << 16;
+            tmove(b,s).boostOfStat = uchar(-1) << 16;
         } else {
             if (b.terrain != 0) {
                 int type = std::abs(b.terrain);
@@ -5683,7 +5696,7 @@ struct MMTransform : public MM {
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
         //For Type changing moves
-        po.types = QVector<int> () << b.getTypes(t);
+        po.types = QVector<int> () << b.getTypes(t, true);
         //po.type1 = PokemonInfo::Type1(num, b.gen());
         //po.type2 = PokemonInfo::Type2(num, b.gen());
         //po.types = QVector<int>() << po.type1 << po.type2;
@@ -5853,7 +5866,12 @@ struct MMSoak : public MM {
             b.setType(t, type);
             b.sendMoveMessage(157, 0, t, type, t);
         } else {
+            if (poke(b,t).contains("ForestTrick")) {
+                int oldtype = poke(b,t).value("ForestTrick").toInt();
+                b.removeType(t, oldtype);
+            }
             b.addType(t, type);
+            poke(b,t)["ForestTrick"] = type;
             b.sendMoveMessage(157, 1, t, type, t);
         }
     }
@@ -6203,6 +6221,9 @@ struct MMFirePledge : public MM
             if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Fire) {
                 /* Here you go with the special effect */
                 turn(b,s)["PledgeEffectActivater"] = i;//ref here
+                if(turn(b, i)["MadeAPledge"] == Pokemon::Water) {
+                    tmove(b, s).type = Pokemon::Water;
+                }
                 return;
             }
         }
@@ -6287,6 +6308,9 @@ struct MMGrassPledge : public MM
             if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Grass) {
                 /* Here you go with the special effect */
                 turn(b,s)["PledgeEffectActivater"] = i;//ref here
+                if(turn(b, i)["MadeAPledge"] == Pokemon::Fire) {
+                    tmove(b, s).type = Pokemon::Fire;
+                }
                 return;
             }
         }
@@ -6349,6 +6373,9 @@ struct MMWaterPledge : public MM
             if (turn(b,i).contains("MadeAPledge") && turn(b,i)["MadeAPledge"] != Pokemon::Water) {
                 /* Here you go with the special effect */
                 turn(b,s)["PledgeEffectActivater"] = i;//ref here
+                if(turn(b, i)["MadeAPledge"] == Pokemon::Grass) {
+                    tmove(b, s).type = Pokemon::Grass;
+                }
                 return;
             }
         }

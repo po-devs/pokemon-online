@@ -30,11 +30,12 @@
 23:0 Ekans
 24:0 Arbok
 25:0 Pikachu
-25:1 Pikachu-Rock
-25:2 Pikachu-Belle
-25:3 Pikachu-Pop
-25:4 Pikachu-PhD
-25:5 Pikachu-Libre
+25:1 Pikachu Rock Star
+25:2 Pikachu Belle
+25:3 Pikachu Pop Star
+25:4 Pikachu Ph. D
+25:5 Pikachu Libre
+25:6 Pikachu Cosplay
 26:0 Raichu
 27:0 Sandshrew
 28:0 Sandslash
@@ -602,7 +603,6 @@
 493:15 Arceus-Dragon
 493:16 Arceus-Dark
 493:17 Arceus-Fairy
-493:18 Arceus-???
 412:1 Burmy-G
 412:2 Burmy-S
 351:1 Castform-Snowy

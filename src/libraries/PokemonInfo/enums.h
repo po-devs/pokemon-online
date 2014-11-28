@@ -909,7 +909,16 @@ namespace Pokemon
         Gourgeist_S = Gourgeist + (1 << 16),
         Gourgeist_L = Gourgeist + (2 << 16),
         Gourgeist_XL = Gourgeist + (3 << 16),
-        Floette_EF = Floette + (5 << 16)
+        Floette_EF = Floette + (5 << 16),
+        Hoopa_B = Hoopa + (1 << 16),
+        Pikachu_RockStar = Pikachu + (1 << 16),
+        Pikachu_Belle = Pikachu + (2 << 16),
+        Pikachu_PopStar = Pikachu + (3 << 16),
+        Pikachu_PhD = Pikachu + (4 << 16),
+        Pikachu_Libre = Pikachu + (5 << 16),
+        Pikachu_Cosplay = Pikachu + (6 << 16),
+        //only mega because of different mega evo method
+        Rayquaza_Mega = Rayquaza + (1 << 16)
     };
 }
 

@@ -609,3 +609,14 @@
 608 Paga extra
 609 Celebración
 610 Clemencia
+611 Acoso
+612 Luz Aniquiladora
+613 Chorro de Vapor
+614 Paso Dimensional
+615 Manos Juntas
+616 Mil Flechas
+617 Mil Temblores
+618 Pulso Primigenio
+619 Filo del Abismo
+620 Ascenso Draco
+621 Hyperspace Fury

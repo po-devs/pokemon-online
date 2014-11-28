@@ -609,3 +609,13 @@
 608 Cuccagna
 610 Riguardo
 611 Tempesta di Diamanti
+612 Luce Nefasta
+613 Vaporscoppio
+614 Forodimensionale
+615 Mano nella Mano
+616 Mille Frecce
+617 Mille Onde
+618 Primopulsar
+619 Spade Telluriche
+620 Ascesa del Drago
+621 Hyperspace Fury

@@ -72,8 +72,6 @@ struct AMAftermath : public AM {
             if (!b.hasWorkingAbility(t,Ability::Damp) && !b.hasWorkingAbility(t,Ability::MagicGuard)){
                 b.sendAbMessage(2,0,s,t);
                 b.inflictPercentDamage(t,25,s,false);
-                if (b.koed(t) && b.gen() >= 5)
-                    b.selfKoer() = t;
             }
             else
                 b.sendAbMessage(2,1,s,t);
@@ -252,9 +250,7 @@ struct AMCuteCharm : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(s) && !b.koed(t) && b.isSeductionPossible(s,t) && b.coinflip(30, 100)
-            && !b.linked(t, "Attract"))
-        {
+        if (!b.koed(s) && !b.koed(t) && b.isSeductionPossible(s,t) && b.coinflip(30, 100) && !b.linked(t, "Attract")) {
             b.sendMoveMessage(58,1,s,0,t);
             if (b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
                 b.sendItemMessage(7,t);
@@ -1618,7 +1614,7 @@ struct AMImposter : public AM
         po.id = num;
         po.weight = PokemonInfo::Weight(num);
         //For Type changing moves
-        po.types = QVector<int> () << b.getTypes(t);
+        po.types = QVector<int> () << b.getTypes(t, true);
         //po.type1 = PokemonInfo::Type1(num, b.gen());
         //po.type2 = PokemonInfo::Type2(num, b.gen());
         //po.types = QVector<int>() << po.type1 << po.type2;
@@ -1632,9 +1628,9 @@ struct AMImposter : public AM
         for (int i = 1; i < 6; i++)
             po.stats[i] = pt.stats[i];
 
-//        for (int i = 0; i < 6; i++) {
-//            po.dvs[i] = pt.dvs[i];
-//        }
+        //for (int i = 0; i < 6; i++) {
+        //  po.dvs[i] = pt.dvs[i];
+        //}
 
         for (int i = 0; i < 8; i++) {
             po.boosts[i] = pt.boosts[i];
@@ -1790,7 +1786,7 @@ struct AMHarvest : public AM
         if (b.poke(s).item() == 0 && b.poke(s).itemUsed() != 0 && ItemInfo::isBerry(b.poke(s).itemUsed())) {
             if (!b.isWeatherWorking(BattleSituation::Sunny)) {
                 if (b.coinflip(1, 2))
-                     return; // 50 % change when not sunny
+                    return; // 50 % change when not sunny
             }
             int item = b.poke(s).itemUsed();
             b.poke(s).itemUsed() = 0;
@@ -2250,7 +2246,7 @@ struct AMStanceChange : public AM {
 
         if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash)
             return;
-            
+
         num = fpoke(b,s).id;
 
         if (num.subnum == 0 && tmove(b,s).category != Move::Other) {

@@ -1527,6 +1527,14 @@ bool PokemonInfo::HasEvolutions(int pokenum)
     return m_DirectEvos.contains(pokenum);
 }
 
+bool PokemonInfo::MoveEvolution(int pokenum)
+{
+    QList<int> pokemon;
+    pokemon << Pokemon::Lickilicky << Pokemon::Tangrowth << Pokemon::MrMime
+            << Pokemon::Sudowoodo << Pokemon::Ambipom << Pokemon::Yanmega << Pokemon::Mamoswine;
+    return pokemon.contains(pokenum);
+}
+
 bool PokemonInfo::IsInEvoChain(const Pokemon::uniqueId &pokeid)
 {
     return Evos(pokeid.pokenum).size() > 1;
@@ -2376,7 +2384,7 @@ QPixmap ItemInfo::HeldItem()
 {
     QPixmap ret;
 
-    QString archive = path("Items.zip");
+    QString archive = path("items.zip");
 
     QString file = QString("helditem.png");
 

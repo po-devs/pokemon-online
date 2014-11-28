@@ -607,7 +607,7 @@ BattleChoices BattleSituation::createChoice(int slot)
     }
 
     //Mega Evolution is not hindered by Embargo, etc.
-    if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num() && !megas[player(slot)]) {
+    if (((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) && !megas[player(slot)]) {
         ret.mega = true;
     }
 
@@ -882,9 +882,10 @@ void BattleSituation::megaEvolve(int slot)
     //Split to allow Mega Evo to activate on Special Pursuit
     //Mega Evolution is not hindered by Embargo, etc.
     if (choice(slot).mega()) {
-        if (ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
-            sendItemMessage(66, slot, 0, 0, 0, ItemInfo::MegaStoneForme(poke(slot).item()).toPokeRef());
-            changeForme(player(slot), slotNum(slot), ItemInfo::MegaStoneForme(poke(slot).item()));
+        if ((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
+            Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
+            sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
+            changeForme(player(slot), slotNum(slot), forme);
             megas[player(slot)] = true;
         }
     }
@@ -1842,15 +1843,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 heatOfAttack() = false;
                 if (hitting) {
-                    if (tmove(player).flags & Move::ContactFlag) {
-                        if (!sub) {
-                            callieffects(target, player, "UponPhysicalAssault");
-                            callaeffects(target,player,"UponPhysicalAssault");
-                            calleffects(target,player,"UponPhysicalAssault");
-                        }
-                        callaeffects(player,target,"OnPhysicalAssault");
-                    }
-
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
                         callaeffects(player, target, "OnHitting");
@@ -2254,31 +2246,21 @@ void BattleSituation::inflictRecoil(int source, int target)
         return;
     }
 
-    if (recoil < 0) {
-        if(repeatCount() >= repeatNum(source) - 1 || koed(target)) {
-            notify(All, Recoil, source, true);
-        }
-    } else {
-        notify(All, Recoil, target, false);
-    }
+    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
 
     // "33" means one-third
     //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
 
-    int damage = recoil < 0 ? std::abs(int(recoil * turnMem(target).damageTaken / 100)):std::abs(int(recoil * turnMemory(source).value("LastDamageInflicted").toInt() / 100));
+    int damage = std::abs(int(recoil * turnMemory(source).value("LastDamageInflicted").toInt() / 100));
 
     if (recoil < 0) {
-        if(repeatCount() >= repeatNum(source) - 1 || koed(target)) {
-            inflictDamage(source, damage, source, false);
+        inflictDamage(source, damage, source, false);
 
-            /* Self KO Clause! */
-            if (koed(source)) {
-                /* In VGC 2011 (gen 5), the user of the recoil move wins instead of losing with the Self KO Clause */
-                if (gen() <= 4)
-                    selfKoer() = source;
-                else
-                    selfKoer() = target;
-            }
+        /* Self KO Clause! */
+        if (koed(source)) {
+            /* In VGC 2011 (gen 5), the user of the recoil move wins instead of losing with the Self KO Clause */
+            if (gen() <= 4)
+                selfKoer() = source;
         }
     } else  {
         if (hasWorkingItem(source, Item::BigRoot)) /* Big root */ {
@@ -2292,12 +2274,6 @@ void BattleSituation::inflictRecoil(int source, int target)
             } else if (!hasWorkingAbility(source, Ability::MagicGuard)){
                 sendMoveMessage(1,2,source,Pokemon::Poison,target);
                 inflictDamage(source,damage,source,false);
-
-                /* Self KO Clause! */
-                if (koed(source)) {
-                    if (gen() >= 5)
-                        selfKoer() = target;
-                }
             }
         } else {
             if (canHeal(source,HealByMove,tmove(source).attack)) {
@@ -2730,9 +2706,6 @@ void BattleSituation::endTurnWeather()
 
                     //In GSC, the damage is 1/8, otherwise 1/16
                     inflictDamage(i, poke(i).totalLifePoints()*(gen() > 2 ? 1 : 2)/16, i, false);
-                    if (gen() >= 5) {
-                        testWin();
-                    }
                 }
             }
         }
@@ -2776,12 +2749,12 @@ int BattleSituation::getType(int player, int slot) const
     return types[slot-1];
 }
 
-QVector<int> BattleSituation::getTypes(int player) const
+QVector<int> BattleSituation::getTypes(int player, bool transform) const
 {
     QVector<int> ret;
 
     foreach(int type, fpoke(player).types) {
-        if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool()) {
+        if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool() && !transform) {
             continue;
         }
         if (type == Pokemon::Curse) {
@@ -2811,6 +2784,14 @@ void BattleSituation::addType(int player, int type)
         }
     }
     fpoke(player).types.push_back(type);
+}
+
+void BattleSituation::removeType(int player, int type)
+{
+    int t = fpoke(player).types.indexOf(type);
+    if (t != -1) {
+        fpoke(player).types.remove(t);
+    }
 }
 
 int BattleSituation::rawTypeEff(int atttype, int player)
@@ -3328,10 +3309,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
             }
         }
 
-        if (hp <= 0) {
-            koPoke(player, source, straightattack);
-        } else {
-
+        if (hp > 0) {
             /* Endure & Focus Sash */
             if (survivalFactor) {
                 //Sturdy
@@ -3361,14 +3339,38 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 end:
                 turnMemory(player).remove("SurviveReason");
             }
+        }
+        if(hp <= 0) {
+            changeHp(player, 0);
+        } else {
+            changeHp(player, hp);
+        }
 
-            if (straightattack) {
-                notify(this->player(player), StraightDamage,player, qint16(damage));
-                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+        if (straightattack) {
+            notify(this->player(player), StraightDamage,player, qint16(damage));
+            notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+
+            if (player != source && !sub) {
+                callpeffects(player, source, "UponOffensiveDamageReceived");
+                callieffects(player, source, "UponOffensiveDamageReceived");
             }
 
+            if (tmove(source).flags & Move::ContactFlag) {
+                if (!sub) {
+                    callieffects(player, source, "UponPhysicalAssault");
+                    callaeffects(player,source,"UponPhysicalAssault");
+                    calleffects(player,source,"UponPhysicalAssault");
+                }
+                callaeffects(source,player,"OnPhysicalAssault");
+            }
+        }
 
-            changeHp(player, hp);
+        if(tmove(source).recoil > 0 && hasWorkingAbility(player, Ability::LiquidOoze)) {
+            inflictRecoil(source, player);
+        }
+
+        if (hp <= 0) {
+            koPoke(player, source, straightattack);
         }
     }
 
@@ -3380,19 +3382,19 @@ end:
             /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
             turnMemory(source)["LastDamageInflicted"] = damage;
             pokeMemory(player)["DamageTakenByAttack"] = damage;
-            turnMem(player).damageTaken += damage;
+            turnMem(player).damageTaken = damage;
             turnMemory(player)["DamageTakenBy"] = source;
         }
 
         if (damage > 0 || (damage == 0 && survivalFactor)) {
-            inflictRecoil(source, player);
+            if(tmove(source).recoil < 0 || !hasWorkingAbility(player, Ability::LiquidOoze)) {
+                inflictRecoil(source, player);
+            }
             callieffects(source,player, "UponDamageInflicted");
             calleffects(source, player, "UponDamageInflicted");
         }
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
-            callpeffects(player, source, "UponOffensiveDamageReceived");
-            callieffects(player, source, "UponOffensiveDamageReceived");
         }
     }
 
@@ -3418,7 +3420,6 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
         inc(turnMemory(source)["DamageInflicted"], life);
         /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
         turnMemory(source)["LastDamageInflicted"] = life;
-		turnMem(player).damageTaken += life;
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
@@ -3426,7 +3427,6 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
         inc(turnMemory(source)["DamageInflicted"], damage);
         /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
         turnMemory(source)["LastDamageInflicted"] = damage;
-		turnMem(player).damageTaken += damage;
         sendMoveMessage(128, 3, player);
     }
 }
@@ -3638,18 +3638,11 @@ void BattleSituation::changeHp(int player, int newHp)
 
 void BattleSituation::koPoke(int player, int source, bool straightattack)
 {
-    if (poke(player).ko()) {
+    if (turnMem(player).flags & TM::WasKoed) {
         return;
     }
 
-    qint16 damage = poke(player).lifePoints();
-
     changeHp(player, 0);
-
-    if (straightattack) {
-        notify(this->player(player), StraightDamage,player, qint16(damage));
-        notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
-    }
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         callaeffects(player, source, "BeforeBeingKoed");
@@ -4071,7 +4064,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
     BattleBase::storeChoice(b);
 
     /* If the move is encored, a random target is picked. */
-    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore))
+    if (counters(b.slot()).hasCounter(BattleCounterIndex::Encore) && gen() <= 4)
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 

@@ -43,8 +43,13 @@ void PokeMovesDb::init()
     }
 
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)
+        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
+                && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa)
             continue;
+
+        if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
+            continue;
+        }
 
         MovesPerPoke p;
         p.init(id);
@@ -110,7 +115,11 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)) {
+                    if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
+                            && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa) {
+                        continue;
+                    }
+                    if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
                         continue;
                     }
                     if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -166,7 +175,11 @@ void PokeMovesDb::save()
 
         for (int i = 0; i < 8; i++) {
             foreach (Pokemon::uniqueId id, ids) {
-                if ((id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)) {
+                if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
+                        && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa) {
+                    continue;
+                }
+                if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
                     continue;
                 }
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
@@ -252,8 +265,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(Pokemon::uniqueId id, ids)
     {
-        if (id.isForme() && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic && id.pokenum != Pokemon::Floette)
+        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
+                && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa)
             continue;
+        if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
+            continue;
+        }
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
     }

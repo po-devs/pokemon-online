@@ -214,7 +214,10 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     for (Pokemon::gen g = gen; g >= limit; g = Pokemon::gen(g.num-1, -1)) {
         if (!PokemonInfo::Exists(pokeid, g)) {
-            if (PokemonInfo::HasPreEvo(pokeid.pokenum)) {
+            if(PokemonInfo::IsMegaEvo(pokeid)) {
+                return MoveSetChecker::isValid(PokemonInfo::OriginalForme(pokeid), g, moves, 0, gender, level, maledw,
+                                               invalid_moves, error);
+            } else if (PokemonInfo::HasPreEvo(pokeid.pokenum)) {
                 return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
             }
@@ -334,6 +337,38 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                     if (ok && isValid(preevo, g, moves))
                         return true;
                 }
+            }
+        }
+
+        /* Pokemon that require knowing a certain move to evolve can't have
+          4 other moves from their preevolution except in gen 6 */
+        if (PokemonInfo::MoveEvolution(pokeid.pokenum)) {
+            QSet<int> moves3 = moves;
+            moves3.subtract(PokemonInfo::dreamWorldMoves(pokeid, g));
+            moves3.subtract(PokemonInfo::EggMoves(pokeid, g));
+            moves3.subtract(PokemonInfo::SpecialMoves(pokeid, g));
+            if(g >= 6) {
+                moves3.subtract(PokemonInfo::PreEvoMoves(pokeid, g));
+            }
+            if(moves3.size() >= 1) {
+                QSet<int> moves4;
+                moves4 = PokemonInfo::EggMoves(pokeid, g);
+                moves4.unite(PokemonInfo::dreamWorldMoves(pokeid, g));
+                if(g >= 6) {
+                    moves4.unite(PokemonInfo::PreEvoMoves(pokeid, g));
+                }
+                moves3.unite(moves4.intersect(moves));
+            }
+            if(moves3.size() == 4) {
+                if (invalid_moves) {
+                    *invalid_moves->insert(moves.toList().value(0));
+                }
+                if (error) {
+                    *error = QObject::tr(gen >= 6 ? "%1 can't have 4 moves which are learned from a previous evolution in a past generation or learned by breeding."
+                                                  :"%1 can't have 4 moves learned from a previous evolution.")
+                            .arg(PokemonInfo::Name(pokeid));
+                }
+                return false;
             }
         }
 

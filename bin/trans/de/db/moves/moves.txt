@@ -609,3 +609,14 @@
 608 Goldene Zeiten
 609 Ehrentag
 610 Zurückhaltung
+611 Diamantsturm
+612 Lux Calamitatis
+613 Dampfschwall
+614 Dimensionsloch
+615 Händchenhalten
+616 Tausend Pfeile
+617 Tausend Wellen
+618 Ursprungswoge
+619 Abgrundsklinge
+620 Zenitstürmer
+621 Hyperspace Fury
