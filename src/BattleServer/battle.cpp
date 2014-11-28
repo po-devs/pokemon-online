@@ -3340,16 +3340,23 @@ end:
                 turnMemory(player).remove("SurviveReason");
             }
         }
+
         if(hp <= 0) {
             changeHp(player, 0);
+            if (straightattack) {
+                notify(this->player(player), StraightDamage,player, qint16(damage));
+                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+            }
+
         } else {
+            if (straightattack) {
+                notify(this->player(player), StraightDamage,player, qint16(damage));
+                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+            }
             changeHp(player, hp);
         }
 
         if (straightattack) {
-            notify(this->player(player), StraightDamage,player, qint16(damage));
-            notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
-
             if (player != source && !sub) {
                 callpeffects(player, source, "UponOffensiveDamageReceived");
                 callieffects(player, source, "UponOffensiveDamageReceived");
