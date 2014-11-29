@@ -1729,11 +1729,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
-        if (tmove(player).type == Type::Water && isWeatherWorking(StrongSun)) {
+        if (tmove(player).type == Type::Water && tmove(player).power > 0 && isWeatherWorking(StrongSun)) {
             sendAbMessage(126, 6, player, player, TypeInfo::TypeForWeather(StrongSun));
             continue;
         }
-        if (tmove(player).type == Type::Fire && isWeatherWorking(StrongRain)) {
+        if (tmove(player).type == Type::Fire && tmove(player).power > 0 && isWeatherWorking(StrongRain)) {
             sendAbMessage(126, 7, player, player, TypeInfo::TypeForWeather(StrongRain));
             continue;
         }
