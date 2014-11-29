@@ -719,6 +719,7 @@ int BattleRBY::calculateDamage(int p, int t)
         def = std::min(1024, def*2);
     }
     
+    // In RBY, if either stat is higher than 255, both are quartered during damage calculation
     if (def > 255 || attack > 255) {
     	def = (def/4) % 256;
 	if (def == 0)
