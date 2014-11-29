@@ -1109,7 +1109,7 @@ struct AMTechnician : public AM {
     static void bpm(int s, int , BS &b) {
         /* Move::NoMove is for confusion damage, Struggle is affected by technician in gen 5 but not gen 4 */
         if (tmove(b,s).power <= 60 && ( (b.gen() >= 5 && move(b,s) != Move::NoMove) || (b.gen() <= 4 && type(b,s) != Type::Curse) ) ) {
-            b.chainBp(s, 4096);
+            b.chainBp(s, 2048);
         }
     }
 };
@@ -1123,7 +1123,7 @@ struct AMThickFat : public AM {
         int tp = tmove(b,t).type;
 
         if (tp == Type::Ice || tp == Type::Fire) {
-            b.chainBp(t, -4096);
+            b.chainBp(t, -2048);
         }
     }
 };
