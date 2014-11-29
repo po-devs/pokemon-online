@@ -158,7 +158,7 @@ struct AMBlaze : public AM {
 
     static void bpm(int s, int, BS &b) {
         if (b.poke(s).lifePoints() <= b.poke(s).totalLifePoints()/3 && type(b,s) == poke(b,s)["AbilityArg"].toInt()) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 2048);
         }
     }
 };
@@ -382,7 +382,7 @@ struct AMDrySkin : public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (type(b,t) == Pokemon::Fire) {
-            b.chainBp(t, 5);
+            b.chainBp(t, 1024);
         }
     }
 
@@ -647,7 +647,7 @@ struct AMHeatProof : public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (type(b,t) == Pokemon::Fire) {
-            b.chainBp(t, -10);
+            b.chainBp(t, -2048);
         }
     }
 };
@@ -816,7 +816,7 @@ struct AMIronFist : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::PunchFlag) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 819);
         }
     }
 };
@@ -921,7 +921,7 @@ struct AMReckless : public AM {
         int mv = move(b,s);
         //Jump kicks
         if (tmove(b,s).recoil < 0 || mv == Move::HiJumpKick || mv == Move::JumpKick) {
-            b.chainBp(s, 4);
+            b.chainBp(s, 819);
         }
     }
 };
@@ -935,9 +935,9 @@ struct AMRivalry : public AM {
         if (b.poke(s).gender() == Pokemon::Neutral || b.poke(t).gender() == Pokemon::Neutral)
             return;
         if (b.poke(s).gender() == b.poke(t).gender())
-            b.chainBp(s, 5);
+            b.chainBp(s, 1024);
         else
-            b.chainBp(s, -5);
+            b.chainBp(s, -1024);
     }
 };
 
@@ -1109,7 +1109,7 @@ struct AMTechnician : public AM {
     static void bpm(int s, int , BS &b) {
         /* Move::NoMove is for confusion damage, Struggle is affected by technician in gen 5 but not gen 4 */
         if (tmove(b,s).power <= 60 && ( (b.gen() >= 5 && move(b,s) != Move::NoMove) || (b.gen() <= 4 && type(b,s) != Type::Curse) ) ) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 4096);
         }
     }
 };
@@ -1123,7 +1123,7 @@ struct AMThickFat : public AM {
         int tp = tmove(b,t).type;
 
         if (tp == Type::Ice || tp == Type::Fire) {
-            b.chainBp(t, -10);
+            b.chainBp(t, -4096);
         }
     }
 };
@@ -1135,7 +1135,7 @@ struct AMTintedLens : public AM {
 
     static void bpm(int s, int , BS &b) {
         if (fturn(b,s).typeMod < 0) {
-            b.chainBp(s, 20);
+            b.chainBp(s, 4096);
         }
     }
 };
@@ -1407,7 +1407,7 @@ struct AMSandForce : public AM {
             int t = type(b,s);
 
             if (t == Type::Rock || t == Type::Steel || t == Type::Ground) {
-                b.chainBp(s, 6);
+                b.chainBp(s, 1229);
             }
         }
     }
@@ -1543,7 +1543,7 @@ struct AMSheerForce : public AM
 
         tmove(b,s).classification = Move::StandardMove;
         tmove(b,s).flinchRate = 0;
-        b.chainBp(s, 6);
+        b.chainBp(s, 1229);
 
         /* Ugly, to tell life orb not to activate =/ */
         turn(b,s)["EncourageBug"] = true;
@@ -1663,7 +1663,7 @@ struct AMMultiScale : public AM
 
     static void bpfm(int s, int t, BS &b) {
         if (b.poke(s).isFull()) {
-            b.chainBp(t, -10);
+            b.chainBp(t, -2048);
         }
     }
 };
@@ -1960,7 +1960,7 @@ struct AMAnalytic : public AM {
 
     static void bpm(int s,int,BS&b) {
         if (b.speedsVector.back() == s) {
-            b.chainBp(s, 6);
+            b.chainBp(s, 1229);
         }
     }
 };
@@ -2004,7 +2004,7 @@ struct AMFriendGuard : public AM
 
     static void bpm(int s, int t, BS &b) {
         if (b.arePartners(s, t)) {
-            b.chainBp(s, -5);
+            b.chainBp(s, -1024);
         }
     }
 };
@@ -2090,7 +2090,7 @@ struct AMAerilate : public AM {
 
     static void bpm(int s, int, BS &b) {
         if (turn(b,s).value("Aerilated").toBool()) {
-            b.chainBp(s, 6);
+            b.chainBp(s, 1229);
         }
     }
 };
@@ -2116,7 +2116,7 @@ struct AMAura : public AM {
             if (!b.koed(i) && b.hasWorkingAbility(i, b.poke(i).ability())) {
                 if (poke(b,i)["AbilityArg"].toString().startsWith("Aura_")) {
                     if (type(b,s) == poke(b,i)["AbilityArg"].toString().mid(5).toInt()) {
-                        boost = 6;
+                        boost = 1365;
                         break;
                     }
                 }
@@ -2127,7 +2127,7 @@ struct AMAura : public AM {
         }
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (!b.koed(i) && b.hasWorkingAbility(i, Ability::AuraBreak)) {
-                boost = -5;
+                boost = -1024;
             }
         }
 
@@ -2179,7 +2179,7 @@ struct AMFurCoat: public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (tmove(b,t).category == Move::Physical) {
-            b.chainBp(t, -10);
+            b.chainBp(t, -2048);
         }
     }
 };
@@ -2191,7 +2191,7 @@ struct AMMegaLauncher : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::LaunchFlag) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 2048);
         }
     }
 };
@@ -2217,7 +2217,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 2048);
         }
     }
 };
@@ -2229,7 +2229,7 @@ struct AMToughClaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && (tmove(b,s).flags & Move::ContactFlag)) {
-            b.chainBp(s, 6);
+            b.chainBp(s, 1365);
         }
     }
 };
@@ -2298,7 +2298,7 @@ struct AMParentalBond : public AM
 
     static void btl(int s, int, BS &b) {
         if (turn(b,s).contains("ParentalBond") && b.repeatCount() == 1) {
-            b.chainBp(s, -10);
+            b.chainBp(s, -2048);
         }
     }
 };

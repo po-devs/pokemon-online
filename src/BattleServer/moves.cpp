@@ -3248,7 +3248,7 @@ struct MMKnockOff : public MM
     }
     static void bh(int s, int t, BS &b) {
         if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
-            b.chainBp(s, 10);
+            b.chainBp(s, 2048);
         }
     }
 
