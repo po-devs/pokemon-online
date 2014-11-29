@@ -230,7 +230,7 @@ struct IMBoostCategory : public IM
     }
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).category == poke(b,s)["ItemArg"]) {
-            b.chainBp(s, 2);
+            b.chainBp(s, 409);
         }
     }
 };
@@ -243,9 +243,9 @@ struct IMBoostType : public IM
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
             if (b.gen() >= 4)
-                b.chainBp(s, 4);
+                b.chainBp(s, 819);
             else
-                b.chainBp(s, 2);
+                b.chainBp(s, 409);
         }
     }
 };
@@ -395,7 +395,7 @@ struct IMPokeTypeBoost : public IM
         int type = tmove(b,s).type;
         for (int i = 1; i < args.size(); i++) {
             if (type == args[i].toInt())
-                b.chainBp(s, 4);
+                b.chainBp(s, 819);
         }
     }
 };

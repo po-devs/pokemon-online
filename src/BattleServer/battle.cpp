@@ -332,6 +332,16 @@ void BattleSituation::removeEndTurnEffect(EffectType type, int slot, const QStri
     }
 }
 
+/*Chain BP Helpful numbers
+ * (Decimal conversion of Hex minus 4096)
+ * 10% = 409
+ * 20% = 819
+ * 25% = 1024
+ * 30% = 1229
+ * 33.33% = 1365
+ * 50% = 2048
+ * 100% = 4096
+*/
 void BattleSituation::chainBp(int , int pow)
 {
     bpmodifiers.append(pow);
@@ -3047,7 +3057,7 @@ int BattleSituation::calculateDamage(int p, int t)
     calleffects(p,t,"BasePowerModifier");
     callieffects(p,t,"BasePowerModifier");
     if (turnMemory(p).value("GemActivated").toBool()) {
-        gen() < 6 ? chainBp(p, 10) : chainBp(p, 6);
+        gen() < 6 ? chainBp(p, 2048) : chainBp(p, 1229);
     }
 
     /* The Acrobat thing is here because it's supposed to activate after gem Consumption */
@@ -3094,7 +3104,7 @@ int BattleSituation::calculateDamage(int p, int t)
     }
 
     for (int i = 0; i < bpmodifiers.size(); i++) {
-        power = power * (20+bpmodifiers[i])/20;
+        power = power * (4096+bpmodifiers[i])/4096;
     }
 
     int oppPlayer = this->player(t);
