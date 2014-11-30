@@ -980,7 +980,10 @@ struct MMAromaTherapy : public MM
             int si = b.slot(player,i);
             //Allied Sap Sippers gets attack boost from Aromatherapy, regardless if anyone is cured
             if (move == Aromatherapy && b.gen() >= 6 && b.isOut(player, i) && b.hasWorkingAbility(si, Ability::SapSipper)) {
-                b.inflictStatMod(si,Attack,1,si);
+                //Doesn't affect user of the move though...
+                if (b.pokeMemory(si)["AnyLastMoveUsed"] != Move::Aromatherapy) {
+                    b.inflictStatMod(si,Attack,1,si);
+                }
             }
             if (b.poke(player,i).status() != Pokemon::Fine) {
                 //SoundProof blocks healbell but not aromatherapy prior to Gen 5
