@@ -2011,6 +2011,9 @@ trueend:
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
+    foreach(int target, targetList) {
+        turnMemory(target)["HadSubstitute"] = false;
+    }
 }
 
 void BattleSituation::useItem(int player, int item, int target, int attack)
@@ -3434,6 +3437,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
 
     if (life <= damage) {
         fpoke(player).remove(BasicPokeInfo::Substitute);
+        turnMemory(player)["HadSubstitute"] = true;
         inc(turnMemory(source)["DamageInflicted"], life);
         /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
         turnMemory(source)["LastDamageInflicted"] = life;
