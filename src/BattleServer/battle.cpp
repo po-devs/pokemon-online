@@ -2007,6 +2007,9 @@ trueend:
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
+    foreach(int target, targetList) {
+        turnMemory(target)["HadSubstitute"] = false;
+    }
 }
 
 void BattleSituation::useItem(int player, int item, int target, int attack)
