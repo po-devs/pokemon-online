@@ -154,6 +154,7 @@ void TierWindow::openTierEdit(Tier *t)
     }
 
     helper->addConfigHelper(new ConfigCombo<Pokemon::gen>("Generation", t->m_gen, genS,  gens ));
+    helper->addConfigHelper(new ConfigSpin("Minimum generation Pokemon obtained", t->minGen, -1, 6));
     helper->addConfigHelper(new ConfigCheck("Ban pokemon/moves/items (uncheck to restrict the choice to them instead)", t->banPokes));
     helper->addConfigHelper(new ConfigSpin("Max number of pokemon", t->numberOfPokemons, 1, 6));
     helper->addConfigHelper(new ConfigText("Pokemon", pokemons));
