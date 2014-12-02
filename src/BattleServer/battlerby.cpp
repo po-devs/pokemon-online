@@ -722,6 +722,7 @@ int BattleRBY::calculateDamage(int p, int t)
         if (attack == 0) {
             attack = 1;	
         }
+    }
 
     /* Light screen / Reflect */
     //In RBY, Reflect / Light Screen boost doesn't cap the stat at 999 or 1023
