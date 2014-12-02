@@ -254,7 +254,7 @@ struct RBYCounter : public MM
     static void daf(int s, int t, BS &b) {
         int mv = (b.gen() <= Pokemon::gen(Gen::Yellow) ? slot(b, t).lastMoveUsed : fpoke(b,t).lastMoveUsed);
 
-        if (mv == 0) {
+        if (mv == 0 || mv == Move::Counter || MoveInfo::Power(mv, b.gen()) == 0) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -266,7 +266,8 @@ struct RBYCounter : public MM
             return;
         }
 
-        int damage = poke(b, s).value("DamageReceived").toInt();
+        //int damage = poke(b, s).value("DamageReceived").toInt();
+        int damage = b.battleMemory().value("LastDamageTakenByAny").toInt();
 
         if (damage == 0) {
             fturn(b,s).add(TM::Failed);
@@ -275,7 +276,8 @@ struct RBYCounter : public MM
     }
 
     static void cad(int s, int, BS &b) {
-        turn(b,s)["CustomDamage"] = 2 * poke(b,s).value("DamageReceived").toInt();
+        //turn(b,s)["CustomDamage"] = 2 * poke(b,s).value("DamageReceived").toInt();
+        turn(b,s)["CustomDamage"] = 2 * b.battleMemory().value("LastDamageTakenByAny").toInt();
     }
 };
 
