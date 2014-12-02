@@ -58,6 +58,7 @@ private:
 
     context pokeMems[2];
     context turnMems[2];
+    context battlelongs;
 
 public:
     BasicPokeInfo &fpoke(int i) {return pokes[i];}
@@ -71,6 +72,8 @@ public:
     const context & pokeMemory(int slot) const {return pokeMems[slot];}
     context &turnMemory(int slot) { return turnMems[slot];}
     const context & turnMemory(int slot) const {return turnMems[slot];}
+    context &battleMemory() { return battlelongs;}
+    const context & battleMemory() const {return battlelongs;}
 
     /* Calls the effects of source reacting to name */
     void calleffects(int source, int target, const QString &name);

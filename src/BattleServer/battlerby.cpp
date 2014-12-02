@@ -272,7 +272,8 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
     if (straightattack) {
         pokeMemory(source)["DamageInflicted"] = damage; //For bide
     }
-    pokeMemory(player)["DamageReceived"] = damage; //For counter
+    //pokeMemory(player)["DamageReceived"] = damage; //For counter
+    battleMemory()["LastDamageTakenByAny"] = damage; //For Counter
 
     bool sub = hasSubstitute(player);
 
@@ -387,6 +388,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     if (target != player && !testAccuracy(player, target)) {
         pokeMemory(player).remove("DamageInflicted");
         calleffects(player,target,"AttackSomehowFailed");
+        battleMemory()["LastDamageTakenByAny"] = 0; //Counter fails if last move used missed
         goto endloop;
     }
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
@@ -546,11 +548,6 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
 
     //OHKO
     int move = tmove(player).attack;
-
-    //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if (move == Move::Swift || move == Move::Mimic || move == Move::Transform) {
-        return true;
-    }
 
     //test for dig/fly here
 
