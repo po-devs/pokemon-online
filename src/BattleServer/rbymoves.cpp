@@ -272,6 +272,11 @@ struct RBYCounter : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
+		
+		if (mv == Move::Counter) {
+			fturn(b,s).add(TM::Failed);
+			return;
+		}
     }
 
     static void cad(int s, int, BS &b) {
