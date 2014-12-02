@@ -122,11 +122,11 @@ void MoveSetChecker::loadGenData(const Pokemon::gen &g)
 }
 
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, int move1, int move2, int move3, int move4, int ability,
-                             int gender, int level, bool maledw, QSet<int> *invalid_moves, QString *error) {
+                             int gender, int level, bool maledw, QSet<int> *invalid_moves, QString *error, int minGen) {
     QSet<int> moves;
     moves << move1 << move2 << move3 << move4;
 
-    return isValid(pokeid, gen, moves, ability, gender, level, maledw, invalid_moves, error);
+    return isValid(pokeid, gen, moves, ability, gender, level, maledw, invalid_moves, error, minGen);
 }
 
 static QString getCombinationS(const QSet<int> &invalid_moves) {
@@ -176,7 +176,7 @@ static QString getCombinationS(const QSet<int> &invalid_moves) {
  * 4th gen evos with 3rd gen moves. But there should be a comment everytime for
  * those exceptions in the code below. */
 bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, const QSet<int> &moves2, int ability, int gender,
-                             int level, bool maledw, QSet<int> *invalid_moves, QString *error)
+                             int level, bool maledw, QSet<int> *invalid_moves, QString *error, int minGen)
 {
     if (gen == Gen::StadiumWithTradebacks) {
         foreach(int move, moves2) {
@@ -208,9 +208,9 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     int limit;
 
     if (gen >= 3)
-        limit = 3;
+        limit = std::max(3, minGen);
     else
-        limit = 1;
+        limit = std::max(1, minGen);
 
     for (Pokemon::gen g = gen; g >= limit; g = Pokemon::gen(g.num-1, -1)) {
         if (!PokemonInfo::Exists(pokeid, g)) {

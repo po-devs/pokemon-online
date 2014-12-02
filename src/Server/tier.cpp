@@ -12,6 +12,7 @@ unsigned int qHash (const Pokemon::uniqueId &key);
 
 #include <PokemonInfo/pokemoninfo.h>
 #include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/movesetchecker.h>
 #include "tier.h"
 #include "tiermachine.h"
 #include "security.h"
@@ -404,6 +405,11 @@ bool Tier::isBanned(const PokeBattle &p) const {
         //            return true;
         //            afterloop:;
         //        }
+    }
+    if(minGen > 0) {
+        if(!MoveSetChecker::isValid(p.num(), m_gen, p.move(0).num(), p.move(1).num(), p.move(2).num(), p.move(3).num(), p.ability(), p.gender(), p.level(), false, NULL, NULL, minGen)) {
+            return true;
+        }
     }
 
     if (parent) {
@@ -865,6 +871,7 @@ void Tier::loadFromXml(const QDomElement &elem)
         m_gen.subnum = 0;
     }
 
+    minGen = elem.attribute("minGen", "-1").toInt();
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
@@ -960,6 +967,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("banParent", banParentS);
     dest.setAttribute("gen", m_gen.num);
     dest.setAttribute("subgen", m_gen.subnum);
+    dest.setAttribute("minGen", minGen);
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
@@ -1175,6 +1183,7 @@ Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), holder
     banPokes = true;
     parent = nullptr;
     m_gen = Pokemon::gen(GenInfo::GenMax(), GenInfo::NumberOfSubgens(GenInfo::GenMax())-1);
+    minGen = -1;
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;
@@ -1241,6 +1250,7 @@ Tier *Tier::dataClone() const
     t.numberOfPokemons = numberOfPokemons;
     t.maxLevel = maxLevel;
     t.m_gen = m_gen;
+    t.minGen = minGen;
     t.banParentS = banParentS;
     t.bannedItems = bannedItems;
     t.bannedMoves = bannedMoves;
