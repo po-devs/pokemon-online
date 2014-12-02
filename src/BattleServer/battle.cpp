@@ -3386,7 +3386,10 @@ end:
         }
 
         if(tmove(source).recoil > 0 && hasWorkingAbility(player, Ability::LiquidOoze)) {
-            inflictRecoil(source, player);
+            if (!sub && straightattack && player != source) {
+                turnMemory(source)["LastDamageInflicted"] = damage;
+                inflictRecoil(source, player);
+            }
         }
 
         if (hp <= 0) {
