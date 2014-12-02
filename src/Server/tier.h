@@ -184,6 +184,7 @@ private:
 //    QMultiHash<int, BannedPoke> restrictedSets;
     int maxLevel;
     Pokemon::gen m_gen;
+    int minGen;
     QString banParentS;
     Tier *parent;
     QSet<int> bannedItems;

@@ -718,7 +718,17 @@ int BattleRBY::calculateDamage(int p, int t)
     if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
         def = std::min(1024, def*2);
     }
-
+    
+    // In RBY, if either stat is higher than 255, both are quartered during damage calculation
+    if (def > 255 || attack > 255) {
+    	def = (def/4) % 256;
+	if (def == 0)
+	    def = 1;
+	attack = (attack/4) % 256;
+	if (attack == 0)
+	    attack = 1;
+    }		
+	
     attack = std::min(attack, 65535);
 
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
