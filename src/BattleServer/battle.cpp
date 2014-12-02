@@ -3375,7 +3375,7 @@ end:
                 callieffects(player, source, "UponOffensiveDamageReceived");
             }
 
-            if (tmove(source).flags & Move::ContactFlag) {
+            if (tmove(source).flags & Move::ContactFlag && player != source) {
                 if (!sub) {
                     callieffects(player, source, "UponPhysicalAssault");
                     callaeffects(player,source,"UponPhysicalAssault");
