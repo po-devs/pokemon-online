@@ -727,7 +727,7 @@ int BattleRBY::calculateDamage(int p, int t)
     /* Light screen / Reflect */
     //In RBY, Reflect / Light Screen boost doesn't cap the stat at 999 or 1023
     if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-        def/=2);
+        def/=2;
     }
     
     // In RBY, if either stat is higher than 255, both are quartered during damage calculation
