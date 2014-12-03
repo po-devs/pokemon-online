@@ -265,10 +265,6 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
         return;
     }
 
-    if (damage == 0) {
-        damage = 1;
-    }
-
     if (straightattack) {
         pokeMemory(source)["DamageInflicted"] = damage; //For bide
     }
