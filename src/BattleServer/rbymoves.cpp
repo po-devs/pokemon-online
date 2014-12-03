@@ -113,6 +113,7 @@ struct RBYBide : public MM
         poke(b,t).remove("DamageInflicted");
         poke(b,s)["BideDamage"] = 0;
         addFunction(poke(b,s), "TurnSettings", "Bide", &ts);
+        addFunction(poke(b,s), "MovesPossible", "Bide", &mp);
     }
 
     static void uas2(int s, int t, BS &b) {
@@ -137,6 +138,7 @@ struct RBYBide : public MM
 
             poke(b,s).remove("BideCount");
             removeFunction(poke(b,s), "TurnSettings", "Bide");
+            removeFunction(poke(b,s), "MovesPossible", "Bide");
         }
     }
 
@@ -145,6 +147,14 @@ struct RBYBide : public MM
         addFunction(turn(b,s), "UponAttackSuccessful", "Bide", &uas2);
 
         turn(b,s)["TellPlayers"] = false;
+    }
+
+    static void mp (int s, int, BS &b) {
+        for (int i = 0; i < 4; i++) {
+            if (b.move(s,i) != Move::Bide) {
+                turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+            }
+        }
     }
 };
 
