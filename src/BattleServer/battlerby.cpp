@@ -707,21 +707,32 @@ int BattleRBY::calculateDamage(int p, int t)
         def = crit ? this->poke(t).normalStat(SpAttack) : getStat(t, SpAttack);
     }
 
-    /* Light screen / Reflect */
-    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-        def = std::min(1024, def*2);
+    //burn
+    if (!crit) {
+        //Burn does not halve the attack stat during damage calculation of Critical hits in RBY
+        attack = attack / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
+        //Minimum attack is set to 1
+        if (attack == 0) {
+            attack = 1;
+        }
     }
-    
+    /* Light screen / Reflect */
+    //In RBY, Reflect / Light Screen boost doesn't cap the stat at 999 or 1023
+    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+        def*=2;
+    }
+
     // In RBY, if either stat is higher than 255, both are quartered during damage calculation
     if (def > 255 || attack > 255) {
-    	def = (def/4) % 256;
-	if (def == 0)
-	    def = 1;
-	attack = (attack/4) % 256;
-	if (attack == 0)
-	    attack = 1;
-    }		
-	
+        def = (def/4) % 256;
+        if (def == 0)
+            def = 1;
+
+        attack = (attack/4) % 256;
+        if (attack == 0)
+            attack = 1;
+    }
+
     attack = std::min(attack, 65535);
 
     if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
@@ -740,12 +751,6 @@ int BattleRBY::calculateDamage(int p, int t)
     power = std::min(power, 65535);
     int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
 
-    //Guts, burn
-    if (!crit){
-        //Burn does not halve the damage of Critical hits in RBY
-        damage = damage / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
-    }
-
     damage = (damage * stab/2) ;
     while (typemod > 0) {
         damage *= 2;
@@ -755,7 +760,12 @@ int BattleRBY::calculateDamage(int p, int t)
         damage /= 2;
         typemod++;
     }
-    damage = (damage * randnum) / 255;
+
+    // In RBY, minimum damage after randnum is applied is 1,
+    // unless it became 0 during typemod calculations.
+    if (damage != 1) {
+        damage = (damage * randnum) / 255;
+    }
 
     return damage;
 }
