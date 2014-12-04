@@ -3369,6 +3369,13 @@ end:
             changeHp(player, hp);
         }
 
+        if(tmove(source).recoil > 0) {
+            if (!sub && straightattack && player != source) {
+                turnMemory(source)["LastDamageInflicted"] = damage;
+                inflictRecoil(source, player);
+            }
+        }
+
         if (straightattack) {
             if (player != source && !sub) {
                 callpeffects(player, source, "UponOffensiveDamageReceived");
@@ -3382,13 +3389,6 @@ end:
                     calleffects(player,source,"UponPhysicalAssault");
                 }
                 callaeffects(source,player,"OnPhysicalAssault");
-            }
-        }
-
-        if(tmove(source).recoil > 0 && hasWorkingAbility(player, Ability::LiquidOoze)) {
-            if (!sub && straightattack && player != source) {
-                turnMemory(source)["LastDamageInflicted"] = damage;
-                inflictRecoil(source, player);
             }
         }
 
@@ -3410,7 +3410,7 @@ end:
         }
 
         if (damage > 0 || (damage == 0 && survivalFactor)) {
-            if(tmove(source).recoil < 0 || !hasWorkingAbility(player, Ability::LiquidOoze)) {
+            if(tmove(source).recoil < 0) {
                 inflictRecoil(source, player);
             }
             callieffects(source,player, "UponDamageInflicted");
