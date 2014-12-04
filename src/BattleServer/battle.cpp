@@ -2259,21 +2259,29 @@ void BattleSituation::inflictRecoil(int source, int target)
         return;
     }
 
-    notify(All, Recoil, recoil < 0 ? source : target, bool(recoil < 0));
+    if (recoil < 0) {
+        if(repeatCount() >= repeatNum(source) - 1 || koed(target)) {
+            notify(All, Recoil, source, true);
+        }
+    } else {
+        notify(All, Recoil, target, false);
+    }
 
     // "33" means one-third
     //if (recoil == -33) recoil = -100 / 3.; -- commented out until ingame confirmation
 
-    int damage = std::abs(int(recoil * turnMemory(source).value("LastDamageInflicted").toInt() / 100));
+    int damage = recoil < 0 ? std::abs(int(recoil * turnMem(target).damageTaken / 100)):std::abs(int(recoil * turnMemory(source).value("LastDamageInflicted").toInt() / 100));
 
     if (recoil < 0) {
-        inflictDamage(source, damage, source, false);
+        if(repeatCount() >= repeatNum(source) - 1 || koed(target)) {
+            inflictDamage(source, damage, source, false);
 
-        /* Self KO Clause! */
-        if (koed(source)) {
-            /* In VGC 2011 (gen 5), the user of the recoil move wins instead of losing with the Self KO Clause */
-            if (gen() <= 4)
-                selfKoer() = source;
+            /* Self KO Clause! */
+            if (koed(source)) {
+                /* In VGC 2011 (gen 5), the user of the recoil move wins instead of losing with the Self KO Clause */
+                if (gen() <= 4)
+                    selfKoer() = source;
+            }
         }
     } else  {
         if (hasWorkingItem(source, Item::BigRoot)) /* Big root */ {
@@ -3405,7 +3413,7 @@ end:
             /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
             turnMemory(source)["LastDamageInflicted"] = damage;
             pokeMemory(player)["DamageTakenByAttack"] = damage;
-            turnMem(player).damageTaken = damage;
+            turnMem(player).damageTaken += damage;
             turnMemory(player)["DamageTakenBy"] = source;
         }
 
@@ -3444,6 +3452,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
         inc(turnMemory(source)["DamageInflicted"], life);
         /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
         turnMemory(source)["LastDamageInflicted"] = life;
+        turnMem(player).damageTaken += life;
         sendMoveMessage(128, 1, player);
         notifySub(player, false);
     } else {
@@ -3451,6 +3460,7 @@ void BattleSituation::inflictSubDamage(int player, int damage, int source)
         inc(turnMemory(source)["DamageInflicted"], damage);
         /* Needed for Parental Bond improperly compounding amount of damage to recoil off of*/
         turnMemory(source)["LastDamageInflicted"] = damage;
+        turnMem(player).damageTaken += life;
         sendMoveMessage(128, 3, player);
     }
 }
