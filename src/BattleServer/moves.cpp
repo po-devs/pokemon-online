@@ -836,14 +836,14 @@ struct MMFeint : public MM
             if (i < 3) {
                 if (turn(b,t).value(shields[i]).toBool()) {
                     turn(b,t).remove(shields[i]);
-                    b.sendMoveMessage(42,i,t);
+                    b.sendMoveMessage(42,i,s,0,t);
                     remove = true;
                 }
             } else {
                 //Team Target: CraftyShield, Mat Block, WideGuard, QuickGuard
                 if (team(b,b.player(t)).contains(shields[i])) {
                     team(b,b.player(t)).remove(shields[i]);
-                    b.sendMoveMessage(42,i,t);
+                    b.sendMoveMessage(42,i,s,0,t);
                     remove = true;
                 }
 
