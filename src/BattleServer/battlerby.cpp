@@ -546,7 +546,6 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     int move = tmove(player).attack;
 
     //test for dig/fly here
-
     if (acc == 0 || acc == 101) {
         return true;
     }
