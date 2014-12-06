@@ -125,6 +125,8 @@ public:
 
     bool hasMove(int moveNum);
 
+    void setAbility(int abilityNum) throw (QString);
+
     quint8 DV(int stat) const;
     void setDV(int stat, quint8 DV);
     void controlHPDV();
