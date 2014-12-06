@@ -1522,7 +1522,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (turnMemory(player).value("ImpossibleToMove").toBool()) {
         goto trueend;
     }
-
     if (!specialOccurence) {
         if (PP(player, move) <= 0) {
             notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
@@ -1541,6 +1540,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             So that's why attack is tested against 0. */
         pokeMemory(player)["AnyLastMoveUsed"] = attack;
         battleMemory()["AnyLastMoveUsed"] = attack;
+        if (pokeMemory(player).contains("OutrageMove")) {
+            /* Have to set last move for disable to work on 2nd or 3rd turn*/
+            pokeMemory(player)["LastMoveUsed"] = attack;
+            pokeMemory(player)["LastMoveUsedTurn"] = turn();
+        }
     }
 
     //For metronome calling fly / sky attack / ...
