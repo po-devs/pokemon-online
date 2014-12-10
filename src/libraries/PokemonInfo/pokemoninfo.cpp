@@ -1967,7 +1967,9 @@ QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
     if (p == 0)
         return "--";
     else if (p == 1)
-        return "???";
+        return "\u200B???";
+    else if (p >= 100)
+        return QString("\u200B%1").arg(p); //to sort properly in teambuilder
     else
         return QString::number(p);
 }
