@@ -452,8 +452,8 @@ void TeamBuilder::exportTeam()
     exporting->setText(team().team().exportToTxt());
     exporting->setReadOnly(true);
 
-    exporting->show();
     exporting->resize(500,500);
+    exporting->show();
 }
 
 void TeamBuilder::markAllUpdated()

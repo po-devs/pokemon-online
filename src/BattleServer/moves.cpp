@@ -1422,8 +1422,10 @@ struct MMBounce : public MM
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
         /* Airbourne targets don't receive damage */
-        if (b.hasType(t, Type::Flying)) {
-            tmove(b,s).power = 1;
+        if (b.hasType(t, Type::Flying) || !b.linked(s, "FreeFalledPokemon")) {
+            b.changeSprite(s, 0);
+            tmove(b,s).power = 1;            
+            fturn(b,s).add(TM::Failed);
         }
     }
 
@@ -5424,14 +5426,18 @@ struct MMOutrage : public MM
     }
 
     static void aas(int s, int, BS &b) {
-        if (poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt()) {
+        bool disabled = poke(b,s).contains("DisabledMove") && poke(b,s)["OutrageMove"] == poke(b,s)["DisabledMove"].toInt();
+        bool lastTurn = poke(b,s).contains("OutrageUntil") && b.turn() == poke(b,s)["OutrageUntil"].toInt();
+        if (lastTurn || disabled) {
+            if(!disabled || (b.gen() >= 5 && lastTurn)) {
+                b.sendMoveMessage(93,0,s,type(b,s));
+                b.inflictConfused(s, s, b.gen() >= 2);
+            }
             removeFunction(poke(b,s), "TurnSettings", "Outrage");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Outrage");
             poke(b,s).remove("OutrageUntil");
             poke(b,s).remove("OutrageMove");
             poke(b,s).remove("LastOutrage");
-            b.sendMoveMessage(93,0,s,type(b,s));
-            b.inflictConfused(s, s, b.gen() >= 2);
         }
     }
 

@@ -118,10 +118,10 @@ QVariant PokeMovesModel::data(const QModelIndex &index, int role) const
         } else if (section == Learning) {
             return storage[names[index.row()]].second;
         } else if (section == PP) {
-            return MoveInfo::PP(movenum, gen);
+            return MoveInfo::PP(movenum, gen)*8/5;
         } else if (section == Pow) {
-            int power = MoveInfo::Power(movenum, gen);
-            if (power > 1) return power; 
+            //int power = MoveInfo::Power(movenum, gen);
+            //if (power > 1) return power;
             return MoveInfo::PowerS(movenum, gen);
         } else if (section == Acc) {
             int acc = MoveInfo::Acc(movenum, gen);

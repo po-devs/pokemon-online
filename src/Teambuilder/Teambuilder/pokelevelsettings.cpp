@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include <PokemonInfo/pokemonstructs.h>
 #include <PokemonInfo/pokemoninfo.h>
 #include "Teambuilder/pokelevelsettings.h"
@@ -84,12 +86,26 @@ void PokeLevelSettings::changeAbility()
         return;
     }
 
+    int abilityToSet;
     if (m_abilities[1]->isChecked()) {
-        poke().ability() = poke().abilities().ab(1);
+        abilityToSet = poke().abilities().ab(1);
     } else if (m_abilities[2]->isChecked()) {
-        poke().ability() = poke().abilities().ab(2);
+        abilityToSet = poke().abilities().ab(2);
     } else {
-        poke().ability() = poke().abilities().ab(0);
+        abilityToSet = poke().abilities().ab(0);
+    }
+
+    try {
+        poke().setAbility(abilityToSet);
+    } catch (const QString &s) {
+        QMessageBox::information(NULL, tr("Invalid moveset"), s);
+        for(int i = 0; i < 3; i++) {
+            if(poke().ability() == poke().abilities().ab(i)) {
+                m_abilities[i]->setChecked(true);
+            } else {
+                m_abilities[i]->setChecked(false);
+            }
+        }
     }
 }
 
