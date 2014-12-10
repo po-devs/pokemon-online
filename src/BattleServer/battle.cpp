@@ -906,8 +906,12 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     int player = this->player(slot);
     int snum = slotNum(slot);
 
-    if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb)
+    if (poke(player,pok).num() == Pokemon::Giratina_O && poke(player,pok).item() != Item::GriseousOrb) {
         changeForme(player,pok,Pokemon::Giratina);
+    }
+    if (poke(player,pok).num() == Pokemon::Giratina && poke(player,pok).item() == Item::GriseousOrb) {
+        changeForme(player,pok,Pokemon::Giratina_O);
+    }
 
     /* reset temporary variables */
     pokeMemory(slot).clear();

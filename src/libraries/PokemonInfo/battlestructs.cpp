@@ -152,6 +152,10 @@ void PokeBattle::init(PokePersonal &poke)
         item() = 0;
     } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
         num() = Pokemon::Giratina;
+        ability() = Ability::Pressure;
+    } else if (num() == Pokemon::Giratina && item() == Item::GriseousOrb) {
+        num() = Pokemon::Giratina_O;
+        ability() = Ability::Levitate;
     }
 
     if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus) {
