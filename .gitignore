@@ -63,7 +63,7 @@ qrc_*
 bin/RelayStation
 bin/*_debug*
 bin/data
-bin/scripts
+bin/scriptdata
 bin/README
 bin/clientscripts
 scripts/sprite
