@@ -1422,8 +1422,10 @@ struct MMBounce : public MM
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
         /* Airbourne targets don't receive damage */
-        if (b.hasType(t, Type::Flying)) {
-            tmove(b,s).power = 1;
+        if (b.hasType(t, Type::Flying) || !b.linked(s, "FreeFalledPokemon")) {
+            b.changeSprite(s, 0);
+            tmove(b,s).power = 1;            
+            fturn(b,s).add(TM::Failed);
         }
     }
 
