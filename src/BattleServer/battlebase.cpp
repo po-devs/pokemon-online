@@ -1968,7 +1968,16 @@ void BattleBase::calculateTypeModStab(int orPlayer, int orTarget)
     int typemod = 0;
 
     for (int i = 0; i < 2; i++) {
-        typemod += convertTypeEff(typeffs[i]);
+        int typeeff = convertTypeEff(typeffs[i]);
+        if (clauses() & ChallengeInfo::Inverted) {
+            if(typeeff<-50){
+                typeeff = 1;
+            }
+            else {
+                typeeff *= -1;
+            }
+        }
+        typemod += typeeff;
     }
 
     // Counter hits regardless of type matchups in Gen 1.
