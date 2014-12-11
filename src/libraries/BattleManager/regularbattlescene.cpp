@@ -54,7 +54,9 @@ QGridLayout* RegularBattleScene::createHPBarLayout(int slot)
     inside->addWidget(gui.status[slot], 0, 1);
 
     gui.gender[slot] = new QLabel();
-    inside->addWidget(gui.gender[slot], 0, 2);
+    if (data()->gen() > 1) {
+        inside->addWidget(gui.gender[slot], 0, 2);
+    }
 
     gui.level[slot] = new QLabel();
     gui.level[slot]->setObjectName("PokemonLevel");
