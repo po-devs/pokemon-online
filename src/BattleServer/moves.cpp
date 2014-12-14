@@ -1332,6 +1332,12 @@ struct MMStomp : public MM
     static void bcd(int s, int t, BS &b) {
         if (poke(b,t).value("Minimize").toBool()) {
             tmove(b, s).power = tmove(b, s).power * 2;
+            int finalmod = turn(b,t).value("FinalModifier").toInt();
+            if (finalmod == 0) {
+               turn(b,t)["FinalModifier"] = 200;
+            } else {
+               turn(b,t)["FinalModifier"] = finalmod * 2;
+            }
         }
     }
 };

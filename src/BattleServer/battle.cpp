@@ -3090,6 +3090,17 @@ int BattleSituation::calculateDamage(int p, int t)
     int power = tmove(p).power;
     int type = tmove(p).type;
 
+    int finalmod;
+    int fmod = turnMemory(t).value("FinalModifier").toInt();
+    if (fmod != 0) {
+        finalmod = fmod;
+    } else {
+        finalmod = 100;
+    }
+    if (hasWorkingAbility(p,Ability::Sniper) && turnMem(p).contains(TM::CriticalHit)) {
+        finalmod*=1.5;
+    }
+
     /* Calculate the multiplier for two turn attacks */
     if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
         QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
@@ -3098,6 +3109,7 @@ int BattleSituation::calculateDamage(int p, int t)
         for (int i = 0; i < vuln_moves.size(); i++) {
             if (vuln_moves[i] == attackused) {
                 power = power * vuln_mults[i];
+                finalmod = finalmod * vuln_mults[i];
             }
         }
     }
@@ -3133,6 +3145,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
         if (!koed(sl) && sl != t && hasWorkingAbility(sl, Ability::FriendGuard)) {
             power = power * 3 / 4;
+            finalmod = finalmod * 3/4;
         }
     }
 
@@ -3164,10 +3177,12 @@ int BattleSituation::calculateDamage(int p, int t)
     /* Light screen / Reflect */
     if ( (!crit || (gen().num == 2 && !turnMemory(p).value("CritIgnoresAll").toBool()) ) && !hasWorkingAbility(p, Ability::Infiltrator) &&
          (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0 || pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0)) {
-        if (!multiples())
+        if (!multiples()) {
             damage /= 2;
-        else {
-            damage = damage * 2 / 3;
+            finalmod /= 2;
+        } else {
+            damage = damage * 2703 / 4096;
+            finalmod = finalmod * 2703 / 4096;
         }
     }
     /* Damage reduction in doubles, which occur only
@@ -3232,6 +3247,7 @@ int BattleSituation::calculateDamage(int p, int t)
         callieffects(p,t,"Mod2Modifier");
         damage = damage*(10+move["ItemMod2Modifier"].toInt())/10/*Mod2*/;
         damage = damage *randnum/100*stab/2;
+        finalmod = finalmod*(10+move["ItemMod2Modifier"].toInt())/10;
 
         while (typemod > 0) {
             damage *= 2;
@@ -3246,22 +3262,31 @@ int BattleSituation::calculateDamage(int p, int t)
         // FILTER / SOLID ROCK
         if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
             damage = damage * 3 / 4;
+            finalmod = finalmod * 3 / 4;
         }
 
         /* Expert belt */
-        damage = damage * ((turnMem(p).typeMod > 0 && hasWorkingItem(p, Item::ExpertBelt))? 6 : 5)/5;
+        if (turnMem(p).typeMod > 0 && hasWorkingItem(p, Item::ExpertBelt)) {
+            damage = damage *6/5;
+            finalmod = finalmod *6/5;
+        }
 
         move.remove("Mod3Berry");
 
         /* Berries of the foe */
         callieffects(t, p, "Mod3Items");
 
-        damage = damage * (10 + turnMemory(p).value("Mod3Berry").toInt())/ 10;
+        int berrymod = turnMemory(p).value("Mod3Berry").toInt();
+        if (berrymod != 0) {
+            damage = damage * (10+berrymod)/10;
+            finalmod = finalmod * (10+berrymod)/10;
+        }
 
         if (gen().num == 2)
             damage += 1;
     }
 
+    turnMemory(t)["FinalModifier"] = finalmod;
     return damage;
 }
 
@@ -3311,8 +3336,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         callieffects(player, source, "BeforeTakingDamage");
     }
 
-    //The exception happens in gen 5+ when reflect, reducing berry, multiscale, friend guard, etc.
-    if (damage == 0/* && (gen() <= 4 || !straightattack)*/) {
+    //Final Modifier is Reflect/Mutliscale/etc. Allows damage to be 0 only if one exists to lessen damage.
+    //Value of 100 or larger means there are more offensive modifiers than defensive and damage will never be 0.
+    if (damage == 0 && turnMemory(player).value("FinalModifier").toInt() >= 100) {
         damage = 1;
     }
 

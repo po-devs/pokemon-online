@@ -1133,9 +1133,15 @@ struct AMTintedLens : public AM {
         functions["BasePowerModifier"] = &bpm;
     }
 
-    static void bpm(int s, int , BS &b) {
+    static void bpm(int s, int t, BS &b) {
         if (fturn(b,s).typeMod < 0) {
             b.chainBp(s, 4096);
+            int finalmod = turn(b,t).value("FinalModifier").toInt();
+            if (finalmod == 0) {
+                turn(b,t)["FinalModifier"] = 200;
+            } else {
+                turn(b,t)["FinalModifier"] = 2*finalmod;
+            }
         }
     }
 };
@@ -1664,6 +1670,12 @@ struct AMMultiScale : public AM
     static void bpfm(int s, int t, BS &b) {
         if (b.poke(s).isFull()) {
             b.chainBp(t, -2048);
+            int finalmod = turn(b,s).value("FinalModifier").toInt();
+            if (finalmod == 0) {
+                turn(b,s)["FinalModifier"] = 50;
+            } else {
+                turn(b,s)["FinalModifier"] = finalmod/2;
+            }
         }
     }
 };
