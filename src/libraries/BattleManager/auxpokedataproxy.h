@@ -20,6 +20,7 @@ public:
 
     void setPlayerPoke(bool p);
 
+    Q_INVOKABLE int gen();
     Q_INVOKABLE int statBoost(int stat);
     Q_INVOKABLE int stat(int stat);
     Q_INVOKABLE int minStat(int stat);

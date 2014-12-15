@@ -32,6 +32,11 @@ void AuxPokeDataProxy::setPlayerPoke(bool p)
     }
 }
 
+int AuxPokeDataProxy::gen()
+{
+    return pokemon()->gen().num;
+}
+
 int AuxPokeDataProxy::statBoost(int stat)
 {
     return statboosts[stat];

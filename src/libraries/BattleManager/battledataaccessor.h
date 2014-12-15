@@ -161,6 +161,7 @@ public:
     void setTeam(const TeamBattle *team);
     void setPoke(int index, ShallowBattlePoke *pokemon, bool soft = false);
     void setName(const QString &name);
+    void setGen(Pokemon::gen gen);
 
     void removeItem(int item);
     void changeItemCount(int item, int count);
