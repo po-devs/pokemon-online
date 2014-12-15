@@ -9,7 +9,6 @@ import "utilities.js" as Utils
 Item {
     id: woof
     property bool back: false
-    property TeamData team
     property FieldPokeData fieldPokemon
     property PokeData pokemon
     property int spot
