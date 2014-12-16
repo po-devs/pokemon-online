@@ -982,6 +982,10 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (gen() >= 2)
         ItemEffect::setup(poke(slot).item(), slot, *this);
 
+    /* If the switch in occured due to a ko
+       we need to remove this so that hazard kos can happen */
+    turnMem(player).remove(TM::WasKoed);
+
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
     callzeffects(player, slot, "UponSwitchIn");
