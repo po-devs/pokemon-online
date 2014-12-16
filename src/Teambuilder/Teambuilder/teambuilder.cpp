@@ -87,6 +87,9 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     teamMenu->addAction(tr("&Save team"), this, SLOT(saveTeam()), tr("Ctrl+Shift+S", "Save team"));
     teamMenu->addAction(tr("&Import team"), this, SLOT(importTeam()), tr("Ctrl+I", "Import team"));
     teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
+    teamMenu->addSeparator();
+    //teamMenu->addAction(tr("Import from Android"), this, SLOT(importAndroid()), tr("Ctrl+Shift+I", "Import from Android"));
+    teamMenu->addAction(tr("Export to Android"), this, SLOT(exportAndroid()), tr("Ctrl+Shift+E", "Export to Android"));
 
     currentWidget()->addMenus(menuBar);
 
@@ -454,6 +457,25 @@ void TeamBuilder::exportTeam()
 
     exporting->resize(500,500);
     exporting->show();
+}
+
+void TeamBuilder::importAndroid()
+{
+
+}
+
+void TeamBuilder::exportAndroid()
+{
+    QTextEdit *exportdroid = new QTextEdit(this);
+    exportdroid->setObjectName("exporting");
+    exportdroid->setWindowFlags(Qt::Window);
+    exportdroid->setAttribute(Qt::WA_DeleteOnClose, true);
+
+    exportdroid->setText(team().team().exportToAndroid());
+    exportdroid->setReadOnly(true);
+
+    exportdroid->resize(500,500);
+    exportdroid->show();
 }
 
 void TeamBuilder::markAllUpdated()

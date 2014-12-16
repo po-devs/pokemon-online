@@ -49,6 +49,8 @@ public slots:
 
     void importTeam();
     void exportTeam();
+    void importAndroid();
+    void exportAndroid();
     void addTeam();
     void openTeam();
     void saveTeam();
