@@ -90,16 +90,16 @@ protected:
 /* Data that is unique to a pokémon */
 class PokePersonal
 {
-    PROPERTY(QString, nickname);
-    PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(quint16, item);
-    PROPERTY(quint16, ability);
-    PROPERTY(quint8, nature);
-    PROPERTY(quint8, gender);
-    PROPERTY(bool, shiny);
-    PROPERTY(quint8, happiness);
-    PROPERTY(quint8, level);
-    PROPERTY(Pokemon::gen, gen);
+    PROPERTY(QString, nickname)
+    PROPERTY(Pokemon::uniqueId, num)
+    PROPERTY(quint16, item)
+    PROPERTY(quint16, ability)
+    PROPERTY(quint8, nature)
+    PROPERTY(quint8, gender)
+    PROPERTY(bool, shiny)
+    PROPERTY(quint8, happiness)
+    PROPERTY(quint8, level)
+    PROPERTY(Pokemon::gen, gen)
 protected:
     quint16 m_moves[4];
 

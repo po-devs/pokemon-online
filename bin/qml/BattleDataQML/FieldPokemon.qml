@@ -142,10 +142,12 @@ Item {
         onShownChanged: {
             if (shown) {
                 var s = pokemon.nick + " &nbsp; lv. " + pokemon.level;
-                if (pokemon.gender === 1) {
-                    s += " (M)"
-                } else if (pokemon.gender === 2) {
-                    s += " (F)"
+                if (fieldPokemon.gen() > 1) {
+                    if (pokemon.gender === 1) {
+                        s += " (M)"
+                    } else if (pokemon.gender === 2) {
+                        s += " (F)"
+                    }
                 }
 
                 s += "<br/>" + Utils.typeImg(fieldPokemon.type1());
