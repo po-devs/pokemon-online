@@ -207,7 +207,7 @@ public:
 
 class Team
 {
-    PROPERTY(QString, defaultTier);
+    PROPERTY(QString, defaultTier)
 protected:
     PokeTeam m_pokes[6];
     Pokemon::gen m_gen;
@@ -225,7 +225,9 @@ public:
     QString toXml() const;
     bool saveToFile(const QString &path) const;
     bool importFromTxt(const QString &path);
+    bool importFromAndroid(const QString &path);
     QString exportToTxt() const;
+    QString exportToAndroid() const;
 
     QString name() const;
     QString folder() const;

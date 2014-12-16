@@ -1212,6 +1212,41 @@ QString Team::exportToTxt() const
     }
     return ret.trimmed();
 }
+/*
+bool Team::importFromAndroid(const QString &file2)
+{
+
+}
+*/
+QString Team::exportToAndroid() const
+{
+    QString ret = "";
+    for (int i = 0; i < 6; i++) {
+        const PokeTeam &p = this->poke(i);
+        if (p.num() == Pokemon::NoPoke)
+            continue;
+
+        if (i == 0) {
+            ret += QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Team defaultTier=\"%1\" gen=\"%2\" subgen=\"%3\">")
+                    .arg(Team::defaultTier()).arg(p.gen().num).arg(p.gen().subnum);
+        }
+
+        ret+= QString("<Pokemon Num=\"%1\" Forme=\"%2\" Nickname=\"%3\" Item=\"%4\" Ability=\"%5\" Gender=\"%6\" Lvl=\"%7\" Shiny=\"%8\" Nature=\"%9\" Happiness=\"%10\">")
+                .arg(p.num().pokenum).arg(p.num().subnum).arg(p.nickname()).arg(p.item()).arg(p.ability()).arg(p.gender()).arg(p.level()).arg(p.shiny()).arg(p.nature()).arg(p.happiness());
+        for (int m = 0; m < 4; m++) {
+            ret += QString("<Move>%1</Move>").arg(p.move(m));
+        }
+        for (int e = 0; e < 6; e++) {
+            ret += QString("<EV>%1</EV>").arg(p.EV(e));
+        }
+        for (int d = 0; d < 6; d++) {
+            ret += QString("<IV>%1</IV>").arg(p.DV(d));
+        }
+        ret += QString("</Pokemon>");
+    }
+
+    return ret;
+}
 
 QString Team::name() const
 {
