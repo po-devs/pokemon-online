@@ -299,6 +299,11 @@ void TeamProxy::setTeam(const TeamBattle *team)
     teamData->setItems(team->items);
 }
 
+void TeamProxy::setGen(Pokemon::gen gen)
+{
+    teamData->setGen(gen);
+}
+
 QHash<quint16,quint16> &TeamProxy::items() {
     return teamData->items();
 }

@@ -13,6 +13,7 @@ ProxyDataContainer::ProxyDataContainer(const BattleConfiguration *conf) : auxdat
     for (int i = 0; i < 2; i++) {
         if (conf->isPlayer(i)) {
             teams[i] = new TeamProxy(new TeamData(conf->teams[i]));
+            teams[i]->setGen(conf->gen);
 
             for (int j = 0; j < numberInTeam; j++) {
                 auxdata.poke(i+j*2)->setPlayerPoke(true);
@@ -20,6 +21,7 @@ ProxyDataContainer::ProxyDataContainer(const BattleConfiguration *conf) : auxdat
             }
         } else {
             teams[i] = new TeamProxy();
+            teams[i]->setGen(conf->gen);
         }
         for (int j = 0; j < numberInTeam; j++) {
             auxdata.poke(i+j*2)->setPoke(teams[i]->poke(j));

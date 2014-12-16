@@ -162,13 +162,20 @@ Item {
                 } else {
                     var min = fieldPokemon.minStat(0)
                     var max = fieldPokemon.maxStat(0)
-                    s += Math.floor(min * pokemon.lifePercent/100) + "/" + min + "-</td><td>" + Math.floor(max * pokemon.lifePercent/100) + "/" + max
+                    s += Math.floor(min * pokemon.lifePercent/100) + "/" + min + "-</td><td>" + Math.floor(max * (pokemon.lifePercent + ((pokemon.lifePercent === 100 || pokemon.lifePercent === 0) ? 0:1))/100) + "/" + max
                 }
 
                 s += "</td></tr>";
 
                 for (i = 0; i < 5; i++) {
-                    s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
+                    if(fieldPokemon.gen() === 1 && i === 3) {
+                        i++;
+                    }
+                    if(fieldPokemon.gen() === 1 && i === 2) {
+                        s += "<tr><td>Special</td><td>&nbsp;";
+                    } else {
+                        s += "<tr><td>" + stats[i] + "</td><td>&nbsp;";
+                    }
                     stat = fieldPokemon.stat(i+1);
                     boost = fieldPokemon.statBoost(i+1);
 
