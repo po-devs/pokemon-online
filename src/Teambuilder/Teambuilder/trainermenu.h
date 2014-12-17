@@ -28,6 +28,8 @@ public slots:
     void updateCurrentTeamAndNotify();
     void importTeam(const QString &team);
     void openImportDialog();
+    void importAndroidTeam(const QString &team);
+    void openImportAndroidDialog();
     void openAvatarDialog();
     void openTeam();
 
@@ -55,6 +57,7 @@ private slots:
     void on_saveTeam_clicked();
     void on_loadTeam_clicked();
     void on_importTeam_clicked();
+    void on_importAndroidTeam_clicked();
     void on_teamFolderButton_clicked();
     void on_profileList_currentIndexChanged(int);
     void on_newProfile_clicked();

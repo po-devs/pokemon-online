@@ -88,7 +88,7 @@ QMenuBar *TeamBuilder::createMenuBar(MainEngine *w)
     teamMenu->addAction(tr("&Import team"), this, SLOT(importTeam()), tr("Ctrl+I", "Import team"));
     teamMenu->addAction(tr("&Export team"), this, SLOT(exportTeam()), tr("Ctrl+E", "Export team"));
     teamMenu->addSeparator();
-    //teamMenu->addAction(tr("Import from Android"), this, SLOT(importAndroid()), tr("Ctrl+Shift+I", "Import from Android"));
+    teamMenu->addAction(tr("Import from Android"), this, SLOT(importAndroid()), tr("Ctrl+Shift+I", "Import from Android"));
     teamMenu->addAction(tr("Export to Android"), this, SLOT(exportAndroid()), tr("Ctrl+Shift+E", "Export to Android"));
 
     currentWidget()->addMenus(menuBar);
@@ -461,7 +461,8 @@ void TeamBuilder::exportTeam()
 
 void TeamBuilder::importAndroid()
 {
-
+    switchToTrainer();
+    trainer->openImportAndroidDialog();
 }
 
 void TeamBuilder::exportAndroid()

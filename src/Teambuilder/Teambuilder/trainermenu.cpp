@@ -104,6 +104,27 @@ void TrainerMenu::importTeam(const QString &team)
     this->team().team().importFromTxt(team);
 }
 
+void TrainerMenu::openImportAndroidDialog()
+{
+    on_importAndroidTeam_clicked();
+}
+
+void TrainerMenu::on_importAndroidTeam_clicked()
+{
+    TeamImporter *i = new TeamImporter();
+    i->show();
+
+    connect(this, SIGNAL(destroyed()), i, SLOT(deleteLater()));
+
+    connect(i, SIGNAL(done(QString)), SLOT(importAndroidTeam(QString)));
+    connect(i, SIGNAL(done(QString)), SLOT(updateCurrentTeamAndNotify()));
+}
+
+void TrainerMenu::importAndroidTeam(const QString &team)
+{
+    this->team().team().importFromAndroid(team);
+}
+
 void TrainerMenu::updateTeamButtons()
 {
     for (int i = 0; i < team().count(); i++) {

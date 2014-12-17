@@ -1212,12 +1212,120 @@ QString Team::exportToTxt() const
     }
     return ret.trimmed();
 }
-/*
+
+/******** More Ugly *********/
 bool Team::importFromAndroid(const QString &file2)
 {
+    QString file = file2;
+    file.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "").replace("</Team>","").replace("</Pokemon>", "***").replace("\"","");
 
+    /*Team settings = tier, gen, subgen*/
+    QString teamsettings = file.section("<Pokemon", 0, 0).trimmed();
+    file.replace(teamsettings, "***");
+    teamsettings.replace("\"","").replace("<Team defaultTier=", "").replace(">","").replace(" gen=", "@").replace(" subgen=","@");
+
+    QStringList settings = teamsettings.split("@");
+    Team::defaultTier() = settings[0];
+
+    QStringList pokes = file.split("***",QString::SkipEmptyParts);
+    for (int i = 0; i < 6 && i < pokes.size(); i++) {
+        PokeTeam &p = this->poke(i);
+        p.reset();
+        p.setGen(Pokemon::gen(settings[1].toInt(), settings[2].toInt()));
+
+        /**Let's really make a mess!**/
+        QString data = pokes[i];
+        QString pokedata = data.section("><",0,0); /*basic information: level, ability, etc.*/
+        QString movedata = data.section("><",1); /*move numbers*/
+        QString evdata = movedata.section("</Move>",-1); /*evs for each stat*/
+        QString dvdata = evdata.section("</EV>",-1); /*dvs for each stat*/
+        /*Clean up the data so we can use it easier*/
+        movedata.replace(evdata,"").replace("Move","").replace(">","").replace("<","");
+        evdata.replace(dvdata,"").replace("EV","").replace(">","").replace("<","");
+        dvdata.replace("DV","").replace(">","").replace("<","");
+
+        pokedata.replace("***","").replace("<","").replace(">","");
+        QStringList pokekeys = pokedata.split(" ", QString::SkipEmptyParts);
+
+        int pokenum = 0, formenum = 0, pokepart = 0;
+        for (int j = 0; j < pokekeys.size(); j++) {
+            QString k = pokekeys[j].trimmed();
+            QString key = k.section('=', 0, 0).trimmed();
+            QString value = k.section('=',1).trimmed();
+
+            if (key == "Num") {
+                pokenum = value.toInt();
+                pokepart +=1;
+            } else if (key == "Forme") {
+                formenum = value.toInt();
+                pokepart +=1;
+            }
+            /*We need to wait for both parts in order to set a number. Thankfully these are the first two keys.*/
+            if (pokepart == 2) {
+                p.setNum(Pokemon::uniqueId(pokenum,formenum));
+                p.load();
+                pokepart = 0;
+            }
+
+            if (key == "Nickname") {
+                QString val = value;
+                p.nickname() = val;
+            } else if (key == "Item") {
+                int val = value.toInt();
+                p.item() = val;
+            } else if (key == "Ability") {
+                int val = value.toInt();
+                p.ability() = val;
+            } else if (key == "Gender") {
+                if (p.genderAvail() == Pokemon::NeutralAvail) {
+                    p.gender() = Pokemon::Neutral;
+                } else {
+                    int val = value.toInt();
+                    p.gender() = val;
+                }
+            } else if (key == "Lvl") {
+                int val = value.toInt();
+                p.level() = val;
+            } else if (key == "Shiny") {
+                bool val = value.toInt();
+                p.shiny() = val;
+            } else if (key == "Nature") {
+                int val = value.toInt();
+                p.nature() = val;
+            } else if (key == "Happiness") {
+                int val = value.toInt();
+                p.happiness() = val;
+            }
+        }
+
+        /*Moves*/
+        QStringList moves = movedata.split("/",QString::SkipEmptyParts);
+        int movecount = 0;
+        for (int m = 0; m < 4; m++){
+            int mnum = moves[m].toInt();
+            p.setMove(mnum,movecount++,false);
+            if (mnum == Move::Return) {
+                p.happiness() = 255;
+            }
+        }
+        /*EVs*/
+        QStringList evs = evdata.split("/",QString::SkipEmptyParts);
+        for (int e = 0; e < 6; e++){
+            int ev = evs[e].toInt();
+            p.setEV(e, ev);
+        }
+        /*DVs/IVs*/
+        QStringList dvs = dvdata.split("/",QString::SkipEmptyParts);
+        for (int d = 0; d < 6; d++){
+            int dv = dvs[d].toInt();
+            p.setDV(d, dv);
+        }
+        p.runCheck(); /* Removes invalid move combinations */
+    }
+    return true;
 }
-*/
+
+/******** Not Ugly *********/
 QString Team::exportToAndroid() const
 {
     QString ret = "";
