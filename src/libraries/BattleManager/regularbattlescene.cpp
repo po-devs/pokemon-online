@@ -8,6 +8,7 @@
 #include <Utilities/otherwidgets.h>
 #include <QMouseEvent>
 #include <QToolTip>
+#include <QSpacerItem>
 
 RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme, bool logNames) : mData(dat), unpausing(false),
     pauseCount(0), info(dat->numberOfSlots()), mLogNames(logNames)
@@ -28,13 +29,13 @@ RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *t
 QHBoxLayout* RegularBattleScene::createTeamLayout(QLabel **labels)
 {
     QHBoxLayout *foeteam = new QHBoxLayout();
-    foeteam->addStretch(100);
+    foeteam->addStretch(240);
     for (int i = 0; i < 6; i++) {
         labels[i] = new QLabel();
         labels[i]->setPixmap(gui.theme->statusIcon(Pokemon::Fine));
         foeteam->addWidget(labels[i],0,Qt::AlignTop);
     }
-    foeteam->setSpacing(1);
+    foeteam->setSpacing(0);
 
     return foeteam;
 }
@@ -329,7 +330,7 @@ void RegularBattleScene::updateBall(int player, int index)
 {
     auto &poke = *data()->team(player).poke(index);
 
-    gui.pokeballs[player][index]->setToolTip(tr("%1 lv %2 -- %3%").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()));
+    gui.pokeballs[player][index]->setToolTip(tr("%1 lv %2 -- %3%%4").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()).arg(poke.status() == 0 ? "" : QString(" (%1)").arg(StatInfo::ShortStatus(poke.status()))));
     updateBallStatus(player, index);
 }
 
@@ -397,7 +398,12 @@ void RegularBattleScene::updateHp(int spot, int val)
 
 void RegularBattleScene::updateBallStatus(int player, int index)
 {
-    gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
+    QSettings s;
+    if (s.value("Battle/UseBalls").toBool()) {
+        gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
+    } else {
+        gui.pokeballs[player][index]->setPixmap(PokemonInfo::Icon(data()->team(player).poke(index)->num()));
+    }
 }
 
 QString RegularBattleScene::health(int lifePercent)
@@ -598,7 +604,8 @@ void RegularBattleScene::updateToolTip(int spot)
 {
     QString tooltip;
 
-    QString stats[7] = {
+    QString stats[8] = {
+        tu(StatInfo::Stat(0, data()->gen())),
         tu(StatInfo::Stat(1, data()->gen())),
         tu(StatInfo::Stat(2, data()->gen())),
         tu(StatInfo::Stat(3, data()->gen())),
@@ -610,10 +617,10 @@ void RegularBattleScene::updateToolTip(int spot)
 
     /* Putting dots after stat names so the ":" is always at the same place */
     int max = 0;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 8; i++) {
         max = std::max(max, stats[i].length());
     }
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 8; i++) {
         stats[i] = stats[i].leftJustified(max, '.', false);
     }
 
@@ -627,26 +634,34 @@ void RegularBattleScene::updateToolTip(int spot)
     }
     tooltip += "\n";
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         // Gen 1 only has Special, and we treat SAtk as Special hiding SDef.
         if (data()->gen().num == 1) {
             switch (i) {
-            case 3: continue;
+            case 4: continue;
             default: tooltip += "\n" + stats[i] + " ";
             }
         } else {
             tooltip += "\n" + stats[i] + " ";
         }
-        int boost = data()->fieldPoke(spot).statBoost(i+1);
-        int stat = data()->fieldPoke(spot).stat(i+1);
+        int boost = data()->fieldPoke(spot).statBoost(i);
+        int stat = data()->fieldPoke(spot).stat(i);
 
         if (stat == 0) {
-            int min = data()->fieldPoke(spot).minStat(i+1);
-            int max = data()->fieldPoke(spot).maxStat(i+1);
-            if (boost >= 0) {
-                tooltip += QString("%2-%3 (+%1)").arg(boost).arg(min).arg(max);
-            } else if (boost < 0) {
-                tooltip += QString("%2-%3 (%1)").arg(boost).arg(min).arg(max);
+            int min = data()->fieldPoke(spot).minStat(i);
+            int max = data()->fieldPoke(spot).maxStat(i);
+            if (i == 0) {
+                if (data()->isPlayer(spot)) {
+                    tooltip += QString("%1/%2").arg(data()->poke(spot).life()).arg(data()->poke(spot).totalLife());
+                } else {
+                    tooltip += QString("%1-%2").arg(min).arg(max);
+                }
+            } else {
+                if (boost >= 0) {
+                    tooltip += QString("%2-%3 (+%1)").arg(boost).arg(min).arg(max);
+                } else if (boost < 0) {
+                    tooltip += QString("%2-%3 (%1)").arg(boost).arg(min).arg(max);
+                }
             }
         } else {
             if (stat == -1) {
@@ -661,8 +676,8 @@ void RegularBattleScene::updateToolTip(int spot)
             }
         }
     }
-    for (int i = 5; i < 7; i++) {
-        int boost = data()->fieldPoke(spot).statBoost(i+1);
+    for (int i = 6; i < 8; i++) {
+        int boost = data()->fieldPoke(spot).statBoost(i);
         if (boost) {
             tooltip += "\n" + stats[i] + " ";
 

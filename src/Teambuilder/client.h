@@ -272,6 +272,7 @@ public slots:
         goAway(away);
     }
     void changeButtonStyle(bool old);
+    void useBallIcons(bool val);
     void changeBattleWindow(bool old);
     void changeBattleLogger(bool logger);
     void changeBattleScreenSize(bool big);

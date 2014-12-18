@@ -1463,6 +1463,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
     oldBattleWindow->setChecked(globals.value("Battle/OldWindow", true).toBool());
 
+    QAction *useBalls = battleMenu->addAction(tr("Use Ball Icons"));
+    useBalls->setCheckable(true);
+    connect(useBalls, SIGNAL(triggered(bool)), SLOT(useBallIcons(bool)));
+    useBalls->setChecked(globals.value("Battle/UseBalls").toBool());
+
     QMenu *newBattleWindow = battleMenu->addMenu(tr("New battle window"));
     {
         QAction *animatedLogger = newBattleWindow->addAction(tr("Animated logger"));
@@ -1730,6 +1735,11 @@ void Client::openSoundConfig()
 void Client::changeButtonStyle(bool old)
 {
     globals.setValue("Battle/OldAttackButtons", old);
+}
+
+void Client::useBallIcons(bool val)
+{
+    globals.setValue("Battle/UseBalls", val);
 }
 
 void Client::changeBattleWindow(bool old)
