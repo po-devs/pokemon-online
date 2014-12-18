@@ -641,10 +641,12 @@ void RegularBattleScene::updateToolTip(int spot)
         int stat = data()->fieldPoke(spot).stat(i+1);
 
         if (stat == 0) {
+            int min = data()->fieldPoke(spot).minStat(i+1);
+            int max = data()->fieldPoke(spot).maxStat(i+1);
             if (boost >= 0) {
-                tooltip += QString("+%1").arg(boost);
+                tooltip += QString("%2-%3 (+%1)").arg(boost).arg(min).arg(max);
             } else if (boost < 0) {
-                tooltip += QString("%1").arg(boost);
+                tooltip += QString("%2-%3 (%1)").arg(boost).arg(min).arg(max);
             }
         } else {
             if (stat == -1) {
