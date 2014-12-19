@@ -330,7 +330,7 @@ void RegularBattleScene::updateBall(int player, int index)
 {
     auto &poke = *data()->team(player).poke(index);
 
-    gui.pokeballs[player][index]->setToolTip(tr("%1 lv %2 -- %3%%4").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()).arg(poke.status() == 0 ? "" : QString(" (%1)").arg(StatInfo::ShortStatus(poke.status()))));
+    gui.pokeballs[player][index]->setToolTip(tr("%1 lv %2 -- %3%%4").arg(PokemonInfo::Name(poke.num())).arg(poke.level()).arg(poke.lifePercent()).arg(poke.status() == 0 ? "" : QString(" (%1)").arg(StatInfo::ShortStatus(poke.status()).toUpper())));
     updateBallStatus(player, index);
 }
 
@@ -402,8 +402,8 @@ void RegularBattleScene::updateBallStatus(int player, int index)
     if (s.value("Battle/UseBalls").toBool()) {
         gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
     } else {
-        //gui.pokeballs[player][index]->setPixmap(PokemonInfo::Icon(data()->team(player).poke(index)->num()));
-        gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(data()->team(player).poke(index)->num(),data()->team(player).poke(index)->status()));
+        int status = data()->team(player).poke(index)->status();
+        gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(data()->team(player).poke(index)->num(),status));
     }
 }
 
