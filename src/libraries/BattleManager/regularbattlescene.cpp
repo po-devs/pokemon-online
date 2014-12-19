@@ -323,6 +323,7 @@ void RegularBattleScene::onHpChange(int spot, int)
         info.animatedValue = gui.bars[spot]->value();
     }
     pause();
+    updateToolTip(spot);
     animateHpBar();
 }
 
@@ -667,7 +668,7 @@ void RegularBattleScene::updateToolTip(int spot)
                 if (data()->isPlayer(spot)) {
                     tooltip += QString("%1/%2").arg(data()->poke(spot).life()).arg(data()->poke(spot).totalLife());
                 } else {
-                    tooltip += QString("%1-%2").arg(min).arg(max);
+                    tooltip += QString("%3/%1-%4/%2").arg(min).arg(max).arg(gui.bars[spot]->value()*min/100).arg(gui.bars[spot]->value()*max/100);
                 }
             } else {
                 if (boost >= 0) {
