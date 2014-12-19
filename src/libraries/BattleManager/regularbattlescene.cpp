@@ -402,8 +402,21 @@ void RegularBattleScene::updateBallStatus(int player, int index)
     if (s.value("Battle/UseBalls").toBool()) {
         gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
     } else {
-        gui.pokeballs[player][index]->setPixmap(PokemonInfo::Icon(data()->team(player).poke(index)->num()));
+        //gui.pokeballs[player][index]->setPixmap(PokemonInfo::Icon(data()->team(player).poke(index)->num()));
+        gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(data()->team(player).poke(index)->num(),data()->team(player).poke(index)->status()));
     }
+}
+
+QPixmap GraphicsZone::getStatusIcon(Pokemon::uniqueId num, int status)
+{
+    QPixmap poke = PokemonInfo::Icon(num);
+
+    QPainter painter(&poke);
+
+    QPixmap bsIcon = QString("Themes/Classic/status/battle_status%1.png").arg(status);
+    painter.drawPixmap(40-bsIcon.width(), 3, bsIcon);
+
+    return poke;
 }
 
 QString RegularBattleScene::health(int lifePercent)
