@@ -337,6 +337,8 @@ void RegularBattleScene::updateBall(int player, int index)
 
 void RegularBattleScene::onShiftSpots(int player, int spot1, int spot2, bool)
 {
+    updatePoke(data()->spot(player, spot1));
+    updatePoke(data()->spot(player, spot2));
     gui.zone->updatePoke(data()->spot(player, spot1));
     gui.zone->updatePoke(data()->spot(player, spot2));
     pause();
