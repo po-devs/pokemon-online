@@ -403,8 +403,12 @@ void RegularBattleScene::updateBallStatus(int player, int index)
     if (s.value("Battle/UseBalls").toBool()) {
         gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
     } else {
-        int status = data()->team(player).poke(index)->status();
-        gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(data()->team(player).poke(index)->num(),status));
+        if (data()->team(player).poke(index)->num() == Pokemon::NoPoke) {
+            gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(data()->team(player).poke(index)->status()));
+        } else {
+            int status = data()->team(player).poke(index)->status();
+            gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(data()->team(player).poke(index)->num(),status));
+        }
     }
 }
 
