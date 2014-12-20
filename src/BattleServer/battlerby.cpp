@@ -266,10 +266,9 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
     }
 
     if (straightattack) {
-        pokeMemory(source)["DamageInflicted"] = damage; //For bide
+        pokeMemory(source)["DamageInflicted"] = damage; //For bide        
+        battleMemory()["LastDamageTakenByAny"] = damage; //For Counter
     }
-    //pokeMemory(player)["DamageReceived"] = damage; //For counter
-    battleMemory()["LastDamageTakenByAny"] = damage; //For Counter
 
     bool sub = hasSubstitute(player);
 
