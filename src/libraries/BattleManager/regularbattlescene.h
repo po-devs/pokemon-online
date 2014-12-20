@@ -129,11 +129,13 @@ public:
     void onDynamicInfo(int spot, const BattleDynamicInfo&) {
         updateToolTip(spot);
         gui.zone->updateToolTip(spot);
+        updateBall(data()->player(spot), spot);
     }
 
     void onDynamicStats(int spot, const BattleStats &) {
         updateToolTip(spot);
         gui.zone->updateToolTip(spot);
+        updateBall(data()->player(spot), spot);
     }
 
     void updateBall(int player, int poke);
