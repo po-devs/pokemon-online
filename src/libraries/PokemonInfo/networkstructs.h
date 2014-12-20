@@ -176,6 +176,7 @@ struct LoginInfo
     TrainerInfo *trainerInfo;
     QStringList *plugins;
     QString *cookie;
+    QPair<bool, QString> *uniqueId;
 };
 
 struct ChangeTeamInfo

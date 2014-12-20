@@ -94,7 +94,8 @@ namespace LoginCommand {
         HasTeams = 8,
         HasEventSpecification,
         HasPluginList,
-        HasCookie
+        HasCookie,
+        HasUniqueId
     };
     enum NetworkFlagsSC {
         HasReconnectPass = 0

@@ -2901,6 +2901,22 @@ QScriptValue ScriptEngine::cookie(int playerId)
     return *login->cookie;
 }
 
+QScriptValue ScriptEngine::uniqueId(int playerId)
+{
+    if (!testPlayer("uniqueId(playerId)", playerId))
+        return myengine.undefinedValue();
+    auto login = myserver->player(playerId)->loginInfo();
+    if (!login->uniqueId) {
+        return myengine.undefinedValue();
+    }
+    QPair<bool, QString> id = *login->uniqueId;
+
+    QScriptValue ret = myengine.newObject();
+    ret.setProperty("isUnique", id.first);
+    ret.setProperty("id", id.second);
+    return ret;
+}
+
 QScriptValue ScriptEngine::avatar(int playerId)
 {
     // TODO: testPlayer

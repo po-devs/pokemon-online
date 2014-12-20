@@ -258,6 +258,7 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
     test(events, HasEventSpecification);
     load(plugins, HasPluginList);
     load(cookie, HasCookie)
+    load(uniqueId, HasUniqueId)
 #undef load
 #undef test
 
