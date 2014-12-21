@@ -116,7 +116,12 @@ public:
     void onPokemonVanish(int spot) {gui.zone->updatePoke(spot);}
     void onPokemonReappear(int spot) {gui.zone->updatePoke(spot);}
     void onSpriteChange(int spot, int) {gui.zone->updatePoke(spot);}
-    void onDefiniteFormeChange(int player, int poke, int){if (poke < data()->numberOfSlots()/2) gui.zone->updatePoke(data()->spot(player, poke));}
+    void onDefiniteFormeChange(int player, int poke, int){
+        if (poke < data()->numberOfSlots()/2) {
+            gui.zone->updatePoke(data()->spot(player, poke));
+            updateBall(player,poke);
+        }
+    }
     void onCosmeticFormeChange(int spot, int) {gui.zone->updatePoke(spot);}
     void onShiftSpots(int player, int spot1, int spot2, bool);
     void onSendBack(int spot, bool) {gui.zone->updatePoke(spot);}
@@ -129,13 +134,11 @@ public:
     void onDynamicInfo(int spot, const BattleDynamicInfo&) {
         updateToolTip(spot);
         gui.zone->updateToolTip(spot);
-        updateBall(data()->player(spot), spot);
     }
 
     void onDynamicStats(int spot, const BattleStats &) {
         updateToolTip(spot);
         gui.zone->updateToolTip(spot);
-        updateBall(data()->player(spot), spot);
     }
 
     void updateBall(int player, int poke);

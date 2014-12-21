@@ -644,13 +644,13 @@ void RegularBattleScene::updateToolTip(int spot)
         stats[i] = stats[i].leftJustified(max, '.', false);
     }
 
-    const auto &poke = data()->poke(spot);
+    const auto &poke = data()->poke(spot).num();
 
     tooltip += nick(spot) + "\n";
-    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke.num(), data()->gen()));
-    int type2 = PokemonInfo::Type2(poke.num(), data()->gen());
+    tooltip += TypeInfo::Name(PokemonInfo::Type1(poke, data()->gen()));
+    int type2 = PokemonInfo::Type2(poke, data()->gen());
     if (type2 != Pokemon::Curse) {
-        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke.num(), data()->gen()));
+        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke, data()->gen()));
     }
     tooltip += "\n";
 

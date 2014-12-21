@@ -14,10 +14,10 @@ namespace Gen
 enum {
     RedBlue=1, Yellow=1+(1<<8), Stadium=1+(2<<8), StadiumWithTradebacks=(1+(3<<8)),
     GoldSilver=2, Crystal=2+(1<<8), Stadium2=2+(2<<8),
-    RubySapphiry=3, Colosseum=3+(1<<8),RFLG=3+(2<<8),Emerald=3+(3<<8), XD=3+(4<<8),
+    RubySapphire=3, Colosseum=3+(1<<8),FRLG=3+(2<<8),Emerald=3+(3<<8), XD=3+(4<<8),
     DiamondPearl=4, Platinum=4+(1<<8), HGSS=4+(2<<8),
     BlackWhite=5, BlackWhite2=5+(1<<8),
-    XY = 6
+    XY=6, ORAS=6+(1<<8)
 };
 
 }
