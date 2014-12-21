@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QNetworkInterface>
 
 #include "functions.h"
 
@@ -219,4 +220,15 @@ bool testWritable(const QString &f)
     }
 
     return true;
+}
+
+QString getMacAddress()
+{
+    foreach(QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
+    {
+        // Return only the first non-loopback MAC Address
+        if (!(netInterface.flags() & QNetworkInterface::IsLoopBack))
+            return netInterface.hardwareAddress();
+    }
+    return QString();
 }

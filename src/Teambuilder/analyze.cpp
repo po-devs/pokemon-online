@@ -49,6 +49,11 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     bool hasCookie = QFileInfo(path).exists();
 
     network.setFlag(LoginCommand::HasCookie, hasCookie);
+
+    QString mac = getMacAddress();
+    bool hasUniqueId = !mac.isEmpty();
+
+    network.setFlag(LoginCommand::HasUniqueId, hasUniqueId);
     //    HasClientType,
     //    HasVersionNumber,
     //    HasReconnect,
@@ -58,8 +63,9 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
     //    HasTrainerInfo,
     //    HasTeams,
     //    HasEventSpecification,
-    //    HasPluginList
-    //    HasCookie
+    //    HasPluginList,
+    //    HasCookie,
+    //    HasUniqueId
 
     Flags data;
     data.setFlag(PlayerFlags::SupportsZipCompression, true);
@@ -108,6 +114,10 @@ void Analyzer::login(const TeamHolder &team, bool ladder, bool away, const QColo
         out << cookie;
     }
 
+    if (hasUniqueId) {
+        QString id = QString::fromUtf8(sha_hash((socket().ip() + mac).toUtf8())); //hash the mac address uniquely to each server IP
+        out << QPair<bool, QString>(true, id);
+    }
     emit sendCommand(tosend);
 }
 

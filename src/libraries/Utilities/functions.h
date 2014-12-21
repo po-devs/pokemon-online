@@ -203,5 +203,5 @@ void removeFolder(const QString &folder);
 
 /* Tests if the given file is writable */
 bool testWritable(const QString &f= QString());
-
+QString getMacAddress();
 #endif // FUNCTIONS_H
