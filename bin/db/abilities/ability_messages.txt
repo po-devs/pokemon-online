@@ -40,7 +40,7 @@
 60 %s's Steadfast increases its speed!
 61 %s's Synchronize changes the status of %f!
 66 %s traced %f's %a!
-67 %s is carelessly slacking off!
+67 %s is loafing around!
 68 %s's %a raised its attack!|%s's %a made the attack useless!
 70 %s's %a absorbs the attack!|%s's %a made the attack useless!
 71 %s's Wonder Guard blocks the attack!

@@ -1111,6 +1111,9 @@ void BattleSituation::callaeffects(int source, int target, const QString &name)
 
 void BattleSituation::sendBack(int player, bool silent)
 {
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    }
     /* Just calling pursuit directly here, forgive me for this */
     if (!turnMemory(player).value("BatonPassed").toBool()) {
         QList<int> opps = revs(player);
@@ -3643,9 +3646,12 @@ void BattleSituation::loseItem(int player, bool real)
     }
 }
 
-void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)
+void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme, bool temp)
 {
     PokeBattle &p  = this->poke(player,poke);
+    if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
+        pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
+    }
     p.num() = newforme;
     p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(0);
 

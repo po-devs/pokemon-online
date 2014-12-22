@@ -524,7 +524,7 @@ struct AMForeCast : public AM {
         //if (weather == b.poke(s).num().subnum)
         //  return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
+        b.changeForme(b.player(s), b.slotNum(s), Pokemon::uniqueId(b.poke(s).num().pokenum, weather), true);
     }
 
     static void ol(int s, int, BS &b) {
@@ -532,7 +532,7 @@ struct AMForeCast : public AM {
         if (b.pokenum(s).pokenum != Pokemon::Castform || b.gen() < 5)
             return;
         if (b.pokenum(s).subnum != 0) {
-            b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, 0));
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Castform, true);
         }
     }
 };
@@ -1504,15 +1504,12 @@ struct AMZenMode : public AM {
         if (daruma == num.subnum)
             return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, daruma));
+        b.changeForme(b.player(s), b.slotNum(s), daruma ? Pokemon::Darmanitan_Z : Pokemon::Darmanitan, true);
     }
 
     static void ol(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum != Pokemon::Darmanitan)
-            return;
-
-        if (b.pokenum(s).subnum != 0) {
-            b.changeAForme(s, 0);
+        if (fpoke(b,s).id == Pokemon::Darmanitan_Z) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
         }
     }
 };
@@ -2262,9 +2259,9 @@ struct AMStanceChange : public AM {
         num = fpoke(b,s).id;
 
         if (num.subnum == 0 && tmove(b,s).category != Move::Other) {
-            b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, 1));
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash_B, true);
         } else if (num.subnum == 1 && move(b,s) == Move::KingsShield) {
-            b.changePokeForme(s, Pokemon::uniqueId(num.pokenum, 0));
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash, true);
         }
     }
 };

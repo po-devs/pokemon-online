@@ -55,7 +55,7 @@ public:
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
-    void changeForme(int player, int poke, const Pokemon::uniqueId &forme);
+    void changeForme(int player, int poke, const Pokemon::uniqueId &forme, bool temp=false);
     void changePokeForme(int slot, const Pokemon::uniqueId &forme);
     void calculateTypeModStab(int orPlayer = -1, int orTarget = -1);
     void changeAForme(int player, int newforme);

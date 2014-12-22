@@ -918,7 +918,8 @@ namespace Pokemon
         Pikachu_Libre = Pikachu + (5 << 16),
         Pikachu_Cosplay = Pikachu + (6 << 16),
         //only mega because of different mega evo method
-        Rayquaza_Mega = Rayquaza + (1 << 16)
+        Rayquaza_Mega = Rayquaza + (1 << 16),
+        Aegislash_B = Aegislash + (1 << 16)
     };
 }
 

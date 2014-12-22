@@ -650,7 +650,7 @@ void RegularBattleScene::updateToolTip(int spot)
     tooltip += TypeInfo::Name(PokemonInfo::Type1(poke, data()->gen()));
     int type2 = PokemonInfo::Type2(poke, data()->gen());
     if (type2 != Pokemon::Curse) {
-        tooltip += " " + TypeInfo::Name(PokemonInfo::Type2(poke, data()->gen()));
+        tooltip += " " + TypeInfo::Name(type2);
     }
     tooltip += "\n";
 
