@@ -107,7 +107,7 @@ void Channel::showContextMenu(const QPoint &requested)
 
                 /* If you're an admin, you can ban */
                 if (myauth >= 2) {
-                    createIntMapper(menu->addAction(tr("&Ban")), SIGNAL(triggered()), client, SLOT(ban(int)), item->id());
+                    createIntMapper(tempbanMenu->addAction(tr("Forever")), SIGNAL(triggered()), client, SLOT(ban(int)), item->id());
                 }
             }
         }
