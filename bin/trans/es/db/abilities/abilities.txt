@@ -187,3 +187,6 @@
 186 Manto Frondoso
 187 Prestidigitador
 188 Simbiosos
+189 Tierra del Ocaso
+190 Mar del Albor
+191 Ráfaga Delta
