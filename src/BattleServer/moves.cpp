@@ -5708,13 +5708,11 @@ struct MMTransform : public MM {
         BS::BasicPokeInfo &po = fpoke(b,s);
         BS::BasicPokeInfo &pt = fpoke(b,t);
 
-        po.id = num;
+        b.changeForme(b.player(s), b.slotNum(s),num,true,true);
+        //po.id = num;
         po.weight = PokemonInfo::Weight(num);
         //For Type changing moves
         po.types = QVector<int> () << b.getTypes(t, true);
-        //po.type1 = PokemonInfo::Type1(num, b.gen());
-        //po.type2 = PokemonInfo::Type2(num, b.gen());
-        //po.types = QVector<int>() << po.type1 << po.type2;
 
 
         b.changeSprite(s, num);

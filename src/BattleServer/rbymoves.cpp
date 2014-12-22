@@ -947,12 +947,11 @@ struct RBYTransform : public MM
         BS::BasicPokeInfo &po = fpoke(b,s);
         BS::BasicPokeInfo &pt = fpoke(b,t);
 
-        po.id = num;
+        b.changeForme(b.player(s), b.slotNum(s),num);
+        //po.id = num;
         po.weight = PokemonInfo::Weight(num);
         //For Type changing moves
         po.types = b.getTypes(t);
-        //po.type1 = PokemonInfo::Type1(num, b.gen());
-        //po.type2 = PokemonInfo::Type2(num, b.gen());
 
         b.changeSprite(s, num);
 

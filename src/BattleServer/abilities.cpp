@@ -524,7 +524,8 @@ struct AMForeCast : public AM {
         //if (weather == b.poke(s).num().subnum)
         //  return;
 
-        b.changeForme(b.player(s), b.slotNum(s), Pokemon::uniqueId(b.poke(s).num().pokenum, weather), true);
+        b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
+        //crash//b.changeForme(b.player(s), b.slotNum(s), Pokemon::uniqueId(b.poke(s).num().pokenum, weather), true);
     }
 
     static void ol(int s, int, BS &b) {
@@ -532,7 +533,8 @@ struct AMForeCast : public AM {
         if (b.pokenum(s).pokenum != Pokemon::Castform || b.gen() < 5)
             return;
         if (b.pokenum(s).subnum != 0) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Castform, true);
+            b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, 0));
+            //crash//b.changeForme(b.player(s), b.slotNum(s), Pokemon::Castform, true);
         }
     }
 };
@@ -1614,13 +1616,11 @@ struct AMImposter : public AM
         BS::BasicPokeInfo &po = fpoke(b,s);
         BS::BasicPokeInfo &pt = fpoke(b,t);
 
-        po.id = num;
+        b.changeForme(b.player(s), b.slotNum(s),num,true,true);
+        //po.id = num;
         po.weight = PokemonInfo::Weight(num);
         //For Type changing moves
         po.types = QVector<int> () << b.getTypes(t, true);
-        //po.type1 = PokemonInfo::Type1(num, b.gen());
-        //po.type2 = PokemonInfo::Type2(num, b.gen());
-        //po.types = QVector<int>() << po.type1 << po.type2;
 
         b.changeSprite(s, num);
 
@@ -2253,7 +2253,9 @@ struct AMStanceChange : public AM {
          * So using b.poke(s) instead of fpoke(b,s). */
         Pokemon::uniqueId num = b.poke(s).num();
 
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash)
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash
+                || (b.pokeMemory(b.slot(s)).contains("PreTransformPoke")
+                    && PokemonInfo::Number(b.pokeMemory(b.slot(s)).value("PreTransformPoke").toString()) != Pokemon::Aegislash))
             return;
 
         num = fpoke(b,s).id;

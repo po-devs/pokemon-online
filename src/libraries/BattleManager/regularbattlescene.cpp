@@ -667,7 +667,7 @@ void RegularBattleScene::updateToolTip(int spot)
         int boost = data()->fieldPoke(spot).statBoost(i);
         int stat = data()->fieldPoke(spot).stat(i);
 
-        if (stat == 0) {
+        if (stat == 0 || i == 0) {
             int min = data()->fieldPoke(spot).minStat(i);
             int max = data()->fieldPoke(spot).maxStat(i);
             if (i == 0) {

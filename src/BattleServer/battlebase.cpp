@@ -2366,3 +2366,21 @@ void BattleBase::changeTempMove(int player, int slot, int move, int pp)
 Pokemon::uniqueId BattleBase::pokenum(int player) {
     return fpoke(player).id;
 }
+
+void BattleBase::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)
+{
+    PokeBattle &p  = this->poke(player,poke);
+    if (!pokeMemory(player).contains("PreTransformPoke")) {
+        pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
+    }
+    p.num() = newforme;
+
+    if (isOut(player, poke)) {
+        int slot = this->slot(player, poke);
+        changeSprite(slot, newforme);
+
+        fpoke(slot).id = newforme;
+    }
+
+    notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
+}

@@ -3646,17 +3646,20 @@ void BattleSituation::loseItem(int player, bool real)
     }
 }
 
-void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme, bool temp)
+void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme, bool temp, bool transform)
 {
     PokeBattle &p  = this->poke(player,poke);
     if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
         pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
     }
     p.num() = newforme;
-    p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(0);
 
-    for (int i = 1; i < 6; i++)
-        p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
+    if (!transform) {
+        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(0);
+
+        for (int i = 1; i < 6; i++)
+            p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
+    }
 
     if (isOut(player, poke)) {
         int slot = this->slot(player, poke);
@@ -3664,15 +3667,17 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 
         fpoke(slot).id = newforme;
 
-        if (gen() >= 3)
-            acquireAbility(slot, p.ability());
+        if (!transform) {
+            if (gen() >= 3)
+                acquireAbility(slot, p.ability());
 
-        for (int i = 1; i < 6; i++)
-            fpoke(slot).stats[i] = p.normalStat(i);
+            for (int i = 1; i < 6; i++)
+                fpoke(slot).stats[i] = p.normalStat(i);
 
-        fpoke(slot).type1 = PokemonInfo::Type1(newforme, gen());
-        fpoke(slot).type2 = PokemonInfo::Type2(newforme, gen());
-        fpoke(slot).types = QVector<int>() << fpoke(slot).type1 << fpoke(slot).type2;
+            fpoke(slot).type1 = PokemonInfo::Type1(newforme, gen());
+            fpoke(slot).type2 = PokemonInfo::Type2(newforme, gen());
+            fpoke(slot).types = QVector<int>() << fpoke(slot).type1 << fpoke(slot).type2;
+        }
     }
 
     notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
