@@ -520,12 +520,16 @@ struct AMForeCast : public AM {
         if (weather != BS::Hail && weather != BS::Rain && weather != BS::Sunny) {
             weather = BS::NormalWeather;
         }
-        //To allow the type reset every turn. Also allows Castform to actually Transform properly with the added mechanic
-        //if (weather == b.poke(s).num().subnum)
-        //  return;
 
-        b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, weather));
-        //crash//b.changeForme(b.player(s), b.slotNum(s), Pokemon::uniqueId(b.poke(s).num().pokenum, weather), true);
+        //To allow the type reset every turn
+        if (poke(b,s).contains("ForestTrick")) {
+            fpoke(b,s).types = QVector<int> () << PokemonInfo::Type1(b.poke(s).num(), b.gen()) << PokemonInfo::Type2(b.poke(s).num(), b.gen());
+        }
+
+        //Check required to prevent crash cause
+        if ((b.pokenum(s).subnum != 0 && weather == BS::NormalWeather) || (b.pokenum(s).subnum == 0 && weather != BS::NormalWeather)) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::uniqueId(b.poke(s).num().pokenum, weather), true);
+        }
     }
 
     static void ol(int s, int, BS &b) {
@@ -533,8 +537,7 @@ struct AMForeCast : public AM {
         if (b.pokenum(s).pokenum != Pokemon::Castform || b.gen() < 5)
             return;
         if (b.pokenum(s).subnum != 0) {
-            b.changePokeForme(s, Pokemon::uniqueId(b.poke(s).num().pokenum, 0));
-            //crash//b.changeForme(b.player(s), b.slotNum(s), Pokemon::Castform, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Castform, true);
         }
     }
 };
