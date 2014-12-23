@@ -187,3 +187,6 @@
 186 Toison Herbue
 187 Magicien
 188 Symbiose
+189 Terre Finale
+190 Mer Primaire
+191 Souffle Delta
