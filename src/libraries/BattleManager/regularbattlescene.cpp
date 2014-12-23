@@ -635,13 +635,37 @@ void RegularBattleScene::updateToolTip(int spot)
         tu(StatInfo::Stat(7, data()->gen()))
     };
 
-    /* Putting dots after stat names so the ":" is always at the same place */
-    int max = 0;
+    //Prevents a headache if it includes HP as a null value
+    QString range[6] = { 0 };
+    QString statval[6] = { 0 };
+    for (int i = 1; i < 6; i++) {
+        int min = data()->fieldPoke(spot).minStat(i);
+        int max = data()->fieldPoke(spot).maxStat(i);
+        range[i] = QString("%2-%3").arg(min).arg(max);
+
+        int stat = data()->fieldPoke(spot).stat(i);
+        if (stat == -1) {
+            statval[i] = "???";
+        } else {
+            statval[i] = QString::number(stat);
+        }
+    }
+
+    /* Aligning various things on the tool tip */
+    int max = 0, max2 = 0, max3 = 0;
     for (int i = 0; i < 8; i++) {
         max = std::max(max, stats[i].length());
+        if (i > 0 && i < 6) {
+            max2 = std::max(max2, range[i].length());
+            max3 = std::max(max3, statval[i].length());
+        }
     }
     for (int i = 0; i < 8; i++) {
         stats[i] = stats[i].leftJustified(max, '.', false);
+        if (i > 0 && i < 6) {
+            range[i] = range[i].leftJustified(max2, ' ', false);
+            statval[i] = statval[i].rightJustified(max3, ' ', false);
+        }
     }
 
     const auto &poke = data()->poke(spot).num();
@@ -678,21 +702,16 @@ void RegularBattleScene::updateToolTip(int spot)
                 }
             } else {
                 if (boost >= 0) {
-                    tooltip += QString("%2-%3 (+%1)").arg(boost).arg(min).arg(max);
+                    tooltip += range[i] + (boost > 0 ? QString(" (+%1)").arg(boost) : "");
                 } else if (boost < 0) {
-                    tooltip += QString("%2-%3 (%1)").arg(boost).arg(min).arg(max);
+                    tooltip += range[i] + QString(" (%1)").arg(boost);
                 }
             }
         } else {
-            if (stat == -1) {
-                tooltip += "???";
-            } else {
-                tooltip += QString::number(stat);
-            }
             if (boost >= 0) {
-                tooltip += QString("(+%1)").arg(boost);
+                tooltip += statval[i] + (boost > 0 ? QString(" (+%1)").arg(boost) : "");
             } else if (boost < 0) {
-                tooltip += QString("(%1)").arg(boost);
+                tooltip += statval[i] + QString(" (%1)").arg(boost);
             }
         }
     }

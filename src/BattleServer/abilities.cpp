@@ -527,7 +527,7 @@ struct AMForeCast : public AM {
         }
 
         //Check required to prevent crash cause
-        if ((b.pokenum(s).subnum != 0 && weather == BS::NormalWeather) || (b.pokenum(s).subnum == 0 && weather != BS::NormalWeather)) {
+        if (b.pokenum(s).subnum != weather) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::uniqueId(b.poke(s).num().pokenum, weather), true);
         }
     }
