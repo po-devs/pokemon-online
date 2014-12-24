@@ -752,5 +752,16 @@ void RegularBattleScene::updateToolTip(int spot)
         tooltip += "\n" + tr("Weather: %1").arg(TypeInfo::weatherName(data()->field().weather()));
     }
 
+    if (!data()->isPlayer(spot) && data()->poke(spot).move(0)->num() != Move::NoMove) {
+        tooltip += "\n\nKnown Moves:\n";
+        for (int i = 0; i < 4; i++) {
+            int move = data()->poke(spot).move(i)->num();
+            if (move != Move::NoMove) {
+                tooltip += MoveInfo::Name(move) + QString(" %1/%2").arg(data()->poke(spot).move(i)->PP()).arg(data()->poke(spot).move(i)->totalPP()) + "\n";
+            } else {
+                tooltip += "??? \n";
+            }
+        }
+    }
     gui.zone->tooltips[spot] = tooltip;
 }
