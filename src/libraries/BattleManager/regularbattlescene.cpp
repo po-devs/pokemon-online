@@ -409,14 +409,15 @@ void RegularBattleScene::updateBallStatus(int player, int index)
         if (data()->team(player).poke(index)->num() == Pokemon::NoPoke) {
             gui.pokeballs[player][index]->setPixmap(gui.theme->statusIcon(status));
         } else {
-            gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(data()->team(player).poke(index)->num(),status));
+            const auto &p = data()->team(player).poke(index);
+            gui.pokeballs[player][index]->setPixmap(GraphicsZone::getStatusIcon(p->num(),status,p->gender()));
         }
     }
 }
 
-QPixmap GraphicsZone::getStatusIcon(Pokemon::uniqueId num, int status)
+QPixmap GraphicsZone::getStatusIcon(Pokemon::uniqueId num, int status, int gender)
 {
-    QPixmap poke = PokemonInfo::Icon(num);
+    QPixmap poke = PokemonInfo::Icon(num, gender);
 
     QPainter painter(&poke);
 

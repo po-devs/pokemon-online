@@ -93,7 +93,7 @@ void LoadLine::updateAll()
     }
 
     for (int i = 0; i < 6; i++) {
-        ui2.pokes[i]->setPixmap(PokemonInfo::Icon(team.poke(i).num()));
+        ui2.pokes[i]->setPixmap(PokemonInfo::Icon(team.poke(i).num(),team.poke(i).gender()));
     }
 
     ui2.name->setText(team.name());

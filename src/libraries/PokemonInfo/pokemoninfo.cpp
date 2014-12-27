@@ -1241,13 +1241,15 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
     return ret;
 }
 
-QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, bool mod)
+QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, int gender, bool mod)
 {
     QString archives[] = {path("icons"), path("icons.zip")};
     QString archive = getArchive(archives, mod);
 
     QString file = QString("%1.png").arg(pokeid.toString());
-
+    if (gender == Pokemon::Female) {
+        file = QString("female/%1.png").arg(pokeid.toString());
+    }
     QPixmap p;
 
     if (QPixmapCache::find(archive+file, &p)) {
@@ -1258,11 +1260,11 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, bool mod)
     if(data.length() == 0)
     {
         if (mod) {
-            return Icon(pokeid, false);
+            return Icon(pokeid, gender, false);
         }
 
         if (IsForme(pokeid)) {
-            return Icon(OriginalForme(pokeid));
+            return Icon(OriginalForme(pokeid),gender);
         }
 
         qDebug() << "error loading icon";

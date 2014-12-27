@@ -122,7 +122,7 @@ void ChallengeDialog::updateCurrentTeam()
     ui->teamChoice->setText(QString ("%1 (%2)").arg(team->team().name(), team->tier()));
 
     for (int i = 0; i < 6; i++) {
-        pokes[i]->setPixmap(PokemonInfo::Icon(team->team().poke(i).num()));
+        pokes[i]->setPixmap(PokemonInfo::Icon(team->team().poke(i).num(),team->team().poke(i).gender()));
     }
 }
 

@@ -72,7 +72,7 @@ public:
     int myself() const;
     bool reversed() const;
 
-    static QPixmap getStatusIcon(Pokemon::uniqueId num, int status);
+    static QPixmap getStatusIcon(Pokemon::uniqueId num, int status, int gender);
 };
 
 class RegularBattleScene: public QWidget, public BattleCommandManager<RegularBattleScene>

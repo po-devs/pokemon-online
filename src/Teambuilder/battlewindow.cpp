@@ -1081,7 +1081,7 @@ BattlePokeButton::BattlePokeButton(const PokeProxy &p)
     : p(&p)
 {
     setIconSize(QSize(32,32));
-    setIcon(PokemonInfo::Icon(p.num()));
+    setIcon(PokemonInfo::Icon(p.num(), p.gender()));
     update();
 
     updateToolTip();
@@ -1091,7 +1091,7 @@ void BattlePokeButton::changePokemon(const PokeProxy &p)
 {
     this->p = &p;
 
-    setIcon(PokemonInfo::Icon(p.num()));
+    setIcon(PokemonInfo::Icon(p.num(), p.gender()));
     update();
 
     updateToolTip();
@@ -1178,7 +1178,7 @@ void TargetSelection::updateData(const BattleInfo &info, int move)
             pokes[i]->setIcon(QIcon());
         } else {
             pokes[i]->setText(data.poke(i).nickname());
-            pokes[i]->setIcon(PokemonInfo::Icon(data.poke(i).num()));
+            pokes[i]->setIcon(PokemonInfo::Icon(data.poke(i).num(),data.poke(i).gender()));
         }
         pokes[i]->setDisabled(true);
         pokes[i]->setChecked(false);
@@ -1389,7 +1389,7 @@ void RearrangeLayout::update(const Pokemon::uniqueId &pokenum, int level, int ge
 
 QPixmap RearrangeLayout::getFullIcon(Pokemon::uniqueId num, bool item, int gender)
 {
-    QPixmap poke = PokemonInfo::Icon(num);
+    QPixmap poke = PokemonInfo::Icon(num,gender);
 
     QPainter painter(&poke);
     if (item) {

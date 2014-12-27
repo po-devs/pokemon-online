@@ -477,7 +477,7 @@ void PokeGraphics::load(int gender, bool shiny)
 
 void PokeGraphics::loadIcon(const Pokemon::uniqueId &pokeid)
 {
-    m_icon = PokemonInfo::Icon(pokeid);
+    m_icon = PokemonInfo::Icon(pokeid,0);
 }
 
 QPixmap PokeGraphics::picture()

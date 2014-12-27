@@ -151,7 +151,7 @@ void TeamMenu::updatePokemons()
         p->setPoke(&team().team().poke(p->property("slot").toInt()));
     }
     for (int i = 0; i < 6; i++) {
-        ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num()));
+        ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num(),team().team().poke(i).gender()));
     }
 }
 
@@ -171,7 +171,7 @@ void TeamMenu::tabIconChanged()
 {
     int slot = sender()->property("slot").toInt();
 
-    ui->pokemonTabs->setTabIcon(slot, PokemonInfo::Icon(team().team().poke(slot).num()));
+    ui->pokemonTabs->setTabIcon(slot, PokemonInfo::Icon(team().team().poke(slot).num(),team().team().poke(slot).gender()));
     emit teamChanged();
 }
 
@@ -210,7 +210,7 @@ void TeamMenu::updateItemModel()
 void TeamMenu::updateTabs()
 {
     for (int i = 0; i < 6; i++) {
-        ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num()));
+        ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num(),team().team().poke(i).gender()));
     }
 }
 

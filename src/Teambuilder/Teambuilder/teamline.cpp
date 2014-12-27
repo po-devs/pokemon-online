@@ -32,6 +32,6 @@ void TeamLine::setTeamTier(const Team &team, const QString &tier)
     QLabel *pokes[] = {ui->poke1, ui->poke2, ui->poke3, ui->poke4, ui->poke5, ui->poke6};
 
     for (int i = 0; i < 6; i++) {
-        pokes[i]->setPixmap(PokemonInfo::Icon(team.poke(i).num()));
+        pokes[i]->setPixmap(PokemonInfo::Icon(team.poke(i).num(),team.poke(i).gender()));
     }
 }
