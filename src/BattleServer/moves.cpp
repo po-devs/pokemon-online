@@ -1049,8 +1049,12 @@ struct MMCovet : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
 
-    static void uas(int s,int t,BS &b)
-    {
+    static void uas(int s,int t,BS &b) {
+        //Knock off = no more items for you in Gens 3 and 4
+        if (b.gen() <= 4 && b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool()) {
+            return;
+        }
+
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
         int i2 = b.poke(t).item();
         if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && b.canPassMStone(s, i2)) {
@@ -3287,8 +3291,29 @@ struct MMSwitcheroo : public MM
     static void daf(int s, int t, BS &b) {
         int i1 = b.poke(s).item();
         int i2 = b.poke(t).item();
-        if (b.koed(t) || b.koed(s) || (i1 == 0 && i2 == 0) || (i2 != 0 && !b.canLoseItem(t, s)) || (i1 != 0 && !b.canLoseItem(s, s)) ||
-                !b.canPassMStone(t, i1) || !b.canPassMStone(s, i2)) {
+        bool works = true;
+        while (works == true) {
+            //Can't switch items with a dead pokemon
+            if (b.koed(t) || b.koed(s))
+                works = false;
+
+            //Can't gain the correct mega stone
+            if (!b.canPassMStone(t, i1) || !b.canPassMStone(s, i2))
+                works = false;
+
+            //Can't switch items if neither has one, or one can't lose their item
+            if ((i1 == 0 && i2 == 0) || (i2 != 0 && !b.canLoseItem(t, s)) || (i1 != 0 && !b.canLoseItem(s, s)))
+                works = false;
+
+            //Can't switch items if either pokemon lost theirs via Knock off in Gen 3 or 4. The above check messes with this in canLoseItem
+            if (b.gen() <= 4 && (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool() ||
+                                 b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()) )
+                works = false;
+
+            break;
+        }
+
+        if (!works) {
             if (b.hasWorkingAbility(t, Ability::StickyHold)) {
                 b.sendAbMessage(121,0,t);
             }
