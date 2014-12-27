@@ -2205,8 +2205,10 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
 
-    //Moves with secondary effects do not work on pokemon sharing the same type as that move
-    if (cl == Move::OffensiveStatusInducingMove && (fm.type == PokemonInfo::Type1(poke(target).num(), gen()) || fm.type == PokemonInfo::Type2(poke(target).num(), gen()))) {
+    //Moves with Par/Burn/Freeze secondary effects do not work on pokemon sharing the same type as that move
+    if (cl == Move::OffensiveStatusInducingMove
+            && (fm.status == Pokemon::Paralysed || fm.status == Pokemon::Burnt || fm.status == Pokemon::Frozen)
+            && (fm.type == PokemonInfo::Type1(poke(target).num(), gen()) || fm.type == PokemonInfo::Type2(poke(target).num(), gen()))) {
         applyingMoveStatMods = false;
         return;
     }
