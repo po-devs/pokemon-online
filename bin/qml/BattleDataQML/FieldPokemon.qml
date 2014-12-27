@@ -83,9 +83,10 @@ Item {
                              shader.image = aimg;
                              playing = true;
                          } else {
-                             shader.image = img;
-                             playing = true;
-                             if (status!=Image.Loading &&pokemon.gender==2&&femaleTry) {
+                             if (status == Image.Loading) {
+                                shader.image = img;
+                                playing = true;
+                             } else if (status == Image.Error && pokemon.gender==2 && femaleTry) {
                                 femaleTry=false;
                              }
                          }

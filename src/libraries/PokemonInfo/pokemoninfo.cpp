@@ -1267,6 +1267,10 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, int gender, bool mod)
             return Icon(OriginalForme(pokeid),gender);
         }
 
+        if (gender == Pokemon::Female) {
+            return Icon(pokeid, Pokemon::Male, true);
+        }
+
         qDebug() << "error loading icon";
         return p;
     }
