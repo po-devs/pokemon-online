@@ -2205,6 +2205,12 @@ void BattleBase::applyMoveStatMods(int player, int target)
 
     /* Then we check if the effect hits */
 
+    //Moves with secondary effects do not work on pokemon sharing the same type as that move
+    if (cl == Move::OffensiveStatusInducingMove && (fm.type == PokemonInfo::Type1(poke(target).num(), gen()) || fm.type == PokemonInfo::Type2(poke(target).num(), gen()))) {
+        applyingMoveStatMods = false;
+        return;
+    }
+
     if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
         applyingMoveStatMods = false;
         return;
