@@ -389,6 +389,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
     /* Protect, ... */
 
+    //A pokemon can only be thawed by a move that can inflict burn. You can thaw and burn on the same turn
+    if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen && attack != Move::FireSpin) {
+        unthaw(target);
+    }
+
     if (tmove(player).power > 0 && player != target && !turnMem(player).contains(TM::BuildUp))
     {
         calculateTypeModStab();
@@ -456,7 +461,10 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             heatOfAttack() = false;
 
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-            applyMoveStatMods(player, target);
+            /* Twineedle can't poison on the first hit */
+            if (attack != Move::Twineedle || repeatCount() > 0) {
+                applyMoveStatMods(player, target);
+            }
 
             if (!sub && !koed(target)) {
                 testFlinch(player, target);
@@ -506,10 +514,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         }
 
         healDamage(player, target);
-    }
-
-    if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-        unthaw(target);
     }
 
     //pokeMemory(target)["LastAttackToHit"] = attack;

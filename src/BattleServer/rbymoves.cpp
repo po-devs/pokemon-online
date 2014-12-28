@@ -541,8 +541,16 @@ struct RBYHiJumpKick : public MM
     }
 
     static void asf(int s, int, BS &b) {
-        //1 damage if you miss the attack
-        b.inflictDamage(s, 1, s, true);
+        /* 1 damage if you miss the attack
+         * If both you and your opponent have subs, the miss "recoil" will be dealt to the opponent's sub
+         * If only you have a sub, the recoil damage is discarded */
+        if (b.hasSubstitute(s)) {
+            if (b.hasSubstitute(b.opponent(s))) {
+                b.inflictDamage(b.opponent(s), 1, s, true);
+            }
+        } else {
+            b.inflictDamage(s, 1, s, true);
+        }
     }
 };
 

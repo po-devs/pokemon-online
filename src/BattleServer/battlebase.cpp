@@ -1902,7 +1902,15 @@ void BattleBase::inflictConfusedDamage(int player)
                    att / 50) / def))*randnum/100;
     }
 
-    inflictDamage(player, damage, player, true, gen() <= 1); //in RBY the damage is to the sub
+    /* If both you and your opponent have subs, the miss "recoil" will be dealt to the opponent's sub
+     * If only you have a sub, the recoil damage is discarded */
+    if (hasSubstitute(player)) {
+        if (hasSubstitute(opponent(player))) {
+            inflictDamage(opponent(player), damage, player, true, gen() <= 1); //in RBY the damage is to the sub
+        }
+    } else {
+        inflictDamage(player, damage, player, true, gen() <= 1); //in RBY the damage is to the sub
+    }
 }
 
 void BattleBase::changeSprite(int player, Pokemon::uniqueId newForme)
@@ -2150,7 +2158,7 @@ void BattleBase::applyMoveStatMods(int player, int target)
             return;
         }
 
-        if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
+        if (rate != 0 && rate != 256 && !coinflip(rate, 256)) {
             continue;
         }
 
@@ -2213,7 +2221,7 @@ void BattleBase::applyMoveStatMods(int player, int target)
         return;
     }
 
-    if (rate != 0 && rate != 100 && !coinflip(rate*255/100, 256)) {
+    if (rate != 0 && rate != 256 && !coinflip(rate, 256)) {
         applyingMoveStatMods = false;
         return;
     }
