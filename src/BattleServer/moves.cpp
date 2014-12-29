@@ -2549,7 +2549,7 @@ struct MMUTurn : public MM
         turn(b,s)["UTurnCount"] = slot(b,s)["SwitchCount"];
     }
 
-    static void aas(int s, int, BS &b) {
+    static void aas(int s, int t, BS &b) {
         if (!turn(b,s).contains("UTurnSuccess") || slot(b,s)["SwitchCount"] != turn(b,s)["UTurnCount"]) {
             return;
         }
@@ -2559,7 +2559,7 @@ struct MMUTurn : public MM
         if (b.koed(s)) {
             return;
         }
-        if (b.hasWorkingItem(t, Item::EscapeButton)) {
+        if (turn(b,t).contains("EscapeButtonActivated")) {
             return;
         }
         b.requestSwitch(s);
