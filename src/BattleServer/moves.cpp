@@ -2559,6 +2559,10 @@ struct MMUTurn : public MM
         if (b.koed(s)) {
             return;
         }
+        if (turn(b,b.opponent(s)).value("EscapeButtonActivated").toBool()) {
+            return;
+        }
+
         b.requestSwitch(s);
     }
 };
