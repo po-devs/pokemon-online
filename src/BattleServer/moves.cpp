@@ -3340,6 +3340,7 @@ struct MMMetalBurst : public MM
     MMMetalBurst() {
         functions["MoveSettings"] = &ms;
         functions["DetermineAttackFailure"] = &daf;
+        functions["UponOffensiveDamageReceived"] = &udi;
         functions["CustomAttackingDamage"] = &cad;
     }
 
@@ -3349,12 +3350,13 @@ struct MMMetalBurst : public MM
     }
 
     static void daf (int s, int, BS &b) {
-        int dam = poke(b,s)["DamageTakenByAttack"].toInt();
-        if (dam == 0) {
+        if (turn(b,s).value("CounterDamage").toInt() <= 0) {
             fturn(b,s).add(TM::Failed);
-            return;
         }
-        turn(b,s)["CounterDamage"] = dam * 3 / 2;
+    }
+
+    static void udi(int s, int, BS &b) {
+        turn(b,s)["CounterDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 3 / 2;
     }
 
     static void cad(int s, int, BS &b) {
