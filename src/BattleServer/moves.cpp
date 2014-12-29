@@ -2559,6 +2559,9 @@ struct MMUTurn : public MM
         if (b.koed(s)) {
             return;
         }
+        if (b.hasWorkingItem(t, Item::EscapeButton)) {
+            return;
+        }
         b.requestSwitch(s);
     }
 };
