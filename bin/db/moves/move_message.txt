@@ -119,13 +119,13 @@
 180 %s prepares its %m!|It is completely synchronised with %f!|%ts's team is under an amplifying rainbow!
 190 %f took the kind offer!
 199 %ts's team is protected by Crafty Shield!|%ts's team Crafty Shield was broken!
-201 The terrain became electrified!|Electricity on the terrain faded away!|Electric Terrain prevents %s from falling asleep!
+201 An electric current runs across the battlefield!|The electricity disappeared from the battlefield!|Electric Terrain prevents %s from falling asleep!|%s surrounds itself with electrified terrain!
 202 %f became electrified!
 203 Pokemon can no longer flee!|Fairy Lock's effect disappeared!
-205 The terrain became grassy!|Grass on the terrain faded away!|The Grassy Terrain heals the Pokemon on the field!
+205 Grass grew to cover the battlefield!|The grass disappeared from the battlefield!|The Grassy Terrain heals the Pokemon on the field!
 206 %s shielded itself against damage!
 207 %ts's team is protected by Mat Block!|%ts's team Mat Block was broken!
-208 Mist descended upon the battle field!|Mist vanished from the battle field!|Misty Terrain prevents %f from being inflicted by status!
+208 Mist swirls around the battlefield!|The mist disappeared from the battlefield!|Misty Terrain prevents %f from being inflicted by status!|%f surrounds itself with a protective mist!
 209 %s was hurt!
 210 Sticky Web was put around %tf's team!|%s became entangled in Sticky Web!
 211 %f had its stat boosts reversed!
