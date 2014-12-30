@@ -5235,7 +5235,7 @@ struct MMYawn : public MM {
         b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "Yawn", &et);
     }
 
-    static void et(int s, int, BS &b) {
+    static void et(int s, int t, BS &b) {
         inc(poke(b,s)["YawnCount"], -1);
         int count = poke(b,s)["YawnCount"].toInt();
         if (count != 0) {
@@ -5244,6 +5244,8 @@ struct MMYawn : public MM {
             if (b.poke(s).status() == Pokemon::Fine && b.canGetStatus(s, Pokemon::Asleep)) {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                     b.notifyClause(ChallengeInfo::SleepClause);
+                } else if (b.terrainCount > 0 && (std::abs(b.terrain) == Type::Electric || std::abs(b.terrain) == Type::Fairy) && !b.isFlying(t)) {
+					b.failSilently(s);
                 } else {
                     b.inflictStatus(s, Pokemon::Asleep, s);
                     if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {
