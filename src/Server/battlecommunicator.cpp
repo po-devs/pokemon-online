@@ -46,13 +46,13 @@ bool BattleCommunicator::valid() const
     return relay && relay->isConnected();
 }
 
-void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, int team1, int team2)
+void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, TeamBattle team1, TeamBattle team2)
 {
     if (!valid()) {
         qFatal("Starting a battle when no valid connections");
     }
 
-    QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
+    QString tier = team1.tier == team2.tier ? team1.tier : QString("Mixed %1").arg(GenInfo::Version(team1.gen));
 
     mybattles.insert(id, new FullBattleConfiguration(id, p1->id(), p2->id(), tier, c));
     mybattles[id]->name[0] = p1->name();
@@ -61,19 +61,19 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
     if (TierMachine::obj()->exists(tier)) {
         Tier & t = TierMachine::obj()->tier(tier);
 
-        BattlePlayer pb1(p1->name(), p1->id(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
-                         p1->tieMessage(), t.getMaxLevel(), t.restricted(p1->team(team1)), t.maxRestrictedPokes, t.numberOfPokemons);
-        BattlePlayer pb2(p2->name(), p2->id(), p2->rating(p2->team(team2).tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
-                         p2->tieMessage(), t.getMaxLevel(), t.restricted(p2->team(team2)), t.maxRestrictedPokes, t.numberOfPokemons);
+        BattlePlayer pb1(p1->name(), p1->id(), p1->rating(team1.tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
+                         p1->tieMessage(), t.getMaxLevel(), t.restricted(team1), t.maxRestrictedPokes, t.numberOfPokemons);
+        BattlePlayer pb2(p2->name(), p2->id(), p2->rating(team2.tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
+                         p2->tieMessage(), t.getMaxLevel(), t.restricted(team2), t.maxRestrictedPokes, t.numberOfPokemons);
 
-        relay->startBattle(id, pb1, pb2, c, p1->team(team1), p2->team(team2));
+        relay->startBattle(id, pb1, pb2, c, team1, team2);
     } else {
-        BattlePlayer pb1(p1->name(), p1->id(), p1->rating(p1->team(team1).tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
+        BattlePlayer pb1(p1->name(), p1->id(), p1->rating(team1.tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
                          p1->tieMessage());
-        BattlePlayer pb2(p2->name(), p2->id(), p2->rating(p2->team(team2).tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
+        BattlePlayer pb2(p2->name(), p2->id(), p2->rating(team2.tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
                          p2->tieMessage());
 
-        relay->startBattle(id, pb1, pb2, c, p1->team(team1), p2->team(team2));
+        relay->startBattle(id, pb1, pb2, c, team1, team2);
     }
 
     p1->addBattle(id);
