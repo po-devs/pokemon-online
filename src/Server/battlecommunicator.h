@@ -29,7 +29,7 @@ public:
     /* Can we have battles? */
     bool valid() const;
 
-    void startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, TeamBattle team1, TeamBattle team2);
+    void startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, TeamBattle &team1, TeamBattle &team2);
     void loadPlugin(const QString &path);
     void unloadPlugin(const QString &name);
 

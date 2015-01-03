@@ -46,7 +46,7 @@ bool BattleCommunicator::valid() const
     return relay && relay->isConnected();
 }
 
-void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, TeamBattle team1, TeamBattle team2)
+void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo &c, int id, TeamBattle &team1, TeamBattle &team2)
 {
     if (!valid()) {
         qFatal("Starting a battle when no valid connections");
