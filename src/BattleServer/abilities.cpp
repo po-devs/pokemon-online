@@ -513,7 +513,8 @@ struct AMForeCast : public AM {
     /*At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.*/
 
     static void us(int s, int, BS &b) {
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Castform)
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Castform ||
+                (b.pokeMemory(b.slot(s)).contains("PreTransformPoke") && PokemonInfo::Number(b.pokeMemory(b.slot(s)).value("PreTransformPoke").toString()) != Pokemon::Castform))
             return;
 
         int weather = b.weather;
@@ -1500,7 +1501,8 @@ struct AMZenMode : public AM {
     }
 
     static void et (int s, int, BS &b) {
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Darmanitan)
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Darmanitan ||
+                (b.pokeMemory(b.slot(s)).contains("PreTransformPoke") && PokemonInfo::Number(b.pokeMemory(b.slot(s)).value("PreTransformPoke").toString()) != Pokemon::Darmanitan))
             return;
 
         Pokemon::uniqueId num = fpoke(b,s).id;
@@ -1510,11 +1512,13 @@ struct AMZenMode : public AM {
             return;
 
         b.changeForme(b.player(s), b.slotNum(s), daruma ? Pokemon::Darmanitan_Z : Pokemon::Darmanitan, true);
+        b.sendAbMessage(77, daruma, s);
     }
 
     static void ol(int s, int, BS &b) {
         if (fpoke(b,s).id == Pokemon::Darmanitan_Z) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
+            b.sendAbMessage(77, 0, s);
         }
     }
 };
