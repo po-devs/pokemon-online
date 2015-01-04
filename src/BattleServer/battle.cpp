@@ -3660,16 +3660,20 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     /* Note: &o must be defined before p.num() is replaced by newforme */
     PokeBattle &o  = this->poke(player,poke);
     p.num() = newforme;
+    int abnum = 0;
 
     if (!transform) {
-        int abnum = 0;
         for (int i = 0; i < 3; i++) {
             if (o.ability() == PokemonInfo::Abilities(o.num(), gen()).ab(i)) {
                 abnum = i;
                 break;
             }
         }
-        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
+
+        //Only change ability if it actually needs to be changed.
+        if (o.ability() != PokemonInfo::Abilities(newforme, gen()).ab(abnum)) {
+            p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
+        }
 
         for (int i = 1; i < 6; i++)
             p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
@@ -3682,7 +3686,8 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         fpoke(slot).id = newforme;
 
         if (!transform) {
-            if (gen() >= 3)
+            //Only change ability if it actually needs to be changed
+            if (o.ability() != PokemonInfo::Abilities(newforme, gen()).ab(abnum))
                 acquireAbility(slot, p.ability());
 
             for (int i = 1; i < 6; i++)
