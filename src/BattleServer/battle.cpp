@@ -2508,7 +2508,7 @@ bool BattleSituation::canGetStatus(int target, int status) {
             return false;
         }
         if (!isFlying(target) && terrainCount > 0 && terrain == Type::Electric) {
-            sendMoveMessage(201,2,target);
+            sendMoveMessage(201,3,target);
             return false;
         }
         return true;

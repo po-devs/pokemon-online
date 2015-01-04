@@ -5235,8 +5235,7 @@ struct MMYawn : public MM {
     static void daf(int s, int t, BS &b) {
         int opp = b.player(t);
 
-        if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0 || poke(b,t).value("YawnCount").toInt() > 0
-                || (b.terrainCount > 0 && (std::abs(b.terrain) == Type::Electric || std::abs(b.terrain) == Type::Fairy) && !b.isFlying(t))) {
+        if (b.poke(t).status() != Pokemon::Fine || team(b,opp).value("SafeGuardCount").toInt() > 0 || poke(b,t).value("YawnCount").toInt() > 0) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -5248,6 +5247,9 @@ struct MMYawn : public MM {
             b.notifyClause(ChallengeInfo::SleepClause);
             fturn(b,s).add(TM::Failed);
         }
+        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Electric && !b.isFlying(t)) {
+            b.fail(s, 201, 3, Pokemon::Electric, t);
+        }	
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
@@ -5269,6 +5271,8 @@ struct MMYawn : public MM {
             if (b.poke(s).status() == Pokemon::Fine && b.canGetStatus(s, Pokemon::Asleep)) {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                     b.notifyClause(ChallengeInfo::SleepClause);
+                } else if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy && !b.isFlying(s)) {
+                    b.fail(s, 208, 3, Pokemon::Fairy, b.opponent(s));
                 } else {
                     b.inflictStatus(s, Pokemon::Asleep, s);
                     if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {
