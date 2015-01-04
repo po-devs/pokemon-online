@@ -513,8 +513,7 @@ struct AMForeCast : public AM {
     /*At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.*/
 
     static void us(int s, int, BS &b) {
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Castform ||
-                (b.pokeMemory(b.slot(s)).contains("PreTransformPoke") && PokemonInfo::Number(b.pokeMemory(b.slot(s)).value("PreTransformPoke").toString()) != Pokemon::Castform))
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Castform || b.preTransPoke(s, Pokemon::Castform))
             return;
 
         int weather = b.weather;
@@ -537,6 +536,11 @@ struct AMForeCast : public AM {
         //Gens 3 and 4 lock Castform into it's current form. Gens 5 on revert it back to the default form
         if (b.pokenum(s).pokenum != Pokemon::Castform || b.gen() < 5)
             return;
+
+        //Retain form if you're not originally a Castform
+        if (b.preTransPoke(s, Pokemon::Castform))
+            return;
+
         if (b.pokenum(s).subnum != 0) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Castform, true);
         }
@@ -1501,22 +1505,31 @@ struct AMZenMode : public AM {
     }
 
     static void et (int s, int, BS &b) {
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Darmanitan ||
-                (b.pokeMemory(b.slot(s)).contains("PreTransformPoke") && PokemonInfo::Number(b.pokeMemory(b.slot(s)).value("PreTransformPoke").toString()) != Pokemon::Darmanitan))
+        /* Not using field pokemon since Ditto doesn't gain zen mode.
+         * So using b.poke(s) instead of fpoke(b,s). */
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Darmanitan || b.preTransPoke(s, Pokemon::Darmanitan))
             return;
 
-        Pokemon::uniqueId num = fpoke(b,s).id;
-        bool daruma = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
+        num = fpoke(b,s).id;
+        bool zen = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
 
-        if (daruma == num.subnum)
-            return;
-
-        b.changeForme(b.player(s), b.slotNum(s), daruma ? Pokemon::Darmanitan_Z : Pokemon::Darmanitan, true);
-        b.sendAbMessage(77, daruma, s);
+        if (num.subnum == 0 && zen) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan_D, true);
+            b.sendAbMessage(77, 1, s);
+        } else if (num.subnum == 1 && !zen) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
+            b.sendAbMessage(77, 0, s);
+        }
     }
 
     static void ol(int s, int, BS &b) {
-        if (fpoke(b,s).id == Pokemon::Darmanitan_Z) {
+        //Retain form if you're not originally a Darmanitan
+        if (b.preTransPoke(s, Pokemon::Darmanitan))
+            return;
+
+        if (b.pokenum(s).subnum != 0) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
             b.sendAbMessage(77, 0, s);
         }
@@ -2260,9 +2273,7 @@ struct AMStanceChange : public AM {
          * So using b.poke(s) instead of fpoke(b,s). */
         Pokemon::uniqueId num = b.poke(s).num();
 
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash
-                || (b.pokeMemory(b.slot(s)).contains("PreTransformPoke")
-                    && PokemonInfo::Number(b.pokeMemory(b.slot(s)).value("PreTransformPoke").toString()) != Pokemon::Aegislash))
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Aegislash || b.preTransPoke(s, Pokemon::Aegislash))
             return;
 
         num = fpoke(b,s).id;

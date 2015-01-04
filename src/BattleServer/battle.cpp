@@ -3656,10 +3656,20 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
         pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
     }
+
+    /* Note: &o must be defined before p.num() is replaced by newforme */
+    PokeBattle &o  = this->poke(player,poke);
     p.num() = newforme;
 
     if (!transform) {
-        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(0);
+        int abnum = 0;
+        for (int i = 0; i < 3; i++) {
+            if (o.ability() == PokemonInfo::Abilities(o.num(), gen()).ab(i)) {
+                abnum = i;
+                break;
+            }
+        }
+        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
 
         for (int i = 1; i < 6; i++)
             p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
@@ -3730,6 +3740,9 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     }
 
     changeHp(player, 0);
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    }
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         callaeffects(player, source, "BeforeBeingKoed");
@@ -4202,4 +4215,12 @@ bool BattleSituation::canPassMStone (int target, int item) {
         return false;
     }
     return true;
+}
+
+bool BattleSituation::preTransPoke(int s, Pokemon::uniqueId check)
+{
+    if (pokeMemory(slot(s)).contains("PreTransformPoke")) {
+        return PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()) != check;
+    }
+    return false;
 }
