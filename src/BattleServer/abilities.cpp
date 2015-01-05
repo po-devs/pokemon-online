@@ -757,6 +757,8 @@ struct AMInsomnia : public AM {
     AMInsomnia() {
         functions["UponSetup"] = &us;
         functions["PreventStatChange"] = &psc;
+        functions["EndTurn6.2"] = &us; /* Gen 4 */
+        functions["EndTurn5.1"] = &us; /* Gen 5 */
     }
 
     static void us(int s, int, BS &b) {
@@ -779,6 +781,8 @@ struct AMOwnTempo : public AM {
     AMOwnTempo() {
         functions["UponSetup"] = &us;
         functions["PreventStatChange"] = &psc;
+        functions["EndTurn6.2"] = &us; /* Gen 4 */
+        functions["EndTurn5.1"] = &us; /* Gen 5 */
     }
 
     static void us(int s, int, BS &b) {

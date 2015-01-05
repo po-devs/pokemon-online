@@ -905,6 +905,8 @@ bool Team::importFromTxt(const QString &file1)
     QString file = file1;
     file.replace("---", "");
     file.replace("\r\n", "\n"); // for windows
+    file.replace(" \n", "\n"); //fix space between pokemon
+    file.replace("EVs:\n","EVs: \n"); //fix null EV crash
 
     QStringList pokes = file.split("\n\n", QString::SkipEmptyParts);
 

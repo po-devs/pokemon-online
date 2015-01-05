@@ -912,6 +912,10 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (poke(player,pok).num() == Pokemon::Giratina && poke(player,pok).item() == Item::GriseousOrb) {
         changeForme(player,pok,Pokemon::Giratina_O);
     }
+    //Change the form so Zoroark isn't "unmasked"
+    if (poke(player,pok).num() == Pokemon::Xerneas) {
+        changeForme(player,pok,Pokemon::Xerneas_A);
+    }
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
@@ -972,9 +976,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         if (forme != 0) {
             changeAForme(slot, forme);
         }
-    }
-    if (p.num() == Pokemon::Xerneas) {
-        changeAForme(slot, 1);
     }
 
     turnMem(slot).add(TurnMemory::Incapacitated);
@@ -2167,31 +2168,21 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
-    bool works = !pokeMemory(player).value("AbilityNullified").toBool();
-
     if (gen() <= 2)
         return false;
 
     if (ability(player) != ab)
         return false;
 
-    /* Illusion and Unburden ignore Mold Breaker  */
-    if (ab == Ability::Illusion || ab == Ability::Unburden)
-        return works;
-
-    /* Weather abilities shouldn't be effected at all, bug elsewhere, but fix here for now... */
-    if (ab == Ability::DeltaStream || ab == Ability::PrimordialSea || ab == Ability::DesolateLand) {
-        return works;
-    }
     if (attacking()) {
-        // Mold Breaker
-        if (heatOfAttack() && player == attacked() && player != attacker() &&
-                (hasWorkingAbility(attacker(), ability(attacker()))
-                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
-            return false;
+        if (player == attacked() && player != attacker() && hasWorkingAbility(attacker(), ability(attacker()))
+                && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze)) {
+            if (AbilityInfo::moldBreakable(ability(player))) {
+                return false;
+            }
         }
     }
-    return works;
+    return !pokeMemory(player).value("AbilityNullified").toBool();
 }
 
 bool BattleSituation::hasWorkingTeamAbility(int play, int ability)
