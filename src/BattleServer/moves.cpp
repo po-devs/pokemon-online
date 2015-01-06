@@ -2981,6 +2981,9 @@ struct MMRoar : public MM
         turn(b,s)["RoarSuccess"] = true;
         turn(b,s)["RoarTarget"] = t;
         turn(b,s)["RoarSwitchCount"] = slot(b,t)["SwitchCount"].toInt();
+        if (b.hasWorkingAbility(s, Ability::MoldBreaker) || b.hasWorkingAbility(s, Ability::TurboBlaze) || b.hasWorkingAbility(s, Ability::TeraVolt)) {
+            turn(b,t)["BrokenMold"] = true;
+        }
         return;
     }
 
@@ -3029,7 +3032,11 @@ struct MMSpikes : public MM
 
     static void usi(int p, int slot, BS &b) {
         int spikeslevel = team(b,p).value("Spikes").toInt();
-        if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
+        if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot, false) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
+            return;
+        }
+        //Levitate is excluded in the isFlying above because Mold Breaker phazing disables Levitate when determining hazard damage
+        if (b.hasWorkingAbility(slot, Ability::Levitate) && !turn(b,slot).contains("BrokenMold")) {
             return;
         }
         int n = 0;
@@ -3106,7 +3113,11 @@ struct MMToxicSpikes : public MM
             b.sendMoveMessage(136, 1, s, Pokemon::Poison);
             return;
         }
-        if ((b.gen().num != 5 && b.hasSubstitute(s)) || b.isFlying(s)) {
+        if ((b.gen().num != 5 && b.hasSubstitute(s)) || b.isFlying(s, false)) {
+            return;
+        }
+        //Levitate is excluded in the isFlying above because Mold Breaker phazing disables Levitate when determining hazard damage
+        if (b.hasWorkingAbility(s, Ability::Levitate) && !turn(b,s).contains("BrokenMold")) {
             return;
         }
         if (team(b,source).value("SafeGuardCount").toInt() > 0) {

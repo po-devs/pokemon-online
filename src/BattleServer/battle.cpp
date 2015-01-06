@@ -1742,7 +1742,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     foreach(int target, targetList) {
-        heatOfAttack() = true;
+        //heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
             pokeMemory(target)["MirrorMoveMemory"] = attack;
@@ -1825,7 +1825,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 bpmodifiers.clear();
-                heatOfAttack() = true;
+                //heatOfAttack() = true;
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
                 bool sub = hasSubstitute(target);
                 if (sub) {
@@ -1867,7 +1867,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 healDamage(player, target);
 
-                heatOfAttack() = false;
+                //heatOfAttack() = false;
                 if (hitting) {
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
@@ -2010,13 +2010,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
-
-    heatOfAttack() = false;
-
 end:
     /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
     callieffects(player, player, "AfterTargetList");
 trueend:
+    heatOfAttack() = false;
 
     if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
         notifyKO(player);
@@ -2027,7 +2025,8 @@ trueend:
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
-    foreach(int target, targetList) {
+    foreach(int target, targetList) {        
+        callaeffects(target, target, "AfterAttackFinished"); //Immunity & such
         turnMemory(target)["HadSubstitute"] = false;
     }
 }
@@ -2175,7 +2174,7 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         return false;
 
     if (attacking()) {
-        if (player == attacked() && player != attacker() && hasWorkingAbility(attacker(), ability(attacker()))
+        if (heatOfAttack() && player == attacked() && player != attacker() && hasWorkingAbility(attacker(), ability(attacker()))
                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze)) {
             if (AbilityInfo::moldBreakable(ability(player))) {
                 return false;
@@ -2857,16 +2856,16 @@ PokeFraction BattleSituation::effFraction(int typeeff)
     return PokeFraction(intpow2(typeeff), 1);
 }
 
-bool BattleSituation::isFlying(int player)
+bool BattleSituation::isFlying(int player, bool levi)
 {
-    return hasFlyingEffect(player) ||
+    return hasFlyingEffect(player, levi) ||
             (!hasGroundingEffect(player) && (!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying));
 }
 
-bool BattleSituation::hasFlyingEffect(int player)
+bool BattleSituation::hasFlyingEffect(int player, bool levi)
 {
     return !hasGroundingEffect(player)  &&
-            (hasWorkingAbility(player, Ability::Levitate)
+            ( (hasWorkingAbility(player, Ability::Levitate) && levi)
              || hasWorkingItem(player, Item::AirBalloon)
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
