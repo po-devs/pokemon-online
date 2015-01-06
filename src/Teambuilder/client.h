@@ -379,6 +379,7 @@ private:
     QPushButton *findMatch;
     /* PM System */
     PMSystem *pmSystem;
+    QList<int> myRejects;
 
     /*Channels */
     QHash<qint32, QString> m_channelNames;
