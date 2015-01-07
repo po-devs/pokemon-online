@@ -43,6 +43,10 @@ void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
 {
     QMutexLocker l(&m);
 
+    if (pokemon == Pokemon::NoPoke) {
+        return;
+    }
+
     if (!positions.contains(pokemon)) {
         if (!PokemonInfo::IsAesthetic(pokemon)) {
             positions.insert(pokemon, uses.size());
