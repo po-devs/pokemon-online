@@ -579,7 +579,7 @@
 610 Cannot bring the target to 0 HP.
 611 Has a 50% chance to raise the user's Defense by 1 stage.
 612 The user takes recoil damage equal to 1/2 of HP lost by the target from this attack.
-613 Has a 30% chance to burn the target.
+613 Has a 30% chance to burn the target. Thaws the user and the target if either is frozen.
 614 Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.
 615 The user and an ally hold hands. This makes them very happy.
 616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
