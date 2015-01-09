@@ -3322,11 +3322,15 @@ struct MMMetalBurst : public MM
         turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
-    static void daf (int s, int, BS &b) {
+    static void daf (int s, int t, BS &b) {
         int dam = poke(b,s)["DamageTakenByAttack"].toInt();
         if (dam == 0) {
             fturn(b,s).add(TM::Failed);
             return;
+        }
+
+        if (!b.hasMoved(t)) {
+            fturn(b,s).add(TM::Failed);
         }
         turn(b,s)["CounterDamage"] = dam * 3 / 2;
     }
