@@ -515,6 +515,7 @@ public:
     static QString EffectDesc(int abnum);
     static bool Exists(int ability, Pokemon::gen gen);
     static int ConvertFromOldAbility(int oldability);
+    static bool moldBreakable(int abnum);
 private:
     static QHash<int, QString> m_Names;
     static QString m_Directory;
@@ -523,6 +524,7 @@ private:
     static QHash<int,int> m_OldAbilities;
     static QHash<int,QString> m_Desc;
     static QHash<int,QString> m_BattleDesc;
+    static QHash<int, bool> m_moldBreaker;
 
     static void loadNames();
     static void loadMessages();

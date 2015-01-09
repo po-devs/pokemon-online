@@ -1484,8 +1484,6 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
 
     int id = freebattleid();
 
-    myengine->beforeBattleStarted(id1,id2,c,id,team1,team2);
-
     if (!playerExist(id1) || !playerExist(id2))
         return;
 
@@ -1509,6 +1507,11 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     Player *p1 (player(id1));
     Player *p2 (player(id2));
 
+    TeamBattle battleTeam1 = *(new TeamBattle(p1->team(team1)));
+    TeamBattle battleTeam2 = *(new TeamBattle(p2->team(team2)));
+
+    myengine->beforeBattleStarted(id1,id2,c,id,battleTeam1,battleTeam2);
+
     QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
 
     printLine(QString("%1 battle between %2 and %3 started").arg(tier).arg(name(id1)).arg(name(id2)));
@@ -1522,7 +1525,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
         p2->relay().sendPlayer(p1->bundle());
     }
 
-    battles->startBattle(player(id1), player(id2), c, id, team1, team2);
+    battles->startBattle(player(id1), player(id2), c, id, battleTeam1, battleTeam2);
 
     Battle battleS = battleList[id];
 

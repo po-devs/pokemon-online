@@ -508,7 +508,6 @@ struct BMPhysicalStat : public BM
 
         if (turn(b,t).value("BugBiter").toBool() || tmove(b,t).category == Move::Physical) {
             b.eatBerry(s, s==t);
-            b.inflictStatMod(s,arg,1,s,false);
 
             if (b.isOut(s)) {
                 if (b.hasWorkingAbility(s, Ability::Contrary)) {
@@ -516,6 +515,7 @@ struct BMPhysicalStat : public BM
                 } else {
                     b.sendBerryMessage(7,s,0,s, berry, arg);
                 }
+                b.inflictStatMod(s,arg,1,s,false);
             }
         }
     }
@@ -536,7 +536,6 @@ struct BMSpecialStat : public BM
 
         if (turn(b,t).value("BugBiter").toBool() || tmove(b,t).category == Move::Special) {
             b.eatBerry(s, s==t);
-            b.inflictStatMod(s,arg,1,s,false);
 
             if (b.isOut(s)) {
                 if (b.hasWorkingAbility(s, Ability::Contrary)) {
@@ -544,6 +543,7 @@ struct BMSpecialStat : public BM
                 } else {
                     b.sendBerryMessage(7,s,0,s, berry, arg);
                 }
+                b.inflictStatMod(s,arg,1,s,false);
             }
         }
     }

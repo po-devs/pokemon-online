@@ -912,6 +912,10 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (poke(player,pok).num() == Pokemon::Giratina && poke(player,pok).item() == Item::GriseousOrb) {
         changeForme(player,pok,Pokemon::Giratina_O);
     }
+    //Change the form so Zoroark isn't "unmasked"
+    if (poke(player,pok).num() == Pokemon::Xerneas) {
+        changeForme(player,pok,Pokemon::Xerneas_A);
+    }
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
@@ -972,9 +976,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         if (forme != 0) {
             changeAForme(slot, forme);
         }
-    }
-    if (p.num() == Pokemon::Xerneas) {
-        changeAForme(slot, 1);
     }
 
     turnMem(slot).add(TurnMemory::Incapacitated);
@@ -1741,7 +1742,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     foreach(int target, targetList) {
-        heatOfAttack() = true;
+        //heatOfAttack() = true;
         attacked() = target;
         if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
             pokeMemory(target)["MirrorMoveMemory"] = attack;
@@ -1824,7 +1825,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             bool hitting = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 bpmodifiers.clear();
-                heatOfAttack() = true;
+                //heatOfAttack() = true;
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
                 bool sub = hasSubstitute(target);
                 if (sub) {
@@ -1866,7 +1867,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 healDamage(player, target);
 
-                heatOfAttack() = false;
+                //heatOfAttack() = false;
                 if (hitting) {
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
@@ -2009,13 +2010,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
         pokeMemory(target)["LastAttackToHit"] = attack;
     }
-
-    heatOfAttack() = false;
-
 end:
     /* In gen 4, choice items are there - they lock even if the move had no target possible.  */
     callieffects(player, player, "AfterTargetList");
 trueend:
+    heatOfAttack() = false;
 
     if (gen() <= 4 && koed(player) && tmove(player).power > 0) {
         notifyKO(player);
@@ -2026,7 +2025,8 @@ trueend:
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
-    foreach(int target, targetList) {
+    foreach(int target, targetList) {        
+        callaeffects(target, target, "AfterAttackFinished"); //Immunity & such
         turnMemory(target)["HadSubstitute"] = false;
     }
 }
@@ -2167,31 +2167,21 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
 
 bool BattleSituation::hasWorkingAbility(int player, int ab)
 {
-    bool works = !pokeMemory(player).value("AbilityNullified").toBool();
-
     if (gen() <= 2)
         return false;
 
     if (ability(player) != ab)
         return false;
 
-    /* Illusion and Unburden ignore Mold Breaker  */
-    if (ab == Ability::Illusion || ab == Ability::Unburden)
-        return works;
-
-    /* Weather abilities shouldn't be effected at all, bug elsewhere, but fix here for now... */
-    if (ab == Ability::DeltaStream || ab == Ability::PrimordialSea || ab == Ability::DesolateLand) {
-        return works;
-    }
     if (attacking()) {
-        // Mold Breaker
-        if (heatOfAttack() && player == attacked() && player != attacker() &&
-                (hasWorkingAbility(attacker(), ability(attacker()))
-                 && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze))) {
-            return false;
+        if (heatOfAttack() && player == attacked() && player != attacker() && hasWorkingAbility(attacker(), ability(attacker()))
+                && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze)) {
+            if (AbilityInfo::moldBreakable(ability(player))) {
+                return false;
+            }
         }
     }
-    return works;
+    return !pokeMemory(player).value("AbilityNullified").toBool();
 }
 
 bool BattleSituation::hasWorkingTeamAbility(int play, int ability)
@@ -2866,16 +2856,16 @@ PokeFraction BattleSituation::effFraction(int typeeff)
     return PokeFraction(intpow2(typeeff), 1);
 }
 
-bool BattleSituation::isFlying(int player)
+bool BattleSituation::isFlying(int player, bool levi)
 {
-    return hasFlyingEffect(player) ||
+    return hasFlyingEffect(player, levi) ||
             (!hasGroundingEffect(player) && (!attacking() || !hasWorkingItem(player, Item::RingTarget)) && hasType(player, Pokemon::Flying));
 }
 
-bool BattleSituation::hasFlyingEffect(int player)
+bool BattleSituation::hasFlyingEffect(int player, bool levi)
 {
     return !hasGroundingEffect(player)  &&
-            (hasWorkingAbility(player, Ability::Levitate)
+            ( (hasWorkingAbility(player, Ability::Levitate) && levi)
              || hasWorkingItem(player, Item::AirBalloon)
              || pokeMemory(player).value("MagnetRiseCount").toInt() > 0
              || pokeMemory(player).value("LevitatedCount").toInt() > 0);
@@ -3656,10 +3646,21 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
         pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
     }
+
+    /* Note: &o must be defined before p.num() is replaced by newforme */
+    PokeBattle &o  = this->poke(player,poke);
     p.num() = newforme;
 
     if (!transform) {
-        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(0);
+        int abnum = 0;
+        for (int i = 0; i < 3; i++) {
+            if (o.ability() == PokemonInfo::Abilities(o.num(), gen()).ab(i)) {
+                abnum = i;
+                break;
+            }
+        }
+
+        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
 
         for (int i = 1; i < 6; i++)
             p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
@@ -3672,7 +3673,8 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         fpoke(slot).id = newforme;
 
         if (!transform) {
-            if (gen() >= 3)
+            //Only change ability if it actually needs to be changed
+            if (p.ability() != Ability::ZenMode && p.ability() != Ability::Forecast)
                 acquireAbility(slot, p.ability());
 
             for (int i = 1; i < 6; i++)
@@ -3730,6 +3732,9 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     }
 
     changeHp(player, 0);
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    }
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         callaeffects(player, source, "BeforeBeingKoed");
@@ -4202,4 +4207,12 @@ bool BattleSituation::canPassMStone (int target, int item) {
         return false;
     }
     return true;
+}
+
+bool BattleSituation::preTransPoke(int s, Pokemon::uniqueId check)
+{
+    if (pokeMemory(slot(s)).contains("PreTransformPoke")) {
+        return PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()) != check;
+    }
+    return false;
 }

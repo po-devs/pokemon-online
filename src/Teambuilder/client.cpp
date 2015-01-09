@@ -863,6 +863,7 @@ void Client::toggleIncomingPM(bool b)
 {
     globals.setValue("PMs/RejectIncoming", b);
     pmReject = b;
+    myRejects.clear();
 }
 
 void Client::togglePMTabs(bool b)
@@ -1163,7 +1164,10 @@ void Client::PMReceived(int id, QString pm)
     }
 
     if(pmReject && !mypms.contains(id) && auth(id) == 0) {
-        relay().sendPM(id, "This player is rejecting incoming PMs.");
+        if (!myRejects.contains(id)) {
+            relay().sendPM(id, "This player is rejecting incoming PMs.");
+            myRejects.append(id);
+        }
         return;
     }
 

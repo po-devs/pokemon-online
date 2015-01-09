@@ -1049,8 +1049,12 @@ struct MMCovet : public MM
         functions["OnFoeOnAttack"] = &uas;
     }
 
-    static void uas(int s,int t,BS &b)
-    {
+    static void uas(int s,int t,BS &b) {
+        //Knock off = no more items for you in Gens 3 and 4
+        if (b.gen() <= 4 && b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool()) {
+            return;
+        }
+
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
         int i2 = b.poke(t).item();
         if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && b.canPassMStone(s, i2)) {
@@ -2555,6 +2559,10 @@ struct MMUTurn : public MM
         if (b.koed(s)) {
             return;
         }
+        if (turn(b,b.opponent(s)).value("EscapeButtonActivated").toBool()) {
+            return;
+        }
+
         b.requestSwitch(s);
     }
 };
@@ -2973,6 +2981,9 @@ struct MMRoar : public MM
         turn(b,s)["RoarSuccess"] = true;
         turn(b,s)["RoarTarget"] = t;
         turn(b,s)["RoarSwitchCount"] = slot(b,t)["SwitchCount"].toInt();
+        if (b.hasWorkingAbility(s, Ability::MoldBreaker) || b.hasWorkingAbility(s, Ability::TurboBlaze) || b.hasWorkingAbility(s, Ability::TeraVolt)) {
+            turn(b,t)["BrokenMold"] = true;
+        }
         return;
     }
 
@@ -3021,7 +3032,11 @@ struct MMSpikes : public MM
 
     static void usi(int p, int slot, BS &b) {
         int spikeslevel = team(b,p).value("Spikes").toInt();
-        if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
+        if (spikeslevel <= 0 || b.koed(slot) || b.isFlying(slot, false) || b.hasWorkingAbility(slot, Ability::MagicGuard)) {
+            return;
+        }
+        //Levitate is excluded in the isFlying above because Mold Breaker phazing disables Levitate when determining hazard damage
+        if (b.hasWorkingAbility(slot, Ability::Levitate) && !turn(b,slot).contains("BrokenMold")) {
             return;
         }
         int n = 0;
@@ -3098,7 +3113,11 @@ struct MMToxicSpikes : public MM
             b.sendMoveMessage(136, 1, s, Pokemon::Poison);
             return;
         }
-        if ((b.gen().num != 5 && b.hasSubstitute(s)) || b.isFlying(s)) {
+        if ((b.gen().num != 5 && b.hasSubstitute(s)) || b.isFlying(s, false)) {
+            return;
+        }
+        //Levitate is excluded in the isFlying above because Mold Breaker phazing disables Levitate when determining hazard damage
+        if (b.hasWorkingAbility(s, Ability::Levitate) && !turn(b,s).contains("BrokenMold")) {
             return;
         }
         if (team(b,source).value("SafeGuardCount").toInt() > 0) {
@@ -3287,8 +3306,26 @@ struct MMSwitcheroo : public MM
     static void daf(int s, int t, BS &b) {
         int i1 = b.poke(s).item();
         int i2 = b.poke(t).item();
-        if (b.koed(t) || b.koed(s) || (i1 == 0 && i2 == 0) || (i2 != 0 && !b.canLoseItem(t, s)) || (i1 != 0 && !b.canLoseItem(s, s)) ||
-                !b.canPassMStone(t, i1) || !b.canPassMStone(s, i2)) {
+        bool works = true;
+
+        //Can't switch items with a dead pokemon
+        if (b.koed(t) || b.koed(s))
+            works = false;
+
+        //Can't gain the correct mega stone
+        if (!b.canPassMStone(t, i1) || !b.canPassMStone(s, i2))
+            works = false;
+
+        //Can't switch items if neither has one, or one can't lose their item
+        if ((i1 == 0 && i2 == 0) || (i2 != 0 && !b.canLoseItem(t, s)) || (i1 != 0 && !b.canLoseItem(s, s)))
+            works = false;
+
+        //Can't switch items if either pokemon lost theirs via Knock off in Gen 3 or 4. The above check messes with this in canLoseItem
+        if (b.gen() <= 4 && (b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool() ||
+                             b.battleMemory().value(QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))).toBool()) )
+            works = false;
+
+        if (!works) {
             if (b.hasWorkingAbility(t, Ability::StickyHold)) {
                 b.sendAbMessage(121,0,t);
             }
@@ -3314,6 +3351,7 @@ struct MMMetalBurst : public MM
     MMMetalBurst() {
         functions["MoveSettings"] = &ms;
         functions["DetermineAttackFailure"] = &daf;
+        functions["UponOffensiveDamageReceived"] = &udi;
         functions["CustomAttackingDamage"] = &cad;
     }
 
@@ -3322,17 +3360,28 @@ struct MMMetalBurst : public MM
         turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
+<<<<<<< HEAD
     static void daf (int s, int t, BS &b) {
         int dam = poke(b,s)["DamageTakenByAttack"].toInt();
         if (dam == 0) {
+=======
+    static void daf (int s, int, BS &b) {
+        if (turn(b,s).value("CounterDamage").toInt() <= 0) {
+>>>>>>> 6efa508ff9e246d7a124a3bc53a7769bd80bfb08
             fturn(b,s).add(TM::Failed);
-            return;
         }
+<<<<<<< HEAD
 
         if (!b.hasMoved(t)) {
             fturn(b,s).add(TM::Failed);
         }
         turn(b,s)["CounterDamage"] = dam * 3 / 2;
+=======
+    }
+
+    static void udi(int s, int, BS &b) {
+        turn(b,s)["CounterDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 3 / 2;
+>>>>>>> 6efa508ff9e246d7a124a3bc53a7769bd80bfb08
     }
 
     static void cad(int s, int, BS &b) {

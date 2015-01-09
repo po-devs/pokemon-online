@@ -892,7 +892,7 @@ namespace Pokemon
         Thundurus_T = Thundurus + (1 << 16),
         Landorus_T = Landorus + (1 << 16),
         Tornadus_T = Tornadus + (1 << 16),
-        Darmanitan_Z = Darmanitan + (1 << 16),
+        Darmanitan_D = Darmanitan + (1 << 16),
         SpikyPichu = Pichu + (1 << 16),
         Kyurem_W = Kyurem + (1 << 16),
         Kyurem_B = Kyurem + (2 << 16),

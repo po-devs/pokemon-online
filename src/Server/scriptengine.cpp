@@ -18,7 +18,6 @@
 #include "tier.h"
 #include "pluginmanager.h"
 #include "analyze.h"
-#include "battlecommunicator.h"
 
 #include "sessiondatafactory.h"
 #include "scriptengineagent.h"
@@ -594,9 +593,13 @@ void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
 }
 
 
-void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c, int id, int team1, int team2)
+void ScriptEngine::beforeBattleStarted(int src, int dest, const ChallengeInfo &c, int id, TeamBattle &team1, TeamBattle &team2)
 {
-    makeEvent("beforeBattleStarted", src, dest, c.clauses, c.rated, c.mode, id, team1, team2);
+    quint32 team1Lo = ((quint64) &team1) % (4294967296);
+    quint32 team1Hi = ((quint64) &team1) >> 32;
+    quint32 team2Lo = ((quint64) &team2) % (4294967296);
+    quint32 team2Hi = ((quint64) &team2) >> 32;
+    makeEvent("beforeBattleStarted", src, dest, c.clauses, c.rated, c.mode, id, team1Lo, team1Hi, team2Lo, team2Hi);
 }
 
 void ScriptEngine::afterBattleStarted(int src, int dest, const ChallengeInfo &c, int id, int team1, int team2)
@@ -761,7 +764,7 @@ QScriptValue ScriptEngine::sendMessage(QScriptContext *c, QScriptEngine *e)
         po->warn("sendMessage(id, message, chan)", "Invalid player ID.", true);
         return QScriptValue();
     }
-    
+
     if ((po->strict && !c->argument(2).isNumber()) || (!po->strict && c->argumentCount() <= 2)) {
         myserver->broadCast(c->argument(1).toString(), Server::NoChannel, Server::NoSender, false, c->argument(0).toInteger());
         return QScriptValue();
@@ -927,58 +930,118 @@ void ScriptEngine::reloadTiers()
     TierMachine::obj()->load();
 }
 
-void ScriptEngine::changePokeItem(int id, int team, int slot, int item)
+void ScriptEngine::changePokeItem(int id, quint32 teamLo, int slot, int item, quint32 teamHi)
 {
-    if (!testPlayer("changePokeItem", id) || !testRange("changePokeItem", slot, 0, 5) || !testTeamCount("changePokeItem", id, team))
-        return;
-    if (!ItemInfo::Exists(item))
-        return;
-    myserver->player(id)->team(team).poke(slot).item() = item;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeItem", slot, 0, 5))
+            return;
+        if (!ItemInfo::Exists(item))
+            return;
+        ((TeamBattle*)team)->poke(slot).item() = item;
+    } else {
+        if (!testPlayer("changePokeItem", id) || !testRange("changePokeItem", slot, 0, 5) || !testTeamCount("changePokeItem", id, team))
+            return;
+        if (!ItemInfo::Exists(item))
+            return;
+        myserver->player(id)->team(team).poke(slot).item() = item;
+    }
 }
 
-void ScriptEngine::changePokeNum(int id, int team, int slot, int num)
+void ScriptEngine::changePokeNum(int id, quint32 teamLo, int slot, int num, quint32 teamHi)
 {
-    if (!testPlayer("changePokeNum", id) || !testRange("changePokeNum", slot, 0, 5) || !testTeamCount("changePokeNum", id, team))
-        return;
-    if (!PokemonInfo::Exists(num, myserver->player(id)->gen(team)))
-        return;
-    myserver->player(id)->team(team).poke(slot).num() = num;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeNum", slot, 0, 5))
+            return;
+        if (!PokemonInfo::Exists(num, ((TeamBattle*)team)->gen))
+            return;
+        ((TeamBattle*)team)->poke(slot).num() = num;
+    } else {
+        if (!testPlayer("changePokeNum", id) || !testRange("changePokeNum", slot, 0, 5) || !testTeamCount("changePokeNum", id, team))
+            return;
+        if (!PokemonInfo::Exists(num, myserver->player(id)->gen(team)))
+            return;
+        myserver->player(id)->team(team).poke(slot).num() = num;
+    }
 }
 
-void ScriptEngine::changePokeLevel(int id, int team, int slot, int level)
+void ScriptEngine::changePokeLevel(int id, quint32 teamLo, int slot, int level, quint32 teamHi)
 {
-    if (!testPlayer("changePokeLevel", id) || !testRange("changePokeLevel", slot, 0, 5) || !testRange("changePokeLevel", level, 1, 100) || !testTeamCount("changePokeLevel", id, team))
-        return;
-    Player *p = myserver->player(id);
-    p->team(team).poke(slot).level() = level;
-    p->team(team).poke(slot).updateStats(p->gen(team));
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeLevel", slot, 0, 5) || !testRange("changePokeLevel", level, 1, 100))
+            return;
+        TeamBattle *t = (TeamBattle*)team;
+        t->poke(slot).level() = level;
+        t->poke(slot).updateStats(t->gen);
+    } else {
+        if (!testPlayer("changePokeLevel", id) || !testRange("changePokeLevel", slot, 0, 5) || !testRange("changePokeLevel", level, 1, 100) || !testTeamCount("changePokeLevel", id, team))
+            return;
+        Player *p = myserver->player(id);
+        p->team(team).poke(slot).level() = level;
+        p->team(team).poke(slot).updateStats(p->gen(team));
+    }
 }
 
-void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int move)
+void ScriptEngine::changePokeMove(int id, quint32 teamLo, int pslot, int mslot, int move, quint32 teamHi)
 {
-    if (!testPlayer("changePokeLevel", id) || !testRange("changePokeLevel", pslot, 0, 5) || !testRange("changePokeLevel", mslot, 0, 3) || !testTeamCount("changePokeLevel", id, team))
-        return;
-    if (!MoveInfo::Exists(move, GenInfo::GenMax()))
-        return;
-    Player *p = myserver->player(id);
-    p->team(team).poke(pslot).move(mslot).num() = move;
-    p->team(team).poke(pslot).move(mslot).load(p->gen(team));
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeLevel", pslot, 0, 5) || !testRange("changePokeLevel", mslot, 0, 3))
+            return;
+        if (!MoveInfo::Exists(move, GenInfo::GenMax()))
+            return;
+        TeamBattle *t = (TeamBattle*)team;
+        t->poke(pslot).move(mslot).num() = move;
+        t->poke(pslot).move(mslot).load(t->gen);
+    } else {
+        if (!testPlayer("changePokeLevel", id) || !testRange("changePokeLevel", pslot, 0, 5) || !testRange("changePokeLevel", mslot, 0, 3) || !testTeamCount("changePokeLevel", id, team))
+            return;
+        if (!MoveInfo::Exists(move, GenInfo::GenMax()))
+            return;
+        Player *p = myserver->player(id);
+        p->team(team).poke(pslot).move(mslot).num() = move;
+        p->team(team).poke(pslot).move(mslot).load(p->gen(team));
+    }
 }
 
-void ScriptEngine::changePokeGender(int id, int team, int pokeslot, int gender)
+void ScriptEngine::changePokeGender(int id, quint32 teamLo, int pokeslot, int gender, quint32 teamHi)
 {
-    if (!testPlayer("changePokeGender", id) || !testRange("changePokeGender", pokeslot, 0, 5) || !testRange("changePokeGender", gender, 0, 2) || !testTeamCount("changePokeGender", id, team))
-        return;
-    Player *p = myserver->player(id);
-    p->team(team).poke(pokeslot).gender() = gender;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeGender", pokeslot, 0, 5) || !testRange("changePokeGender", gender, 0, 2))
+            return;
+        TeamBattle *t = (TeamBattle*)team;
+        t->poke(pokeslot).gender() = gender;
+    } else {
+        if (!testPlayer("changePokeGender", id) || !testRange("changePokeGender", pokeslot, 0, 5) || !testRange("changePokeGender", gender, 0, 2) || !testTeamCount("changePokeGender", id, team))
+            return;
+        Player *p = myserver->player(id);
+        p->team(team).poke(pokeslot).gender() = gender;
+    }
 }
 
-void ScriptEngine::changePokeName(int id, int team, int pokeslot, const QString &name)
+void ScriptEngine::changePokeName(int id, quint32 teamLo, int pokeslot, const QString &name, quint32 teamHi)
 {
-    if (!testPlayer("changePokeName", id)|| !testTeamCount("changePokeName", id, team) || !testRange("changePokeName", pokeslot, 0, 5))
-        return;
-    Player *p = myserver->player(id);
-    p->team(team).poke(pokeslot).nick() = name;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeName", pokeslot, 0, 5))
+            return;
+        TeamBattle *t = (TeamBattle*)team;
+        t->poke(pokeslot).nick() = name;
+    } else {
+        if (!testPlayer("changePokeName", id)|| !testTeamCount("changePokeName", id, team) || !testRange("changePokeName", pokeslot, 0, 5))
+            return;
+        Player *p = myserver->player(id);
+        p->team(team).poke(pokeslot).nick() = name;
+    }
 }
 
 void ScriptEngine::changePokeHp(int id, int team, int slot, int hp)
@@ -1498,12 +1561,18 @@ QScriptValue ScriptEngine::getColor(int id)
     }
 }
 
-QScriptValue ScriptEngine::tier(int id, int team)
+QScriptValue ScriptEngine::tier(int id, quint32 teamLo, quint32 teamHi)
 {
-    if (!testPlayer("tier(id, team)", id) || !testTeamCount("tier(id, team)", id, team)) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        return ((TeamBattle*)team)->tier;
+    } else {
+        if (!testPlayer("tier(id, team)", id) || !testTeamCount("tier(id, team)", id, team)) {
+            return myengine.undefinedValue();
+        }
+        return myserver->player(id)->team(team).tier;
     }
-    return myserver->player(id)->team(team).tier;
 }
 
 bool ScriptEngine::hasTier(int id, const QString &tier)
@@ -1787,14 +1856,22 @@ QString ScriptEngine::gender(int genderNum)
     return "";
 }
 
-QScriptValue ScriptEngine::teamPoke(int id, int team, int index)
+QScriptValue ScriptEngine::teamPoke(int id, quint32 teamLo, int index, quint32 teamHi)
 {
-    if (!testPlayer("teamPoke(id, team, index)", id) || !testTeamCount("teamPoke(id, team, index)", id, team)
-            || !testRange("teamPoke(id, team, index)", index, 0, 5)) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("teamPoke(id, team, index)", index, 0, 5)) {
+            return myengine.undefinedValue();
+        }
+        return ((TeamBattle*)team)->poke(index).num().toPokeRef();
+    } else {
+        if (!testPlayer("teamPoke(id, team, index)", id) || !testTeamCount("teamPoke(id, team, index)", id, team)
+                || !testRange("teamPoke(id, team, index)", index, 0, 5)) {
+            return myengine.undefinedValue();
+        }
+        return myserver->player(id)->team(team).poke(index).num().toPokeRef();
     }
-    
-    return myserver->player(id)->team(team).poke(index).num().toPokeRef();
 }
 
 QScriptValue ScriptEngine::teamPokeName(int id, int team, int index)
@@ -1803,18 +1880,26 @@ QScriptValue ScriptEngine::teamPokeName(int id, int team, int index)
             || !testRange("teamPokeName(id, team, index)", index, 0, 5)) {
         return myengine.undefinedValue();
     }
-    
+
     return myserver->player(id)->team(team).poke(index).nick();
 }
 
-QScriptValue ScriptEngine::teamPokeLevel(int id, int team, int index)
+QScriptValue ScriptEngine::teamPokeLevel(int id, quint32 teamLo, int index, quint32 teamHi)
 {
-    if (!testPlayer("teamPokeLevel(id, team, index)", id) || !testTeamCount("teamPokeLevel(id, team, index)", id, team)
-            || !testRange("teamPokeLevel(id, team, index)", index, 0, 5)) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("teamPokeLevel(id, team, index)", index, 0, 5)) {
+            return myengine.undefinedValue();
+        }
+        return ((TeamBattle*)team)->poke(index).level();
+    } else {
+        if (!testPlayer("teamPokeLevel(id, team, index)", id) || !testTeamCount("teamPokeLevel(id, team, index)", id, team)
+                || !testRange("teamPokeLevel(id, team, index)", index, 0, 5)) {
+            return myengine.undefinedValue();
+        }
+        return myserver->player(id)->team(team).poke(index).level();
     }
-
-    return myserver->player(id)->team(team).poke(index).level();
 }
 
 QScriptValue ScriptEngine::teamPokeStat(int id, int team, int slot, int stat)
@@ -1929,36 +2014,62 @@ bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int team, int index)
     return false;
 }
 
-QScriptValue ScriptEngine::teamPokeMove(int id, int team, int pokeindex, int moveindex)
+QScriptValue ScriptEngine::teamPokeMove(int id, quint32 teamLo, int pokeindex, int moveindex, quint32 teamHi)
 {
-    if (!testPlayer("teamPokeMove(id, team, pokeindex, moveindex)", id)
-            || !testTeamCount("teamPokeMove(id, team, pokeindex, moveindex)", id, team)) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (pokeindex < 0 || moveindex < 0 || pokeindex >= 6 || moveindex >= 4) {
+            return myengine.undefinedValue();
+        }
+        return ((TeamBattle*)team)->poke(pokeindex).move(moveindex).num();
+    } else {
+        if (!testPlayer("teamPokeMove(id, team, pokeindex, moveindex)", id)
+                || !testTeamCount("teamPokeMove(id, team, pokeindex, moveindex)", id, team)) {
+            return myengine.undefinedValue();
+        }
+        // TODO: testRange
+        if (pokeindex < 0 || moveindex < 0 || pokeindex >= 6 || moveindex >= 4) {
+            return myengine.undefinedValue();
+        }
+        return myserver->player(id)->team(team).poke(pokeindex).move(moveindex).num();
     }
-    // TODO: testRange
-    if (pokeindex < 0 || moveindex < 0 || pokeindex >= 6 || moveindex >= 4) {
-        return myengine.undefinedValue();
-    }
-    return myserver->player(id)->team(team).poke(pokeindex).move(moveindex).num();
 }
 
-bool ScriptEngine::hasTeamPokeMove(int id, int team, int pokeindex, int movenum)
+bool ScriptEngine::hasTeamPokeMove(int id, quint32 teamLo, int pokeindex, int movenum, quint32 teamHi)
 {
-    if (testPlayer("hasTeamPokeMove(id, team, pokeindex, movenum)", id) || !testTeamCount("hasTeamPokeMove(id, team, pokeindex, movenum)", id, team)) {
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
         // TODO: testRange
         if (pokeindex < 0 || pokeindex >= 6) {
             return false;
         }
-        PokeBattle &poke = myserver->player(id)->team(team).poke(pokeindex);
+        PokeBattle &poke = ((TeamBattle*)team)->poke(pokeindex);
 
         for (int i = 0; i < 4; i++) {
             if (poke.move(i).num() == movenum) {
-                return true;
+               return true;
             }
         }
         return false;
+    } else {
+        if (testPlayer("hasTeamPokeMove(id, team, pokeindex, movenum)", id) || !testTeamCount("hasTeamPokeMove(id, team, pokeindex, movenum)", id, team)) {
+            // TODO: testRange
+            if (pokeindex < 0 || pokeindex >= 6) {
+                return false;
+            }
+            PokeBattle &poke = myserver->player(id)->team(team).poke(pokeindex);
+
+            for (int i = 0; i < 4; i++) {
+                if (poke.move(i).num() == movenum) {
+                   return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
-    return false;
 }
 
 QScriptValue ScriptEngine::indexOfTeamPokeMove(int id, int team, int pokeindex, int movenum)
@@ -1978,7 +2089,7 @@ QScriptValue ScriptEngine::indexOfTeamPokeMove(int id, int team, int pokeindex, 
             return i;
         }
     }
-    
+
     return -1;
 }
 
@@ -1994,17 +2105,26 @@ bool ScriptEngine::hasTeamMove(int id, int team, int movenum)
     return false;
 }
 
-QScriptValue ScriptEngine::teamPokeItem(int id, int team, int index)
+QScriptValue ScriptEngine::teamPokeItem(int id, quint32 teamLo, int index, quint32 teamHi)
 {
-    if (!testPlayer("teamPokeItem(id, team, index)", id) || !testTeamCount("teamPokeItem(id, team, index)", id, team)) {
-        return myengine.undefinedValue();
-    }
-    
-    // TODO: testRange
-    if (index < 0 || index >= 6) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (index < 0 || index >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return ((TeamBattle*)team)->poke(index).item();
+        }
     } else {
-        return myserver->player(id)->team(team).poke(index).item();
+        if (!testPlayer("teamPokeItem(id, team, index)", id) || !testTeamCount("teamPokeItem(id, team, index)", id, team)) {
+            return myengine.undefinedValue();
+        }
+        // TODO: testRange
+        if (index < 0 || index >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return myserver->player(id)->team(team).poke(index).item();
+        }
     }
 }
 
@@ -2157,7 +2277,7 @@ QScriptValue ScriptEngine::teamPokeHappiness(int id, int team, int index)
     if(!testPlayer("teamPokeHappiness(id, team, index)", id) || !testTeamCount("teamPokeHappiness(id, team, index)", id, team)) {
         return myengine.undefinedValue();
     }
-    
+
     // TODO: testRange
     if (index < 0 || index >= 6) {
         return myengine.undefinedValue();
@@ -2166,61 +2286,100 @@ QScriptValue ScriptEngine::teamPokeHappiness(int id, int team, int index)
     }
 }
 
-QScriptValue ScriptEngine::teamPokeNature(int id, int team, int index)
+QScriptValue ScriptEngine::teamPokeNature(int id, quint32 teamLo, int index, quint32 teamHi)
 {
-    if (!testPlayer("teamPokeNature(id, team, index)", id) || !testTeamCount("teamPokeNature(id, team, index)", id, team)) {
-        return myengine.undefinedValue();
-    }
-    
-    // TODO: testRange
-    if (index < 0 || index >= 6) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (index < 0 || index >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return ((TeamBattle*)team)->poke(index).nature();
+        }
     } else {
-        return myserver->player(id)->team(team).poke(index).nature();
+        if (!testPlayer("teamPokeNature(id, team, index)", id) || !testTeamCount("teamPokeNature(id, team, index)", id, team)) {
+            return myengine.undefinedValue();
+        }
+        // TODO: testRange
+        if (index < 0 || index >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return myserver->player(id)->team(team).poke(index).nature();
+        }
     }
 }
 
-QScriptValue ScriptEngine::teamPokeEV(int id, int team, int index, int stat)
+QScriptValue ScriptEngine::teamPokeEV(int id, quint32 teamLo, int index, int stat, quint32 teamHi)
 {
-    if (!testPlayer("teamPokeEV(id, team, index, stat)", id) || !testTeamCount("teamPokeEV(id, team, index, stat)", id, team)) {
-        return myengine.undefinedValue();
-    }
-    
-    // TODO: testRange
-    if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return ((TeamBattle*)team)->poke(index).evs()[stat];
+        }
     } else {
-        return myserver->player(id)->team(team).poke(index).evs()[stat];
+        if (!testPlayer("teamPokeEV(id, team, index, stat)", id) || !testTeamCount("teamPokeEV(id, team, index, stat)", id, team)) {
+            return myengine.undefinedValue();
+        }
+        // TODO: testRange
+        if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return myserver->player(id)->team(team).poke(index).evs()[stat];
+        }
     }
 }
 
-QScriptValue ScriptEngine::teamPokeDV(int id, int team, int index, int stat)
+QScriptValue ScriptEngine::teamPokeDV(int id, quint32 teamLo, int index, int stat, quint32 teamHi)
 {
-    if (!testPlayer("teamPokeDV(id, team, index, stat)", id) || !testTeamCount("teamPokeDV(id, team, index, stat)", id, team)) {
-        return myengine.undefinedValue();
-    }
-    
-    // TODO: testRange
-    if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
-        return myengine.undefinedValue();
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return ((TeamBattle*)team)->poke(index).dvs()[stat];
+        }
     } else {
-        return myserver->player(id)->team(team).poke(index).dvs()[stat];
+        if (!testPlayer("teamPokeDV(id, team, index, stat)", id) || !testTeamCount("teamPokeDV(id, team, index, stat)", id, team)) {
+            return myengine.undefinedValue();
+        }
+        // TODO: testRange
+        if (index < 0 || index >= 6 || stat < 0 || stat >= 6) {
+            return myengine.undefinedValue();
+        } else {
+            return myserver->player(id)->team(team).poke(index).dvs()[stat];
+        }
     }
 }
 
-void ScriptEngine::changeTeamPokeDV(int id, int team, int slot, int stat, int newValue)
+void ScriptEngine::changeTeamPokeDV(int id, quint32 teamLo, int slot, int stat, int newValue, quint32 teamHi)
 {
-    // TODO: testRange
-    if (testPlayer("changeTeamPokeDV(id, team, slot, stat, newValue)", id)
-            && testTeamCount("changeTeamPokeDV(id, team, slot, stat, newValue)", id, team)
-            && (slot >=0 && slot <=5 && stat >=0 && stat <= 5 && newValue >= 0 && newValue <= 31)) {
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (slot >=0 && slot <=5 && stat >=0 && stat <= 5 && newValue >= 0 && newValue <= 31) {
+            ((TeamBattle*)team)->poke(slot).dvs()[stat] = newValue;
+        }
+    } else if (testPlayer("changeTeamPokeDV(id, team, slot, stat, newValue)", id)
+        && testTeamCount("changeTeamPokeDV(id, team, slot, stat, newValue)", id, team)
+        && (slot >=0 && slot <=5 && stat >=0 && stat <= 5 && newValue >= 0 && newValue <= 31)) {
+        // TODO: testRange
         myserver->player(id)->team(team).poke(slot).dvs()[stat] = newValue;
     }
 }
 
-void ScriptEngine::changeTeamPokeEV(int id, int team, int slot, int stat, int newValue)
+void ScriptEngine::changeTeamPokeEV(int id, quint32 teamLo, int slot, int stat, int newValue, quint32 teamHi)
 {
-    if (testPlayer("changeTeamPokeEV(id, team, slot, stat, newValue)", id)
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (slot >=0 && slot <6 && stat >=0 && stat <6 && newValue >= 0 && newValue <= 255) {
+                ((TeamBattle*)team)->poke(slot).evs()[stat] = newValue;
+            }
+    } else if (testPlayer("changeTeamPokeEV(id, team, slot, stat, newValue)", id)
             && testTeamCount("changeTeamPokeEV(id, team, slot, stat, newValue)", id, team)
             && (slot >=0 && slot <6 && stat >=0 && stat <6 && newValue >= 0 && newValue <= 255)) {
         /* int total = 0;
@@ -2645,14 +2804,24 @@ QString ScriptEngine::getDescription()
     return myserver->description();
 }
 
-int ScriptEngine::teamPokeAbility(int id, int team, int slot)
+int ScriptEngine::teamPokeAbility(int id, quint32 teamLo, int slot, quint32 teamHi)
 {
-    // TODO: testRange
-    if (!testPlayer("teamPokeAbility(id, team, slot)", id) || slot < 0 || slot >= 6
-            || !testTeamCount("teamPokeAbility(id, team, slot)", id, team)) {
-        return Ability::NoAbility;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (slot < 0 || slot >= 6) {
+            return Ability::NoAbility;
+        } else {
+            return ((TeamBattle*)team)->poke(slot).ability();
+        }
     } else {
-        return myserver->player(id)->team(team).poke(slot).ability();
+        // TODO: testRange
+        if (!testPlayer("teamPokeAbility(id, team, slot)", id) || slot < 0 || slot >= 6
+                || !testTeamCount("teamPokeAbility(id, team, slot)", id, team)) {
+            return Ability::NoAbility;
+        } else {
+            return myserver->player(id)->team(team).poke(slot).ability();
+        }
     }
 }
 
@@ -2688,14 +2857,23 @@ QScriptValue ScriptEngine::info(int playerId)
     }
 }
 
-void ScriptEngine::changePokeAbility(int id, int team, int slot, int ability)
+void ScriptEngine::changePokeAbility(int id, quint32 teamLo, int slot, int ability, quint32 teamHi)
 {
-    if (!testPlayer("changePokeAbility(id, team, slot, ability)", id)
-            || !testRange("changePokeAbility(id, team, slot, ability)", slot, 0, 5)
-            || !testTeamCount("changePokeAbility(id, team, slot, ability)", id, team)) {
-        return;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeAbility(id, team, slot, ability)", slot, 0, 5)) {
+            return;
+        }
+        ((TeamBattle*)team)->poke(slot).ability() = ability;
+    } else {
+        if (!testPlayer("changePokeAbility(id, team, slot, ability)", id)
+                || !testRange("changePokeAbility(id, team, slot, ability)", slot, 0, 5)
+                || !testTeamCount("changePokeAbility(id, team, slot, ability)", id, team)) {
+            return;
+        }
+        myserver->player(id)->team(team).poke(slot).ability() = ability;
     }
-    myserver->player(id)->team(team).poke(slot).ability() = ability;
 }
 
 QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
@@ -2708,35 +2886,62 @@ QScriptValue ScriptEngine::pokeAbility(int poke, int slot, int gen)
     return myengine.undefinedValue();
 }
 
-void ScriptEngine::changePokeHappiness(int id, int team, int slot, int value)
+void ScriptEngine::changePokeHappiness(int id, quint32 teamLo, int slot, int value, quint32 teamHi)
 {
-    if (!testPlayer("changePokeHappiness(id, team, slot, value)", id)
-            || !testRange("changePokeHappiness(id, team, slot, value)", slot, 0, 5)
-            || !testRange("changePokeHappiness(id, team, slot, value)", value, 0, 255)
-            || !testTeamCount("changePokeHappiness(id, team, slot, value)", id, team)) {
-        return;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeHappiness(id, team, slot, value)", slot, 0, 5)
+                || !testRange("changePokeHappiness(id, team, slot, value)", value, 0, 255)) {
+            return;
+        }
+        ((TeamBattle*)team)->poke(slot).happiness() = value;
+    } else {
+        if (!testPlayer("changePokeHappiness(id, team, slot, value)", id)
+                || !testRange("changePokeHappiness(id, team, slot, value)", slot, 0, 5)
+                || !testRange("changePokeHappiness(id, team, slot, value)", value, 0, 255)
+                || !testTeamCount("changePokeHappiness(id, team, slot, value)", id, team)) {
+            return;
+        }
+        myserver->player(id)->team(team).poke(slot).happiness() = value;
     }
-    myserver->player(id)->team(team).poke(slot).happiness() = value;
 }
 
-void ScriptEngine::changePokeShine(int id, int team, int slot, bool value)
+void ScriptEngine::changePokeShine(int id, quint32 teamLo, int slot, bool value, quint32 teamHi)
 {
-    if (!testPlayer("changePokeShine(id, team, slot, value)", id)
-            || !testRange("changePokeShine(id, team, slot, value)", slot, 0, 5)
-            || !testTeamCount("changePokeShine(id, team, slot, value)", id, team)) {
-        return;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeShine(id, team, slot, value)", slot, 0, 5)) {
+            return;
+        }
+        ((TeamBattle*)team)->poke(slot).shiny() = value;
+    } else {
+        if (!testPlayer("changePokeShine(id, team, slot, value)", id)
+                || !testRange("changePokeShine(id, team, slot, value)", slot, 0, 5)
+                || !testTeamCount("changePokeShine(id, team, slot, value)", id, team)) {
+            return;
+        }
+        myserver->player(id)->team(team).poke(slot).shiny() = value;
     }
-    myserver->player(id)->team(team).poke(slot).shiny() = value;
 }
 
-void ScriptEngine::changePokeNature(int id, int team, int slot, int nature)
+void ScriptEngine::changePokeNature(int id, quint32 teamLo, int slot, int nature, quint32 teamHi)
 {
-    if(!testPlayer("changePokeNature(id, team, slot, nature)", id)
-            || !testRange("changePokeNature(id, team, slot, nature)", slot, 0, 15)
-            || !testTeamCount("changePokeNature(id, team, slot, nature)", id, team))
-        return;
-    // Ugly, we don't have NatureInfo::Exists(nature) or we do?
-    myserver->player(id)->team(team).poke(slot).nature() = nature;
+    quint64 team = teamHi;
+    team = (team << 32) + teamLo;
+    if (team > 100) {
+        if (!testRange("changePokeNature(id, team, slot, nature)", slot, 0, 15))
+            return;
+        ((TeamBattle*)team)->poke(slot).nature() = nature;
+    } else {
+        if (!testPlayer("changePokeNature(id, team, slot, nature)", id)
+                || !testRange("changePokeNature(id, team, slot, nature)", slot, 0, 15)
+                || !testTeamCount("changePokeNature(id, team, slot, nature)", id, team))
+            return;
+        // Ugly, we don't have NatureInfo::Exists(nature) or we do?
+        myserver->player(id)->team(team).poke(slot).nature() = nature;
+    }
 }
 
 QScriptValue ScriptEngine::teamPokeGender(int id, int team, int slot)
@@ -3250,7 +3455,7 @@ void ScriptEngine::webCall(const QString &urlstring, const QScriptValue &callbac
         warn("webCall(urlstring, callback, params_array)", "callback is not a string or a function.");
         return;
     }
-    
+
     QNetworkRequest request;
     QByteArray postData;
 
@@ -3354,7 +3559,7 @@ QScriptValue ScriptEngine::getValKeys()
     QSettings s;
     QStringList list = s.childKeys();
     QStringList result_data;
-    
+
     QStringListIterator it(list);
     while (it.hasNext()) {
         QString v = it.next();
@@ -3375,7 +3580,7 @@ QScriptValue ScriptEngine::getValKeys(const QString &file)
     QSettings s(file, QSettings::IniFormat);
     QStringList list = s.childKeys();
     QStringList result_data;
-    
+
     QStringListIterator it(list);
     while (it.hasNext()) {
         QString v = it.next();

@@ -309,8 +309,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
     int oldAttacker = attacker();
     int oldAttacked = attacked();
 
-    heatOfAttack() = true;
-
     attacker() = player;
 
     int attack;
@@ -370,7 +368,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         }
     }
 
-    heatOfAttack() = true;
     attacked() = target;
     if (!specialOccurence && (tmove(player).flags & Move::MemorableFlag) ) {
         //pokeMemory(target)["MirrorMoveMemory"] = attack;
@@ -384,10 +381,15 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         pokeMemory(player).remove("DamageInflicted");
         calleffects(player,target,"AttackSomehowFailed");
         battleMemory()["LastDamageTakenByAny"] = 0; //Counter fails if last move used missed
-        goto endloop;
+        goto trueend;
     }
     //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
     /* Protect, ... */
+
+    //A pokemon can only be thawed by a move that can inflict burn. You can thaw and burn on the same turn
+    if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen && attack != Move::FireSpin) {
+        unthaw(target);
+    }
 
     if (tmove(player).power > 0 && player != target && !turnMem(player).contains(TM::BuildUp))
     {
@@ -398,13 +400,13 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             /* If it's ineffective we just say it */
             notify(All, Effective, target, quint8(0));
             calleffects(player,target,"AttackSomehowFailed");
-            goto endloop;
+            goto trueend;
         }
 
         calleffects(player, target, "DetermineAttackFailure");
         if (testFail(player)){
             calleffects(player,target,"AttackSomehowFailed");
-            goto endloop;
+            goto trueend;
         }
 
         int num = repeatNum(player);
@@ -428,7 +430,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         int hitcount = 0;
 
         for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
-            heatOfAttack() = true;
             fpoke(target).remove(BasicPokeInfo::HadSubstitute);
             bool sub = hasSubstitute(target);
             if (sub) {
@@ -453,10 +454,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             calleffects(player, target, "UponAttackSuccessful");
             healDamage(player, target);
 
-            heatOfAttack() = false;
-
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
-            applyMoveStatMods(player, target);
+            /* Twineedle can't poison on the first hit */
+            if (attack != Move::Twineedle || repeatCount() > 0) {
+                applyMoveStatMods(player, target);
+            }
 
             if (!sub && !koed(target)) {
                 testFlinch(player, target);
@@ -464,8 +466,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
             attackCount() += 1;
         }
-
-        heatOfAttack() = false;
 
         if (hit) {
             notifyHits(player, hitcount);
@@ -486,14 +486,14 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
                  ((attack == Move::ThunderWave || attack == Move::Toxic || attack == Move::PoisonGas || attack == Move::PoisonPowder)
                   && TypeInfo::Eff(type, getType(target, 1)) * TypeInfo::Eff(type, getType(target, 2)) == 0))) {
             notify(All, Failed, player);
-            goto endloop;
+            goto trueend;
         }
 
 
         calleffects(player, target, "DetermineAttackFailure");
         if (testFail(player)){
             calleffects(player,target,"AttackSomehowFailed");
-            goto endloop;
+            goto trueend;
         }
 
         applyMoveStatMods(player, target);
@@ -508,15 +508,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
         healDamage(player, target);
     }
 
-    if (tmove(player).type == Type::Fire && poke(target).status() == Pokemon::Frozen) {
-        unthaw(target);
-    }
-
     //pokeMemory(target)["LastAttackToHit"] = attack;
-
-    endloop:
-
-    heatOfAttack() = false;
 
     trueend:
 

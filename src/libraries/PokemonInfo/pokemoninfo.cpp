@@ -82,6 +82,7 @@ QString AbilityInfo::m_Directory;
 QVector<QHash<int,AbilityInfo::Effect> > AbilityInfo::m_Effects;
 QHash<int, QStringList> AbilityInfo::m_Messages;
 QHash<int,int> AbilityInfo::m_OldAbilities;
+QHash<int,bool> AbilityInfo::m_moldBreaker;
 
 QHash<int, QString> GenderInfo::m_Names;
 QString GenderInfo::m_Directory;
@@ -1261,6 +1262,10 @@ QPixmap PokemonInfo::Icon(const Pokemon::uniqueId &pokeid, int gender, bool mod)
     {
         if (mod) {
             return Icon(pokeid, gender, false);
+        }
+
+        if (gender == Pokemon::Female) {
+            return Icon(pokeid, Pokemon::Male, true);
         }
 
         if (IsForme(pokeid)) {
@@ -2939,6 +2944,8 @@ bool AbilityInfo::Exists(int ability, Pokemon::gen gen)
 
 void AbilityInfo::loadEffects()
 {
+    fill_int_bool(m_moldBreaker, path("mold_breaker.txt"));
+
     m_Effects.clear();
     m_Effects.resize(GenInfo::NumberOfGens());
 
@@ -2986,6 +2993,11 @@ int AbilityInfo::Number(const QString &ability)
 QString AbilityInfo::Name(int abnum)
 {
     return m_Names[abnum];
+}
+
+bool AbilityInfo::moldBreakable(int abnum)
+{
+    return m_moldBreaker[abnum];
 }
 
 int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
