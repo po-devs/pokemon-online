@@ -3360,14 +3360,28 @@ struct MMMetalBurst : public MM
         turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
+<<<<<<< HEAD
+    static void daf (int s, int t, BS &b) {
+        int dam = poke(b,s)["DamageTakenByAttack"].toInt();
+        if (dam == 0) {
+=======
     static void daf (int s, int, BS &b) {
         if (turn(b,s).value("CounterDamage").toInt() <= 0) {
+>>>>>>> 6efa508ff9e246d7a124a3bc53a7769bd80bfb08
             fturn(b,s).add(TM::Failed);
         }
+<<<<<<< HEAD
+
+        if (!b.hasMoved(t)) {
+            fturn(b,s).add(TM::Failed);
+        }
+        turn(b,s)["CounterDamage"] = dam * 3 / 2;
+=======
     }
 
     static void udi(int s, int, BS &b) {
         turn(b,s)["CounterDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 3 / 2;
+>>>>>>> 6efa508ff9e246d7a124a3bc53a7769bd80bfb08
     }
 
     static void cad(int s, int, BS &b) {
