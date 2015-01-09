@@ -3360,8 +3360,12 @@ struct MMMetalBurst : public MM
         turn(b,s)["Target"] = turn(b,s).value("DamageTakenBy").toInt();
     }
 
-    static void daf (int s, int, BS &b) {
+    static void daf (int s, int t, BS &b) {
         if (turn(b,s).value("CounterDamage").toInt() <= 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+        
+        if (!b.hasMoved(t)) {
             fturn(b,s).add(TM::Failed);
         }
     }
