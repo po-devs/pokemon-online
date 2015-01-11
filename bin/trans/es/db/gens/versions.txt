@@ -16,3 +16,4 @@
 5:0 Blanco/Negro
 5:1 Blanco/Negro 2
 6:0 X/Y
+6:1 Rubino Omega/Zaffiro Alpha

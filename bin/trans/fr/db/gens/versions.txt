@@ -16,4 +16,4 @@
 5:0 Noire/Blanche
 5:1 Noire/Blanche 2
 6:0 X/Y
-6:1 Eubis Oméga/Saphir Alpha
+6:1 Rubis Oméga/Saphir Alpha
