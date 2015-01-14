@@ -1049,7 +1049,7 @@ struct IMPrimalOrb : public IM {
     static void us(int s, int, BS &b) {
         if (ItemInfo::MegaStoneForme(b.poke(s).item()).original() == b.poke(s).num()) {
             b.sendItemMessage(67, s);
-            b.changeForme(b.player(s), b.slotNum(s), ItemInfo::MegaStoneForme(b.poke(s).item()));
+            b.changeForme(b.player(s), b.slotNum(s), ItemInfo::MegaStoneForme(b.poke(s).item()), false, false, true);
             turn(b,s)["PrimalForme"] = true;
         }
     }

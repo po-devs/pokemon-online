@@ -895,7 +895,7 @@ void BattleSituation::megaEvolve(int slot)
         if ((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
             Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
             sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
-            changeForme(player(slot), slotNum(slot), forme);
+            changeForme(player(slot), slotNum(slot), forme, false, false, true);
             megas[player(slot)] = true;
         }
     }
@@ -3636,7 +3636,7 @@ void BattleSituation::loseItem(int player, bool real)
     }
 }
 
-void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme, bool temp, bool transform)
+void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId &newforme, bool temp, bool transform, bool mega)
 {
     PokeBattle &p  = this->poke(player,poke);
     if (p.num() == newforme) {
@@ -3653,10 +3653,12 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 
     if (!transform) {
         int abnum = 0;
-        for (int i = 0; i < 3; i++) {
-            if (o.ability() == PokemonInfo::Abilities(o.num(), gen()).ab(i)) {
-                abnum = i;
-                break;
+        if (!mega) {
+            for (int i = 0; i < 3; i++) {
+                if (o.ability() == PokemonInfo::Abilities(o.num(), gen()).ab(i)) {
+                    abnum = i;
+                    break;
+                }
             }
         }
 
