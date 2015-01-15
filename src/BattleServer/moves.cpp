@@ -2559,7 +2559,7 @@ struct MMUTurn : public MM
         if (b.koed(s)) {
             return;
         }
-        if (turn(b,b.opponent(s)).value("EscapeButtonActivated").toBool()) {
+        if (turn(b,b.opponent(b.player(s))).value("EscapeButtonActivated").toBool()) {
             return;
         }
 
