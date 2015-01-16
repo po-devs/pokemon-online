@@ -55,10 +55,15 @@ BattleScene::BattleScene(battledata_ptr dat, BattleDefaultTheme *theme, QVariant
     // Set optimizations not already done in QDeclarativeView
     mWidget->setAttribute(Qt::WA_OpaquePaintEvent);
     mWidget->setAttribute(Qt::WA_NoSystemBackground);
+
+    // Using OpenGL for the viewport causes horrible lag on Mac
+    
+#ifndef Q_OS_MACX
     // Make QDeclarativeView use OpenGL backend
     QGLWidget *glWidget = new QGLWidget(mWidget);
     mWidget->setViewport(glWidget);
     mWidget->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+#endif
 
     mWidget->engine()->rootContext()->setContextProperty("battle", mOwnProxy);
     mWidget->engine()->addImageProvider("pokeinfo", new PokemonInfoAccessor());
