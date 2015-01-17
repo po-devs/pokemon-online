@@ -3335,7 +3335,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     //Final Modifier is Reflect/Mutliscale/etc. Allows damage to be 0 only if one exists to lessen damage.
     //Value of 100 or larger means there are more offensive modifiers than defensive and damage will never be 0.
-    if (damage == 0 && turnMemory(player).value("FinalModifier").toInt() >= 100) {
+    int finalmod = turnMemory(player).value("FinalModifier").toInt();
+    if (damage == 0 && (finalmod >= 100 || finalmod == 0)) {
         damage = 1;
     }
 
