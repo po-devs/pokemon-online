@@ -312,7 +312,7 @@ struct MMCamouflage : public MM {
         if (b.gen().num == 5) {
             type = Pokemon::Ground;
         }
-        if (b.terrain != 0) {
+        if (b.terrain != 0 && b.terrain != Type::Curse) {
             type = std::abs(b.terrain);
         }
         //Move fails if the type you're transforming to is EXACTLY your typing.
