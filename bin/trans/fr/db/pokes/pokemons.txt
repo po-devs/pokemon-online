@@ -807,8 +807,7 @@
 713:0 Séracrawl
 714:0 Sonistrelle
 715:0 Bruyverne
-716:0:H Xerneas
-716:1 Xerneas-A
+716:0 Xerneas
 717:0 Yveltal
 718:0 Zygarde
 719:0 Diancie

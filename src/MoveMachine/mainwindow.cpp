@@ -122,6 +122,14 @@ void PokeMovesDb::save()
                     if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
                         continue;
                     }
+
+                    //Discard pre-evo/egg moves from event pokemon
+                    if (PokemonInfo::IsForme(id) && (id.pokenum == Pokemon::Pikachu || id.pokenum == Pokemon::Floette)) {
+                        if (i == EggMoves || i == PreEvoMoves) {
+                            continue;
+                        }
+                    }
+
                     if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
                         continue;
                     }
@@ -182,6 +190,14 @@ void PokeMovesDb::save()
                 if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
                     continue;
                 }
+
+                //Discard pre-evo/egg moves from event pokemon
+                if (PokemonInfo::IsForme(id) && (id.pokenum == Pokemon::Pikachu || id.pokenum == Pokemon::Floette)) {
+                    if (i == EggMoves || i == PreEvoMoves) {
+                        continue;
+                    }
+                }
+
                 if (!pokes[id].gens.contains(g) || pokes[id].gens[g].moves[i].count() == 0) {
                     continue;
                 }

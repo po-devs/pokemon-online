@@ -912,10 +912,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (poke(player,pok).num() == Pokemon::Giratina && poke(player,pok).item() == Item::GriseousOrb) {
         changeForme(player,pok,Pokemon::Giratina_O);
     }
-    //Change the form so Zoroark isn't "unmasked"
-    if (poke(player,pok).num() == Pokemon::Xerneas) {
-        changeForme(player,pok,Pokemon::Xerneas_A);
-    }
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
@@ -3335,7 +3331,8 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     //Final Modifier is Reflect/Mutliscale/etc. Allows damage to be 0 only if one exists to lessen damage.
     //Value of 100 or larger means there are more offensive modifiers than defensive and damage will never be 0.
-    if (damage == 0 && turnMemory(player).value("FinalModifier").toInt() >= 100) {
+    int finalmod = turnMemory(player).value("FinalModifier").toInt();
+    if (damage == 0 && (finalmod >= 100 || finalmod == 0)) {
         damage = 1;
     }
 
@@ -4018,11 +4015,6 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.nick() = p2.nick();
         p.gender() = p2.gender();
         p.shiny() = p2.shiny();
-
-        /* Special case: xerneas and its other forme */
-        if (p.num() == Pokemon::Xerneas) {
-            p.num() = Pokemon::Xerneas_A;
-        }
 
         return p;
     } else {
