@@ -912,10 +912,6 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     if (poke(player,pok).num() == Pokemon::Giratina && poke(player,pok).item() == Item::GriseousOrb) {
         changeForme(player,pok,Pokemon::Giratina_O);
     }
-    //Change the form so Zoroark isn't "unmasked"
-    if (poke(player,pok).num() == Pokemon::Xerneas) {
-        changeForme(player,pok,Pokemon::Xerneas_A);
-    }
 
     /* reset temporary variables */
     pokeMemory(slot).clear();
@@ -4019,11 +4015,6 @@ ShallowBattlePoke BattleSituation::opoke(int slot, int player, int i) const
         p.nick() = p2.nick();
         p.gender() = p2.gender();
         p.shiny() = p2.shiny();
-
-        /* Special case: xerneas and its other forme */
-        if (p.num() == Pokemon::Xerneas) {
-            p.num() = Pokemon::Xerneas_A;
-        }
 
         return p;
     } else {
