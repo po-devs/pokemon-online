@@ -64,6 +64,7 @@ public:
     Q_PROPERTY(int gender READ gender NOTIFY pokemonReset)
     Q_PROPERTY(int level READ level NOTIFY pokemonReset)
     Q_PROPERTY(int numRef READ numRef STORED false NOTIFY numChanged)
+    Q_PROPERTY(int ability READ ability STORED false NOTIFY abilityChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
     Q_PROPERTY(int lifePercent READ lifePercent STORED false NOTIFY lifeChanged)
     Q_PROPERTY(int totalLife READ totalLife NOTIFY pokemonReset)
@@ -113,6 +114,7 @@ public:
     void adaptTo(const PokeBattle *pokemon);
     void changeStatus(int fullStatus);
     void setNum(Pokemon::uniqueId num);
+    void setAbility(int newAbility);
     void setLife(int newLife);
     void setItem(int newItem);
 
@@ -125,6 +127,7 @@ public:
     ShallowBattlePoke *exposedData() { return d();}
 signals:
     void numChanged();
+    void abilityChanged();
     void statusChanged();
     void pokemonReset();
     void lifeChanged();

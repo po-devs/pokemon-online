@@ -3672,8 +3672,10 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         fpoke(slot).id = newforme;
 
         if (!transform) {
-            if (gen() >= 3)
+            if (gen() >= 3) {
                 acquireAbility(slot, p.ability());
+                notify(player, ChangeTempPoke, player, quint8(TempAbility), quint8(poke), p.ability());
+            }
 
             for (int i = 1; i < 6; i++)
                 fpoke(slot).stats[i] = p.normalStat(i);

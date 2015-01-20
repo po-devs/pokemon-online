@@ -97,6 +97,11 @@ public:
         fieldPoke(spot).changeForme(subforme);
     }
 
+    void onAbilityChange(int player, int poke, int newAbility)
+    {
+        team(player).poke(poke)->setAbility(newAbility);
+    }
+
     void onShiftSpots(int player, int spot1, int spot2, bool)
     {
         d()->field()->shiftSpots(spot(player, spot1), spot(player, spot2));

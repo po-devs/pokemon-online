@@ -183,6 +183,15 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
     emit numChanged();
 }
 
+void PokeProxy::setAbility(int newAbility)
+{
+    if (!hasExposedData() || dd()->ability() == newAbility) {
+        return;
+    }
+    dd()->ability() = newAbility;
+    emit abilityChanged();
+}
+
 void PokeProxy::setItem(int newItem)
 {
     if (!hasExposedData() || dd()->item() == newItem) {
