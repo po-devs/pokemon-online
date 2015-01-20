@@ -82,6 +82,10 @@ QVariant PokeMovesModel::headerData(int section, Qt::Orientation orientation, in
             return tr("Acc");
         } else if (section == Category) {
             return tr("Category");
+        } else if (section == Range) {
+            return tr("Range");
+        } else if (section == Priority) {
+            return tr("Priority");
         }
     case Qt::ToolTipRole:
         if (section == Type) {
@@ -89,7 +93,7 @@ QVariant PokeMovesModel::headerData(int section, Qt::Orientation orientation, in
         } else if (section == Name) {
             return tr("The name of the attack");
         } else if (section == Learning) {
-            return tr ("The way the pokemon learns the attack. There may be several ways a pokemon learns an attack, "
+            return tr ("The way the Pokemon learns the attack. There may be several ways a pokemon learns an attack, "
                        "in which case only the most recent/easy way is displayed.");
         } else if (section == PP) {
             return tr("The total number of PP for the attack, including PP ups.");
@@ -99,6 +103,10 @@ QVariant PokeMovesModel::headerData(int section, Qt::Orientation orientation, in
             return tr("The accuracy of the attack, in percentage. -- indicates it never misses.");
         } else if (section == Category) {
             return tr("The type of damage the attack deals, or Other if it doesn't deal direct damage");
+        } else if (section == Range) {
+            return tr("The Pokemon affected by the move.");
+        } else if (section == Priority) {
+            return tr("The speed bracket of a move.");
         }
     };
     return QVariant();
@@ -129,6 +137,10 @@ QVariant PokeMovesModel::data(const QModelIndex &index, int role) const
             return MoveInfo::AccS(movenum, gen);
         } else if (section == Category) {
             return CategoryInfo::Name(MoveInfo::Category(movenum, gen));
+        } else if (section == Range) {
+            return MoveInfo::TargetS(movenum, gen);
+        }else if (section == Priority) {
+            return MoveInfo::PriorityS(movenum, gen);
         }
     case Qt::DecorationRole:
         if (section == Type) {

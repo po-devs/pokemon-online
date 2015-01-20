@@ -70,8 +70,8 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     ui->nickname->setCompleter(completer);
     connect(completer, SIGNAL(activated(QString)), SLOT(setNum(QString)));
 
-    /* 12 characters for the name */
-    ui->nickname->setValidator(new QNickValidator(ui->nickname, 12));
+    /* 20 characters for the name. Longest name: Vivillon-Archipelago = 20 characters */
+    ui->nickname->setValidator(new QNickValidator(ui->nickname, 20));
 
     movesModel = new PokeMovesModel(poke->num(), poke->gen(), this);
     QSortFilterProxyModel *filter = new QSortFilterProxyModel(this);
@@ -80,6 +80,7 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
 
 #ifdef QT5
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Priority, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
@@ -419,9 +420,9 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
     poke().setNum(num);
     poke().load();
 
-    if (!sameForme) {
+    //if (!sameForme) {
         poke().nickname() = PokemonInfo::Name(num);
-    }
+    //}
 
     if (sameForme) {
         poke().runCheck();

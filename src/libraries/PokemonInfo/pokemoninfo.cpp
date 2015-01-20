@@ -65,6 +65,7 @@ QHash<int,int> ItemInfo::m_BerryPowers;
 QHash<int,int> ItemInfo::m_BerryTypes;
 QHash<int, bool> ItemInfo::m_UsefulItems, ItemInfo::m_UsefulBerries;
 QVector<QSet<int> > ItemInfo::m_GenItems;
+QHash<int,QString> ItemInfo::m_ItemDesc;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -2023,6 +2024,19 @@ int MoveInfo::SpeedPriority(int movenum, Pokemon::gen g)
     move_find(priority, movenum, g);
 }
 
+QString MoveInfo::PriorityS(int movenum, Pokemon::gen gen)
+{
+    int p = MoveInfo::SpeedPriority(movenum, gen);
+
+    if (p == 0)
+        return "--";
+    else if (p > 0)
+        return QString("+%1").arg(p);
+    else
+        return QString::number(p);
+}
+
+
 int MoveInfo::Flags(int movenum, Pokemon::gen g)
 {
     move_find(flags, movenum, g);
@@ -2066,6 +2080,44 @@ quint32 MoveInfo::RateOfStat(int movenum, Pokemon::gen g)
 int MoveInfo::Target(int movenum, Pokemon::gen g)
 {
     move_find(range, movenum, g);
+}
+
+QString MoveInfo::TargetS(int movenum, Pokemon::gen gen)
+{
+    int p = MoveInfo::Target(movenum, gen);
+
+    switch(p) {
+        case Move::ChosenTarget:
+            return QString("Single Target");
+        case Move::PartnerOrUser:
+            return QString("Self or Ally");
+        case Move::Partner:
+            return QString("Single Ally");
+        case Move::MeFirstTarget:
+            return QString("Single Target");
+        case Move::AllButSelf:
+            return QString("All But Self");
+        case Move::Opponents:
+            return QString("Adjacent Foes");
+        case Move::TeamParty:
+            return QString("User's Team");
+        case Move::User:
+            return QString("Self");
+        case Move::All:
+            return QString("All");
+        case Move::RandomTarget:
+            return QString("Random");
+        case Move::Field:
+            return QString("Field");
+        case Move::OpposingTeam:
+            return QString("All Foes");
+        case Move::TeamSide:
+            return QString("All Allies");
+        case Move::IndeterminateTarget:
+            return QString("Self");
+        default:
+            return QString("---");
+    }
 }
 
 int MoveInfo::Healing(int movenum, Pokemon::gen g)
@@ -2142,12 +2194,14 @@ void ItemInfo::init(const QString &dir)
     loadEffects();
     loadFlingData();
     loadMessages();
+    loadDescriptions();
 }
 
 void ItemInfo::retranslate()
 {
     loadNames();
     loadMessages();
+    loadDescriptions();
 }
 
 void ItemInfo::loadGenData()
@@ -2233,6 +2287,11 @@ void ItemInfo::loadMessages()
 {
     ::loadMessages(path("item_messages.txt"), m_RegMessages);
     ::loadMessages(path("berry_messages.txt"), m_BerryMessages);
+}
+
+void ItemInfo::loadDescriptions()
+{
+    fill_int_str(m_ItemDesc, path("item_descriptions.txt"));
 }
 
 void ItemInfo::loadFlingData()
@@ -2322,6 +2381,11 @@ QString ItemInfo::Message(int effect, int part)
 QString ItemInfo::path(const QString &file)
 {
     return m_Directory + file;
+}
+
+QString ItemInfo::ItemDesc(int item)
+{
+    return m_ItemDesc[item];
 }
 
 int ItemInfo::NumberOfItems()

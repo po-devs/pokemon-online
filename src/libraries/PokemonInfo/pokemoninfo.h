@@ -256,6 +256,7 @@ public:
     static int RepeatMin(int movenum, Pokemon::gen gen);
     static int RepeatMax(int movenum, Pokemon::gen gen);
     static int SpeedPriority(int movenum, Pokemon::gen gen);
+    static QString PriorityS(int movenum, Pokemon::gen gen);
     static int Flags(int movenum, Pokemon::gen gen);
     static bool Exists(int movenum, Pokemon::gen gen);
     static bool isOHKO(int movenum, Pokemon::gen gen);
@@ -266,6 +267,7 @@ public:
     static quint32 BoostOfStat(int movenum, Pokemon::gen gen);
     static quint32 RateOfStat(int movenum, Pokemon::gen gen);
     static int Target(int movenum, Pokemon::gen gen);
+    static QString TargetS(int movenum, Pokemon::gen gen);
     static int Healing(int movenum, Pokemon::gen gen);
     static int MinTurns(int movenum, Pokemon::gen gen);
     static int MaxTurns(int movenum, Pokemon::gen gen);
@@ -377,12 +379,13 @@ public:
     static QList<Effect> Effects(int item, Pokemon::gen gen);
     static QString Message(int item, int part);
     static int Number(const QString &itemname);
-    static QString Description(int itemnum);
+    //static QString Description(int itemnum);
     static int Power(int itemnum);
     static int BerryPower(int itemnum);
     static int BerryType(int itemnum);
     static QPixmap Icon(int itemnum, bool mod=true);
     static QPixmap HeldItem();
+    static QString ItemDesc(int item);
 private:
     static QHash<int,QString> m_BerryNames;
     static QHash<int,QString> m_RegItemNames;
@@ -400,12 +403,14 @@ private:
     static QHash<int,int> m_BerryTypes;
     static QHash<int, bool> m_UsefulItems, m_UsefulBerries;
     static QVector<QSet<int> > m_GenItems;
+    static QHash<int,QString> m_ItemDesc;
 
     static void loadNames();
     static void loadEffects();
     static void loadFlingData();
     static void loadGenData();
     static void loadMessages();
+    static void loadDescriptions();
     static QString path(const QString &filename);
 };
 

@@ -25,6 +25,8 @@ public:
         Pow,
         Acc,
         Category,
+        Priority,
+        Range,
         LastColumn
     };
 private:

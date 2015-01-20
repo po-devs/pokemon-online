@@ -1047,9 +1047,9 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Po
 
     QString moveCategory;
     moveCategory = CategoryInfo::Name(MoveInfo::Category(b.num(), gen));
-    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\n\nDescription: %5").arg(MoveInfo::Name(b.num()), power,
+    QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\nRange: %6\n\nDescription: %5").arg(MoveInfo::Name(b.num()), power,
                                                                                                 MoveInfo::AccS(b.num(), gen), moveCategory,
-                                                                                                MoveInfo::Description(b.num(), gen));
+                                                                                                MoveInfo::Description(b.num(), gen), MoveInfo::TargetS(b.num(), gen));
 
     int type = b.num() == Move::HiddenPower ?
                 HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
