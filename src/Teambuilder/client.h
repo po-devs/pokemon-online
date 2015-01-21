@@ -75,6 +75,7 @@ public:
     Q_INVOKABLE Channel *channel(int channelid);
     Q_INVOKABLE int ownId() const;
     Q_INVOKABLE int ownAuth() const;
+    Q_INVOKABLE int version() const;
 
     Q_INVOKABLE int auth(int id) const;
     Q_INVOKABLE bool isIgnored(int id) const;

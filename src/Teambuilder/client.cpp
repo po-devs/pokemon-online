@@ -285,6 +285,11 @@ int Client::currentChannel() const
     return m_channelByNames[mainChat->tabText(mainChat->currentIndex()).toLower()];
 }
 
+int Client::version() const
+{
+    return CLIENT_VERSION_NUMBER;
+}
+
 QIcon Client::statusIcon(int auth, Status status) const
 {
     if (auth > 3 || auth < 0)
