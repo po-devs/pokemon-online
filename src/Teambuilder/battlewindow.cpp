@@ -754,6 +754,16 @@ void BattleWindow::onMoveChange(int spot, int slot, int, bool definite)
     }
 }
 
+void BattleWindow::onDefiniteFormeChange(int spot, int, int)
+{
+    mypzone->pokes[data().slotNum(spot)]->updateIcon();
+}
+
+void BattleWindow::onCosmeticFormeChange(int spot, int)
+{
+    mypzone->pokes[data().slotNum(spot)]->updateIcon();
+}
+
 void BattleWindow::onChoiceSelection(int player)
 {
     if (player != info().myself) {
@@ -1080,11 +1090,9 @@ PokeZone::PokeZone(const TeamProxy &team)
 BattlePokeButton::BattlePokeButton(const PokeProxy &p)
     : p(&p)
 {
-    setIconSize(QSize(32,32));
+    setIconSize(QSize(40,40));
     setIcon(PokemonInfo::Icon(p.num(), p.gender()));
     update();
-
-    updateToolTip();
 }
 
 void BattlePokeButton::changePokemon(const PokeProxy &p)
@@ -1093,8 +1101,6 @@ void BattlePokeButton::changePokemon(const PokeProxy &p)
 
     setIcon(PokemonInfo::Icon(p.num(), p.gender()));
     update();
-
-    updateToolTip();
 }
 
 void BattlePokeButton::update()
@@ -1106,9 +1112,16 @@ void BattlePokeButton::update()
     } else {
         setStyleSheet("background: " + Theme::StatusColor(status).name() + ";");
     }
-    
+
+    updateIcon();
     updateToolTip();
     setAccessibleName(PokemonInfo::Name(p->num()));
+}
+
+void BattlePokeButton::updateIcon()
+{
+    const PokeProxy &p = *(this->p);
+    setIcon(PokemonInfo::Icon(p.num(), p.gender()));
 }
 
 void BattlePokeButton::updateToolTip()
@@ -1157,7 +1170,7 @@ TargetSelection::TargetSelection(const BattleInfo &info)
         gl->addWidget(pokes[i] = new QPushButton(), !opp, info.data->slotNum(i));
         pokes[i]->setCheckable(true);
         pokes[i]->setObjectName("PokemonTargetButton");
-        pokes[i]->setIconSize(QSize(32,32));
+        pokes[i]->setIconSize(QSize(40,40));
 
         bg->addButton(pokes[i], i);
     }

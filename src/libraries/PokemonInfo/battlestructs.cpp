@@ -324,6 +324,7 @@ ShallowBattlePoke::ShallowBattlePoke()
     gender() = 0;
     fullStatus() = 1;
     level() = 100;
+    ability() = 0;
 }
 
 ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)

@@ -3674,8 +3674,10 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         if (!transform) {
             //Only change ability if it actually needs to be changed.
             //Imposter is overriden because there's nothing to cancel a transform in battle but without an override it causes a double transform in sendBack.
-            if (p.ability() != Ability::ZenMode && p.ability() != Ability::Forecast && p.ability() != Ability::Imposter)
+            if (gen() >= 3 && p.ability() != Ability::ZenMode && p.ability() != Ability::Forecast && p.ability() != Ability::Imposter) {
                 acquireAbility(slot, p.ability());
+                notify(player, ChangeTempPoke, player, quint8(TempAbility), quint8(poke), p.ability());
+            }
 
             for (int i = 1; i < 6; i++)
                 fpoke(slot).stats[i] = p.normalStat(i);

@@ -106,6 +106,8 @@ public:
     void onTempPPChange(int spot, int move, int PP);
     void onOfferChoice(int player, const BattleChoices &choice);
     void onMoveChange(int spot, int slot, int move, bool definite);
+    void onDefiniteFormeChange(int spot, int, int);
+    void onCosmeticFormeChange(int spot, int);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
     void onChoiceSelection(int player);
     void onChoiceCancellation(int player);
@@ -258,6 +260,7 @@ public:
     BattlePokeButton(const PokeProxy &p);
     void changePokemon(const PokeProxy &p);
     void update();
+    void updateIcon();
     void updateToolTip();
 private:
 

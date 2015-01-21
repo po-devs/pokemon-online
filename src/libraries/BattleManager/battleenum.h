@@ -57,13 +57,14 @@ enum /* class */ BattleEnum
     OfferChoice,
     TempPPChange,
     MoveChange,
+    AbilityChange,
     RearrangeTeam,
     ChoiceSelection,
     ChoiceCancelled,
     Variation,
     DynamicStats,
-    PrintHtml,
-    Reconnect, //60
+    PrintHtml, //60
+    Reconnect,
     Disconnect,
     /* Player choices, that the player actually make (as opposed to choice offered by the server) */
     ChooseAttack,

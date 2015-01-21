@@ -420,6 +420,11 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
             in >> slot >> move;
 
             output<BattleEnum::MoveChange>(spot, slot, move, type==BC::DefMove);
+        } else if (type == BC::TempAbility) {
+            quint8 poke;
+            quint16 newability;
+            in >> poke >> newability;
+            output<BattleEnum::AbilityChange>(spot, poke, newability);
         } else if (type == BC::TempPP) {
             qint8 slot;
             qint8 PP;

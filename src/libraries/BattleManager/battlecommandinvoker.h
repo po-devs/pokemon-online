@@ -124,6 +124,7 @@ protected:
     start(OfferChoice, onOfferChoice, int player, std::shared_ptr<BattleChoices>* choice) end (onOfferChoice, player, *choice->get())
     start(TempPPChange, onTempPPChange, int spot, int move, int PP) end (onTempPPChange, spot, move, PP)
     start(MoveChange, onMoveChange, int spot, int slot, int move, bool definite) end (onMoveChange, spot, slot, move, definite)
+    start(AbilityChange, onAbilityChange, int spot, int poke, int newAbility) end(onAbilityChange, spot, poke, newAbility)
     start(RearrangeTeam, onRearrangeTeam, int player, std::shared_ptr<ShallowShownTeam>* team) end (onRearrangeTeam, player, *team->get())
     start(ChoiceSelection, onChoiceSelection, int player) end (onChoiceSelection, player)
     start(ChoiceCancelled, onChoiceCancellation, int player) end (onChoiceCancellation, player)

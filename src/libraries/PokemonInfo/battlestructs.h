@@ -42,6 +42,7 @@ class ShallowBattlePoke
     PROPERTY(bool, shiny)
     PROPERTY(quint8, gender)
     PROPERTY(quint8, level)
+    PROPERTY(quint16, ability)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
@@ -62,6 +63,7 @@ public:
     virtual void setLife(int newLife) { mLifePercent = newLife;}
     virtual void setLifePercent(quint8 percent) {mLifePercent = percent;}
     void setNum(Pokemon::uniqueId num) {this->num() = num;}
+    void setAbility(quint16 ability) {this->ability() = ability;}
 
     bool operator == (const ShallowBattlePoke &other) const {
         return gender() == other.gender() && level() == other.level()
@@ -86,7 +88,6 @@ class PokeBattle : public ShallowBattlePoke
     PROPERTY(QList<int>, evs)
     PROPERTY(quint16, totalLifePoints)
     PROPERTY(quint16, item)
-    PROPERTY(quint16, ability)
     PROPERTY(quint8, nature)
     PROPERTY(quint8, happiness)
     /* Below is only known by battle */

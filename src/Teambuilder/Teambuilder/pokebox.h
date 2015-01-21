@@ -46,7 +46,7 @@ signals:
 
 protected:
     void addGraphicsItem(int spot);
-    QPointF calculatePos(int spot, const QSize& itemSize = QSize(32,32));
+    QPointF calculatePos(int spot, const QSize& itemSize = QSize(40,40));
     int calculateSpot(const QPoint &graphicViewPos);
     void drawBackground(QPainter *painter, const QRectF &rect);
     PokeBoxItem* currentItem();
