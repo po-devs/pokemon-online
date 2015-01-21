@@ -253,14 +253,30 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return false;
         }
 
+
         /* If the pokemon is underleveled, he was caught wild or from a previous gen, anyhow he couldn't have evolved from this gen */
         bool nobreeding = PokemonInfo::MinEggLevel(pokeid, g) > level;
 
-        if (g < 5 && g >= 3) {
+        if (g >= 3 && ability != 0) {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
 
-            if (ability != 0 && ability != ab.ab(0)) {
-                if (ability != ab.ab(1)) {
+            if (!PokemonInfo::Abilities(pokeid, g).contains(ability)) {
+                /* First stage evolutions can't have 4th gen abilities with 3rd gen moves, except gen 6 */
+                if (ability == ab.ab(1) && gen < 6) {
+                    if (!PokemonInfo::HasPreEvo(pokeid.pokenum)) {
+                        if (invalid_moves) {
+                            *invalid_moves = moves;
+                        }
+                        if (error) {
+                            *error = QObject::tr("%1 can't learn the following moves from third generation at the same time as having the fourth generation ability %2: %3.")
+                                    .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                        }
+                        return false;
+                    }
+                    return nobreeding == false &&
+                            isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, false, invalid_moves, error);
+                }
+                if(gen < 6 || ab.ab(2) == ability) {
                     if (invalid_moves) {
                         *invalid_moves = moves;
                     }
@@ -269,25 +285,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                                 .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
                     }
                     return false;
-                }
-
-                /* First stage evolutions can't have 4th gen abilities with 3rd gen moves, except gen 6 */
-                if (g.num == 3 && gen > 3 && gen < 6) {
-                    ab = PokemonInfo::Abilities(pokeid, g);
-                    if (ab.ab(1) != ability) {
-                        if (!PokemonInfo::HasPreEvo(pokeid.pokenum)) {
-                            if (invalid_moves) {
-                                *invalid_moves = moves;
-                            }
-                            if (error) {
-                                *error = QObject::tr("%1 can't learn the following moves from third generation at the same time as having the fourth generation ability %2: %3.")
-                                        .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
-                            }
-                            return false;
-                        }
-                        return nobreeding == false &&
-                                isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, false, invalid_moves, error);
-                    }
                 }
             }
         }
