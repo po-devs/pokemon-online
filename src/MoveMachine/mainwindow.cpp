@@ -407,7 +407,7 @@ void MainWindow::save()
 {
     database.save();
 
-    QMessageBox::information(this, "Saved", "Changes saved succesfully");
+    QMessageBox::information(this, "Saved", "Changes saved succesfully. \n\nIf you added a move to a Pokemon that evolves: \nClose MoveMachine, Reopen, and Save again to make sure all evolutions get the move too!");
 }
 
 void MainWindow::moveDeleted(QListWidgetItem *it)

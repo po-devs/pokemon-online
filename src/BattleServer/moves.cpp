@@ -828,6 +828,13 @@ struct MMFeint : public MM
     }
 
     static void daf(int s, int t, BS &b) {
+        //Only Hoopa-Unbound can use HyperspaceFury
+        if (move(b,s) == Move::HyperspaceFury) {
+            if (poke(b,s).contains("PreTransformPoke") || b.poke(s).num() != Pokemon::Hoopa_B) {
+                fturn(b,s).add(TM::Failed);
+                return;
+            }
+        }
         const char *shields[] = {"DetectUsed", "KingsShieldUsed", "SpikyShieldUsed", "CraftyShieldUsed", "MatBlockUsed", "WideGuardUsed", "QuickGuardUsed"};
         bool remove = false;
 
