@@ -2415,7 +2415,7 @@ QPixmap ItemInfo::Icon(int itemnum, bool mod)
 
     QString base = isBerry(itemnum) ? "berries" : "items";
     if (isBerry(itemnum)) {
-        itemnum -= 7999;
+        itemnum -= 8000;
     }
 
     QString archives[] = {path("%1").arg(base), path("%1.zip").arg(base)};
@@ -2485,7 +2485,7 @@ bool ItemInfo::Exists(int itemnum)
 
 bool ItemInfo::isBerry(int itemnum)
 {
-    return itemnum >= 8000;
+    return itemnum > 8000;
 }
 
 bool ItemInfo::isPlate(int itemnum)
