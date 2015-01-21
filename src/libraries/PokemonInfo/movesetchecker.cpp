@@ -217,16 +217,17 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             if(PokemonInfo::IsMegaEvo(pokeid) || PokemonInfo::OriginalForme(pokeid) == Pokemon::Arceus) {
                 return MoveSetChecker::isValid(PokemonInfo::OriginalForme(pokeid), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
-            } else if (PokemonInfo::HasPreEvo(pokeid.pokenum)) {
+            } else if (PokemonInfo::HasPreEvo(pokeid.pokenum) &&
+                       !(PokemonInfo::IsForme(pokeid) && (PokemonInfo::OriginalForme(pokeid) == Pokemon::Pikachu || PokemonInfo::OriginalForme(pokeid) == Pokemon::Floette))) {
                 return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
-            }
+            } //Note: Pikachu and Floette checks above are more of a back end fix. Ideally, the invalid moves shouldn't appear in the learnset at all.
             if (invalid_moves) {
                 *invalid_moves = moves;
             }
             if (error) {
-                *error = QObject::tr("%1 can't learn the following moves while being at level %2: %3.")
-                         .arg(PokemonInfo::Name(pokeid), QString::number(level), getCombinationS(moves));
+                *error = QObject::tr("%1 can't learn the following moves: %2.")
+                         .arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
             }
             return false;
         }
