@@ -45,7 +45,6 @@ QHash<Pokemon::gen, MoveInfo::Gen> MoveInfo::gens;
 QHash<int,QString> MoveInfo::m_Names;
 QHash<QString, int> MoveInfo::m_LowerCaseMoves;
 QHash<int, QStringList> MoveInfo::m_MoveMessages;
-QHash<int,QString> MoveInfo::m_Details;
 QHash<int,int> MoveInfo::m_OldMoves;
 QVector<QSet<int> > MoveInfo::m_GenMoves;
 
@@ -1717,7 +1716,6 @@ void MoveInfo::init(const QString &dir)
 
     loadNames();
     loadMoveMessages();
-    //loadDetails();
 
     m_GenMoves.clear();
     m_GenMoves.resize(GenInfo::NumberOfGens());
@@ -1846,7 +1844,6 @@ void MoveInfo::retranslate()
 {
     loadNames();
     loadMoveMessages();
-    //loadDetails();
 
     for (int i = 0; i < Version::NumberOfGens; i++) {
         gens[i].retranslate();
@@ -1867,11 +1864,6 @@ void MoveInfo::loadNames()
         it.next();
         m_LowerCaseMoves.insert(it.value().toLower(),it.key());
     }
-}
-
-void MoveInfo::loadDetails()
-{
-    fill_int_str(m_Details, path("move_description.txt"), true);
 }
 
 QString MoveInfo::Name(int movenum)
@@ -2161,11 +2153,6 @@ QString MoveInfo::SpecialEffect(int movenum, Pokemon::gen gen)
 QSet<int> MoveInfo::Moves(Pokemon::gen gen)
 {
     return m_GenMoves[gen.num-GenInfo::GenMin()];
-}
-
-QString MoveInfo::DetailedDescription(int movenum)
-{
-    return m_Details[movenum];
 }
 
 QString MoveInfo::path(const QString &file)

@@ -244,7 +244,6 @@ public:
     static int FlinchRate(int movenum, Pokemon::gen gen);
     static int Recoil(int movenum, Pokemon::gen gen);
     static QString Description(int movenum, Pokemon::gen gen);
-    static QString DetailedDescription(int movenum);
     static int Power(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum, Pokemon::gen gen);
@@ -283,7 +282,6 @@ private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
     static QHash<int, QStringList> m_MoveMessages;
-    static QHash<int, QString> m_Details;
     static QHash<int,int> m_OldMoves;
     static QVector<QSet<int> > m_GenMoves;
 
@@ -335,7 +333,6 @@ private:
 
     static void loadNames();
     static void loadMoveMessages();
-    static void loadDetails();
 
     static QString path(const QString &filename);
 };
