@@ -295,6 +295,44 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return false;
         }
 
+        /* For moves that can only be learned by a previous evolution
+           at a higher level than the Pokemon evolved */
+        if (g < Pokemon::gen(1, 3)) {
+            /* const QHash<QString, QHash<QString, QList<QString> > > invalidCombinations = {{"Kakuna", {{"Harden", {"Poison Sting", "String Shot"}}}}, {"Beedrill", {{"Harden", {"Poison Sting", "String Shot"}}}}, {"Nidoking", {{"Thrash", {"Fury Attack"}}}}, {"Rapidash", {{"Pay Day", {"Tail Whip", "Growl"}}}},
+                                                                                        {"Exeggutor", {{"Stomp", {"Sleep Powder", "Stun Spore", "Poison Powder"}}}}, {"Fearow", {{"Pay Day", {"Peck"}}}}, {"Jolteon", {{"Focus Energy", {"Thunder Shock"}}}}, {"Flareon", {{"Focus Energy", {"Ember"}}}}, {"Mewtwo", {{"Confusion", {}}, {"Disable", {}}}}}; */
+            QHash<QString, QHash<QString, QList<QString> > > invalidCombinations;
+            rbyInvalidCombinations(&invalidCombinations);
+            if (invalidCombinations.contains(PokemonInfo::Name(pokeid))) {
+                foreach(int moveA, moves) {
+                    if (invalidCombinations.value(PokemonInfo::Name(pokeid)).contains(MoveInfo::Name(moveA))) {
+                        if (invalidCombinations.value(PokemonInfo::Name(pokeid)).value(MoveInfo::Name(moveA)).isEmpty()) {
+                            if (invalid_moves) {
+                                invalid_moves->insert(moveA);
+                            }
+                            if (error) {
+                                *error = QObject::tr("%1 can't learn %2.")
+                                         .arg(PokemonInfo::Name(pokeid), MoveInfo::Name(moveA));
+                            }
+                            return false;
+                        } else {
+                            foreach(QString moveB, invalidCombinations.value(PokemonInfo::Name(pokeid)).value(MoveInfo::Name(moveA))) {
+                                if (moves.contains(MoveInfo::Number(moveB))) {
+                                    if (invalid_moves) {
+                                        invalid_moves->insert(moveA);
+                                    }
+                                    if (error) {
+                                        *error = QObject::tr("%1 can't learn both %2 and %3.")
+                                                 .arg(PokemonInfo::Name(pokeid), MoveInfo::Name(moveA), moveB);
+                                    }
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
@@ -505,4 +543,33 @@ QHash<Pokemon::uniqueId, QList<QSet<int> > > MoveSetChecker::breedingCombination
         loadGenData(gen);
     }
     return breedingCombinations.value(gen);
+}
+
+void MoveSetChecker::rbyInvalidCombinations(QHash<QString, QHash<QString, QList<QString> > >* hash) {
+    QHash<QString, QList<QString> > temp;
+    temp.insert("Harden", {"Poison Sting", "String Shot"});
+    hash->insert("Kakuna", temp);
+    hash->insert("Beedrill", temp);
+    temp.remove("Harden");
+    temp.insert("Thrash", {"Fury Attack"});
+    hash->insert("Nidoking", temp);
+    temp.remove("Thrash");
+    temp.insert("Pay Day", {"Tail Whip", "Growl"});
+    hash->insert("Rapidash", temp);
+    temp.remove("Pay Day");
+    temp.insert("Stomp", {"Sleep Powder", "Stun Spore", "Poison Powder"});
+    hash->insert("Exeggutor", temp);
+    temp.remove("Stomp");
+    temp.insert("Pay Day", {"Peck"});
+    hash->insert("Fearow", temp);
+    temp.remove("Pay Day");
+    temp.insert("Focus Energy", {"Thunder Shock"});
+    hash->insert("Jolteon", temp);
+    temp.remove("Focus Energy");
+    temp.insert("Focus Energy", {"Ember"});
+    hash->insert("Flareon", temp);
+    temp.remove("Focus Energy");
+    temp.insert("Confusion", {});
+    temp.insert("Disable", {});
+    hash->insert("Mewtwo", temp);
 }
