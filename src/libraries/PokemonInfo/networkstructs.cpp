@@ -202,13 +202,13 @@ DataStream & operator >> (DataStream & in, PersonalTeam & team)
     return in;
 }
 
-LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0), cookie(0)
+LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0), cookie(0), uniqueId(0)
 {
 }
 
 LoginInfo::~LoginInfo()
 {
-    delete teams, delete channel, delete additionalChannels, delete trainerInfo, delete plugins; delete cookie;
+    delete teams, delete channel, delete additionalChannels, delete trainerInfo, delete plugins; delete cookie; delete uniqueId;
 }
 
 DataStream & operator >> (DataStream &in, LoginInfo &l)
