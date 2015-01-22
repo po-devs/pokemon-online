@@ -567,7 +567,4 @@ void MoveSetChecker::rbyInvalidCombinations(QHash<QString, QHash<QString, QList<
     temp.insert("Focus Energy", {"Ember"});
     hash->insert("Flareon", temp);
     temp.remove("Focus Energy");
-    temp.insert("Confusion", {});
-    temp.insert("Disable", {});
-    hash->insert("Mewtwo", temp);
 }
