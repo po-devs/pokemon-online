@@ -1950,7 +1950,12 @@ int MoveInfo::Recoil(int movenum, Pokemon::gen g)
 QString MoveInfo::Description(int movenum, Pokemon::gen g)
 {
     move_find2(QString, r, effect, movenum, g);
-    r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
+    if (g < 2) {
+        int eff = EffectRate(movenum, g);
+        r.replace("$effect_chance", QString("%1/255 (%2%)").arg(eff).arg(eff*100/255));
+    } else {
+        r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
+    }
 
     return r;
 }
