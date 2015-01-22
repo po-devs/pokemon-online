@@ -2014,6 +2014,27 @@ bool ScriptEngine::compatibleAsDreamWorldEvent(int id, int team, int index)
     return false;
 }
 
+int ScriptEngine::genForMove(int poke, int move, int gen) {
+    int ret = -1;
+    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
+        return ret;
+    }
+    if (gen < 3) {
+        for (int g = 0; g < gen + 1; g++) {
+            if (PokemonInfo::HasMoveInGen(poke, move, g)) {
+                ret = g;
+            }
+        }
+    } else {
+        for (int g = 3; g < gen + 1; g++) {
+            if (PokemonInfo::HasMoveInGen(poke, move, g)) {
+                ret = g;
+            }
+        }
+    }
+    return ret;
+}
+
 QScriptValue ScriptEngine::teamPokeMove(int id, quint32 teamLo, int pokeindex, int moveindex, quint32 teamHi)
 {
     quint64 team = teamHi;

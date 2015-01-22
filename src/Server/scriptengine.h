@@ -356,6 +356,7 @@ public:
     Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int team, int pokenum);
     Q_INVOKABLE bool hasDreamWorldAbility(int id, int team, int slot, int gen = 5);
     Q_INVOKABLE bool compatibleAsDreamWorldEvent(int id, int team, int slot);
+    Q_INVOKABLE int genForMove(int poke, int move, int gen = GenInfo::GenMax());
 
     Q_INVOKABLE QScriptValue teamPokeMove(int id, quint32 teamLo, int pokeindex, int moveindex, quint32 teamHi = 0);
     Q_INVOKABLE bool hasTeamPokeMove(int id, quint32 teamLo, int pokeindex, int movenum, quint32 teamHi = 0);
