@@ -18,6 +18,7 @@ public:
     static QList<QSet<int> > combinationsFor(Pokemon::uniqueId pokenum, Pokemon::gen gen);
     static QHash<Pokemon::uniqueId, QList<QSet<int> > > eventCombinationsOf(Pokemon::gen gen);
     static QHash<Pokemon::uniqueId, QList<QSet<int> > > breedingCombinationsOf(Pokemon::gen gen);
+    static void rbyInvalidCombinations(QHash<QString, QHash<QString, QList<QString> > >* hash);
 
     static bool enforceMinLevels;
 private:
