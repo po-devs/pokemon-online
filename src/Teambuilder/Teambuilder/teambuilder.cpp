@@ -499,6 +499,7 @@ void TeamBuilder::markTeamUpdated()
     if (team().team().gen() != lastGen) {
         if (ui->gens.contains(team().team().gen())) {
             lastGen = team().team().gen();
+            dynamic_cast<PokeTableModel *>(pokemonModel)->setGen(lastGen);
             ui->gens[lastGen]->setChecked(true);
         }
     }
