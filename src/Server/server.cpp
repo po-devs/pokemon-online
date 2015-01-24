@@ -269,7 +269,7 @@ void Server::start(){
     myengine->init();
     myengine->serverStartUp();
 
-    connect(battles, SIGNAL(battleConnectionLost()), myengine, SLOT(battleConnectionLost()));
+    connect(battles, SIGNAL(battleConnectionLost()), this, SLOT(battleConnectionLost()));
 
     this->showLogMessages = s.value("GUI/ShowLogMessages").toBool();
 
@@ -1982,6 +1982,10 @@ void Server::atServerShutDown() {
     TierMachine::destroy();
     SecurityManager::destroy();
     RelayManager::destroy();
+}
+
+void Server::battleConnectionLost() {
+    myengine->battleConnectionLost();
 }
 
 void Server::setAnnouncement(int &id, const QString &html) {

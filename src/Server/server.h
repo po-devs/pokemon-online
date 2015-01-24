@@ -201,6 +201,7 @@ public slots:
     void updateRatings();
 
     void atServerShutDown();
+    void battleConnectionLost();
 private:
     void kick(int dest, int src);
     void ban(int dest, int src);
