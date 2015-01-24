@@ -486,7 +486,7 @@ void BaseBattleWindow::onSendBack(int spot, bool)
     switchToNaught(spot);
 }
 
-void BaseBattleWindow::onUseAttack(int, int, bool)
+void BaseBattleWindow::onUseAttack(int, int, bool, bool)
 {
     flashIfNeeded();
 }

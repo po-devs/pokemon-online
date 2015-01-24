@@ -95,7 +95,7 @@ public:
     int myself() const;
     bool isPlayer(int spot) const;
 
-    void onUseAttack(int spot, int attack, bool);
+    void onUseAttack(int spot, int attack, bool, bool);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onKo(int spot) {
         updatePoke(spot);

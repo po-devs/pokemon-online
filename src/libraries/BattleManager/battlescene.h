@@ -53,7 +53,7 @@ public:
     }
 
     bool shouldStartPeeking(param<BattleEnum::StatChange>, int spot, int stat, int boost, bool silent);
-    bool shouldStartPeeking(param<BattleEnum::UseAttack>, int, int, bool);
+    bool shouldStartPeeking(param<BattleEnum::UseAttack>, int, int, bool, bool);
 
     template <enumClass val, typename... Params>
     bool shouldContinuePeeking(param<val>, Params...) {
@@ -86,7 +86,7 @@ public:
     bool shouldContinuePeeking(param<BattleEnum::Turn>, int) {return false;}
     bool shouldContinuePeeking(param<BattleEnum::Hits>, int, int hits) {info.hits = hits; info.blocked = true; info.moveData.insert("hits", hits); return true;}
 
-    void onUseAttack(int spot, int attack, bool silent);
+    void onUseAttack(int spot, int attack, bool silent, bool);
     void onStatBoost(int spot, int stat, int boost, bool silent);
     void onContinueWeather(int __attribute__((unused)) weather) {
         emit weatherContinue();

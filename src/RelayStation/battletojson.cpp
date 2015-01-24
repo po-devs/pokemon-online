@@ -22,11 +22,12 @@ void BattleToJson::onSendBack(int spot, bool silent)
     map.insert("silent", silent);
 }
 
-void BattleToJson::onUseAttack(int spot, int attack, bool silent)
+void BattleToJson::onUseAttack(int spot, int attack, bool silent, bool special)
 {
     makeCommand("move");
     map.insert("move", attack);
     map.insert("silent", silent);
+    map.insert("special", special);
 }
 
 void BattleToJson::onBeginTurn(int turn)

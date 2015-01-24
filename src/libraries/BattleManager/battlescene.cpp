@@ -249,7 +249,7 @@ void BattleScene::onStatBoost(int, int, int, bool)
     info.statChanges.pop_front();
 }
 
-bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int attack, bool)
+bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int attack, bool, bool)
 {
     /* Those three attacks require a choice from the player and so would hang the battle window
       until the player made the choice - and it's annoying. */
@@ -262,7 +262,7 @@ bool BattleScene::shouldStartPeeking(param<BattleEnum::UseAttack>, int, int atta
     }
 }
 
-void BattleScene::onUseAttack(int spot, int attack, bool)
+void BattleScene::onUseAttack(int spot, int attack, bool, bool)
 {
     info.attack = attack;
     info.spot = spot;

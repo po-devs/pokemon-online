@@ -36,8 +36,8 @@ public:
     void onSendBack(int spot, bool silent) {
         makeEvent("onSendBack", spot, silent);
     }
-    void onUseAttack(int spot, int attack, bool silent) {
-        makeEvent("onUseAttack", spot, attack, silent);
+    void onUseAttack(int spot, int attack, bool silent, bool special) {
+        makeEvent("onUseAttack", spot, attack, silent, special);
     }
     void onBeginTurn(int turn) {
         makeEvent("onBeginTurn", turn);

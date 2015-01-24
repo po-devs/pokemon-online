@@ -105,8 +105,9 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
     {
         qint16 attack;
         bool silent;
-        in >> attack >> silent;
-        output<BattleEnum::UseAttack>(spot, attack, silent);
+        bool special;
+        in >> attack >> silent >> special;
+        output<BattleEnum::UseAttack>(spot, attack, silent, special);
         break;
     }
     case BC::BeginTurn:

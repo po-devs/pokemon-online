@@ -18,10 +18,10 @@ public:
 
     }
 
-    void onUseAttack(int spot, int attack, bool silent)
+    void onUseAttack(int spot, int attack, bool silent, bool special)
     {
         (void) silent;
-        if (isPlayer(spot)) {
+        if (isPlayer(spot) || special) {
             return;
         }
 

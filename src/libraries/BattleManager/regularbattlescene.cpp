@@ -298,7 +298,7 @@ void RegularBattleScene::unpause()
     baseClass::unpause();
 }
 
-void RegularBattleScene::onUseAttack(int spot, int attack, bool) {
+void RegularBattleScene::onUseAttack(int spot, int attack, bool, bool) {
     emit attackUsed(spot, attack);
 }
 

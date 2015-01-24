@@ -70,7 +70,7 @@ protected:
 
     /* Todo: expand following macros */
     start(SendBack, onSendBack, int spot, bool silent) end(onSendBack, spot, silent)
-    start(UseAttack, onUseAttack, int spot, int attack, bool silent) end(onUseAttack, spot, attack, silent)
+    start(UseAttack, onUseAttack, int spot, int attack, bool silent, bool special) end(onUseAttack, spot, attack, silent, special)
     start(Turn, onBeginTurn, int turn) end(onBeginTurn, turn)
     start(NewHp, onHpChange, int spot, int newHp) end(onHpChange, spot, newHp)
     start(Hits, onHitCount, int spot, int count) end(onHitCount, spot, count)

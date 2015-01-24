@@ -136,7 +136,7 @@ void BattleClientLog::onSendBack(int spot, bool silent)
     printLine("SendBack", tr("%1 called %2 back!").arg(data()->name(data()->player(spot)), rnick(spot)), silent);
 }
 
-void BattleClientLog::onUseAttack(int spot, int attack, bool silent)
+void BattleClientLog::onUseAttack(int spot, int attack, bool silent, bool)
 {
     if (!silent) {
         printHtml("UseAttack", tr("%1 used %2!").arg(escapeHtml(tu(nick(spot))), toBoldColor(MoveInfo::Name(attack), theme()->typeColor(MoveInfo::Type(attack, data()->gen())))));
