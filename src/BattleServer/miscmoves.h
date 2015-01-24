@@ -3,6 +3,7 @@
 
 #include "moves.h"
 #include "battlecounterindex.h"
+#include "../Shared/battlecommands.h"
 
 /* There's gonna be tons of structures inheriting it,
     so let's do it fast */
@@ -135,6 +136,7 @@ struct MMDisable : public MM
         //maybe shouldn't block any moves called through another move
         if(move(b,s) == poke(b,s)["DisabledMove"] && !turn(b,s).contains("SleepTalkedMove")) {
             turn(b,s)["ImpossibleToMove"] = true;
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
             b.sendMoveMessage(28,1,s,0,s, move(b,s));
         }
     }

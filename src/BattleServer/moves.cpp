@@ -2343,6 +2343,7 @@ struct MMGravity : public MM
         int mv = move(b,s);
         if(forbidden_moves.contains(mv)) {
             turn(b,s)["ImpossibleToMove"] = true;
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
             b.sendMoveMessage(53,4,s,Type::Psychic,s,mv);
         }
     }
@@ -3458,10 +3459,11 @@ struct MMTaunt : public MM
             return;
         }
 
-        int move = turn(b,s)["MoveChosen"].toInt();
-        if (move != NoMove && MoveInfo::Power(move, b.gen()) == 0) {
+        int mov = turn(b,s)["MoveChosen"].toInt();
+        if (mov != NoMove && MoveInfo::Power(mov, b.gen()) == 0) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.sendMoveMessage(134,0,s,Pokemon::Dark,s,move);
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+            b.sendMoveMessage(134,0,s,Pokemon::Dark,s,mov);
         }
     }
 };
@@ -3918,6 +3920,7 @@ struct MMImprison : public MM
             for (int i = 0; i < 4; i++) {
                 if (b.move(foe,i) == attack) {
                     turn(b,s)["ImpossibleToMove"] = true;
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
                     b.sendMoveMessage(67,1,s,Pokemon::Psychic,foe,attack);
                     return;
                 }
