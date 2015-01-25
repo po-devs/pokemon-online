@@ -1767,6 +1767,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "BeforeCalculatingDamage");
             /* For charge */
             callpeffects(player, target, "BeforeCalculatingDamage");
+            /* For Focus Punch*/
+            if (turnMemory(player).contains("LostFocus")) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
 
             int typemod = turnMem(player).typeMod;
             if (typemod < -50) {

@@ -1032,12 +1032,14 @@ struct MMFocusPunch : public MM
 {
     MMFocusPunch() {
         functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeCalculatingDamage"] = &daf;
         functions["OnSetup"] = &os;
     }
 
     static void daf(int s, int, BS &b)
     {
         if (turn(b,s).contains("DamageTakenBy")) {
+            turn(b,s)["LostFocus"] = true;
             b.fail(s,47,0,Pokemon::Fighting);
         }
     }
