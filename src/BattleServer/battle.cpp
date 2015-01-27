@@ -3835,11 +3835,15 @@ void BattleSituation::requestSwitchIns()
     }
 }
 
-void BattleSituation::requestSwitch(int slot, bool eeffects)
+void BattleSituation::requestSwitch(int s, bool eeffects)
 {
     testWin();
 
-    int player = this->player(slot);
+    if (pokeMemory(s).contains("PreTransformPoke")) {
+        changeForme(player(s), slotNum(s), PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()));
+    }
+
+    int player = this->player(s);
 
     if (countBackUp(player) == 0) {
         //No poke to switch in, so we won't request a choice & such;
@@ -3848,12 +3852,12 @@ void BattleSituation::requestSwitch(int slot, bool eeffects)
 
     notifyInfos();
 
-    options[slot] = BattleChoices::SwitchOnly(slot);
+    options[s] = BattleChoices::SwitchOnly(s);
 
-    requestChoice(slot,true,true);
-    analyzeChoice(slot);
+    requestChoice(s,true,true);
+    analyzeChoice(s);
     if (eeffects) {
-        callEntryEffects(slot);
+        callEntryEffects(s);
     }
 }
 
