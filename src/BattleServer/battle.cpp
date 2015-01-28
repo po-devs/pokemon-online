@@ -1461,6 +1461,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 {
     int oldAttacker = attacker();
     int oldAttacked = attacked();
+    /* For Sleep Talk */
+    bool special = specialOccurence;
 
     heatOfAttack() = true;
 
@@ -1562,7 +1564,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     calleffects(player, player, "MoveSettings");
 
-    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")), specialOccurence);
+    //Sleep Talked moves should be tracked on tooltip. We use a new bool so PP isn't deducted from the tooltip.
+    if (turnMemory(player).contains("SleepTalkedMove")) {
+        special = false;
+    }
+    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")), special);
 
     calleffects(player, player, "AfterTellingPlayers");
 

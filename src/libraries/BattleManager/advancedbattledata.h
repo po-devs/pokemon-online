@@ -30,6 +30,8 @@ public:
                 break;
             } else if (poke(spot).move(i)->num() == Move::NoMove) {
                 poke(spot).move(i)->setNum(attack);
+                /* For Sleep Talk */
+                poke(spot).move(i)->changePP(poke(spot).move(i)->totalPP());
                 break;
             }
         }
