@@ -1932,7 +1932,7 @@ void BattleBase::changePP(int player, int move, int PP)
         fpoke(player).pps[move] = PP;
     }
     poke(player).move(move).PP() = PP;
-    notify(this->player(player), ChangePP, player, quint8(move), quint8(this->PP(player, move)));
+    notify(All, ChangePP, player, quint8(move), quint8(this->PP(player, move)));
 }
 
 bool BattleBase::testFail(int player)

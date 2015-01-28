@@ -26,14 +26,10 @@ public:
         }
 
         for (int i = 0; i < 4; i++) {
-            if (poke(spot).move(i)->num() == Move::NoMove) {
-                poke(spot).move(i)->setNum(attack);
-                poke(spot).move(i)->changePP(poke(spot).move(i)->totalPP() - 1);
-
+            if (poke(spot).move(i)->num() == attack) {
                 break;
-            } else if (poke(spot).move(i)->num() == attack) {
-                poke(spot).move(i)->changePP(poke(spot).move(i)->PP() - 1);
-
+            } else if (poke(spot).move(i)->num() == Move::NoMove) {
+                poke(spot).move(i)->setNum(attack);
                 break;
             }
         }
