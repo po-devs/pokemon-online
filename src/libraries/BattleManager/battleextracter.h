@@ -90,6 +90,7 @@ protected:
     /* Todo: expand following macros */
     start(SendBack, int spot; bool silent) end(spot, silent)
     start(UseAttack, int spot; int attack; bool silent; bool special=false) end(spot, attack, silent, special)
+    start(UsePP, int spot; int attack; int ppsum) end(spot, attack, ppsum)
     start(Turn, int turn) end(turn)
     start(NewHp, int spot; int newHp) end(spot, newHp)
     start(Hits, int spot; int count) end(spot, count)
@@ -213,6 +214,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(SendOut);
     addCallback(SendBack);
     addCallback(UseAttack);
+    addCallback(UsePP);
     addCallback(Turn);
     addCallback(Hits);
     addCallback(Effectiveness);

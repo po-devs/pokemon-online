@@ -56,7 +56,8 @@ namespace BattleCommands {
                      in replays (battle window store choice mades that way) */
         UseItem,
         ItemCountChange,
-        CappedStat
+        CappedStat,
+        UsePP
     };
 
     enum ChangeTempPoke {

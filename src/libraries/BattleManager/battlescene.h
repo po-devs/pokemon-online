@@ -87,6 +87,7 @@ public:
     bool shouldContinuePeeking(param<BattleEnum::Hits>, int, int hits) {info.hits = hits; info.blocked = true; info.moveData.insert("hits", hits); return true;}
 
     void onUseAttack(int spot, int attack, bool silent, bool);
+    void onUsePP(int spot, int attack, int ppsum);
     void onStatBoost(int spot, int stat, int boost, bool silent);
     void onContinueWeather(int __attribute__((unused)) weather) {
         emit weatherContinue();
@@ -113,6 +114,7 @@ signals:
     void launched();
     void playCry(int);
     void attackUsed(int spot, int attack, QVariantMap params);
+    void ppUsed(int spot, int attack, int ppsum);
     void weatherContinue();
     void hit(int spot, int attack, QVariantMap params);
 

@@ -18,6 +18,7 @@ public:
     void onSendOut(int spot, int slot, ShallowBattlePoke* pokemon, bool silent);
     void onSendBack(int spot, bool silent);
     void onUseAttack(int spot, int attack, bool silent, bool special=false);
+    void onUsePP(int spot, int attack, int ppsum);
     void onBeginTurn(int turn);
     void onHpChange(int spot, int newHp);
     void onHitCount(int spot, int count);
