@@ -273,11 +273,6 @@ void BattleScene::onUseAttack(int spot, int attack, bool, bool)
     emit attackUsed(spot, attack, info.moveData);
 }
 
-void BattleScene::onPPChange(int spot, int attack, int ppsum)
-{
-    emit ppUsed(spot, attack, ppsum);
-}
-
 void BattleScene::startPeeking()
 {
     replayCount = 0;

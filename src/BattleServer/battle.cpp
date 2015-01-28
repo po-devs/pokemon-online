@@ -3889,9 +3889,9 @@ void BattleSituation::changePP(int player, int move, int PP)
 
         if (fpoke(player).moves[move] == poke(player).move(move).num()) {
             poke(player).move(move).PP() = PP;
-            notify(All, ChangePP, player, quint8(move), fpoke(player).pps[move]);
+            notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);
         } else {
-            notify(All, ChangeTempPoke, player, quint8(TempPP), quint8(move), quint8(PP));
+            notify(this->player(player), ChangeTempPoke, player, quint8(TempPP), quint8(move), quint8(PP));
         }
     } else {
         BattleBase::changePP(player, move, PP);

@@ -96,7 +96,6 @@ public:
     bool isPlayer(int spot) const;
 
     void onUseAttack(int spot, int attack, bool, bool);
-    void onPPChange(int spot, int attack, int PP);
     void onPokeballStatusChanged(int player, int poke, int status);
     void onKo(int spot) {
         updatePoke(spot);
@@ -155,7 +154,6 @@ public:
 signals:
     void printMessage(const QString&);
     void attackUsed(int spot, int attack);
-    void ppUsed(int spot, int attack, int ppsum);
     void playCry(int poke);
 public slots:
     void updateTimers();
