@@ -1478,6 +1478,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     if (specialOccurence) {
         attack = move;
+        turnMemory(player)["SpecialMoveUsed"] = move;
     } else {
         //Quick claw, special case
         if (gen() >= 4 && turnMemory(player).value("QuickClawed").toBool()) {
