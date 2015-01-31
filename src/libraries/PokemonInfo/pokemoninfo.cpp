@@ -3012,7 +3012,19 @@ QString AbilityInfo::path(const QString &filename)
 
 bool AbilityInfo::Exists(int ability, Pokemon::gen gen)
 {
-    return gen <= 3 ? ability <= Ability::AirLock : (gen ==4 ? ability <=  Ability::BadDreams : true);
+    if (gen <= 3 && ability > Ability::AirLock) {
+        return false;
+    }
+    if (gen <= 4 && ability > Ability::BadDreams) {
+        return false;
+    }
+    if (gen <= 5 && ability > Ability::TeraVolt) {
+        return false;
+    }
+    if (gen <= 6 && ability < Ability::NoAbility) {
+        return false;
+    }
+    return true;
 }
 
 void AbilityInfo::loadEffects()

@@ -99,7 +99,7 @@ void AdvancedSearch::search() {
         types.push_back(ui->type2->currentIndex());
     }
     ability = AbilityInfo::Number(ui->ability->currentText());
-    if (!AbilityInfo::Exists(ability, gen)) {
+    if (!AbilityInfo::Exists(ability, gen) || ui->ability->currentText().length() == 0) {
         ability = Ability::NoAbility;
     }
 
