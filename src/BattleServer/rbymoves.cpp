@@ -193,8 +193,8 @@ struct RBYBind : public MM
                 turn(b,b.opponent(s)) ["ForceBind"] = true;
             }
             initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
+            turn(b,s)["TellPlayers"] = false;
         }
-        turn(b,s)["TellPlayers"] = false;
     }
 
     static void cad(int s, int t, BS &b) {
@@ -220,6 +220,7 @@ struct RBYBind : public MM
         /* Either Bind was used last turn and is ongoing, or was used this turn (and may have finished) */
         if (( (poke(b,s).contains("Bound") || poke(b,t).contains("BindCount")) && poke(b,t).value("LastBind").toInt() >= b.turn()-1) ||
                 poke(b,t).value("LastBind").toInt() == b.turn() || turn(b,s).contains("ForceBind")) {
+            b.sendMoveMessage(10, 4, s);
             turn(b,s)["ImpossibleToMove"] = true;
         }
     }
