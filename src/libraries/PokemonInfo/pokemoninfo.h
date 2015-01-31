@@ -109,6 +109,7 @@ public:
     static Pokemon::uniqueId NonAestheticForme(Pokemon::uniqueId id);
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
+    static bool HasMegaEvo(const Pokemon::uniqueId &pokeid);
     // Will NOT return base form.
     static QList<Pokemon::uniqueId> Formes(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QList<Pokemon::uniqueId> VisibleFormes(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
@@ -369,6 +370,7 @@ public:
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
     static int DriveForForme(int forme);
+    static int StoneForForme(const Pokemon::uniqueId &id);
     static bool IsBattleItem(int itemnum, Pokemon::gen gen);
     static int Target(int itemnum, Pokemon::gen gen);
     static QList<QString> SortedNames(Pokemon::gen gen);
@@ -401,11 +403,13 @@ private:
     static QHash<int, bool> m_UsefulItems, m_UsefulBerries;
     static QVector<QSet<int> > m_GenItems;
     static QHash<int,QString> m_ItemDesc;
+    static QHash<Pokemon::uniqueId,int> m_StoneFormes;
 
     static void loadNames();
     static void loadEffects();
     static void loadFlingData();
     static void loadGenData();
+    static void loadStoneFormes();
     static void loadMessages();
     static void loadDescriptions();
     static QString path(const QString &filename);

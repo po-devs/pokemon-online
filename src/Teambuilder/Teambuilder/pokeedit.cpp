@@ -415,14 +415,20 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
         poke().item() = ItemInfo::PlateForType(num.subnum);
     } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
         poke().item() = ItemInfo::DriveForForme(num.subnum);
+    } else if (PokemonInfo::IsMegaEvo(num)) {
+        poke().item() = ItemInfo::StoneForForme(num);
+        /*Override using the mega until there's a better solution.*/
+        num = Pokemon::uniqueId(num.pokenum, 0);
     }
 
     poke().setNum(num);
     poke().load();
 
-    //if (!sameForme) {
+    if (PokemonInfo::IsMegaEvo(num)) {
+        poke().nickname() = PokemonInfo::Name(Pokemon::uniqueId(num.pokenum, 0));
+    } else {
         poke().nickname() = PokemonInfo::Name(num);
-    //}
+    }
 
     if (sameForme) {
         poke().runCheck();
@@ -461,6 +467,11 @@ void PokeEdit::changeItem(const QString &itemName)
     if (poke().num().pokenum == Pokemon::Genesect) {
         int subnum = ItemInfo::isDrive(itemNum) ? ItemInfo::DriveForme(itemNum) : 0;
         setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+    }
+    if (itemNum != ItemInfo::StoneForForme(poke().num())) {
+        if (PokemonInfo::IsMegaEvo(poke().num())) {
+            setNum(Pokemon::uniqueId(poke().num().pokenum,0));
+        }
     }
     updateItemSprite(poke().item());
     emit itemChanged();

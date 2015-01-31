@@ -65,6 +65,7 @@ QHash<int,int> ItemInfo::m_BerryTypes;
 QHash<int, bool> ItemInfo::m_UsefulItems, ItemInfo::m_UsefulBerries;
 QVector<QSet<int> > ItemInfo::m_GenItems;
 QHash<int,QString> ItemInfo::m_ItemDesc;
+QHash<Pokemon::uniqueId,int> ItemInfo::m_StoneFormes;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -1429,9 +1430,14 @@ bool PokemonInfo::HasFormes(const Pokemon::uniqueId &pokeid)
     return NumberOfAFormes(pokeid) > 0;
 }
 
+bool PokemonInfo::HasMegaEvo(const Pokemon::uniqueId &pokeid)
+{
+    return m_Options.value(pokeid.pokenum).contains('H');
+}
+
 bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
 {
-    return !m_Options.value(pokeid.pokenum).contains('H');
+    return !(m_Options.value(pokeid.pokenum).contains('B') || m_Options.value(pokeid.pokenum).contains('H'));
 }
 
 bool PokemonInfo::IsMegaEvo(const Pokemon::uniqueId &pokeid)
@@ -2185,6 +2191,7 @@ void ItemInfo::init(const QString &dir)
     loadNames();
     loadEffects();
     loadFlingData();
+    loadStoneFormes();
     loadMessages();
     loadDescriptions();
 }
@@ -2273,6 +2280,11 @@ void ItemInfo::loadNames()
                 m_SortedUsefulNames[g].push_back(sortedUsefulNames[i]);
         }
     }
+}
+
+void ItemInfo::loadStoneFormes()
+{
+    fill_uid_int(m_StoneFormes, path("item_for_forme.txt"));
 }
 
 void ItemInfo::loadMessages()
@@ -2606,6 +2618,11 @@ int ItemInfo::DriveForForme(int forme)
     case 4: return Item::ChillDrive;
     case 0: default: return Item::NoItem;
     }
+}
+
+int ItemInfo::StoneForForme(const Pokemon::uniqueId &pokeid)
+{
+    return m_StoneFormes.value(pokeid);
 }
 
 bool ItemInfo::IsBattleItem(int itemnum, Pokemon::gen gen)

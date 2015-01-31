@@ -551,7 +551,7 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
 
     //Keep acc 1 for rage
     if (acc != 1) {
-        acc = acc*255/100;
+        acc = acc*255/100 + ((gen() > Pokemon::gen(Gen::Yellow)) ? 1 : 0);
     }
 
     if (MoveInfo::isOHKO(move, gen())) {

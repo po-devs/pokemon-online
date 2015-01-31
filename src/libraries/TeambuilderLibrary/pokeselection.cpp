@@ -129,7 +129,7 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
 
     ui->baseStats->setNum(num);
 
-    if (PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) {
+    if ((PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) || PokemonInfo::HasMegaEvo(num)) {
         QMenu *m = new QMenu(ui->altForme);
         QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(num, getGen());
         if (formes.length() > 1) {

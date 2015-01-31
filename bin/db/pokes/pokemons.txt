@@ -389,7 +389,7 @@
 348:0 Armaldo
 349:0 Feebas
 350:0 Milotic
-351:0:H Castform
+351:0:B Castform
 352:0 Kecleon
 353:0 Shuppet
 354:0:H Banette
@@ -469,7 +469,7 @@
 418:0 Buizel
 419:0 Floatzel
 420:0 Cherubi
-421:0:H Cherrim
+421:0:B Cherrim
 422:0 Shellos
 423:0 Gastrodon
 424:0 Ambipom
@@ -674,7 +674,7 @@
 552:0 Krokorok
 553:0 Krookodile
 554:0 Darumaka
-555:0:H Darmanitan
+555:0:B Darmanitan
 555:1 Darmanitan-D
 556:0 Maractus
 557:0 Dwebble
@@ -780,8 +780,8 @@
 646:2 Kyurem-B
 647:0 Keldeo
 647:1 Keldeo-R
-648:0:H Meloetta
-648:1:B Meloetta-S
+648:0:B Meloetta
+648:1 Meloetta-S
 649:0 Genesect
 649:1 Genesect-D
 649:2 Genesect-S
@@ -860,7 +860,7 @@
 678:1 Meowstic-F
 679:0 Honedge
 680:0 Doublade
-681:0:H Aegislash
+681:0:B Aegislash
 681:1 Aegislash-B
 682:0 Spritzee
 683:0 Aromatisse
