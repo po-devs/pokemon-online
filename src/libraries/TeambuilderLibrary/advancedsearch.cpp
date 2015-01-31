@@ -99,6 +99,9 @@ void AdvancedSearch::search() {
         types.push_back(ui->type2->currentIndex());
     }
     ability = AbilityInfo::Number(ui->ability->currentText());
+    if (!AbilityInfo::Exists(ability, gen)) {
+        ability = Ability::NoAbility;
+    }
 
     QLineEdit *move[] = {ui->move1, ui->move2, ui->move3, ui->move4};
     for(int i = 0; i < 4; i++) {
