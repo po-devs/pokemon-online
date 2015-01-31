@@ -50,6 +50,7 @@ void AdvancedSearch::setGen(const Pokemon::gen &gen)
         abilities.push_back(AbilityInfo::Name(i));
     }
     qSort(abilities);
+    abilities.removeAll("");
 
     ui->ability->setModel(new QStringListModel(abilities, this));
 
@@ -59,6 +60,7 @@ void AdvancedSearch::setGen(const Pokemon::gen &gen)
         moves.push_back(MoveInfo::Name(i));
     }
     qSort(moves);
+    moves.removeAll("");
 
     QStringListModel *mmodel = new QStringListModel(moves, this);
     QLineEdit *movesw[4] = {ui->move1, ui->move2, ui->move3, ui->move4 };
