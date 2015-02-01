@@ -500,6 +500,9 @@ struct ChallengeInfo
 
     /* Insensitive case search for the clause, returns -1 if not found */
     static int clause (const QString &name) {
+        if (name.toLower() == "wifi battle") {
+            name = "team preview"; //compatability
+        }
         for (int i = 0; i < numberOfClauses; i++) {
             if (clauseText[i].toLower() == name.toLower()) {
                 return i;

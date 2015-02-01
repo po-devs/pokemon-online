@@ -16,7 +16,7 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Challenge Cup"),
     QObject::tr("No Timeout"),
     QObject::tr("Species Clause"),
-    QObject::tr("Wifi Battle"),
+    QObject::tr("Team Preview"),
     QObject::tr("Self-KO Clause"),
     QObject::tr("Inverted Battle")
 };
