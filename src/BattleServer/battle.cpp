@@ -1461,6 +1461,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 {
     int oldAttacker = attacker();
     int oldAttacked = attacked();
+    /* For Sleep Talk */
+    bool special = specialOccurence;
 
     heatOfAttack() = true;
 
@@ -1476,6 +1478,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     if (specialOccurence) {
         attack = move;
+        turnMemory(player)["SpecialMoveUsed"] = move;
     } else {
         //Quick claw, special case
         if (gen() >= 4 && turnMemory(player).value("QuickClawed").toBool()) {
@@ -1562,7 +1565,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     calleffects(player, player, "MoveSettings");
 
-    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")), specialOccurence);
+    //Sleep Talked moves should be tracked on tooltip. We use a new bool so PP isn't deducted from the tooltip.
+    if (turnMemory(player).contains("SleepTalkedMove")) {
+        special = false;
+    }
+    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")), special);
 
     calleffects(player, player, "AfterTellingPlayers");
 
@@ -1767,6 +1774,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             calleffects(player, target, "BeforeCalculatingDamage");
             /* For charge */
             callpeffects(player, target, "BeforeCalculatingDamage");
+            /* For Focus Punch*/
+            if (turnMemory(player).contains("LostFocus")) {
+                calleffects(player,target,"AttackSomehowFailed");
+                continue;
+            }
 
             int typemod = turnMem(player).typeMod;
             if (typemod < -50) {
@@ -3830,11 +3842,15 @@ void BattleSituation::requestSwitchIns()
     }
 }
 
-void BattleSituation::requestSwitch(int slot, bool eeffects)
+void BattleSituation::requestSwitch(int s, bool eeffects)
 {
     testWin();
 
-    int player = this->player(slot);
+    if (pokeMemory(s).contains("PreTransformPoke")) {
+        changeForme(player(s), slotNum(s), PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()));
+    }
+
+    int player = this->player(s);
 
     if (countBackUp(player) == 0) {
         //No poke to switch in, so we won't request a choice & such;
@@ -3843,12 +3859,12 @@ void BattleSituation::requestSwitch(int slot, bool eeffects)
 
     notifyInfos();
 
-    options[slot] = BattleChoices::SwitchOnly(slot);
+    options[s] = BattleChoices::SwitchOnly(s);
 
-    requestChoice(slot,true,true);
-    analyzeChoice(slot);
+    requestChoice(s,true,true);
+    analyzeChoice(s);
     if (eeffects) {
-        callEntryEffects(slot);
+        callEntryEffects(s);
     }
 }
 
@@ -3877,7 +3893,7 @@ void BattleSituation::changePP(int player, int move, int PP)
 {
     if (isOut(player)) {
         fpoke(player).pps[move] = PP;
-
+        notify(All, UsePP, player, qint16(this->move(player, move)), quint8(PP));
         if (fpoke(player).moves[move] == poke(player).move(move).num()) {
             poke(player).move(move).PP() = PP;
             notify(this->player(player), ChangePP, player, quint8(move), fpoke(player).pps[move]);

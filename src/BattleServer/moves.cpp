@@ -1032,12 +1032,14 @@ struct MMFocusPunch : public MM
 {
     MMFocusPunch() {
         functions["DetermineAttackFailure"] = &daf;
+        functions["BeforeCalculatingDamage"] = &daf;
         functions["OnSetup"] = &os;
     }
 
     static void daf(int s, int, BS &b)
     {
         if (turn(b,s).contains("DamageTakenBy")) {
+            turn(b,s)["LostFocus"] = true;
             b.fail(s,47,0,Pokemon::Fighting);
         }
     }
@@ -3678,12 +3680,13 @@ struct MMHealingWish : public MM
 
     static void asi(int s, int, BS &b) {
         if (!b.koed(s)) {
-            int t = type(b,s);
-            b.sendMoveMessage(61,move(b,s) == HealingWish ? 1 : 2,s,t);
+            int t = Pokemon::Psychic;
+            bool wish = (move(b,s) == HealingWish || turn(b,s)["SpecialMoveUsed"].toInt() == HealingWish);
+            b.sendMoveMessage(61, wish ? 1 : 2,s,t);
             b.sendMoveMessage(61,0,s,t);
             b.healLife(s,b.poke(s).totalLifePoints());
             b.changeStatus(s, Pokemon::Fine);
-            if (move(b,s) == LunarDance) {
+            if (move(b,s) == LunarDance || turn(b,s)["SpecialMoveUsed"].toInt() == LunarDance) {
                 for(int i = 0; i < 4; i++) {
                     b.gainPP(s, i, 100);
                 }

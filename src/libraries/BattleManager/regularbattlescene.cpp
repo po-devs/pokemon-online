@@ -302,6 +302,11 @@ void RegularBattleScene::onUseAttack(int spot, int attack, bool, bool) {
     emit attackUsed(spot, attack);
 }
 
+void RegularBattleScene::onUsePP(int spot, int attack, int ppsum)
+{
+    emit ppUsed(spot, attack, ppsum);
+}
+
 void RegularBattleScene::onPokeballStatusChanged(int player, int poke, int)
 {
     updateBallStatus(player, poke);

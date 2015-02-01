@@ -30,6 +30,13 @@ void BattleToJson::onUseAttack(int spot, int attack, bool silent, bool special)
     map.insert("special", special);
 }
 
+void BattleToJson::onUsePP(int spot, int attack, int ppsum)
+{
+    makeCommand("ppuse");
+    map.insert("move", attack);
+    map.insert("amount", ppsum);
+}
+
 void BattleToJson::onBeginTurn(int turn)
 {
     map.insert("command", "turn");

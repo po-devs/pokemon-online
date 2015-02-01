@@ -110,6 +110,14 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         output<BattleEnum::UseAttack>(spot, attack, silent, special);
         break;
     }
+    case BC::UsePP:
+    {
+        qint16 attack;
+        quint8 ppsum;
+        in >> attack >> ppsum;
+        output<BattleEnum::UsePP>(spot, attack, ppsum);
+        break;
+    }
     case BC::BeginTurn:
     {
         int turn;
