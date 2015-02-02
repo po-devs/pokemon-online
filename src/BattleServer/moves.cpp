@@ -1376,13 +1376,6 @@ struct MMBounce : public MM
                     b.fail(s, 13, 7, Pokemon::Flying, t);
                 }
             }
-        } else {
-            /* Second part of the move */
-            if (move(b,s) == Move::SkyDrop) {
-                if (!b.linked(s, "FreeFalledPokemon")) {
-                    fturn(b,s).add(TM::Failed);
-                }
-            }
         }
     }
 
@@ -1429,8 +1422,13 @@ struct MMBounce : public MM
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &MMStomp::bcd);
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &MMFeint::daf);
             } else if (move == SkyDrop) {
-                /* FreeFall sure-hits the foe once it caught it... */
-                tmove(b,s).accuracy = 0;
+                if (!b.linked(s, "FreeFalledPokemon")) {
+                    /* Force it to fail if the target is no longer alive */
+                    turn(b,s)["LinkedDeath"] = true;
+                } else {
+                    /* FreeFall sure-hits the foe once it caught it... */
+                    tmove(b,s).accuracy = 0;
+                }
                 addFunction(turn(b,s), "BeforeCalculatingDamage", "Bounce", &bcd);
             }
         }
@@ -1440,8 +1438,8 @@ struct MMBounce : public MM
 
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
-        /* Airbourne targets don't receive damage */
-        if (b.hasType(t, Type::Flying) || !b.linked(s, "FreeFalledPokemon")) {
+        /* Airbourne targets don't receive damage. Also if the opponent caught dies, then it fails */
+        if (b.hasType(t, Type::Flying) || turn(b,s).value("LinkedDeath").toBool()) {
             b.changeSprite(s, 0);
             tmove(b,s).power = 1;            
             fturn(b,s).add(TM::Failed);
