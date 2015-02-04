@@ -2387,6 +2387,10 @@ Pokemon::uniqueId BattleBase::pokenum(int player) {
 void BattleBase::changeForme(int player, int poke, const Pokemon::uniqueId &newforme)
 {
     PokeBattle &p  = this->poke(player,poke);
+    if (p.num() == newforme) {
+        //Prevents crashes from pokemon accidentally turning into the same forme
+        return;
+    }
     if (!pokeMemory(player).contains("PreTransformPoke")) {
         pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
     }
