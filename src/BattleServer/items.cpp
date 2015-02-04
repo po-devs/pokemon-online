@@ -266,8 +266,8 @@ struct IMZoomLens : public IM
 struct IMStatusOrb : public IM
 {
     IMStatusOrb() {
-        functions["EndTurn6.7"] = &et; /* Gen 4 */
-        functions["EndTurn26.2"] = &et; /* Gen 5 */
+        functions["EndTurn6.8"] = &et; /* Gen 4 */
+        functions["EndTurn28.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -403,8 +403,8 @@ struct IMPokeTypeBoost : public IM
 struct IMStickyBarb : public IM
 {
     IMStickyBarb() {
-        functions["EndTurn6.19"] = &et; /* Gen 4 */
-        functions["EndTurn26.2"] = &et; /* Gen 5 */
+        functions["EndTurn6.20"] = &et; /* Gen 4 */
+        functions["EndTurn28.2"] = &et; /* Gen 5 */
         functions["UponPhysicalAssault"] = &upa;
     }
 

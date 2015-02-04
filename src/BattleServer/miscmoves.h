@@ -66,7 +66,7 @@ struct MMDisable : public MM
     }
 
     static BS::priorityBracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 12) : makeBracket(14, 0) ;
+        return gen <= 4 ? makeBracket(6, 13) : makeBracket(16, 0) ;
     }
 
     static void uas (int s, int t, BS &b) {

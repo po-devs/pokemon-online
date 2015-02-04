@@ -136,8 +136,8 @@ struct AMArenaTrap : public AM {
 
 struct AMBadDreams : public AM {
     AMBadDreams() {
-        functions["EndTurn6.10"] = &et; /* Gen 4 */
-        functions["EndTurn26.1"] = &et; /* Gen 5 */
+        functions["EndTurn6.11"] = &et; /* Gen 4 */
+        functions["EndTurn28.1"] = &et; /* Gen 5 */
     }
 
     static void et (int s, int, BS &b) {
@@ -508,7 +508,7 @@ struct AMForeCast : public AM {
         functions["WeatherChange"] = &us;
         functions["OnLoss"] = &ol;
         functions["EndTurn12.0"] = &us; /* Gen 4 */
-        functions["EndTurn29.0"] = &us; /* Gen 5 */
+        functions["EndTurn31.0"] = &us; /* Gen 5 */
     }
     /*At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.*/
 
@@ -1021,7 +1021,7 @@ struct AMSlowStart : public AM {
     AMSlowStart() {
         functions["UponSetup"] = &us;
         functions["EndTurn12.0"] = &et; /* gen 4 */
-        functions["EndTurn29.0"] = &et; /* gen 5 */
+        functions["EndTurn31.0"] = &et; /* gen 5 */
         functions["StatModifier"] = &sm;
     }
 
@@ -1080,7 +1080,7 @@ struct AMSoundProof : public AM {
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
         functions["EndTurn6.2"] = &et; /* Gen 4 */
-        functions["EndTurn26.1"] = &et; /* Gen 5 */
+        functions["EndTurn28.1"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
@@ -1501,7 +1501,7 @@ struct AMDefeatist : public AM {
 
 struct AMZenMode : public AM {
     AMZenMode() {
-        functions["EndTurn27.0"] = &et;
+        functions["EndTurn29.0"] = &et;
         functions["OnLoss"] = &ol;
         functions["UponSetup"] = &et;
     }
@@ -1810,7 +1810,7 @@ struct AMMagicBounce : public AM
 struct AMHarvest : public AM
 {
     AMHarvest() {
-        functions["EndTurn26.1"] = &et;
+        functions["EndTurn28.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1920,7 +1920,7 @@ struct AMJustified : public AM {
 
 struct AMMoody : public AM {
     AMMoody() {
-        functions["EndTurn26.1"] = &et;
+        functions["EndTurn28.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -2066,7 +2066,7 @@ struct AMRegenerator : public AM {
 
 struct AMPickUp : public AM {
     AMPickUp() {
-        functions["EndTurn26.1"] = &et;
+        functions["EndTurn28.3"] = &et;
     }
 
     static void et(int s, int, BS &b) {

@@ -36,7 +36,8 @@ public:
     void engageBattle();
     void endTurn();
     void personalEndTurn(int source);
-    void endTurnStatus(int player);
+    void endTurnPoison(int player);
+    void endTurnBurn(int player);
     void endTurnWeather();
     void endTurnDefrost();
     void callForth(int weather, int turns);

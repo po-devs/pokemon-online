@@ -598,7 +598,7 @@ struct MMCurse : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 8) : makeBracket(10, 0) ;
+        return gen <= 4 ? makeBracket(6, 9) : makeBracket(12, 0) ;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -1273,7 +1273,7 @@ struct MMBind : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 2 ? makeBracket(3,0) : gen <= 4 ? makeBracket(6, 9) : makeBracket(11, 0) ;
+        return gen <= 2 ? makeBracket(3,0) : gen <= 4 ? makeBracket(6, 10) : makeBracket(13, 0) ;
     }
 
     static void uas (int s, int t, BS &b) {
@@ -1728,7 +1728,7 @@ struct MMEmbargo : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 17) : makeBracket(18, 0) ;
+        return gen <= 4 ? makeBracket(6, 18) : makeBracket(20, 0) ;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -1765,7 +1765,7 @@ struct MMEncore : public MM
     static FM forbidden_moves;
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 2 ? makeBracket(9, 0) : gen <= 4 ? makeBracket(6, 13) : makeBracket(13, 0) ;
+        return gen <= 2 ? makeBracket(9, 0) : gen <= 4 ? makeBracket(6, 14) : makeBracket(15, 0) ;
     }
 
     static void daf(int s, int t, BS &b)
@@ -2284,7 +2284,7 @@ struct MMGravity : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(5, 0) : makeBracket(22, 0) ;
+        return gen <= 4 ? makeBracket(5, 0) : makeBracket(24, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -2664,7 +2664,7 @@ struct MMPerishSong : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 2 ? makeBracket(4,0) : gen <= 4 ? makeBracket(8, 0) : makeBracket(20, 0) ;
+        return gen <= 2 ? makeBracket(4,0) : gen <= 4 ? makeBracket(8, 0) : makeBracket(22, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -3400,7 +3400,7 @@ struct MMTaunt : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 14) : makeBracket(12, 0) ;
+        return gen <= 4 ? makeBracket(6, 15) : makeBracket(14, 0) ;
     }
 
     static void uas (int s, int t, BS &b) {
@@ -3729,7 +3729,7 @@ struct MMHealBlock: public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 16) : makeBracket(17, 0) ;
+        return gen <= 4 ? makeBracket(6, 17) : makeBracket(19, 0) ;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -3961,7 +3961,7 @@ struct MMMagnetRise : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 15) : makeBracket(15, 0) ;
+        return gen <= 4 ? makeBracket(6, 16) : makeBracket(17, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -4039,7 +4039,7 @@ struct MMTeamBarrier : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 2 ? makeBracket(7, 0) : gen <= 4 ? makeBracket(1, 0) : makeBracket(21, 0) ;
+        return gen <= 2 ? makeBracket(7, 0) : gen <= 4 ? makeBracket(1, 0) : makeBracket(23, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -4111,7 +4111,7 @@ struct MMLuckyChant : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(1, 5) : makeBracket(21, 5) ;
+        return gen <= 4 ? makeBracket(1, 5) : makeBracket(23, 5) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -4484,7 +4484,7 @@ struct MMMist : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 2 ? makeBracket(7, 3) : gen <= 4 ? makeBracket(1, 2) : makeBracket(21, 3) ;
+        return gen <= 2 ? makeBracket(7, 3) : gen <= 4 ? makeBracket(1, 2) : makeBracket(23, 3) ;
     }
 
     static void daf(int s, int, BS &b) {
@@ -4579,7 +4579,7 @@ struct MMNightMare : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 6) : makeBracket(9, 1) ;
+        return gen <= 4 ? makeBracket(6, 7) : makeBracket(11, 0) ;
     }
 
     static void uas(int, int t, BS &b) {
@@ -4834,7 +4834,7 @@ struct MMSafeGuard : public MM
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 2 ? makeBracket(7, 2) : gen <= 4 ? makeBracket(1, 3) : makeBracket(21, 2);
+        return gen <= 2 ? makeBracket(7, 2) : gen <= 4 ? makeBracket(1, 3) : makeBracket(23, 2);
     }
 
     static void daf(int s, int, BS &b) {
@@ -5111,7 +5111,7 @@ struct MMTailWind : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(1, 4) : makeBracket(21, 4) ;
+        return gen <= 4 ? makeBracket(1, 4) : makeBracket(23, 4) ;
     }
 
     static void daf(int s, int , BS &b) {
@@ -5179,7 +5179,7 @@ struct MMTrickRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(9, 0) : makeBracket(23, 0) ;
+        return gen <= 4 ? makeBracket(9, 0) : makeBracket(25, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -5279,7 +5279,7 @@ struct MMYawn : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 18) : makeBracket(19, 0) ;
+        return gen <= 4 ? makeBracket(6, 19) : makeBracket(21, 0) ;
     }
 
     static void uas(int s, int t, BS &b) {
@@ -5467,7 +5467,7 @@ struct MMOutrage : public MM
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(6, 11);
+        return makeBracket(6, 12);
     }
 
     static void uas(int s, int, BS &b) {
@@ -5529,7 +5529,7 @@ struct MMUproar : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 11) : makeBracket(26, 0) ;
+        return gen <= 4 ? makeBracket(6, 12) : makeBracket(28, 0) ;
     }
 
     static void uas(int s,int, BS &b) {
@@ -5884,7 +5884,7 @@ struct MMMagicRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(25, 0) ;
+        return makeBracket(27, 0) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
@@ -6156,7 +6156,7 @@ struct MMWonderRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 0) ;
+        return makeBracket(26, 0) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
@@ -6217,7 +6217,7 @@ struct MMTelekinesis : public MM
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(16, 0) ;
+        return makeBracket(18, 0) ;
     }
 
     static void daf(int s, int t, BS &b) {
@@ -6407,7 +6407,7 @@ struct MMGrassPledge : public MM
     static void uas(int s, int t, BS &b);
 
     static ::bracket bracket(Pokemon::gen) {
-        return  makeBracket(21, 6) ;
+        return  makeBracket(23, 6) ;
     }
 
     static void makeASwamp(int t, BS &b) {
@@ -6470,7 +6470,7 @@ struct MMWaterPledge : public MM
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(21, 6) ;
+        return makeBracket(23, 6) ;
     }
 
     static void makeARainbow(int t, BS &b) {

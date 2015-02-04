@@ -92,21 +92,22 @@ void BattleSituation::initializeEndTurnFunctions()
     6.2 Speed Boost, Shed Skin
     6.3 Black Sludge, Leftovers: "pokémon restored a little HP using its leftovers"
     6.4 Leech Seed: "pokémon's health is sapped by leech seed"
-    6.5 Burn, Poison Heal, Poison: "pokémon is hurt by poison"
-    6.6 Nightmare
-    6.7 Flame Orb activation, Toxic Orb activation
-    6.8 Curse (from a Ghost)
-    6.9 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
-    6.10 Bad Dreams Damage
-    6.11 End of Outrage, Petal Dance, Thrash, Uproar: "pokémon caused an uproar" & "pokémon calmed down"
-    6.12 Disable ends: "pokémon is no longer disabled"
-    6.13 Encore ends
-    6.14 Taunt wears off
-    6.15 Magnet Rise
-    6.16 Heal Block: "the foe pokémon's heal block wore off"
-    6.17 Embargo
-    6.18 Yawn
-    6.19 Sticky Barb
+    6.5 Poison Heal, Poison: "pokémon is hurt by poison"
+    6.6 Burn
+    6.7 Nightmare
+    6.8 Flame Orb activation, Toxic Orb activation
+    6.9 Curse (from a Ghost)
+    6.10 Bind, Clamp, Fire Spin, Magma Storm, Sand Tomb, Whirlpool, Wrap
+    6.11 Bad Dreams Damage
+    6.12 End of Outrage, Petal Dance, Thrash, Uproar: "pokémon caused an uproar" & "pokémon calmed down"
+    6.13 Disable ends: "pokémon is no longer disabled"
+    6.14 Encore ends
+    6.15 Taunt wears off
+    6.16 Magnet Rise
+    6.17 Heal Block: "the foe pokémon's heal block wore off"
+    6.18 Embargo
+    6.19 Yawn
+    6.20 Sticky Barb
 
     7.0 Doom Desire, Future Sight
 
@@ -129,11 +130,12 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(AbilityEffect, 6, 2); /* Shed Skin, Speed Boost */
         addEndTurnEffect(ItemEffect, 6, 3); /* Black Sludge, Leftovers */
 
-        addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnStatus);
+        addEndTurnEffect(OwnEffect, 6, 5, 0, "", NULL, &BattleSituation::endTurnPoison);
+        addEndTurnEffect(OwnEffect, 6, 6, 0, "", NULL, &BattleSituation::endTurnBurn);
 
-        addEndTurnEffect(ItemEffect, 6, 7); /* Orbs */
-        addEndTurnEffect(AbilityEffect, 6, 10); /* Bad Dreams */
-        addEndTurnEffect(ItemEffect, 6, 19); /* Sticky Barb */
+        addEndTurnEffect(ItemEffect, 6, 8); /* Orbs */
+        addEndTurnEffect(AbilityEffect, 6, 11); /* Bad Dreams */
+        addEndTurnEffect(ItemEffect, 6, 20); /* Sticky Barb */
 
 
         addEndTurnEffect(AbilityEffect, 12, 0); /* Slow Start, Forecast */
@@ -156,59 +158,62 @@ void BattleSituation::initializeEndTurnFunctions()
 
         8.0 Leech Seed
 
-        9.0 (bad) poison damage, burn damage, Poison Heal
-        9.1 Nightmare
+        9.0 (bad) poison damage, Poison Heal
 
-        10.0 Curse (from a Ghost-type)
+        10.0 burn damage
 
-        11.0 Bind, Wrap, Fire Spin, Clamp, Whirlpool, Sand Tomb, Magma Storm
+        11.0 Nightmare
 
-        12.0 Taunt ends
+        12.0 Curse (from a Ghost-type)
 
-        13.0 Encore ends
+        13.0 Bind, Wrap, Fire Spin, Clamp, Whirlpool, Sand Tomb, Magma Storm
 
-        14.0 Disable ends, Cursed Body ends
+        14.0 Taunt ends
 
-        15.0 Magnet Rise ends
+        15.0 Encore ends
 
-        16.0 Telekinesis ends
+        16.0 Disable ends, Cursed Body ends
 
-        17.0 Heal Block ends
+        17.0 Magnet Rise ends
 
-        18.0 Embargo ends
+        18.0 Telekinesis ends
 
-        19.0 Yawn
+        19.0 Heal Block ends
 
-        20.0 Perish Song
+        20.0 Embargo ends
 
-        21.0 Reflect ends
-        21.1 Light Screen ends
-        21.2 Safeguard ends
-        21.3 Mist ends
-        21.4 Tailwind ends
-        21.5 Lucky Chant ends
-        21.6 Water Pledge + Fire Pledge ends, Fire Pledge + Grass Pledge ends, Grass Pledge + Water Pledge ends
+        21.0 Yawn
 
-        22.0 Gravity ends
+        22.0 Perish Song
 
-        23.0 Trick Room ends
+        23.0 Reflect ends
+        23.1 Light Screen ends
+        23.2 Safeguard ends
+        23.3 Mist ends
+        23.4 Tailwind ends
+        23.5 Lucky Chant ends
+        23.6 Water Pledge + Fire Pledge ends, Fire Pledge + Grass Pledge ends, Grass Pledge + Water Pledge ends
 
-        24.0 Wonder Room ends
+        24.0 Gravity ends
 
-        25.0 Magic Room ends
+        25.0 Trick Room ends
 
-        26.0 Uproar message
-        26.1 Speed Boost, Bad Dreams, Harvest, Moody
-        26.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
-        26.3 pickup
+        26.0 Wonder Room ends
 
-        27.0 Zen Mode
+        27.0 Magic Room ends
 
-        28.0 Pokémon is switched in (if previous Pokémon fainted)
-        28.1 Healing Wish, Lunar Dance
-        28.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
+        28.0 Uproar message
+        28.1 Speed Boost, Bad Dreams, Harvest, Moody
+        28.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
+        28.3 pickup
 
-        29.0 Slow Start, Forecast
+        29.0 Zen Mode
+
+        30.0 Pokémon is switched in (if previous Pokémon fainted)
+        30.1 Healing Wish, Lunar Dance
+        30.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
+
+        31.0 Slow Start, Forecast
         */
         ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
         ownEndFunctions.push_back(QPair<int, VoidFunction>(28, &BattleSituation::requestEndOfTurnSwitchIns));
@@ -216,14 +221,15 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(AbilityEffect, 5, 1); /* Shed skin, Hydration, Healer */
         addEndTurnEffect(ItemEffect, 5, 2); /* Leftovers, Black sludge */
 
-        addEndTurnEffect(OwnEffect, 9, 0, 0, "", NULL, &BattleSituation::endTurnStatus);
+        addEndTurnEffect(OwnEffect, 9, 0, 0, "", NULL, &BattleSituation::endTurnPoison);
+        addEndTurnEffect(OwnEffect, 10, 0, 0, "", NULL, &BattleSituation::endTurnBurn);
 
-        addEndTurnEffect(AbilityEffect, 26, 1); /* Speed Boost, Bad Dreams, Harvest, Pickup Moody */
-        addEndTurnEffect(ItemEffect, 26, 2); /* Orbs, sticky barb */
+        addEndTurnEffect(AbilityEffect, 28, 1); /* Speed Boost, Bad Dreams, Harvest, Pickup Moody */
+        addEndTurnEffect(ItemEffect, 28, 2); /* Orbs, sticky barb */
 
-        addEndTurnEffect(AbilityEffect, 27, 0); /* Daruma Mode */
+        addEndTurnEffect(AbilityEffect, 29, 0); /* Daruma Mode */
 
-        addEndTurnEffect(AbilityEffect, 29, 0); /* Slow Start, Forecast */
+        addEndTurnEffect(AbilityEffect, 31, 0); /* Slow Start, Forecast */
     }
 }
 
@@ -545,54 +551,55 @@ void BattleSituation::personalEndTurn(int player)
 {
     if (koed(player))
         return;
-    endTurnStatus(player);
+    endTurnPoison(player);
+    endTurnBurn(player);
     callpeffects(player, player, "EndTurn6.4");//leech seed
-    callpeffects(player, player, "EndTurn6.6");//nightmare
-    callpeffects(player, player, "EndTurn6.8");//curse
-    callpeffects(player, player, "EndTurn6.9");//bind
+    callpeffects(player, player, "EndTurn6.7");//nightmare
+    callpeffects(player, player, "EndTurn6.9");//curse
+    callpeffects(player, player, "EndTurn6.10");//bind
 
     testWin();
 }
 
-void BattleSituation::endTurnStatus(int player)
+void BattleSituation::endTurnPoison(int player)
 {
-    if (koed(player))
+    if (koed(player)|| poke(player).status() != Pokemon::Poisoned)
         return;
 
-    switch(poke(player).status())
-    {
-    case Pokemon::Burnt:
-        if (hasWorkingAbility(player, Ability::MagicGuard))
-            return;
+    //PoisonHeal
+    if (hasWorkingAbility(player, Ability::PoisonHeal)) {
+        if (canHeal(player,HealByAbility,ability(player))) {
+            sendAbMessage(45,0,player,0,Pokemon::Poison);
+            healLife(player, poke(player).totalLifePoints()/8);
+        }
+    } else {
+        if (!hasWorkingAbility(player, Ability::MagicGuard)) {
+            notify(All, StatusMessage, player, qint8(HurtPoison));
 
-        notify(All, StatusMessage, player, qint8(HurtBurn));
-        //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
-        inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1))), player);
-        break;
-    case Pokemon::Poisoned:
-        //PoisonHeal
-        if (hasWorkingAbility(player, Ability::PoisonHeal)) {
-            if (canHeal(player,HealByAbility,ability(player))) {
-                sendAbMessage(45,0,player,0,Pokemon::Poison);
-                healLife(player, poke(player).totalLifePoints()/8);
-            }
-        } else {
-            if (!hasWorkingAbility(player, Ability::MagicGuard)) {
-                notify(All, StatusMessage, player, qint8(HurtPoison));
-
-                if (poke(player).statusCount() == 0)
-                    inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
-                else {
-                    inflictDamage(player, poke(player).totalLifePoints() * (16-poke(player).statusCount()) / 16, player);
-                    //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
-                }
+            if (poke(player).statusCount() == 0)
+                inflictDamage(player, poke(player).totalLifePoints()/ (gen().num == 1 ? 16 : 8), player); // 1/16 in gen 1
+            else {
+                inflictDamage(player, poke(player).totalLifePoints() * (16-poke(player).statusCount()) / 16, player);
+                //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
             }
         }
-        /* Toxic still increases under magic guard, poison heal */
-        if (poke(player).statusCount() != 0)
-            poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
-        break;
     }
+    /* Toxic still increases under magic guard, poison heal */
+    if (poke(player).statusCount() != 0)
+        poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1);
+}
+
+void BattleSituation::endTurnBurn(int player)
+{
+    if (koed(player) || poke(player).status() != Pokemon::Burnt)
+        return;
+
+    if (hasWorkingAbility(player, Ability::MagicGuard))
+        return;
+
+    notify(All, StatusMessage, player, qint8(HurtBurn));
+    //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
+    inflictDamage(player, poke(player).totalLifePoints()/(8*(1+(hasWorkingAbility(player,Ability::Heatproof) || gen().num == 1))), player);
 }
 
 BattleChoices BattleSituation::createChoice(int slot)
