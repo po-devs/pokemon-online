@@ -1658,6 +1658,9 @@ void BattleBase::koPoke(int player, int source, bool straightattack)
     qint16 damage = poke(player).lifePoints();
 
     changeHp(player, 0);
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    }
 
     if (straightattack) {
         notify(this->player(player), StraightDamage,player, qint16(damage));
