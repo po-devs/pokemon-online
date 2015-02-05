@@ -1365,14 +1365,20 @@ struct MMBounce : public MM
 
     static void daf(int s, int t, BS &b) {
         if (!poke(b,s).value("Invulnerable").toBool()) {
-            if (move(b,s) == Move::SkyDrop) {
+            if (move(b,s) == SkyDrop) {
+                /* Sky drop can target allies, but the move fails */
+                if (b.arePartners(s, t)) {
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop));
+                    fturn(b,s).add(TM::Failed);
+                    return;
+                }
                 /* First part of the move */
                 if (b.hasSubstitute(t)) {
-                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop));
                     fturn(b,s).add(TM::Failed);
                 } else if (b.gen() >= 6  && b.weight(t) >= 2000) {
                     //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs. Remember floating point precision! 200.0 = 2000
-                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(Move::SkyDrop));
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop));
                     b.fail(s, 13, 7, Pokemon::Flying, t);
                 }
             }
@@ -1380,7 +1386,7 @@ struct MMBounce : public MM
     }
 
     static void ms(int s, int, BS &b) {
-        if (b.hasWorkingItem(s, Item::PowerHerb)) {
+        if (b.hasWorkingItem(s, Item::PowerHerb) && move(b,s) != SkyDrop) {
             QStringList args = turn(b,s)["Bounce_Arg"].toString().split('_');
             b.sendMoveMessage(13,args[0].toInt(),s,type(b,s),s,move(b,s));
             b.sendItemMessage(11,s);
@@ -1397,7 +1403,7 @@ struct MMBounce : public MM
         } else {
             tmove(b, s).power = 0;
             tmove(b, s).accuracy = 0;
-            if (move(b,s) != Move::SkyDrop) {
+            if (move(b,s) != SkyDrop) {
                 tmove(b, s).targets = Move::User;
                 tmove(b, s).status = 0;
                 tmove(b, s).statAffected = 0;
@@ -1439,7 +1445,7 @@ struct MMBounce : public MM
     /* Called with freefall */
     static void bcd (int s, int t, BS &b) {
         /* Airbourne targets don't receive damage. Also if the opponent caught dies, then it fails */
-        if (b.hasType(t, Type::Flying) || turn(b,s).value("LinkedDeath").toBool()) {
+        if ((!b.hasGroundingEffect(t) && b.hasType(t, Type::Flying)) || turn(b,s).value("LinkedDeath").toBool()) {
             b.changeSprite(s, 0);
             tmove(b,s).power = 1;            
             fturn(b,s).add(TM::Failed);
@@ -2382,7 +2388,7 @@ struct MMSmackDown : public MM
 
         if(poke(b,t).value("Invulnerable").toBool()) {
             int move = poke(b,t)["2TurnMove"].toInt();
-            if (move == Fly || move == Bounce || move == SkyDrop) {
+            if (move == Fly || move == Bounce) {
                 MMBounce::groundStruck(t, b);
             }
         }

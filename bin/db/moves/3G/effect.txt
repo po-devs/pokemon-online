@@ -14,9 +14,9 @@
 13 Requires a turn to charge before attacking.
 14 Raises the user's Attack by two levels.
 15 Inflicts regular damage with no additional effect.
-16 Inflicts regular damage and can hit Bounce and Fly users.
+16 Inflicts regular damage. This attack's power is doubled if the target is using Fly or Bounce.
 17 Inflicts regular damage with no additional effect.
-18 Immediately ends wild battles. Forces trainers to switch Pokémon.
+18 Immediately ends wild battles. Forces trainers to switch Pokémon. Can hit the target even if it is using Bounce or Fly.
 19 User flies high into the air, dodging all attacks, and hits next turn.
 20 Prevents the target from fleeing and inflicts damage for 2-5 turns.
 21 Inflicts regular damage with no additional effect.
@@ -85,7 +85,7 @@
 84 Has a $effect_chance% chance to paralyze the target.
 85 Has a $effect_chance% chance to paralyze the target.
 86 Paralyzes the target.
-87 Has a $effect_chance% chance to paralyze the target.
+87 Has a $effect_chance% chance to paralyze the target. This attack's power is doubled if the target is using Fly or Bounce.
 88 Inflicts regular damage with no additional effect.
 89 Inflicts regular damage and can hit Dig users.
 90 Causes a one-hit KO.
@@ -237,7 +237,7 @@
 236 Heals the user by half its max HP.  Affected by weather.
 237 Power and type depend upon user's IVs.  Power can range from 30 to 70.
 238 Has an increased chance for a critical hit. (12.5%)
-239 Has chance to make the target flinch.
+239 Has chance to make the target flinch. This attack's power is doubled if the target is using Fly or Bounce.
 240 Changes the weather to rain for five turns.
 241 Changes the weather to sunny for five turns.
 242 Has a $effect_chance% chance to lower the target's Defense by one level.

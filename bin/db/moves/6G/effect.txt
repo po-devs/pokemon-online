@@ -69,7 +69,7 @@
 84 Has a 10% chance to paralyze the target.
 85 Has a 10% chance to paralyze the target.
 86 Paralyzes the target. Affected by type immunities.
-87 Has a 30% chance to paralyze the target. During Rain Dance, this attack hits without fail, but during Sunny Day, this attack's accuracy is 50. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
+87 Has a 30% chance to paralyze the target. During Rain Dance, this attack hits without fail, but during Sunny Day, this attack's accuracy is 50. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
 89 This attack's power is doubled if the target is using Dig.
 90 One-hit KO. Deals damage to the target equal to its max HP. Fails if the target's level is higher than the user's level, but has its accuracy increased by the level difference otherwise. Other accuracy effects are ignored for this attack.
 91 Requires a charge up turn before use. While the user is using this attack, the user can't be hit by attacks other than Earthquake and Magnitude, and the user doesn't get damaged by Sandstorm and Hail.
@@ -333,7 +333,7 @@
 353 On the turn it is used, queues the attack. Two turns later, at the end of the turn, the Pokémon at the target's position is hit, using the stat changes and modifications on the user and the target active at the time the attack hits. This attack fails if it has already been queued.
 354 If this attack hits, lowers the user's Special Attack by 2 stages.
 355 Recovers 1/2 of the user's max HP, and until the end of the turn, the user's Flying type is ignored. If used by a pure Flying-type Pokémon, it becomes Normal type for the rest of the turn.
-356 For five turns, no Pokémon can use Bounce, Fly, Flying Press, Hi Jump Kick, Jump Kick, Magnet Rise, Sky Drop, Splash, and Telekinesis, and the Ground immunity of any Pokémon on the field is negated. In addition, boosts the Accuracy of all Pokémon by 10/6.
+356 For five turns, no Pokémon can use Bounce, Fly, Flying Press, Hi Jump Kick, Jump Kick, Magnet Rise, Sky Drop, Splash, or Telekinesis, and the Ground immunity of any Pokémon on the field is negated. In addition, boosts the Accuracy of all Pokémon by 10/6.
 357 Until the target or the user switches out, the user ignores the target's positive evasiveness stages, and changes the user's effectiveness of Psychic moves against the target's Dark typing to neutral.
 358 This attack's power is doubled on a Sleeping target, but cures the target of Sleep.
 359 If this attack hits, lowers the user's Speed by 1 stage.
@@ -450,7 +450,7 @@
 476 Draws to the user any single-target move used by any of the opponent's Pokémon. Priority level 2.
 477 For three turns, or until the target switches out, the target is always hit with 100% accuracy and is immune to Ground moves.
 478 For five turns, or until this move is used again, no Pokémon can use or receive an effect from their held item unless it can change their forme.
-479 Stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
+479 Stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
 480 Always scores a critical hit.
 481 Also damages Pokémon next to the target for 1/16 of their max HP.
 482 Has a 10% chance to poison the target.
@@ -513,7 +513,7 @@
 539 Has a 40% chance to lower the target's Accuracy by 1 stage.
 540 Damage is calculated using the target's Defense stat, not Special Defense.
 541 Multi-hit attack, attacks two to five times in a turn. 37.5% chance for 2 or 3 hits; 12.5% chance for 4 or 5 hits.
-542 Has a 30% chance to confuse the target. During Rain Dance, this attack hits without fail, but during Sunny Day, this attack's accuracy is 50. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
+542 Has a 30% chance to confuse the target. During Rain Dance, this attack hits without fail, but during Sunny Day, this attack's accuracy is 50. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
 543 The user takes recoil damage equal to 1/4 of HP lost by the target from this attack.
 544 Hits twice in a turn.
 545 Has a 30% chance to burn the target.
@@ -582,7 +582,7 @@
 613 Has a 30% chance to burn the target. Thaws the user and the target if either is frozen.
 614 Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.
 615 The user and an ally hold hands. This makes them very happy.
-616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. Can hit the target even if it is using Fly, Bounce, or Sky Drop.
+616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
 617 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
 620 Lowers the user's Defense and Special Defense by 1 stage.
 621 Lowers the user's Defense by 1 stage. Cannot be evaded. Fails if the user is not Hoopa-Unbound. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.

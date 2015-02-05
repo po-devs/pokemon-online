@@ -2,7 +2,7 @@
 12 43#Guillotine
 13 104-0#razor wind
 18 107#whirlwind
-19 13-3_16*2_239*2_327_87_542_479_248_353#Fly
+19 13-3_16*2_239*2_327_87*2_248_353_18#Fly
 20 10#bind-inflict damage every turn
 23 126#stomp
 26 64#jump kick
@@ -166,7 +166,7 @@
 329 43#sheer cold
 335 12#block, aka mean look
 338 11#frenzy plant
-340 13-0_16*2_239*2_327_87_542_479_248_353#bounce
+340 13-0_16*2_239*2_327_87*2_248_353#bounce
 343 23#covet
 346 88-9#water sport
 353 29#doom desire
