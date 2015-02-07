@@ -1418,7 +1418,8 @@ QStringList Player::getTierList() const
 
 void Player::assignNewColor(const QColor &c)
 {
-    if (c.lightness() <= 140 && c.green() <= 210)
+    int luma = (c.green()*3 + c.blue() +c.red()*2)/6;
+    if (!((luma > 140 && c.lightness() > 140) || c.green() > 200))
         color() = c;
 }
 

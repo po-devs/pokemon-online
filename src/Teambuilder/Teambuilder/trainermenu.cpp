@@ -377,10 +377,16 @@ void TrainerMenu::on_colorButton_clicked()
 {
     QColor c = QColorDialog::getColor(team().color());
 
-    if (c.green() + c.red() + c.blue() = 0) {
+    if (c.green() + c.red() + c.blue() == 0) {
         c.setBlue(1);
     }
-    if (!c.isValid() || (c.isValid() && (c.lightness() > 140 || c.green() > 210))) { // So they can click cancel without their colour disappearing!
+
+    if (!c.isValid())
+        return;
+
+    int luma = (c.green()*3 + c.blue() +c.red()*2)/6;
+    if ((luma > 140 && c.lightness() > 140) || c.green() > 200) { // So they can click cancel without their colour disappearing!
+        QMessageBox::information(NULL, tr("Invalid Color"), tr("Your color must have less than 200 parts green, brightness less than 140, and lightness less than 140.\n\nYour selected color currently has %1 parts green, a brightness of %2, and a lightness of %3.").arg(c.green()).arg(luma).arg(c.lightness()));
         return;
     }
 
