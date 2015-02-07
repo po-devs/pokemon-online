@@ -1418,7 +1418,7 @@ QStringList Player::getTierList() const
 
 void Player::assignNewColor(const QColor &c)
 {
-    if (c.lightness() <= 140 && c.green() <= 180)
+    if (c.lightness() <= 140 && c.green() <= 210)
         color() = c;
 }
 
