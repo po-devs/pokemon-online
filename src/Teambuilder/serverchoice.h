@@ -2,6 +2,7 @@
 #define SERVERCHOICE_H
 
 #include "centralwidget.h"
+#include <QtNetwork>
 
 struct ServerInfo;
 class TeamHolder;
@@ -40,6 +41,7 @@ private slots:
     void connected();
     void anchorClicked(const QUrl&);
     void timeout();
+    void announcementReceived(QNetworkReply* reply);
 
     void on_switchPort_clicked();
 private:
@@ -52,8 +54,9 @@ private:
 
     bool wasConnected;
     TeamHolder *team;
-
+    QNetworkAccessManager manager;
     void addSavedServer(const QString &ip, const QString &name="");
+    void getAnnouncement();
 };
 
 #endif // SERVERCHOICE_H

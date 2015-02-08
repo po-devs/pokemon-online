@@ -37,9 +37,9 @@ ServerChoice::ServerChoice(TeamHolder* team) :
     ui->switchPort->setIcon(QApplication::style()->standardIcon(QStyle::SP_BrowserReload));
 
     connect(registry_connection, SIGNAL(connectionError(int,QString)), SLOT(connectionError(int , QString)));
-    connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(setText(QString)));
-    connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
-
+    //connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(setText(QString)));
+    //connect(registry_connection, SIGNAL(regAnnouncementReceived(QString)), ui->announcement, SLOT(show()));
+    connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(announcementReceived(QNetworkReply*)));
     connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), model, SLOT(addServer(ServerInfo)));
     connect(this, SIGNAL(clearList()), model, SLOT(clear()));
     connect(registry_connection, SIGNAL(serverReceived(ServerInfo)), SLOT(serverAdded()));
@@ -91,12 +91,36 @@ ServerChoice::ServerChoice(TeamHolder* team) :
 #else
     ui->serverList->sortByColumn(ServerChoiceModel::Players, Qt::DescendingOrder);
 #endif
+    getAnnouncement();
 }
 
 ServerChoice::~ServerChoice()
 {
     saveSettings();
     delete ui;
+}
+
+void ServerChoice::getAnnouncement() {
+    manager.get(QNetworkRequest(QUrl("http://pokemon-online.eu/files/announcement.html")));
+}
+
+void ServerChoice::announcementReceived(QNetworkReply* reply) {
+    QString html = QString(reply->readAll());
+    QFile out("db/announcement.html");
+    bool open = out.open(QIODevice::ReadWrite);
+    if (html.isEmpty()) {
+        if (!open) {
+            ui->announcement->setText("<b>Welcome to Pokémon Online!</b>"); //bad default message
+        } else {
+            ui->announcement->setText(out.readAll());
+        }
+    } else {
+        ui->announcement->setText(html);
+        ui->announcement->show();
+        if (open) {
+            out.write(html.toUtf8()); //save so if offline in the future, the announcement is still there
+        }
+    }
 }
 
 bool ServerChoice::event(QEvent *e)
