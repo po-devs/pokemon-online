@@ -216,7 +216,7 @@ void BattleSituation::initializeEndTurnFunctions()
         31.0 Slow Start, Forecast
         */
         ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
-        ownEndFunctions.push_back(QPair<int, VoidFunction>(28, &BattleSituation::requestEndOfTurnSwitchIns));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(30, &BattleSituation::requestEndOfTurnSwitchIns));
 
         addEndTurnEffect(AbilityEffect, 5, 1); /* Shed skin, Hydration, Healer */
         addEndTurnEffect(ItemEffect, 5, 2); /* Leftovers, Black sludge */
