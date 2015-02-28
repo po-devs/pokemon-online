@@ -34,6 +34,8 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
     teamCount = p1.teamCount;
     restricted[0] = p1.restrictedPokes;
     restricted[1] = p2.restrictedPokes;
+    bannedPokes[0] = p1.bannedPokes.split(", ");
+    bannedPokes[1] = p2.bannedPokes.split(", ");
     ratings[0] = p1.rating;
     ratings[1] = p2.rating;
     winMessage[0] = p1.win;
