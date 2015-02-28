@@ -624,8 +624,11 @@ BattleChoices BattleSituation::createChoice(int slot)
     }
 
     //Mega Evolution is not hindered by Embargo, etc.
-    if (((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent) && !bannedPokes[0].contains("Mega Rayquaza") && !bannedPokes[1].contains("Mega Rayquaza"))) && !megas[player(slot)]) {
-        ret.mega = true;
+    if (((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) && !megas[player(slot)]) {
+        Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
+        if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
+            ret.mega = true;
+        }
     }
 
     if (!hasWorkingItem(slot, Item::ShedShell) && (gen() < 6 || !hasType(slot, Type::Ghost))) {
@@ -899,11 +902,13 @@ void BattleSituation::megaEvolve(int slot)
     //Split to allow Mega Evo to activate on Special Pursuit
     //Mega Evolution is not hindered by Embargo, etc.
     if (choice(slot).mega()) {
-        if ((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent) && !bannedPokes[0].contains("Mega Rayquaza") && !bannedPokes[1].contains("Mega Rayquaza"))) {
+        if ((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
             Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
-            sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
-            changeForme(player(slot), slotNum(slot), forme, false, false, true);
-            megas[player(slot)] = true;
+            if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
+                sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
+                changeForme(player(slot), slotNum(slot), forme, false, false, true);
+                megas[player(slot)] = true;
+            }
         }
     }
 }
