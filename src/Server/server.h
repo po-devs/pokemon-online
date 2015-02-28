@@ -112,6 +112,8 @@ public:
 
     bool correctPass(const QByteArray &hash, const QByteArray &salt) const;
     void processLoginDetails(Player *p);
+
+    void scriptKillBattleServer();
 signals:
     void chatMessage(const QString &name);
     void serverMessage(const QString &name);

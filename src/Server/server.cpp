@@ -2046,4 +2046,9 @@ void Server::notifyGroup(PlayerGroupFlags group, const QByteArray &packet)
     }
 }
 
+void Server::scriptKillBattleServer()
+{
+    battles->killServer();
+}
+
 #include "server.tpp"
