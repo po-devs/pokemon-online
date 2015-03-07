@@ -9,8 +9,8 @@
 Registry::Registry() {
     linecount = 0;
 
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    //QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 
     if (!forPlayers[1].listen(QHostAddress::Any, 5090))
     {
