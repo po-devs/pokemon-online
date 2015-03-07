@@ -3368,6 +3368,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     if (sub && (player != source || goForSub) && straightattack) {
         inflictSubDamage(player, damage, source);
+        if(tmove(source).recoil > 0) {
+            inflictRecoil(source, player);
+        }
     } else {
         damage = std::min(int(poke(player).lifePoints()), damage);
 
