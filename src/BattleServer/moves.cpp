@@ -3300,6 +3300,7 @@ struct MMKnockOff : public MM
         //Knock off if target is dead, but not if attacker
         if (!b.koed(s)) {
             if (b.canLoseItem(t,s)) {
+                turn(b,t)["LostItem"] = b.poke(t).item();
                 b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
                 b.loseItem(t);
                 b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;

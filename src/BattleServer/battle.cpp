@@ -1897,6 +1897,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callieffects(target, player, "UponBeingHit");
                     /*This allows Knock off to work*/
                     calleffects(player, target, "KnockOff");
+                    callieffects(target, player, "AfterKnockOff");
                 }
 
                 if (koed(target))
