@@ -154,6 +154,7 @@ public:
     bool isPlayer(int spot) const { return role(spot) == BattleConfiguration::Player;}
     int numberOfSlots() const {return conf->numberOfSlots();}
     bool multiples() const {return (conf->mode != ChallengeInfo::Singles);}
+    bool doubles() const {return (conf->mode == ChallengeInfo::Doubles); }
 
     void reloadTeam(int player) {
         d()->reloadTeam(player);

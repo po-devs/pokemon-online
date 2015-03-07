@@ -209,7 +209,7 @@ private:
     bool mLogNames;
 
     void setupGui();
-    QHBoxLayout *createTeamLayout(QLabel** labels);
+    QGridLayout *createTeamLayout(QLabel** labels);
     QGridLayout *createHPBarLayout(int slot);
     QWidget *createFullBarLayout(int nslots, int player);
 };
