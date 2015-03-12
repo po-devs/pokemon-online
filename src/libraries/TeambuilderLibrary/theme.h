@@ -49,6 +49,7 @@ public:
     static void ToolButtonIcon(QToolButton *b, ToolIcon icon);
     static QPixmap GenderPicture(int gender, GenderMode mode = TeamBuilderM);
     static QString path(const QString &filename, bool defaultP = false);
+    static QString dirPath(const QString &dirname, bool defaultP = false);
 
     static QImageButton *Button(const QString &code);
     static QImageButtonP *PressedButton(const QString &code);

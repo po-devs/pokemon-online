@@ -21,6 +21,7 @@ public:
     virtual QPixmap battleStatusIcon(int){return QPixmap();}
     virtual QPixmap battleGenderPicture(int){return QPixmap();}
     Q_INVOKABLE virtual QString trainerSpritePath(int) {return QString();}
+    Q_INVOKABLE virtual QString directoryPath(const QString&) {return QString();}
 };
 
 #endif // DEFAULTTHEME_H

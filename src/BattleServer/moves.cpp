@@ -1395,9 +1395,11 @@ struct MMBounce : public MM
             removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
             if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &MMFeint::daf);
-                if (poke(b, b.targetList.front()).value("Minimize").toBool()) {
-                    tmove(b, s).accuracy = 0;
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                if (b.targetList.size() > 0) {
+                    if (poke(b, b.targetList.front()).value("Minimize").toBool()) {
+                        tmove(b, s).accuracy = 0;
+                        tmove(b, s).power = tmove(b, s).power * 2;
+                    }
                 }
             }
         } else {
