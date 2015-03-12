@@ -4924,7 +4924,6 @@ struct MMSleepTalk : public MM
     struct FM : public QSet<int> {
         FM() {
             //Sleep Talk prevents all 2-Turn moves
-            //Fixme: Gen 4 and below Mimic should have the move replaced, not Sleep Talk
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
@@ -4950,9 +4949,12 @@ struct MMSleepTalk : public MM
             /* Sleep talk can work on 0 PP moves but not on disabled moves*/
             /* On gen 5 it can work several times behind a choice band, so I allowed disabled moves, as
                choice band blocks moves the same way, but it needs to be cross checked. */
-            if ( (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false)
-                 && !forbidden_moves.contains(b.move(s,i), b.gen())) {
-                mp.push_back(i);
+            if (!forbidden_moves.contains(b.move(s,i), b.gen())) {
+                if (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false) {
+                    mp.push_back(i);
+                } else if (b.counters(s).hasCounter(BC::Encore) && (!poke(b,s).contains("ChoiceMemory") || poke(b,s).value("ChoiceMemory").toInt() == 0)) {
+                    mp.push_back(i);
+                }
             }
         }
 

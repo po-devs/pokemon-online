@@ -1545,6 +1545,20 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (turnMemory(player).value("ImpossibleToMove").toBool()) {
         goto trueend;
     }
+
+    //Gen 3 Sleep Talk fails if the move selected has 0 pp
+    if (specialOccurence && turnMemory(player).contains("SleepTalkedMove") && gen().num == 3) {
+        for (int i = 0; i < 3; i++) {
+            if (fpoke(player).moves[i] == turnMemory(player)["SleepTalkedMove"].toInt()) {
+                if (PP(player, i) <= 0) {
+                    notify(All, UseAttack, player, qint16(move));
+                    notify(All, Failed, player);
+                    goto trueend;
+                }
+            }
+        }
+    }
+
     if (!specialOccurence) {
         if (PP(player, move) <= 0) {
             notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
