@@ -11,7 +11,7 @@ Rectangle {
     width: buttonText.width + padding * 2
     height: buttonText.height + padding * 2
     radius: U.dp(0.1)
-    color: Theme.buttonColor
+    //color: Theme.buttonColor //TODO Theme
     Text {
         id: buttonText
         anchors.centerIn: parent

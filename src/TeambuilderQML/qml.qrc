@@ -3,5 +3,7 @@
         <file>qml/main.qml</file>
         <file>qml/js/units.js</file>
         <file>qml/components/Button.qml</file>
+        <file>qml/ui/ServerListPage.qml</file>
+        <file>qml/ui/BuildTeamPage.qml</file>
     </qresource>
 </RCC>

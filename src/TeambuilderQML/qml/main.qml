@@ -2,33 +2,36 @@ import QtQuick 2.2
 import PokemonOnlineQml 1.0
 import "js/units.js" as U
 import "components"
-Rectangle {
+import "ui"
+Item {
+    id: pokemonOnlineQml
     width: U.dp(8)
     height: U.dp(6)
-    ServerChoiceModel {
-        id: serverChoiceModel
+
+    state: "serverList"
+    Loader {
+        id: pageContentLoader
+        sourceComponent: serverListPageComponent
+        anchors.fill: parent
     }
-    ListView {
-        id: serverListView
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            bottom: teambuilderButton.top
-        }
-        model: serverChoiceModel
-        delegate: Text {
-            text: name
+
+    Loader {
+        id: teamBuilderLoader
+        sourceComponent: pokemonOnlineQml.state == "buildTeam" ? buildTeamPageComponent : null
+        anchors.fill: parent
+    }
+
+    Component {
+        id: serverListPageComponent
+        ServerListPage {
+            onBuildTeamClicked: pokemonOnlineQml.state = "buildTeam";
         }
     }
-    Button {
-        id: teambuilderButton
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
+
+    Component {
+        id: buildTeamPageComponent
+        BuildTeamPage {
+            onGoBack: pokemonOnlineQml.state = "serverList";
         }
-        text: "Build Team"
-        onTriggered: console.log("Build team")
     }
 }
