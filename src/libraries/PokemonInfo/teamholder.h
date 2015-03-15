@@ -21,12 +21,14 @@ class Profile : public ProfileInterace
     void sanitize();
 };
 
-class TeamHolder : public TeamHolderInterface
+class TeamHolder : public QObject, public TeamHolderInterface
 {
+    Q_OBJECT
     PROPERTY(Profile, profile)
 
-    TeamHolder();
-    TeamHolder(const QString &name);
+public:
+    TeamHolder(QObject *parent = 0);
+    TeamHolder(const QString &name, QObject *parent = 0);
     virtual ~TeamHolder();
 
     TrainerInfo &info() {return profile().info();}

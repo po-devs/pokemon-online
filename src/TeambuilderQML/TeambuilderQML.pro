@@ -9,7 +9,11 @@ SOURCES =   main.cpp \
             ../Teambuilder/analyze.cpp
 
 HEADERS =   serverchoicemodel.h \
-            ../Teambuilder/analyze.h
+            ../Teambuilder/analyze.h \
+            ../libraries/TeambuilderLibrary/poketablemodel.h \
+            ../libraries/PokemonInfo/teamholder.h \
+            ../libraries/PokemonInfo/pokemoninfo.h \
+            ../libraries/PokemonInfo/movesetchecker.h
 
 INCLUDEPATH = "../libraries"
 
