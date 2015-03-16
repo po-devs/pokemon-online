@@ -5,5 +5,7 @@
         <file>qml/components/Button.qml</file>
         <file>qml/ui/ServerListPage.qml</file>
         <file>qml/ui/BuildTeamPage.qml</file>
+        <file>qml/ui/MainMenuPage.qml</file>
+        <file>qml/ui/FindGamePage.qml</file>
     </qresource>
 </RCC>

@@ -3,6 +3,9 @@ import PokemonOnlineQml 1.0
 import "../components"
 Rectangle {
     signal goBack;
+    signal goFindGame;
+
+    anchors.fill: parent
 
     TeamHolder {
         id: teamHolder
@@ -14,18 +17,19 @@ Rectangle {
     }
 
     Column {
+        width: parent.width
+        Text {
+            text: "Build team"
+        }
+
         Button {
             text: "Back to server list"
             onTriggered: goBack();
         }
-    }
-    Flow {
-        width: parent.width
-        Repeater {
-            model: teamHolder.team;
-            delegate: Text {
-                text: "a pokemon"
-            }
+
+        Button {
+            text: "Find game"
+            onTriggered: goFindGame();
         }
     }
 }

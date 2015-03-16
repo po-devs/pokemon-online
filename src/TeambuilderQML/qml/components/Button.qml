@@ -11,6 +11,8 @@ Rectangle {
     width: buttonText.width + padding * 2
     height: buttonText.height + padding * 2
     radius: U.dp(0.1)
+    border.color: "black"
+    border.width: 2
     //color: Theme.buttonColor //TODO Theme
     Text {
         id: buttonText

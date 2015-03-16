@@ -9,29 +9,44 @@ Item {
     height: U.dp(6)
 
     state: "serverList"
-    Loader {
-        id: pageContentLoader
-        sourceComponent: serverListPageComponent
-        anchors.fill: parent
+    Item {
+        id: pageStack
+        property var stack: [];
+        function push(component) {
+            stack.push(component.createObject(pokemonOnlineQml));
+        }
+        function pop() {
+            stack[stack.length - 1].destroy()
+            stack.pop();
+        }
+        Component.onCompleted: pageStack.push(mainMenuPageComponent)
     }
-
-    Loader {
-        id: teamBuilderLoader
-        sourceComponent: pokemonOnlineQml.state == "buildTeam" ? buildTeamPageComponent : null
-        anchors.fill: parent
-    }
-
     Component {
-        id: serverListPageComponent
-        ServerListPage {
-            onBuildTeamClicked: pokemonOnlineQml.state = "buildTeam";
+        id: mainMenuPageComponent
+        MainMenuPage {
+            onBuildTeamClicked: pageStack.push(buildTeamPageComponent);
         }
     }
+
+//    Component {
+//        id: serverListPageComponent
+//        ServerListPage {
+//            onBuildTeamClicked: pokemonOnlineQml.state = "buildTeam";
+//        }
+//    }
 
     Component {
         id: buildTeamPageComponent
         BuildTeamPage {
-            onGoBack: pokemonOnlineQml.state = "serverList";
+            onGoBack: pageStack.pop()
+            onGoFindGame: pageStack.push(findGamePageComponent)
+        }
+    }
+
+    Component {
+        id: findGamePageComponent
+        FindGamePage {
+            onGoBack: pageStack.pop()
         }
     }
 }

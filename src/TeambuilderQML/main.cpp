@@ -9,6 +9,7 @@
 #include "libraries/PokemonInfo/teamholder.h"
 #include "libraries/PokemonInfo/pokemoninfo.h"
 #include "libraries/PokemonInfo/movesetchecker.h"
+#include "analyzeraccess.h"
 
 void reloadPokemonDatabase() {
     QSettings s;
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<PokemonOnlineQML::ServerChoiceModel>("PokemonOnlineQml", 1, 0, "ServerChoiceModel");
     qmlRegisterType<PokeTableModel>("PokemonOnlineQml", 1, 0, "PokeTableModel");
     qmlRegisterType<TeamHolder>("PokemonOnlineQml", 1, 0, "TeamHolder");
+    qmlRegisterType<AnalyzerAccess>("PokemonOnlineQml", 1, 0, "AnalyzerAccess");
     view->engine()->rootContext()->setContextProperty("screenDpi", dpi);
 
     view->setResizeMode(QQuickView::SizeRootObjectToView);

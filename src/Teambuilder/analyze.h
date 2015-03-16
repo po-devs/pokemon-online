@@ -9,6 +9,7 @@
 #include <Utilities/network.h>
 #include <Utilities/coreclasses.h>
 #include <PokemonInfo/networkstructs.h>
+#include "libraries/PokemonInfo/battlestructs.h"
 
 class Client;
 class PlayerInfo;
