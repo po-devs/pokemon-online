@@ -1795,6 +1795,9 @@ void BattleBase::analyzeChoice(int slot)
 
 void BattleBase::sendBack(int player, bool silent)
 {
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    }
     notify(All, SendBack, player, silent);
 }
 
