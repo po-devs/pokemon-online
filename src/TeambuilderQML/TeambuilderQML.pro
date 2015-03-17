@@ -21,11 +21,15 @@ HEADERS =   serverchoicemodel.h \
             analyzeraccess.h \
     playerinfolistmodel.h
 
-INCLUDEPATH = "../libraries"
+INCLUDEPATH += "../libraries"
 
 RESOURCES += \
     qml.qrc
 
 include(../Shared/Common.pri)
+exists ($$LIBZIP_PATH) {
+    LIBS += -L$$LIBZIP_PATH/lib/.libs -lzip
+}
+
 
 LIBS += $$teambuilder
