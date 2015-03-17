@@ -1,6 +1,7 @@
 #include "analyzeraccess.h"
 #include "libraries/PokemonInfo/battlestructs.h"
 #include "../Teambuilder/analyze.h"
+#include "libraries/PokemonInfo/teamholder.h"
 
 AnalyzerAccess::AnalyzerAccess(QObject *parent) :
     QObject(parent)
@@ -48,11 +49,18 @@ AnalyzerAccess::AnalyzerAccess(QObject *parent) :
     connect(m_analyzer, SIGNAL(reconnectPassGiven(QByteArray)), SLOT(setReconnectPass(QByteArray)));
     connect(m_analyzer, SIGNAL(reconnectSuccess()), SLOT(cleanData()));
     connect(m_analyzer, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
+
+    m_playerInfoListModel = new PlayerInfoListModel(this);
 }
 
 void AnalyzerAccess::connectTo(QString host, int port)
 {
     m_analyzer->connectTo(host, port);
+}
+
+QAbstractItemModel *AnalyzerAccess::playerInfoListModel()
+{
+    return m_playerInfoListModel;
 }
 
 void AnalyzerAccess::errorFromNetwork(int a, QString b)
@@ -62,7 +70,10 @@ void AnalyzerAccess::errorFromNetwork(int a, QString b)
 
 void AnalyzerAccess::connected()
 {
-    qDebug() << "TODO AnalyzerAccess::connected";
+    qDebug() << "AnalyzerAccess::connected";
+    TeamHolder th; // TODO temporary team holder
+    th.name() = "zAnArbitraryName";
+    m_analyzer->login(th, true, false, QColor(), QString(), QStringList());
 }
 
 void AnalyzerAccess::disconnected()
@@ -87,6 +98,7 @@ void AnalyzerAccess::printChannelMessage(QString s, int a, bool b)
 void AnalyzerAccess::playerReceived(PlayerInfo pi)
 {
     qDebug() << "TODO AnalyzerAccess::playerReceived" << pi.name;
+    m_playerInfoListModel->add(pi);
 }
 
 void AnalyzerAccess::playerLogin(PlayerInfo pi, QStringList sl)

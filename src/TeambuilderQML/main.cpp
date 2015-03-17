@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
 
     QQuickView *view = new QQuickView();
 
+    qRegisterMetaType<QAbstractItemModel *>();
+
     qmlRegisterType<PokemonOnlineQML::ServerChoiceModel>("PokemonOnlineQml", 1, 0, "ServerChoiceModel");
     qmlRegisterType<PokeTableModel>("PokemonOnlineQml", 1, 0, "PokeTableModel");
     qmlRegisterType<TeamHolder>("PokemonOnlineQml", 1, 0, "TeamHolder");

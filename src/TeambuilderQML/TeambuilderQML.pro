@@ -7,7 +7,8 @@ CONFIG += c++11
 SOURCES =   main.cpp \
             serverchoicemodel.cpp \
             ../Teambuilder/analyze.cpp \
-            analyzeraccess.cpp
+            analyzeraccess.cpp \
+    playerinfolistmodel.cpp
 
 HEADERS =   serverchoicemodel.h \
             ../Teambuilder/analyze.h \
@@ -16,7 +17,9 @@ HEADERS =   serverchoicemodel.h \
             ../libraries/PokemonInfo/pokemoninfo.h \
             ../libraries/PokemonInfo/movesetchecker.h \
             ../libraries/PokemonInfo/battlestructs.h \
-            analyzeraccess.h
+            ../libraries/PokemonInfo/networkstructs.h \
+            analyzeraccess.h \
+    playerinfolistmodel.h
 
 INCLUDEPATH = "../libraries"
 

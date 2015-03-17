@@ -3,16 +3,21 @@
 
 #include "libraries/PokemonInfo/battlestructs.h"
 #include "../Teambuilder/analyze.h"
+#include "playerinfolistmodel.h"
 #include <QObject>
 
 class AnalyzerAccess : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QAbstractItemModel * playersInfoListModel READ playerInfoListModel NOTIFY modelChanged)
 public:
     explicit AnalyzerAccess(QObject *parent = 0);
     Q_INVOKABLE void connectTo(QString host, int port);
+
+    QAbstractItemModel *playerInfoListModel();
 signals:
 
+    void modelChanged();
 public slots:
     void errorFromNetwork(int, QString);
     void connected();
@@ -56,6 +61,7 @@ public slots:
     void onReconnectFailure(int);
 private:
     Analyzer * m_analyzer;
+    PlayerInfoListModel *m_playerInfoListModel;
 };
 
 #endif // ANALYZERACCESS_H
