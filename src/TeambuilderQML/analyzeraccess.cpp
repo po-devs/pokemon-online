@@ -51,11 +51,34 @@ AnalyzerAccess::AnalyzerAccess(QObject *parent) :
     connect(m_analyzer, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
 
     m_playerInfoListModel = new PlayerInfoListModel(this);
+
+    m_team = new TeamHolder(this);
+    m_team->load();
+    m_team->team().loadFromFile("/home/luke/Documents/Pokemon\ Online/Teams/ab1");
+    m_team->name() = "zAnArbitraryName";
 }
 
 void AnalyzerAccess::connectTo(QString host, int port)
 {
     m_analyzer->connectTo(host, port);
+}
+
+void AnalyzerAccess::sendChallenge(int playerId)
+{
+    ChallengeInfo cinfo;
+    cinfo.dsc = ChallengeInfo::Sent;
+    cinfo.opp = playerId;
+    cinfo.mode = 0;
+    cinfo.clauses = 0;
+    cinfo.desttier = "Battle Factory";
+    cinfo.team = m_team->currentTeam();
+    m_analyzer->sendChallengeStuff(cinfo);
+}
+
+void AnalyzerAccess::setPlayerName(QString name)
+{
+    qDebug() << "AnalyzerAccess::setPlayerName" << name;
+    m_team->name() = name;
 }
 
 QAbstractItemModel *AnalyzerAccess::playerInfoListModel()
@@ -71,9 +94,7 @@ void AnalyzerAccess::errorFromNetwork(int a, QString b)
 void AnalyzerAccess::connected()
 {
     qDebug() << "AnalyzerAccess::connected";
-    TeamHolder th; // TODO temporary team holder
-    th.name() = "zAnArbitraryName";
-    m_analyzer->login(th, true, false, QColor(), QString(), QStringList());
+    m_analyzer->login(*m_team, true, false, QColor(), QString(), QStringList());
 }
 
 void AnalyzerAccess::disconnected()
@@ -113,7 +134,10 @@ void AnalyzerAccess::playerLogout(int a)
 
 void AnalyzerAccess::challengeStuff(ChallengeInfo ci)
 {
-    qDebug() << "TODO AnalyzerAccess::challengeStuff";
+    qDebug() << "TODO AnalyzerAccess::challengeStuff" << ci.desc();
+    if (ci.desc() == ChallengeInfo::Refused) {
+        emit challengeDeclined();
+    }
 }
 
 void AnalyzerAccess::battleStarted(int a, Battle b, TeamBattle tb, BattleConfiguration bc)

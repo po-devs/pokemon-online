@@ -13,11 +13,14 @@ class AnalyzerAccess : public QObject
 public:
     explicit AnalyzerAccess(QObject *parent = 0);
     Q_INVOKABLE void connectTo(QString host, int port);
+    Q_INVOKABLE void sendChallenge(int playerId);
+    Q_INVOKABLE void setPlayerName(QString name);
 
     QAbstractItemModel *playerInfoListModel();
 signals:
 
     void modelChanged();
+    void challengeDeclined();
 public slots:
     void errorFromNetwork(int, QString);
     void connected();
@@ -62,6 +65,7 @@ public slots:
 private:
     Analyzer * m_analyzer;
     PlayerInfoListModel *m_playerInfoListModel;
+    TeamHolder *m_team;
 };
 
 #endif // ANALYZERACCESS_H

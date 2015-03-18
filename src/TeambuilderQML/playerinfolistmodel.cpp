@@ -26,6 +26,8 @@ QVariant PlayerInfoListModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case RoleName:
         return m_playerInfoList[index.row()].name;
+    case RolePlayerId:
+        return m_playerInfoList[index.row()].id;
     }
     return QVariant();
 }
@@ -34,5 +36,6 @@ QHash<int, QByteArray> PlayerInfoListModel::roleNames() const
 {
     QHash<int, QByteArray> r;
     r[RoleName] = "name";
+    r[RolePlayerId] = "playerId";
     return r;
 }

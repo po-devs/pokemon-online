@@ -21,6 +21,13 @@ Item {
         }
         Component.onCompleted: pageStack.push(mainMenuPageComponent)
     }
+
+
+    AnalyzerAccess {
+        id: analyserAccess
+    }
+
+
     Component {
         id: mainMenuPageComponent
         MainMenuPage {
