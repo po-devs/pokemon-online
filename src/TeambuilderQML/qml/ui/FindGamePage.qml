@@ -8,6 +8,22 @@ Rectangle {
     anchors.fill: parent
 
     Component.onCompleted: analyserAccess.connectTo("188.165.244.152", 5080)
+
+    Component {
+        id: challengePopupComponent
+        ChallengeDialog {
+            onDecline: analyserAccess.declineChallenge();
+        }
+    }
+
+    Connections {
+        target: analyserAccess
+        onChallengeRecieved: challengePopupComponent.createObject(
+                                 pokemonOnlineQml, {
+                                    playerName: playerName
+                                 });
+    }
+
     VisualDataModel {
         id: visualModel
         model: analyserAccess.playersInfoListModel
@@ -19,7 +35,7 @@ Rectangle {
         ]
         delegate: Rectangle {
             id: item
-            height: name == "poqmtest" ? 25 : 0
+            height: name.indexOf("poqmtest") == 0 ? 25 : 0
             width: 200
             clip: true
             Text {

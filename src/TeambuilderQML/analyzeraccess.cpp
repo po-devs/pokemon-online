@@ -54,7 +54,7 @@ AnalyzerAccess::AnalyzerAccess(QObject *parent) :
 
     m_team = new TeamHolder(this);
     m_team->load();
-    m_team->team().loadFromFile("/home/luke/Documents/Pokemon\ Online/Teams/ab1");
+    m_team->team().loadFromFile(QDir::homePath() + "/team1.tp");
     m_team->name() = "zAnArbitraryName";
 }
 
@@ -79,6 +79,12 @@ void AnalyzerAccess::setPlayerName(QString name)
 {
     qDebug() << "AnalyzerAccess::setPlayerName" << name;
     m_team->name() = name;
+}
+
+void AnalyzerAccess::declineChallenge()
+{
+    m_cinfo.dsc = ChallengeInfo::Refused;
+    m_analyzer->sendChallengeStuff(m_cinfo);
 }
 
 QAbstractItemModel *AnalyzerAccess::playerInfoListModel()
@@ -137,6 +143,9 @@ void AnalyzerAccess::challengeStuff(ChallengeInfo ci)
     qDebug() << "TODO AnalyzerAccess::challengeStuff" << ci.desc();
     if (ci.desc() == ChallengeInfo::Refused) {
         emit challengeDeclined();
+    } else if (ci.desc() == ChallengeInfo::Sent) {
+        m_cinfo = ci;
+        emit challengeRecieved(m_playerInfoListModel->findPlayerById(ci.opponent()).name);
     }
 }
 

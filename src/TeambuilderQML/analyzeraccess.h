@@ -15,12 +15,14 @@ public:
     Q_INVOKABLE void connectTo(QString host, int port);
     Q_INVOKABLE void sendChallenge(int playerId);
     Q_INVOKABLE void setPlayerName(QString name);
+    Q_INVOKABLE void declineChallenge();
 
     QAbstractItemModel *playerInfoListModel();
 signals:
 
     void modelChanged();
     void challengeDeclined();
+    void challengeRecieved(QString playerName);
 public slots:
     void errorFromNetwork(int, QString);
     void connected();
@@ -66,6 +68,7 @@ private:
     Analyzer * m_analyzer;
     PlayerInfoListModel *m_playerInfoListModel;
     TeamHolder *m_team;
+    ChallengeInfo m_cinfo; //store challengeInfo recieved
 };
 
 #endif // ANALYZERACCESS_H

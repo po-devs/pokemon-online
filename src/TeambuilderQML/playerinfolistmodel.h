@@ -16,6 +16,7 @@ class PlayerInfoListModel : public QAbstractListModel
 public:
     explicit PlayerInfoListModel(QObject *parent = 0);
     void add(PlayerInfo pi);
+    PlayerInfo findPlayerById(int id);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

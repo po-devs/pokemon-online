@@ -13,6 +13,16 @@ void PlayerInfoListModel::add(PlayerInfo pi)
     emit endInsertRows();
 }
 
+PlayerInfo PlayerInfoListModel::findPlayerById(int id)
+{
+    //TODO use hash table
+    for (int i = 0; i < m_playerInfoList.size(); i++) {
+        if (m_playerInfoList.at(i).id == id) {
+            return m_playerInfoList.at(i);
+        }
+    }
+}
+
 int PlayerInfoListModel::rowCount(const QModelIndex &parent) const
 {
     return m_playerInfoList.size();
