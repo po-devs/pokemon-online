@@ -941,7 +941,15 @@ struct MMBellyDrum : public MM
         if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
             b.fail(s, 8);
 
-            /* Odd bug with gold, silver, crystal versions in gen 2 */
+            /* Odd bug with Gold, Silver, Crystal versions in gen 2
+             * A quick explanation of what happens:
+             * The game applies 1 Swords Dance boost.
+             * The game realizes the Pokemon has insufficient HP.
+             * The Swords Dance boost is kept.
+             * If it had enough HP, two more Swords Dance boosts would attempt to be applied.
+             * If one of the next Swords Dance boosts takes it to the 999 cap, then the move ends.
+             * This is why a Snorlax at +1 will reach +5 attack while one at 0 will reach +6.
+             */
             if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal)) && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
             }
@@ -957,14 +965,14 @@ struct MMBellyDrum : public MM
     }
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
-            b.sendMoveMessage(8,1,s,type(b,s));
-            b.inflictStatMod(s,Attack,12, s, false);
+            b.sendMoveMessage(8, 1, s, type(b, s));
 
             if (b.gen().num == 2) {
-                while (b.getStat(s, Attack) == 999) {
-                    b.inflictStatMod(s,Attack,-1,s,false);
+                while (b.getStat(s, Attack) < 999 && b.fpoke(s).boosts[Attack] < 6) {
+                    b.inflictStatMod(s, Attack, 2, s, false);
                 }
-                b.inflictStatMod(s,Attack,1,s,false);
+            } else {
+                b.inflictStatMod(s, Attack, 12, s, false);
             }
         }
         if (move(b,s) != Move::Substitute) {
