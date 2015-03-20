@@ -2115,9 +2115,14 @@ void BattleBase::testFlinch(int player, int target)
 {
     int rate = tmove(player).flinchRate;
 
-    if (rate && coinflip(rate*255/100, 256)) {
-        turnMem(target).add(TM::Flinched);
-        pokeMemory(target).remove("Recharging"); //Flinch remove Recharge Turn for Hyper Beam in RBY
+    if (rate) {
+        if (gen() > 1) {
+            rate = rate*255/100;
+        }
+        if (coinflip(rate, 256)) {
+            turnMem(target).add(TM::Flinched);
+            pokeMemory(target).remove("Recharging"); //Flinch remove Recharge Turn for Hyper Beam in RBY
+        }
     }
 }
 
