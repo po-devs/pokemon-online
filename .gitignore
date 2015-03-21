@@ -73,3 +73,4 @@ bin/test-*
 pokemon-online*
 pokemon-template
 Thumbs.db
+bin/db/announcement.html
