@@ -478,6 +478,9 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
         fpoke(target).remove(BasicPokeInfo::HadSubstitute);
     } else {
+        if (Move::StatChangingMove || (Move::StatusInducingMove && tmove(player).status == Pokemon::Asleep)) {
+             battleMemory()["LastDamageTakenByAny"] = 0; //Counter damage resets on Sleep moves and Stat changing moves
+        }
         /* Needs to be called before opponentblock because lightning rod / twave */
         int type = tmove(player).type; /* move type */
 
@@ -697,37 +700,37 @@ int BattleRBY::calculateDamage(int p, int t)
         def = crit ? this->poke(t).normalStat(SpAttack) : getStat(t, SpAttack);
     }
 
-    //burn
+    // burn
     if (!crit) {
-        //Burn does not halve the attack stat during damage calculation of Critical hits in RBY
+        // Burn does not halve the attack stat during damage calculation of Critical hits in RBY
         attack = attack / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
-        //Minimum attack is set to 1
+        // Minimum attack is set to 1
         if (attack == 0) {
             attack = 1;
         }
     }
     /* Light screen / Reflect */
-    //In RBY, Reflect / Light Screen boost doesn't cap the stat at 999 or 1023
-    if ( !crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-        def*=2;
+    // In RBY, Reflect / Light Screen boost doesn't cap the stat at 999 or 1023
+    if (!crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+        def *= 2;
     }
 
     // In RBY, if either stat is higher than 255, both are quartered during damage calculation
     if (def > 255 || attack > 255) {
-        def = (def/4) % 256;
+        def = (def / 4) % 256;
         if (def == 0)
             def = 1;
 
-        attack = (attack/4) % 256;
+        attack = (attack / 4) % 256;
         if (attack == 0)
             attack = 1;
     }
 
     attack = std::min(attack, 65535);
 
-    if ( (attackused == Move::Explosion || attackused == Move::Selfdestruct)) {
+    if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
         /* explosion / selfdestruct */
-        def/=2;
+        def /= 2;
         if (def == 0)
             // prevent division by zero
             def = 1;
@@ -735,13 +738,14 @@ int BattleRBY::calculateDamage(int p, int t)
 
     int stab = turnMem(p).stab;
     int typemod = turnMem(p).typeMod;
-    int randnum = randint(38) + 217;
+    int randnum = randint(39) + 217;
     int power = tmove(p).power;
 
     power = std::min(power, 65535);
-    int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50) + 2;
+    int damage = ((std::min(((level * ch * 2 / 5) + 2) * power, 65535) * attack / def) / 50);
+    damage = std::min(damage, 997) + 2;
 
-    damage = (damage * stab/2) ;
+    damage = (damage * stab / 2) ;
     while (typemod > 0) {
         damage *= 2;
         typemod--;
