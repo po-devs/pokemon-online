@@ -1136,7 +1136,11 @@ void BattleSituation::sendBack(int player, bool silent)
                     sendMoveMessage(171, 0, player);
                 }
                 turnMemory(player)["SendingBack"] = true; //To prevent PinchStat berries from activating right before switch
-                tmove(opp).power = tmove(opp).power * 2;
+                if (gen().num > 2) {
+                    tmove(opp).power = tmove(opp).power * 2;
+                } else {
+                    turnMemory(player)["PursuitedOnSwitch"] = true;
+                }
                 choice(opp).setTarget(player);
                 analyzeChoice(opp);
 
@@ -3038,6 +3042,163 @@ void BattleSituation::makePokemonLast(int t)
 
 int BattleSituation::calculateDamage(int p, int t)
 {
+    if (gen().num == 2) {
+        calleffects(p, t, "DamageFormulaStart");
+
+        PokeBattle &poke = this->poke(p);
+
+        int level = fpoke(p).level;
+        int atk, def;
+        bool crit = turnMem(p).contains(TM::CriticalHit);
+
+        int attackused = tmove(p).attack;
+
+        int cat = tmove(p).category;
+        QString qA, qD;
+        if (cat == Move::Physical) {
+            atk = getStat(p, Attack, 1);
+            qA = "Stat"+QString::number(Attack);
+            def = getStat(t, Defense, 1);
+            qD = "Stat"+QString::number(Defense);
+        } else {
+            atk = getStat(p, SpAttack, 1);
+            qA = "Stat"+QString::number(SpAttack);
+            def = getStat(t, SpDefense, 1);
+            qD = "Stat"+QString::number(SpDefense);
+        }
+
+        if ((!crit || !turnMemory(p).value("CritIgnoresAll").toBool())
+            && teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+            def *= 2;
+        }
+
+        callieffects(p, p, "StatModifier");
+        callieffects(t, t, "StatModifier");
+
+        // Thick Club and Light Ball
+        atk = atk * (20 + turnMemory(p).value(qA+"ItemModifier").toInt()) / 20;
+
+        if (atk > 255 || def > 255) { // Stat Scaling 1
+            atk = (atk / 4) % 256;
+            def = (def / 4) % 256;
+            if (def == 0) {
+                def = 1;
+            }
+        }
+
+        // Metal Powder
+        if (turnMemory(t).value(qD+"ItemModifier").toInt() > 0) {
+            def = def * (20 + turnMemory(t).value(qD+"ItemModifier").toInt()) / 20;
+            if (def > 255) { // Stat Scaling 2
+                atk = (atk / 2) % 256;
+                def = (def / 2) % 256;
+                if (def == 0) {
+                    def = 1;
+                }
+            }
+        }
+
+        turnMemory(p).remove(qA+"ItemModifier");
+        turnMemory(t).remove(qD+"ItemModifier");
+
+        if (attackused == Move::Explosion || attackused == Move::Selfdestruct) {
+            /* Explosion / Selfdestruct */
+            def /= 2;
+            if (def == 0) { // prevent division by zero
+                def = 1;
+            }
+        }
+
+        calleffects(p, t, "BasePowerModifier");
+        callieffects(p, t, "BasePowerModifier");
+
+        int power = tmove(p).power;
+        int type = tmove(p).type;
+
+        /* This is for Dig and Fly */
+        if (pokeMemory(t).contains("VulnerableMoves") && pokeMemory(t).value("Invulnerable").toBool()) {
+            QList<int> vuln_moves = pokeMemory(t)["VulnerableMoves"].value<QList<int> >();
+            QList<int> vuln_mults = pokeMemory(t)["VulnerableMults"].value<QList<int> >();
+
+            for (int i = 0; i < vuln_moves.size(); i++) {
+                if (vuln_moves[i] == attackused) {
+                    power = power * vuln_mults[i];
+                }
+            }
+        }
+
+        /* "The math buffer can store up to 32-bit numbers even though the final result must fit in
+         *  16 bits. The multiplicand can be as high as a 24-bit number anytime and the multiplier
+         *  as high as 255, so you can calc up to 1677215 * 255 for example." ~Crystal_
+         *  42 * 255 * 255 (max value for damage before dividing) < 1677215 * 255
+         *  2731050 < 427689825
+         *  So we don't ever need to worry about capping out.
+         *  Note: We used 255 as attack and defense were scaled to an 8-bit int if they weren't already.
+         *        Power is always less than 255 so that's fine too.
+         */
+        int damage = (int)((2 * level / 5 + 2) * (long)power * atk / def / 50);
+
+        if (crit) {
+            damage *= 2;
+        }
+
+        callieffects(p, t, "Mod2Modifier");
+        debug(QString::number(turnMemory(p).value("ItemMod2Modifier").toInt()));
+        damage = damage * (turnMemory(p).value("ItemMod2Modifier").toInt() + 10) / 10; // item boosts for damage
+        turnMemory(p).remove("ItemMod2Modifier");
+
+        damage = std::min(997, damage) + 2;
+
+        // weather goes here
+        if (isWeatherWorking(Sunny)) {
+            if (type == Type::Fire) {
+                damage = damage * 3 /2;
+            } else if (type == Type::Water) {
+                damage /= 2;
+            }
+        } else if (isWeatherWorking(Rain)) {
+            if (type == Type::Water) {
+                damage = damage * 3/2;
+            } else if (type == Type::Fire) {
+                damage /= 2;
+            }
+        }
+        if (attackused == Move::SolarBeam && turnMemory(p).value("SolarbeamDamageReduction").toBool()) { // Solarbeam affects damage, not base power
+            damage /= 2;
+        }
+
+        damage = damage * turnMem(p).stab / 2;
+
+        // Type effectiveness
+        int typemod = turnMem(p).typeMod;
+        while (typemod > 0) {
+            damage *= 2;
+            typemod--;
+        }
+        while (typemod < 0) {
+            damage /= 2;
+            typemod++;
+        }
+
+        if (!turnMemory(p).value("CritIgnoresAll").toBool() && poke.status() == Pokemon::Burnt) {
+            damage /= 2;
+        }
+
+        int randnum = randint(39) + 217; // remember that randint is 0 to n-1
+        if (attackused == Move::Flail || attackused == Move::Reversal) {
+            // these moves are proven to ignore randomization
+            randnum = 255;
+        }
+        damage = damage * randnum / 255;
+
+        if (attackused == Move::Pursuit && turnMemory(t).value("PursuitedOnSwitch").toBool()) { // pursuit affects damage, not base power
+            damage *= 2;
+        }
+
+        turnMemory(t)["FinalModifier"] = 100;
+        return damage;
+    }
+
     callaeffects(p,t,"DamageFormulaStart");
     calleffects(p,t,"DamageFormulaStart");
 
