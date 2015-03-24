@@ -1900,7 +1900,7 @@ void BattleBase::inflictConfusedDamage(int player)
 
     int randnum;
     int damage;
-    if (gen().num == 1) {
+    if (gen().num <= 2) {
         randnum = randint(38) + 217;
         damage = (((std::min(((level * 2 / 5) + 2) * power, 65535) *
                    att / def) / 50) + 2) * randnum/255;

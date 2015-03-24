@@ -2999,7 +2999,7 @@ void BattleSituation::preventStatMod(int player, int attacker)
 
 void BattleSituation::debug(const QString &message)
 {
-    battleChat(conf.ids[0],message);
+    battleChat(conf.ids[0], message);
 }
 
 bool BattleSituation::canSendPreventMessage(int defender, int attacker) {
@@ -3143,7 +3143,6 @@ int BattleSituation::calculateDamage(int p, int t)
         }
 
         callieffects(p, t, "Mod2Modifier");
-        debug(QString::number(turnMemory(p).value("ItemMod2Modifier").toInt()));
         damage = damage * (turnMemory(p).value("ItemMod2Modifier").toInt() + 10) / 10; // item boosts for damage
         turnMemory(p).remove("ItemMod2Modifier");
 
@@ -4106,6 +4105,11 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getBoostedStat(int player, int stat)
 {
+    // These calculations and arrays are only for GSC. This makes the stat boosts' implementation much more explicit.
+    int boost = std::min(std::max(fpoke(player).boosts[stat] + 6, 0), 12);
+    int numerator[] = {25, 28, 33, 40, 50, 66, 1, 15, 2, 25, 3, 35, 4};
+    int denominator[] = {100, 100, 100, 100, 100, 100, 1, 10, 1, 10, 1, 10, 1};
+
     if (stat == Attack && turnMemory(player).contains("CustomAttackStat")) {
         return turnMemory(player)["CustomAttackStat"].toInt();
     } else if (stat == Attack && turnMemory(player).contains("UnboostedAttackStat")) {
@@ -4113,7 +4117,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return turnMemory(player)["UnboostedAttackStat"].toInt() * (floor(100*getStatBoost(player, Attack))/100);
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * numerator[boost] / denominator[boost];
         }
     } else{
         int givenStat = stat;
@@ -4128,10 +4132,10 @@ int BattleSituation::getBoostedStat(int player, int stat)
             givenStat = 6 - givenStat;
         }
         if (gen() > 2) {
-            return fpoke(player).stats[givenStat] *getStatBoost(player, stat);
+            return fpoke(player).stats[givenStat] * getStatBoost(player, stat);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return fpoke(player).stats[givenStat] * (floor(100*getStatBoost(player, stat))/100);
+            return fpoke(player).stats[givenStat] * numerator[boost] / denominator[boost];
         }
 
     }

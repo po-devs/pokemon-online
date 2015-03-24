@@ -21,6 +21,8 @@ public:
     void changeStatus(int player, int status, bool tell=false, int turns=0);
     virtual bool gainStatMod(int player, int stat, int bonus, int attacker, bool tell=true);
     int getBoostedStat(int p, int stat);
+
+    void debug(const QString &message);
 protected:
     void endTurn();
     void initializeEndTurnFunctions();
