@@ -3582,12 +3582,16 @@ struct MMGyroBall : public MM
     }
 
     static void bcd (int s, int t, BS &b) {
-        bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
+        /* Have to check to only apply the power increase to gyro ball
+           or it will mess up future sight and doom desire */
+        if(tmove(b, s).attack == MoveInfo::Number("Gyro Ball")) {
+            bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
 
-        int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
-        bp = std::max(2,std::min(bp,150));
+            int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
+            bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = tmove(b, s).power * bp;
+            tmove(b, s).power = tmove(b, s).power * bp;
+        }
     }
 };
 
