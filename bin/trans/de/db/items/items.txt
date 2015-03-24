@@ -340,6 +340,8 @@
 339 Illumina-Galette
 340 Duftbeutel
 341 Sahnehäubchen
+342 Rote Kugel
+343 Blaue Kugel
 1000 Rosa Band
 1001 Punkt-Band
 2001 Bisaflornit
