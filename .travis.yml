@@ -7,7 +7,7 @@ before_install:
   - sudo apt-get update
 
 install:
-  - sudo apt-get install libzip-dev qt4-dev-tools libqt4-declarative-shaders libqt4-dev libphonon-dev
+  - sudo apt-get install libpulse-dev libzip-dev qt5-default qtbase5-dev qtmultimedia5-dev qtquick1-5-dev qtscript5-dev qtdeclarative5-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-particles-plugin 
 
 script:
   - qmake "CONFIG += po_all po_registry webconf" && make && ./scripts/run-tests.sh
