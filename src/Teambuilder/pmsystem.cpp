@@ -244,7 +244,7 @@ void PMStruct::changeName(const QString &newname)
     QString oldname = name();
     QSettings s;
     if (s.value("PMs/ChangeNameEvents").toBool() && !oldname.isEmpty() && oldname != newname) {
-        printHtml("<i>" + tr("%1 changed names and is now known as %2.").arg(oldname, newname) + "</i>");
+        printHtml(tr("%1 changed names and is now known as %2.").arg(oldname, newname));
     }
     this->m_name = newname;
     setWindowTitle(newname);
