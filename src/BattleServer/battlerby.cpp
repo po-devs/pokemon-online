@@ -543,6 +543,14 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     //OHKO
     int move = tmove(player).attack;
 
+    //Sleep bypasses accuracy check on recharging turn if the target pokemon has another status
+    if (poke(target).status() != Pokemon::Fine && poke(target).status() != Pokemon::Asleep) {
+        if (pokeMemory(target).contains("Recharging") && tmove(player).status == Pokemon::Asleep) {
+            //If it isn't supposed to work on the same turn HB is first used, then add a check to see if recharging turn = current turn
+            acc = 0;
+        }
+    }
+
     //test for dig/fly here
     if (acc == 0 || acc == 101) {
         return true;

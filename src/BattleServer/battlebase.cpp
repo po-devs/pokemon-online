@@ -2272,6 +2272,7 @@ bool BattleBase::canSendPreventSMessage(int, int attacker)
 
 void BattleBase::inflictStatus(int player, int status, int attacker, int minTurns, int maxTurns)
 {
+    bool hb = pokeMemory(player).contains("Recharging") && poke(player).status() != Pokemon::Asleep;
     //fixme: mist + intimidate
     if (poke(player).status() != Pokemon::Fine) {
         if (this->attacker() == attacker &&
@@ -2279,12 +2280,16 @@ void BattleBase::inflictStatus(int player, int status, int attacker, int minTurn
                  tmove(attacker).classification == Move::StatAndStatusMove) && canSendPreventSMessage(player, attacker)) {
             if (poke(player).status() == status) {
                 notify(All, AlreadyStatusMessage, player, quint8(poke(player).status()));
-            }
-            else {
-                notify(All, Failed, player);
+                return;
+            } else {
+                if (!hb) {
+                    notify(All, Failed, player);
+                }
             }
         }
-        return;
+        if (!hb) {
+            return;
+        }
     }
     if (!canGetStatus(player, status))
         return;
@@ -2296,7 +2301,9 @@ void BattleBase::inflictStatus(int player, int status, int attacker, int minTurn
             return;
         } else {
             currentForcedSleepPoke[this->player(player)] = currentInternalId(player);
-            pokeMemory(player).remove("Recharging"); //For RBY Hyper Beam
+            if (pokeMemory(player).contains("Recharging")) {
+                pokeMemory(player).remove("Recharging"); //For RBY Hyper Beam
+            }
         }
     } else if (status == Pokemon::Frozen)
     {
