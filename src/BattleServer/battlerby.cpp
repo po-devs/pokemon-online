@@ -478,8 +478,8 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
 
         fpoke(target).remove(BasicPokeInfo::HadSubstitute);
     } else {
-        if (Move::StatChangingMove || (Move::StatusInducingMove && tmove(player).status == Pokemon::Asleep)) {
-             battleMemory()["LastDamageTakenByAny"] = 0; //Counter damage resets on Sleep moves and Stat changing moves
+        if (tmove(player).classification == Move::StatChangingMove || (tmove(player).classification == Move::StatusInducingMove && tmove(player).status == Pokemon::Asleep)) {
+            battleMemory()["LastDamageTakenByAny"] = 0; //Counter damage resets on Sleep moves and Stat changing moves
         }
         /* Needs to be called before opponentblock because lightning rod / twave */
         int type = tmove(player).type; /* move type */
