@@ -704,7 +704,7 @@ struct IMRedCard : public IM
         int s = turn(b,t)["RedCardUser"].toInt();
         if (b.koed(s) || b.koed(t) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
             return;
-        if (!b.hasWorkingItem(s, Item::RedCard))
+        if (!b.hasWorkingItem(s, Item::RedCard) && turn(b,s).value("LostItem") != Item::RedCard)
             return;
 
         int target = b.player(t);
@@ -761,7 +761,7 @@ struct IMEscapeButton : public IM
 
         for (unsigned i = 0; i < speeds.size(); i++) {
             int p = speeds[i];
-            if (!b.hasWorkingItem(p, Item::EscapeButton))
+            if (!b.hasWorkingItem(p, Item::EscapeButton) && turn(b,p).value("LostItem") != Item::EscapeButton)
                 continue;
             if (!turn(b,p).contains("EscapeButtonActivated"))
                 continue;

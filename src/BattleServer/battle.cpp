@@ -216,7 +216,7 @@ void BattleSituation::initializeEndTurnFunctions()
         31.0 Slow Start, Forecast
         */
         ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
-        ownEndFunctions.push_back(QPair<int, VoidFunction>(28, &BattleSituation::requestEndOfTurnSwitchIns));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(30, &BattleSituation::requestEndOfTurnSwitchIns));
 
         addEndTurnEffect(AbilityEffect, 5, 1); /* Shed skin, Hydration, Healer */
         addEndTurnEffect(ItemEffect, 5, 2); /* Leftovers, Black sludge */
@@ -625,7 +625,10 @@ BattleChoices BattleSituation::createChoice(int slot)
 
     //Mega Evolution is not hindered by Embargo, etc.
     if (((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) && !megas[player(slot)]) {
-        ret.mega = true;
+        Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
+        if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
+            ret.mega = true;
+        }
     }
 
     if (!hasWorkingItem(slot, Item::ShedShell) && (gen() < 6 || !hasType(slot, Type::Ghost))) {
@@ -901,9 +904,11 @@ void BattleSituation::megaEvolve(int slot)
     if (choice(slot).mega()) {
         if ((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
             Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
-            sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
-            changeForme(player(slot), slotNum(slot), forme, false, false, true);
-            megas[player(slot)] = true;
+            if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
+                sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
+                changeForme(player(slot), slotNum(slot), forme, false, false, true);
+                megas[player(slot)] = true;
+            }
         }
     }
 }
@@ -1540,6 +1545,20 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (turnMemory(player).value("ImpossibleToMove").toBool()) {
         goto trueend;
     }
+
+    //Gen 3 Sleep Talk fails if the move selected has 0 pp
+    if (specialOccurence && turnMemory(player).contains("SleepTalkedMove") && gen().num == 3) {
+        for (int i = 0; i < 3; i++) {
+            if (fpoke(player).moves[i] == turnMemory(player)["SleepTalkedMove"].toInt()) {
+                if (PP(player, i) <= 0) {
+                    notify(All, UseAttack, player, qint16(move));
+                    notify(All, Failed, player);
+                    goto trueend;
+                }
+            }
+        }
+    }
+
     if (!specialOccurence) {
         if (PP(player, move) <= 0) {
             notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")));
@@ -1892,6 +1911,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     callieffects(target, player, "UponBeingHit");
                     /*This allows Knock off to work*/
                     calleffects(player, target, "KnockOff");
+                    callieffects(target, player, "AfterKnockOff");
                 }
 
                 if (koed(target))
@@ -3362,6 +3382,9 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
 
     if (sub && (player != source || goForSub) && straightattack) {
         inflictSubDamage(player, damage, source);
+        if(tmove(source).recoil > 0) {
+            inflictRecoil(source, player);
+        }
     } else {
         damage = std::min(int(poke(player).lifePoints()), damage);
 

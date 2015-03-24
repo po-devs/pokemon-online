@@ -58,6 +58,7 @@ class BattleTheme : public BattleDefaultTheme {
     QPixmap battleStatusIcon(int s){return Theme::BattleStatusIcon(s);}
     QPixmap battleGenderPicture(int g){return Theme::GenderPicture(g, Theme::BattleM);}
     QString trainerSpritePath(int t) {return Theme::TrainerSpritePath(t);}
+    QString directoryPath(const QString &s) { return Theme::dirPath(s); }
 };
 
 class Accessor : public ThemeAccessor {
@@ -85,6 +86,17 @@ QString Theme::path(const QString& file, bool def)
     }
 
     return ("Themes/" DEFAULT_PO_THEME "/") + file;
+}
+
+QString Theme::dirPath(const QString& dir, bool def) {
+    if (!def) {
+        QString test = m_Directory+dir;
+        QDir directory(test);
+        if (directory.exists(test))
+            return test;
+    }
+
+    return ("Themes/" DEFAULT_PO_THEME "/") + dir;
 }
 
 void Theme::loadColors()

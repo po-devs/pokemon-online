@@ -496,7 +496,7 @@ struct BMConfuseBerry : public BMPinch
 struct BMPhysicalStat : public BM
 {
     BMPhysicalStat() {
-        functions["UponBeingHit"] = &uodr;
+        functions["AfterKnockOff"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {
@@ -524,7 +524,7 @@ struct BMPhysicalStat : public BM
 struct BMSpecialStat : public BM
 {
     BMSpecialStat() {
-        functions["UponBeingHit"] = &uodr;
+        functions["AfterKnockOff"] = &uodr;
     }
 
     static void uodr(int s, int t, BS &b) {

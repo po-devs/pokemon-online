@@ -186,6 +186,7 @@ protected:
     QString winMessage[2];
     QString loseMessage[2];
     QString tieMessage[2];
+    QStringList bannedPokes[2];
 
     /* timers */
     QAtomicInt timeleft[2];

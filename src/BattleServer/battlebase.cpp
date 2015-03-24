@@ -34,6 +34,8 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
     teamCount = p1.teamCount;
     restricted[0] = p1.restrictedPokes;
     restricted[1] = p2.restrictedPokes;
+    bannedPokes[0] = p1.bannedPokes.split(", ");
+    bannedPokes[1] = p2.bannedPokes.split(", ");
     ratings[0] = p1.rating;
     ratings[1] = p2.rating;
     winMessage[0] = p1.win;
@@ -1793,6 +1795,9 @@ void BattleBase::analyzeChoice(int slot)
 
 void BattleBase::sendBack(int player, bool silent)
 {
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    }
     notify(All, SendBack, player, silent);
 }
 
@@ -2110,9 +2115,14 @@ void BattleBase::testFlinch(int player, int target)
 {
     int rate = tmove(player).flinchRate;
 
-    if (rate && coinflip(rate*255/100, 256)) {
-        turnMem(target).add(TM::Flinched);
-        pokeMemory(target).remove("Recharging"); //Flinch remove Recharge Turn for Hyper Beam in RBY
+    if (rate) {
+        if (gen() > 1) {
+            rate = rate*255/100;
+        }
+        if (coinflip(rate, 256)) {
+            turnMem(target).add(TM::Flinched);
+            pokeMemory(target).remove("Recharging"); //Flinch remove Recharge Turn for Hyper Beam in RBY
+        }
     }
 }
 

@@ -3867,6 +3867,11 @@ bool ScriptEngine::validColor(const QString &color)
     return colorName.isValid();
 }
 
+void ScriptEngine::killBattleServer()
+{
+    myserver->scriptKillBattleServer();
+}
+
 QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
 {
     ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());

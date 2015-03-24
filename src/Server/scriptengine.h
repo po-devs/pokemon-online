@@ -511,6 +511,9 @@ public:
     Q_INVOKABLE QScriptValue list_processes();
     Q_INVOKABLE QScriptValue kill_processes();
     Q_INVOKABLE QScriptValue write_process(double pid, const QString &data);
+
+    Q_INVOKABLE void killBattleServer();
+
     inline quint64 getProcessID(const QProcess* proc)
     {
         #ifdef Q_OS_WIN

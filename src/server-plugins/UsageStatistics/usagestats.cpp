@@ -185,8 +185,9 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
             }
 
             savePokemon(b.poke(i,j), lead, dir);
-
-            if (b.rating(i) > 1100 && ranked_ptr) {
+            QSettings s("config", QSettings::IniFormat);
+            int rating = s.value(QString("UsageStats/%1").arg(tier.replace(" ","")), 1000).toInt();
+            if (b.rating(i) > rating && ranked_ptr) {
                 ranked_ptr->addUsage(b.poke(i,j).num());
             }
         }

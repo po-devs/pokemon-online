@@ -550,12 +550,12 @@ struct BattlePlayer
     quint8 restrictedCount;
     /* Maximum number of pokes per team */
     quint8 teamCount;
-
+    QString bannedPokes;
     BattlePlayer(){}
     BattlePlayer(const QString &name, int id, int rating=0, int avatar=0, const QString &win="", const QString &lose="",
-                 const QString &tie="", int maxlevel=100, int restrictedPokes=0, int restrictedCount=0, int teamCount=6)
+                 const QString &tie="", int maxlevel=100, int restrictedPokes=0, int restrictedCount=0, int teamCount=6, const QString &bannedPokes="")
         : name(name), win(win), lose(lose), tie(tie), rating(rating), avatar(avatar), id(id), maxlevel(maxlevel),
-          restrictedPokes(restrictedPokes), restrictedCount(restrictedCount), teamCount(teamCount){}
+          restrictedPokes(restrictedPokes), restrictedCount(restrictedCount), teamCount(teamCount), bannedPokes(bannedPokes){}
 };
 
 DataStream & operator >> (DataStream &in, BattlePlayer &p);

@@ -506,7 +506,14 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
     items.resize(nslots);
 
     scene.setSceneRect(0,0,321,181);
-    scene.addItem(new QGraphicsPixmapItem(theme->pic(QString("battle_fields/%1.png").arg((rand()%11)+1))));
+    QDir directory((theme->directoryPath("battle_fields")));
+    directory.setNameFilters(QStringList() << "*.png");
+    QStringList files = directory.entryList();
+    QString fileName = "";
+    if (!files.isEmpty()) {
+        fileName = files[(rand()%files.length())];
+    }
+    scene.addItem(new QGraphicsPixmapItem(theme->pic(QString("battle_fields/%1").arg(fileName))));
 
     for (int i = 0; i < nslots; i++) {
         items[i] = new QGraphicsPixmapItem();

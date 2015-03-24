@@ -941,7 +941,15 @@ struct MMBellyDrum : public MM
         if (b.poke(s).lifePoints() <= std::max(b.poke(s).totalLifePoints()*turn(b,s)["BellyDrum_Arg"].toInt()/100,1)) {
             b.fail(s, 8);
 
-            /* Odd bug with gold, silver, crystal versions in gen 2 */
+            /* Odd bug with Gold, Silver, Crystal versions in gen 2
+             * A quick explanation of what happens:
+             * The game applies 1 Swords Dance boost.
+             * The game realizes the Pokemon has insufficient HP.
+             * The Swords Dance boost is kept.
+             * If it had enough HP, two more Swords Dance boosts would attempt to be applied.
+             * If one of the next Swords Dance boosts takes it to the 999 cap, then the move ends.
+             * This is why a Snorlax at +1 will reach +5 attack while one at 0 will reach +6.
+             */
             if ((b.gen() == Pokemon::gen(Gen::GoldSilver) || b.gen() == Pokemon::gen(Gen::Crystal)) && move(b,s) == Move::BellyDrum) {
                 b.inflictStatMod(s, Attack, 2, s);
             }
@@ -957,14 +965,14 @@ struct MMBellyDrum : public MM
     }
     static void uas(int s, int, BS &b) {
         if (move(b,s) == Move::BellyDrum) {
-            b.sendMoveMessage(8,1,s,type(b,s));
-            b.inflictStatMod(s,Attack,12, s, false);
+            b.sendMoveMessage(8, 1, s, type(b, s));
 
             if (b.gen().num == 2) {
-                while (b.getStat(s, Attack) == 999) {
-                    b.inflictStatMod(s,Attack,-1,s,false);
+                while (b.getStat(s, Attack) < 999 && b.fpoke(s).boosts[Attack] < 6) {
+                    b.inflictStatMod(s, Attack, 2, s, false);
                 }
-                b.inflictStatMod(s,Attack,1,s,false);
+            } else {
+                b.inflictStatMod(s, Attack, 12, s, false);
             }
         }
         if (move(b,s) != Move::Substitute) {
@@ -1395,9 +1403,11 @@ struct MMBounce : public MM
             removeFunction(turn(b,s), "UponAttackSuccessful", "Bounce");
             if (move(b,s) == ShadowForce || move(b,s) == PhantomForce) {
                 addFunction(turn(b,s), "UponAttackSuccessful", "Bounce", &MMFeint::daf);
-                if (poke(b, b.targetList.front()).value("Minimize").toBool()) {
-                    tmove(b, s).accuracy = 0;
-                    tmove(b, s).power = tmove(b, s).power * 2;
+                if (b.targetList.size() > 0) {
+                    if (poke(b, b.targetList.front()).value("Minimize").toBool()) {
+                        tmove(b, s).accuracy = 0;
+                        tmove(b, s).power = tmove(b, s).power * 2;
+                    }
                 }
             }
         } else {
@@ -3300,6 +3310,7 @@ struct MMKnockOff : public MM
         //Knock off if target is dead, but not if attacker
         if (!b.koed(s)) {
             if (b.canLoseItem(t,s)) {
+                turn(b,t)["LostItem"] = b.poke(t).item();
                 b.sendMoveMessage(70,0,s,type(b,s),t,b.poke(t).item());
                 b.loseItem(t);
                 b.battleMemory()[QString("KnockedOff%1%2").arg(b.player(t)).arg(b.currentInternalId(t))] = true;
@@ -3571,12 +3582,16 @@ struct MMGyroBall : public MM
     }
 
     static void bcd (int s, int t, BS &b) {
-        bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
+        /* Have to check to only apply the power increase to gyro ball
+           or it will mess up future sight and doom desire */
+        if(tmove(b, s).attack == Move::GyroBall) {
+            bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
 
-        int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
-        bp = std::max(2,std::min(bp,150));
+            int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
+            bp = std::max(2,std::min(bp,150));
 
-        tmove(b, s).power = tmove(b, s).power * bp;
+            tmove(b, s).power = tmove(b, s).power * bp;
+        }
     }
 };
 
@@ -4923,7 +4938,6 @@ struct MMSleepTalk : public MM
     struct FM : public QSet<int> {
         FM() {
             //Sleep Talk prevents all 2-Turn moves
-            //Fixme: Gen 4 and below Mimic should have the move replaced, not Sleep Talk
             (*this) << NoMove << Bide << Bounce << Chatter << Copycat << Dig << Dive << Fly
                               << FocusPunch << MeFirst << Metronome << MirrorMove << ShadowForce
                               << SkullBash << SkyAttack << SleepTalk << SolarBeam << Struggle << RazorWind
@@ -4949,9 +4963,12 @@ struct MMSleepTalk : public MM
             /* Sleep talk can work on 0 PP moves but not on disabled moves*/
             /* On gen 5 it can work several times behind a choice band, so I allowed disabled moves, as
                choice band blocks moves the same way, but it needs to be cross checked. */
-            if ( (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false)
-                 && !forbidden_moves.contains(b.move(s,i), b.gen())) {
-                mp.push_back(i);
+            if (!forbidden_moves.contains(b.move(s,i), b.gen())) {
+                if (b.gen() >= 5 || turn(b, s).value("Move" + QString::number(i) + "Blocked").toBool() == false) {
+                    mp.push_back(i);
+                } else if (b.counters(s).hasCounter(BC::Encore) && (!poke(b,s).contains("ChoiceMemory") || poke(b,s).value("ChoiceMemory").toInt() == 0)) {
+                    mp.push_back(i);
+                }
             }
         }
 
