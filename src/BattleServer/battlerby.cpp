@@ -18,6 +18,11 @@ BattleRBY::~BattleRBY()
     onDestroy();
 }
 
+void BattleRBY::debug(const QString &message)
+{
+    battleChat(conf.ids[0], message);
+}
+
 void BattleRBY::endTurn()
 {
     testWin();
@@ -43,12 +48,12 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
     if (poke(player).status() == status) {
         return;
     }
-    //Sub blocks status in Stadium
+    // Sub blocks status in Stadium
     if (hasSubstitute(player) && gen() > Pokemon::gen(Gen::Yellow)) {
         return;
     }
 
-    //Sleep clause
+    // Sleep clause
     if (status != Pokemon::Asleep && currentForcedSleepPoke[this->player(player)] == currentInternalId(player)) {
         currentForcedSleepPoke[this->player(player)] = -1;
     }
@@ -72,15 +77,15 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
     }
 
     if (status == Pokemon::Paralysed) {
-        fpoke(player).stats[Speed] = getBoostedStat(player, Speed)/4;
+        fpoke(player).stats[Speed] = std::max(getBoostedStat(player, Speed) / 4, 1);
     } else if (status == Pokemon::Burnt) {
-        //fpoke(player).stats[Attack] = getBoostedStat(player, Attack)/2;
+        fpoke(player).stats[Attack] = std::max(getBoostedStat(player, Attack) / 2, 1);
     }
 }
 
 int BattleRBY::getStat(int poke, int stat)
 {
-    return std::min(fpoke(poke).stats[stat], 999);
+    return std::max(std::min(fpoke(poke).stats[stat], 999), 1);
 }
 
 void BattleRBY::sendPoke(int slot, int pok, bool silent)
@@ -219,8 +224,7 @@ void BattleRBY::analyzeChoices()
 
 void BattleRBY::personalEndTurn(int player)
 {
-    if (koed(player))
-        return;
+    if (koed(player)) return;
 
     switch(poke(player).status())
     {
@@ -266,7 +270,7 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
     }
 
     if (straightattack) {
-        pokeMemory(source)["DamageInflicted"] = damage; //For bide        
+        pokeMemory(source)["DamageInflicted"] = damage; //For bide
         battleMemory()["LastDamageTakenByAny"] = damage; //For Counter
     }
 
@@ -283,8 +287,8 @@ void BattleRBY::inflictDamage(int player, int damage, int source, bool straighta
             koPoke(player, source, straightattack);
         } else {
             if (straightattack) {
-                notify(this->player(player), StraightDamage,player, qint16(damage));
-                notify(AllButPlayer, StraightDamage,player, qint16(damage*100/poke(player).totalLifePoints()));
+                notify(this->player(player), StraightDamage, player, qint16(damage));
+                notify(AllButPlayer, StraightDamage, player, qint16(damage*100/poke(player).totalLifePoints()));
             }
 
             changeHp(player, hp);
@@ -700,15 +704,6 @@ int BattleRBY::calculateDamage(int p, int t)
         def = crit ? this->poke(t).normalStat(SpAttack) : getStat(t, SpAttack);
     }
 
-    // burn
-    if (!crit) {
-        // Burn does not halve the attack stat during damage calculation of Critical hits in RBY
-        attack = attack / ((poke.status() == Pokemon::Burnt && cat == Move::Physical) ? 2 : 1);
-        // Minimum attack is set to 1
-        if (attack == 0) {
-            attack = 1;
-        }
-    }
     /* Light screen / Reflect */
     // In RBY, Reflect / Light Screen boost doesn't cap the stat at 999 or 1023
     if (!crit && pokeMemory(t).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
@@ -774,15 +769,19 @@ void BattleRBY::changeTempMove(int player, int slot, int move)
 
 int BattleRBY::getBoostedStat(int p, int stat)
 {
-    return poke(p).normalStat(stat) * (floor(100*getStatBoost(p, stat))/100);
+    int boost = std::min(std::max(fpoke(p).boosts[stat] + 6, 0), 12);
+    int s = poke(p).normalStat(stat);
+    int numerator[] = {25, 28, 33, 40, 50, 66, 1, 15, 2, 25, 3, 35, 4};
+    int denominator[] = {100, 100, 100, 100, 100, 100, 1, 10, 1, 10, 1, 10, 1};
+    return std::min(std::max(s * numerator[boost] / denominator[boost], 1), 999);
 }
 
 bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
 {
     if (attacker != player) {
         /* Mist only works on move purely based on stat changes, not on side effects, in gen 1 */
-        if(pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
-            sendMoveMessage(86, 2, player,Pokemon::Ice,player, tmove(attacker).attack);
+        if (pokeMemory(this->player(player)).contains("Misted") && tmove(attacker).power == 0) {
+            sendMoveMessage(86, 2, player, Pokemon::Ice, player, tmove(attacker).attack);
             return false;
         }
     }
@@ -795,22 +794,22 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
         notify(All, CappedStat, player, qint8(stat), false);
     }
 
-    if (poke(player).status() == Pokemon::Burnt && stat == Attack) {
-        //fpoke(player).stats[stat] = getBoostedStat(player, Attack) / 2;
-    } else if (poke(player).status() == Pokemon::Paralysed && stat == Speed) {
-        fpoke(player).stats[stat] = getBoostedStat(player, Speed) / 4;
-    } else {
-        fpoke(player).stats[stat] = getBoostedStat(player, stat);
+    fpoke(player).stats[stat] = getBoostedStat(player, stat);
+
+    if (poke(player).status() == Pokemon::Burnt) {
+        fpoke(player).stats[Attack] = std::max(fpoke(player).stats[Attack] / 2, 1);
+    } else if (poke(player).status() == Pokemon::Paralysed) {
+        fpoke(player).stats[Speed] = std::max(fpoke(player).stats[Speed] / 4, 1);
     }
 
     return true;
 }
 
 
-bool BattleRBY::gainStatMod(int player, int stat, int bonus, int , bool tell)
+bool BattleRBY::gainStatMod(int player, int stat, int bonus, int, bool tell)
 {
     int boost = fpoke(player).boosts[stat];
-    if (boost < 6 && (gen() > 2 || getStat(player, stat) < 999)) {
+    if (boost < 6 && getStat(player, stat) < 999) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
     } else {
@@ -818,6 +817,18 @@ bool BattleRBY::gainStatMod(int player, int stat, int bonus, int , bool tell)
     }
 
     fpoke(player).stats[stat] = getBoostedStat(player, stat);
+
+    // RBY Doubles and Triples are dumb.
+    // Actually they don't exist, but this is just in case.
+    for (int i = 0; i < numberOfSlots(); i++) {
+        if (i != player) {
+            if (poke(i).status() == Pokemon::Burnt) {
+                fpoke(i).stats[Attack] = std::max(fpoke(i).stats[Attack] / 2, 1);
+            } else if (poke(i).status() == Pokemon::Paralysed) {
+                fpoke(i).stats[Speed] = std::max(fpoke(i).stats[Speed] / 4, 1);
+            }
+        }
+    }
 
     return true;
 }

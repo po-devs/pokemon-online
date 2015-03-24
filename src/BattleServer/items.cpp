@@ -235,17 +235,29 @@ struct IMBoostCategory : public IM
     }
 };
 
+/* Charcoal, Miracle Seed, Mystic Water, etc. */
 struct IMBoostType : public IM
 {
     IMBoostType() {
-        functions["BasePowerModifier"] = &bpm;
+        functions["BasePowerModifier"] = &bpm; // everything else (for now)
+        functions["Mod2Modifier"] = &m2m; // gsc
     }
+
     static void bpm(int s, int, BS &b) {
+        if (b.gen().num == 2) {
+            return;
+        }
         if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
             if (b.gen() >= 4)
                 b.chainBp(s, 819);
             else
                 b.chainBp(s, 409);
+        }
+    }
+
+    static void m2m(int s, int, BS &b) {
+        if (b.gen().num == 2) {
+            turn(b, s)["ItemMod2Modifier"] = 1;
         }
     }
 };
@@ -386,13 +398,15 @@ struct IMPokeTypeBoost : public IM
     IMPokeTypeBoost() {
         functions["BasePowerModifier"] = &bpm;
     }
-    static void bpm(int s, int, BS &b) {
-        QStringList args = poke(b,s)["ItemArg"].toString().split('_');
-        QStringList pokes = args[0].split('/');
-        if (!pokes.contains(QString::number(b.pokenum(s).pokenum)))
-            return;
 
-        int type = tmove(b,s).type;
+    static void bpm(int s, int, BS &b) {
+        QStringList args = poke(b, s)["ItemArg"].toString().split('_');
+        QStringList pokes = args[0].split('/');
+        if (!pokes.contains(QString::number(b.pokenum(s).pokenum))) {
+            return;
+        }
+
+        int type = tmove(b, s).type;
         for (int i = 1; i < args.size(); i++) {
             if (type == args[i].toInt())
                 b.chainBp(s, 819);

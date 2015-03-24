@@ -798,8 +798,8 @@ struct RBYRage : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(poke(b,s), "TurnSettings", "Rage", &ts);
-        addFunction(poke(b,s), "UponOffensiveDamageReceived", "Rage", &uodr);
+        addFunction(poke(b, s), "TurnSettings", "Rage", &ts);
+        addFunction(poke(b, s), "UponOffensiveDamageReceived", "Rage", &uodr);
     }
 
     static void ts(int s, int, BS &b) {
