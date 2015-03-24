@@ -340,6 +340,8 @@
 339 Crêpe Luminalia
 340 Saquito fragante
 341 Dulce de nata
+342 Esfera Roja
+343 Esfera Azul
 1000 Lazo Rosa
 1001 Cinta Lunares
 2001 Venusaurita

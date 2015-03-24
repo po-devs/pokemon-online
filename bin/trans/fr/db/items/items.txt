@@ -340,6 +340,8 @@
 339 Galette Illumis
 340 Sachet Senteur
 341 Chantibonbon
+342 Orbe Rouge
+343 Orbe Bleu
 1000 Ruban Rose
 1001 Ruban à Pois
 2001 Florizarrite

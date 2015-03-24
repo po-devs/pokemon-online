@@ -333,13 +333,15 @@
 332 Visierantisabbia
 333 Vulneropolizza
 334 Palla di Neve
-335 Luminous Moss
+335 Muschioluce
 336 Capsula Abilità
 337 Fossilmascella
 338 Fossilpinna
 339 Pan di Lumi
 340 Bustina Aromi
 341 Dolcespuma
+342 Sfera Rossa
+343 Sfera Blu
 1000 Fiocco Rosa
 1001 Fiocco Pois
 2001 Venusaurite
