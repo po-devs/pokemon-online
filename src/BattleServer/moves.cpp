@@ -1583,6 +1583,11 @@ struct MMCounter : public MM
             return;
         }
 
+        //Sleep Talked moves can't be countered/coated in Gen 2
+        if (b.gen().num == 2 && turn(b,source).contains("SleepTalkedMove")) {
+            return;
+        }
+
         if (poke(b,s)["DamageTakenByAttack"].toInt() <= 0) {
             return;
         }
@@ -1593,6 +1598,7 @@ struct MMCounter : public MM
 
     static void ms (int s, int, BS &b) {
         //In GSC Sleep Talk + Counter works
+        /* No it doesnt... http://www.smogon.com/forums/threads/past-gens-research-thread.3506992/#post-5881233
         if (!turn(b,s).contains("CounterDamage") && b.gen().num == 2) {
             int t = b.slot(b.opponent(b.player(s)));
 
@@ -1601,7 +1607,7 @@ struct MMCounter : public MM
                 turn(b,s)["CounterDamage"] = 2 * poke(b,s)["DamageTakenByAttack"].toInt();
                 turn(b,s)["CounterTarget"] = t;
             }
-        }
+        }*/
         turn(b,s)["Target"] = turn(b,s)["CounterTarget"];
         tmove(b,s).targets = Move::ChosenTarget;
     }
@@ -1808,6 +1814,12 @@ struct MMEncore : public MM
             }
         }
         int move = poke(b,t)["LastMoveUsed"].toInt();
+
+        //Encore fails against sleep talk in Gen 2
+        if (b.gen().num == 2 && move == Move::SleepTalk) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
         bool cont = forbidden_moves.contains(move);
 
         if (cont) {

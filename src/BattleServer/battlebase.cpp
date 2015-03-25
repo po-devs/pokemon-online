@@ -2315,6 +2315,9 @@ void BattleBase::inflictStatus(int player, int status, int attacker, int minTurn
                 }
             }
         }
+        if (pokeMemory(player).contains("Recharging")) {
+            pokeMemory(player).remove("Recharging"); //For RBY Hyper Beam
+        }
     }
 
     changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + randint(maxTurns - minTurns + 1));

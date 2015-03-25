@@ -579,6 +579,7 @@ struct RBYHyperBeam : public MM
         } else {
             turn(b, s)["TellPlayers"] = false;
             tmove(b, s).targets = Move::User;
+            poke(b,s).remove("Recharging"); //For Hyper Beam Sleep Status override
             addFunction(turn(b,s), "UponAttackSuccessful", "HyperBeam", &aas);
         }
     }
