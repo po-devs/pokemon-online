@@ -693,7 +693,7 @@ void BattleRBY::losePP(int player, int move, int loss)
 
 int BattleRBY::calculateDamage(int p, int t)
 {
-    PokeBattle &poke = this->poke(p);
+    //PokeBattle &poke = this->poke(p);
 
     int level = fpoke(p).level;
     int attack, def;

@@ -1123,6 +1123,10 @@ void BattleSituation::sendBack(int player, bool silent)
     if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
         changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
     }
+    //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
+    if (turnMemory(player).contains("PrimalForme")) {
+        turnMemory(player).remove("PrimalForme");
+    }
     /* Just calling pursuit directly here, forgive me for this */
     if (!turnMemory(player).value("BatonPassed").toBool()) {
         QList<int> opps = revs(player);
@@ -3939,6 +3943,10 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
         changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
     }
+    //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
+    if (turnMemory(player).contains("PrimalForme")) {
+        turnMemory(player).remove("PrimalForme");
+    }
 
     if (!attacking() || tmove(attacker()).power == 0 || gen() >= 5) {
         callaeffects(player, source, "BeforeBeingKoed");
@@ -4038,6 +4046,8 @@ void BattleSituation::requestSwitch(int s, bool eeffects)
 
     if (pokeMemory(s).contains("PreTransformPoke")) {
         changeForme(player(s), slotNum(s), PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()));
+    }
+    //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     }
 
     int player = this->player(s);
