@@ -4048,6 +4048,8 @@ void BattleSituation::requestSwitch(int s, bool eeffects)
         changeForme(player(s), slotNum(s), PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()));
     }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
+    if (turnMemory(player(s)).contains("PrimalForme")) {
+        turnMemory(player(s)).remove("PrimalForme");
     }
 
     int player = this->player(s);
