@@ -771,6 +771,7 @@ FullBattleConfiguration::FullBattleConfiguration(int battleid, int p1, int p2, c
     this->flags.setFlag(Rated, c.rated);
     this->mode = c.mode;
     this->finished() = false;
+    this->gen = c.gen;
 }
 
 bool FullBattleConfiguration::acceptSpectator(int player, bool authed) const
