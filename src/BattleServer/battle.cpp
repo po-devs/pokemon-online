@@ -3136,8 +3136,6 @@ int BattleSituation::calculateDamage(int p, int t)
          *  Note: We used 255 as attack and defense were scaled to an 8-bit int if they weren't already.
          *        Power is always less than 255 so that's fine too.
          */
-        debug(QString::number(atk));
-        debug(QString::number(def));
         int damage = (int)((2 * level / 5 + 2) * (long)power * atk / def / 50);
 
         if (crit) {
