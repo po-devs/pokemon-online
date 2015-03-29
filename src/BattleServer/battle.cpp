@@ -3136,6 +3136,8 @@ int BattleSituation::calculateDamage(int p, int t)
          *  Note: We used 255 as attack and defense were scaled to an 8-bit int if they weren't already.
          *        Power is always less than 255 so that's fine too.
          */
+        debug(QString::number(atk));
+        debug(QString::number(def));
         int damage = (int)((2 * level / 5 + 2) * (long)power * atk / def / 50);
 
         if (crit) {
@@ -4105,11 +4107,6 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getBoostedStat(int player, int stat)
 {
-    // These calculations and arrays are only for GSC. This makes the stat boosts' implementation much more explicit.
-    int boost = std::min(std::max(fpoke(player).boosts[stat] + 6, 0), 12);
-    int numerator[] = {25, 28, 33, 40, 50, 66, 1, 15, 2, 25, 3, 35, 4};
-    int denominator[] = {100, 100, 100, 100, 100, 100, 1, 10, 1, 10, 1, 10, 1};
-
     if (stat == Attack && turnMemory(player).contains("CustomAttackStat")) {
         return turnMemory(player)["CustomAttackStat"].toInt();
     } else if (stat == Attack && turnMemory(player).contains("UnboostedAttackStat")) {
@@ -4117,7 +4114,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return turnMemory(player)["UnboostedAttackStat"].toInt() * numerator[boost] / denominator[boost];
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * (int)(100 * getStatBoost(player, Attack)) / 100;
         }
     } else{
         int givenStat = stat;
@@ -4135,7 +4132,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return fpoke(player).stats[givenStat] * getStatBoost(player, stat);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return fpoke(player).stats[givenStat] * numerator[boost] / denominator[boost];
+            return fpoke(player).stats[givenStat] * (int)(100 * getStatBoost(player, stat)) / 100;
         }
 
     }
