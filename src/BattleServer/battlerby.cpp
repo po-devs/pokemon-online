@@ -776,11 +776,7 @@ void BattleRBY::changeTempMove(int player, int slot, int move)
 
 int BattleRBY::getBoostedStat(int p, int stat)
 {
-    int boost = std::min(std::max(fpoke(p).boosts[stat] + 6, 0), 12);
-    int s = poke(p).normalStat(stat);
-    int numerator[] = {25, 28, 33, 40, 50, 66, 1, 15, 2, 25, 3, 35, 4};
-    int denominator[] = {100, 100, 100, 100, 100, 100, 1, 10, 1, 10, 1, 10, 1};
-    return std::min(std::max(s * numerator[boost] / denominator[boost], 1), 999);
+    return poke(p).normalStat(stat) * (floor(100*getStatBoost(p, stat))/100);
 }
 
 bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool tell)

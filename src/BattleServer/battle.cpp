@@ -4117,11 +4117,6 @@ void BattleSituation::gainPP(int player, int move, int gain)
 
 int BattleSituation::getBoostedStat(int player, int stat)
 {
-    // These calculations and arrays are only for GSC. This makes the stat boosts' implementation much more explicit.
-    int boost = std::min(std::max(fpoke(player).boosts[stat] + 6, 0), 12);
-    int numerator[] = {25, 28, 33, 40, 50, 66, 1, 15, 2, 25, 3, 35, 4};
-    int denominator[] = {100, 100, 100, 100, 100, 100, 1, 10, 1, 10, 1, 10, 1};
-
     if (stat == Attack && turnMemory(player).contains("CustomAttackStat")) {
         return turnMemory(player)["CustomAttackStat"].toInt();
     } else if (stat == Attack && turnMemory(player).contains("UnboostedAttackStat")) {
@@ -4129,7 +4124,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return turnMemory(player)["UnboostedAttackStat"].toInt() * numerator[boost] / denominator[boost];
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * (floor(100*getStatBoost(player, Attack))/100);
         }
     } else{
         int givenStat = stat;
@@ -4147,7 +4142,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return fpoke(player).stats[givenStat] * getStatBoost(player, stat);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return fpoke(player).stats[givenStat] * numerator[boost] / denominator[boost];
+            return fpoke(player).stats[givenStat] * (floor(100*getStatBoost(player, stat))/100);
         }
 
     }
