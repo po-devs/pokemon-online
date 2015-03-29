@@ -769,7 +769,7 @@ void BattleRBY::changeTempMove(int player, int slot, int move)
 
 int BattleRBY::getBoostedStat(int p, int stat)
 {
-    return poke(p).normalStat(stat) * (int)(100 * getStatBoost(p, stat)) / 100;
+    return poke(p).normalStat(stat) * (floor(100*getStatBoost(p, stat))/100);
 }
 
 bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool tell)

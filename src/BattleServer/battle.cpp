@@ -4112,7 +4112,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return turnMemory(player)["UnboostedAttackStat"].toInt() * getStatBoost(player, Attack);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return turnMemory(player)["UnboostedAttackStat"].toInt() * (int)(100 * getStatBoost(player, Attack)) / 100;
+            return turnMemory(player)["UnboostedAttackStat"].toInt() * (floor(100*getStatBoost(player, Attack))/100);
         }
     } else{
         int givenStat = stat;
@@ -4130,7 +4130,7 @@ int BattleSituation::getBoostedStat(int player, int stat)
             return fpoke(player).stats[givenStat] * getStatBoost(player, stat);
         } else {
             //Gen 2 returns same calculated stat as Gen 1
-            return fpoke(player).stats[givenStat] * (int)(100 * getStatBoost(player, stat)) / 100;
+            return fpoke(player).stats[givenStat] * (floor(100*getStatBoost(player, stat))/100);
         }
 
     }
