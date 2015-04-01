@@ -451,6 +451,11 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             hitcount += 1;
 
             calleffects(player, target, "UponAttackSuccessful");
+
+            /* A broken sub stops a multi-hit attack and draining moves don't heal */
+            if (hadSubstitute(target)) {
+                break;
+            }
             healDamage(player, target);
 
             /* Secondary effect of an attack: like ancient power, acid, thunderbolt, ... */
@@ -462,13 +467,7 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             if (!sub && !koed(target)) {
                 testFlinch(player, target);
             }
-
-            /* A broken sub stops a multi-hit attack */
-            if (hadSubstitute(target)) {
-                break;
-            }
             attackCount() += 1;
-
         }
 
         if (hit) {
