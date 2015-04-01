@@ -1490,6 +1490,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     int attack;
 
+    //Dead Pokemon shouldn't be attacking...
+    if (koed(player)) {
+        goto trueend;
+    }
+
     /* Special Occurence could be through the use of Magic Mirror for example,
       that's why it's needed */
     if (!specialOccurence && !pokeMemory(player).contains("HasMovedOnce")) {
