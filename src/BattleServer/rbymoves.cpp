@@ -189,7 +189,7 @@ struct RBYBind : public MM
             addFunction(turn(b,s), "EvenWhenCantMove", "Bind", &ewcm);
             /* Bind does the same damage every turn */
             addFunction(turn(b,s), "CustomAttackingDamage", "Bind", &cad);
-            if (b.gen() <= Pokemon::gen(Gen::Yellow)) {
+            if (!b.isStadium()) {
                 turn(b,b.opponent(s)) ["ForceBind"] = true;
             }
             initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
@@ -263,7 +263,7 @@ struct RBYCounter : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        int mv = (b.gen() <= Pokemon::gen(Gen::Yellow) ? slot(b, t).lastMoveUsed : fpoke(b,t).lastMoveUsed);
+        int mv = (!b.isStadium() ? slot(b, t).lastMoveUsed : fpoke(b,t).lastMoveUsed);
 
         if (mv == 0 || mv == Move::Counter || MoveInfo::Power(mv, b.gen()) == 0) {
             fturn(b,s).add(TM::Failed);
@@ -451,11 +451,10 @@ struct RBYExplosion : public MM
     static void uas(int s, int t, BS &b) {
         /* Explosion doesn't faint the user if it breaks a sub.
          * However, it faints all the time in Stadium. */
-        if (b.gen() <= Pokemon::gen(Gen::Yellow) && b.hadSubstitute(t))
-            return;
-
-        b.selfKoer() = s;
-        b.koPoke(s, s);
+        if (b.isStadium() || !b.hadSubstitute(t)) {
+            b.selfKoer() = s;
+            b.koPoke(s, s);
+        }
     }
 
     static void asf(int s, int, BS &b) {
@@ -529,7 +528,7 @@ struct RBYHaze : public MM
         b.poke(t).removeStatus(Pokemon::Seeded);
 
         //Haze clears major status that the user has in Stadium
-        if (b.gen() > Pokemon::gen(Gen::Yellow)) {
+        if (b.isStadium()) {
             b.changeStatus(s, Pokemon::Fine,false);
         }
     }
@@ -564,7 +563,7 @@ struct RBYHyperBeam : public MM
     static void uas(int s, int t, BS &b) {
         /*Hyper Beam always needs to recharge in Stadium
          *KOs and sub breaks dont cause recharge in RBY*/
-        if (b.gen() <= Pokemon::gen(Gen::Yellow) && (b.koed(t) || b.hadSubstitute(t)))
+        if (!b.isStadium() && (b.koed(t) || b.hadSubstitute(t)))
             return;
 
         poke(b,s)["Recharging"] = b.turn()+1;

@@ -49,7 +49,7 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
         return;
     }
     // Sub blocks status in Stadium
-    if (hasSubstitute(player) && gen() > Pokemon::gen(Gen::Yellow)) {
+    if (hasSubstitute(player) && isStadium()) {
         return;
     }
 
@@ -66,7 +66,7 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
         poke(player).statusCount() = turns;
     }
     else if (status == Pokemon::Asleep) {
-        if (gen() <= Pokemon::gen(Gen::Yellow)) {
+        if (!isStadium()) {
             poke(player).statusCount() = 2 + (randint(7));
         } else {
             poke(player).statusCount() = 2 + (randint(3));
@@ -450,11 +450,6 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
             }
             hitcount += 1;
 
-            /* A broken sub stops a multi-hit attack */
-            if (hadSubstitute(target)) {
-                break;
-            }
-
             calleffects(player, target, "UponAttackSuccessful");
             healDamage(player, target);
 
@@ -468,7 +463,12 @@ void BattleRBY::useAttack(int player, int move, bool specialOccurence, bool tell
                 testFlinch(player, target);
             }
 
+            /* A broken sub stops a multi-hit attack */
+            if (hadSubstitute(target)) {
+                break;
+            }
             attackCount() += 1;
+
         }
 
         if (hit) {
@@ -565,7 +565,7 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
 
     //Keep acc 1 for rage
     if (acc != 1) {
-        acc = acc*255/100 + ((gen() > Pokemon::gen(Gen::Yellow)) ? 1 : 0);
+        acc = acc*255/100 + ((isStadium()) ? 1 : 0);
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
@@ -610,7 +610,7 @@ void BattleRBY::inflictRecoil(int source, int target)
     }
 
     // If move KOs opponent's pokemon, no recoil damage is applied in stadium.
-    if (koed(target) && recoil < 0 && gen() > Pokemon::gen(Gen::Yellow)) {
+    if (koed(target) && recoil < 0 && isStadium()) {
         return;
     }
 

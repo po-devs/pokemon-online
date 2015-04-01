@@ -2433,3 +2433,8 @@ void BattleBase::changeForme(int player, int poke, const Pokemon::uniqueId &newf
     notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
     notify(player, ChangeTempPoke, player, quint8(TempAbility), quint8(poke), p.ability());
 }
+
+bool BattleBase::isStadium() const
+{
+    return gen() == Gen::Stadium || gen() == Gen::StadiumWithTradebacks;
+}
