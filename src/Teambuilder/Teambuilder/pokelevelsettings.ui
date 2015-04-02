@@ -137,6 +137,9 @@
     </layout>
    </item>
    <item>
+    <widget class="QComboBox" name="ability"/>
+   </item>
+   <item>
     <widget class="QRadioButton" name="ability1">
      <property name="text">
       <string>Ability 1</string>

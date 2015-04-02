@@ -128,7 +128,8 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 void PokeBattle::init(PokePersonal &poke)
 {
     /* Checks num, ability, moves, item */
-    poke.runCheck();
+    poke.runCheck(poke.illegal());
+    illegal() = poke.illegal();
 
     num() = poke.num();
 
@@ -197,7 +198,7 @@ void PokeBattle::init(PokePersonal &poke)
     QSet<int> taken_moves;
     
     for (int i = 0; i < 4; i++) {
-        if (!taken_moves.contains(poke.move(i)) && poke.move(i) != 0) {
+        if (!taken_moves.contains(poke.move(i) || poke.illegal()) && poke.move(i) != 0) {
             taken_moves.insert(poke.move(i));
             move(curs).num() = poke.move(i);
             move(curs).load(poke.gen());
@@ -242,7 +243,7 @@ void PokeBattle::init(PokePersonal &poke)
             //Arceus
             if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && evs()[i] > 100 && p.gen() < 5) evs()[i] = 100;
             sum += evs()[i];
-            if (sum > 510) {
+            if (sum > 510 && !poke.illegal()) {
                 evs()[i] -= (sum-510);
                 sum = 510;
             }
@@ -287,7 +288,6 @@ DataStream & operator >> (DataStream &in, PokeBattle &po)
     for (int i = 0; i < 6; i++) {
         in >> po.dvs()[i];
     }
-
     return in;
 }
 
@@ -314,7 +314,6 @@ DataStream & operator << (DataStream &out, const PokeBattle &po)
     for (int i = 0; i < 6; i++) {
         out << po.dvs()[i];
     }
-
     return out;
 }
 
@@ -339,6 +338,7 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     fullStatus() = poke.fullStatus();
     num() = poke.num();
     shiny() = poke.shiny();
+    illegal() = poke.illegal();
     gender() = poke.gender();
     setLifePercent( (poke.lifePoints() * 100) / poke.totalLifePoints() );
     if (lifePercent() == 0 && poke.lifePoints() > 0) {

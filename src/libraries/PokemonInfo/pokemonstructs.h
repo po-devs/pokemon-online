@@ -100,6 +100,7 @@ class PokePersonal
     PROPERTY(quint8, happiness)
     PROPERTY(quint8, level)
     PROPERTY(Pokemon::gen, gen)
+    PROPERTY(bool, illegal)
 protected:
     quint16 m_moves[4];
 
@@ -117,15 +118,15 @@ public:
     /* resets everything to default values */
     void reset();
     /* Removes / Reset things if they are wrong */
-    void runCheck();
-
+    void runCheck(bool hack = false);
+    bool isLegal() const;
     void setMove(int moveNum, int moveSlot, bool check=false) throw (QString);
     int addMove(int moveNum, bool check = false) throw (QString);
     void removeMove(int movenum);
 
     bool hasMove(int moveNum);
 
-    void setAbility(int abilityNum) throw (QString);
+    void setAbility(int abilityNum, bool hack) throw (QString);
 
     quint8 DV(int stat) const;
     void setDV(int stat, quint8 DV);
@@ -136,11 +137,11 @@ public:
     quint8 EV(int stat) const;
     int EVSum() const;
 
-    void setEV(int stat, quint8 EV);
+    void setEV(int stat, quint8 EV, bool hack = false);
 
     enum Flags {
         hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs,
-        isShiny=0
+        isShiny=0, isIllegal
     };
 };
 
@@ -187,7 +188,7 @@ public:
     void setNum(Pokemon::uniqueId num);
     void setGen(Pokemon::gen gen);
     Pokemon::gen gen() const;
-    void runCheck();
+    void runCheck(bool hack = false);
 
     int stat(int statno) const;
 
@@ -199,7 +200,7 @@ public:
     QPixmap picture();
     QIcon icon();
 
-    void loadFromXml(const QDomElement &el, int version);
+    void loadFromXml(const QDomElement &el, int version, bool hack = false);
     QDomElement & toXml(QDomElement &dest) const;
 
     void sanityCheck();
@@ -208,6 +209,7 @@ public:
 class Team
 {
     PROPERTY(QString, defaultTier)
+    PROPERTY(QString, hackMons)
 protected:
     PokeTeam m_pokes[6];
     Pokemon::gen m_gen;
@@ -224,7 +226,7 @@ public:
     void toXml(QDomDocument &doc) const;
     QString toXml() const;
     bool saveToFile(const QString &path) const;
-    bool importFromTxt(const QString &path);
+    bool importFromTxt(const QString &path, bool hack = false);
     bool importFromAndroid(const QString &path);
     QString exportToTxt() const;
     QString exportToAndroid() const;
@@ -234,7 +236,7 @@ public:
     QString path() const {return m_path;}
     void setName(const QString &name);
     void setFolder(const QString &folder);
-
+    void setIllegal(bool hack);
     /* Runs some check to validate a team better, and edits invalid values */
     void sanityCheck();
 private:

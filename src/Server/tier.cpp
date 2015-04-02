@@ -326,45 +326,48 @@ void Tier::addBanParent(Tier *t)
 
 QString Tier::bannedReason(const PokeBattle &p, bool child) const {
     QString errorList = "";
-    if(banPokes) {
-        if(bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
+    if (banPokes) {
+        if (bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
             errorList += QString("Pokemon %1 is banned, ").arg(PokemonInfo::Name(p.num()));
         }
-        if(bannedMoves.size() > 0) {
+        if (bannedMoves.size() > 0) {
             for(int i = 0; i < 4; i++) {
                 if(bannedMoves.contains(p.move(i).num())) {
                     errorList += QString("Move %1 is banned, ").arg(MoveInfo::Name(p.move(i).num()));
                 }
             }
         }
-        if(bannedItems.contains(p.item())) {
+        if (bannedItems.contains(p.item())) {
             errorList += QString("Item %1 is banned, ").arg(ItemInfo::Name(p.item()));
         }
         if (bannedAbilities.contains(p.ability())) {
             errorList += QString("Ability %1 is banned, ").arg(AbilityInfo::Name(p.ability()));
         }
     } else {
-        if(bannedPokes.size() > 0 && !bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
+        if (bannedPokes.size() > 0 && !bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
             errorList += QString("Pokemon %1 is banned, ").arg(PokemonInfo::Name(p.num()));
         }
-        if(bannedMoves.size() > 0) {
+        if (bannedMoves.size() > 0) {
             for(int i = 0; i < 4; i++) {
                 if(p.move(i).num() != 0 && !bannedMoves.contains(p.move(i).num())) {
                     errorList += QString("Move %1 is banned, ").arg(MoveInfo::Name(p.move(i).num()));
                 }
             }
         }
-        if(bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
+        if (bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
             errorList += QString("Item %1 is banned, ").arg(ItemInfo::Name(p.item()));
         }
         if (bannedAbilities.size() > 0 && p.ability() != 0 && !bannedAbilities.contains(p.ability())) {
             errorList += QString("Ability %1 is banned, ").arg(AbilityInfo::Name(p.ability()));
         }
     }
+    if (allowIllegal != "true" && p.illegal()) {
+        errorList += QString("Pokemon %1 has an illegal set, ").arg(PokemonInfo::Name(p.num()));
+    }
     if (parent) {
         errorList += parent->bannedReason(p, true);
     }
-    if(errorList.length() >= 2 && !child) {
+    if (errorList.length() >= 2 && !child) {
         QStringList errors = errorList.split(", ").toSet().toList(); //remove duplicates
         QMutableListIterator<QString> i(errors);
         while (i.hasNext()) {
@@ -432,7 +435,9 @@ bool Tier::isBanned(const PokeBattle &p) const {
             return true;
         }
     }
-
+    if (allowIllegal != "true" && p.illegal()) {
+        return true;
+    }
     if (parent) {
         return parent->isBanned(p);
     } else {
@@ -893,6 +898,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     }
 
     minGen = elem.attribute("minGen", "-1").toInt();
+    allowIllegal = elem.attribute("allowIllegal", "false");
     maxLevel = elem.attribute("maxLevel", "100").toInt();
     numberOfPokemons = elem.attribute("numberOfPokemons", "6").toInt();
     maxRestrictedPokes = elem.attribute("numberOfRestricted", "1").toInt();
@@ -990,6 +996,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("gen", m_gen.num);
     dest.setAttribute("subgen", m_gen.subnum);
     dest.setAttribute("minGen", minGen);
+    dest.setAttribute("allowIllegal", allowIllegal);
     dest.setAttribute("maxLevel", maxLevel);
     dest.setAttribute("numberOfPokemons", numberOfPokemons);
     dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
@@ -1231,6 +1238,7 @@ Tier::Tier(TierMachine *boss, TierCategory *cat) : boss(boss), node(cat), holder
     parent = nullptr;
     m_gen = Pokemon::gen(GenInfo::GenMax(), GenInfo::NumberOfSubgens(GenInfo::GenMax())-1);
     minGen = -1;
+    allowIllegal = "false";
     maxLevel = 100;
     numberOfPokemons = 6;
     maxRestrictedPokes = 1;
@@ -1298,6 +1306,7 @@ Tier *Tier::dataClone() const
     t.maxLevel = maxLevel;
     t.m_gen = m_gen;
     t.minGen = minGen;
+    t.allowIllegal = allowIllegal;
     t.banParentS = banParentS;
     t.bannedItems = bannedItems;
     t.bannedMoves = bannedMoves;

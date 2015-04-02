@@ -43,6 +43,7 @@ class ShallowBattlePoke
     PROPERTY(quint8, gender)
     PROPERTY(quint8, level)
     PROPERTY(quint16, ability)
+    PROPERTY(bool, illegal)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);

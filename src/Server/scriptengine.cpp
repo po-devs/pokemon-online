@@ -1965,6 +1965,16 @@ bool ScriptEngine::hasTeamPoke(int id, int team, int pokemonnum)
     return false;
 }
 
+bool ScriptEngine::teamPokeIllegal(int id, int team, int slot)
+{
+    if (!testPlayer("teamPokeIllegal(id, team, slot)", id) || !testTeamCount("teamPokeIllegal(id, team, slot)", id, team)
+            || !testRange("teamPokeIllegal(id, team, slot)", slot, 0, 5)) {
+        return false;
+    }
+
+    return myserver->player(id)->team(team).poke(slot).illegal();
+}
+
 QScriptValue ScriptEngine::indexOfTeamPoke(int id, int team, int pokenum)
 {
     if (!testPlayer("indexOfTeamPoke(id, team, pokenum)", id)

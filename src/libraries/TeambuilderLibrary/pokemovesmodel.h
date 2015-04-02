@@ -8,7 +8,7 @@
 class PokeMovesModel : public QAbstractTableModel
 {
 public:
-    PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen = Pokemon::gen(), QObject *parent=0);
+    PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen = Pokemon::gen(), QObject *parent=0, bool hackmons = false);
     void setPokemon(const Pokemon::uniqueId &id, Pokemon::gen gen = Pokemon::gen());
 
     int rowCount(const QModelIndex &parent) const;
@@ -34,7 +34,7 @@ private:
 
     Pokemon::uniqueId id;
     Pokemon::gen gen;
-
+    bool hackmons;
     QMap<QString, QPair<int, QString> > storage;
     QList<QString> names;
 };

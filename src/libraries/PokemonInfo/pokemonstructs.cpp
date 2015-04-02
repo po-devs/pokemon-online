@@ -186,10 +186,14 @@ void PokePersonal::setMove(int moveNum, int moveSlot, bool check) throw(QString)
     }
 }
 
-void PokePersonal::setAbility(int abilityNum) throw(QString)
+void PokePersonal::setAbility(int abilityNum, bool hack) throw(QString)
 {
     QSet<int> invalid_moves;
     QString error;
+    if (hack) {
+        ability() = abilityNum;
+        return;
+    }
     if (!MoveSetChecker::isValid(num(), gen(), m_moves[0],m_moves[1],m_moves[2],m_moves[3],abilityNum,gender(),level(),false,&invalid_moves, &error)) {
         throw error;
     } else {
@@ -197,13 +201,50 @@ void PokePersonal::setAbility(int abilityNum) throw(QString)
     }
 }
 
-void PokePersonal::runCheck()
+//this function simply returns true/false depending on the legality of the pokemon, instead of changing it
+bool PokePersonal::isLegal() const
+{
+    if (!PokemonInfo::Exists(num(), gen())) {
+        return false;
+    }
+    if (PokemonInfo::IsForme(num()) && !PokemonInfo::AFormesShown(num())) {
+        return false;
+    }
+    if (gen() > 2) {
+        AbilityGroup ab = PokemonInfo::Abilities(num(), gen());
+        if (ability() == 0 || (ability() != ab.ab(2) && ability() != ab.ab(1) && ability() != ab.ab(0))) {
+            return false;
+        }
+    }
+    if (gen() > 2 && EVSum() > 510) {
+        return false;
+    }
+    QSet<int> invalidMoves;
+
+    MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
+
+    while (invalidMoves.size() > 0) {
+        for (int i = 0; i < 4; i++) {
+            if (invalidMoves.contains(move(i))) {
+                return false;
+            }
+        }
+        invalidMoves.clear();
+
+        MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
+    }
+    return true;
+}
+
+void PokePersonal::runCheck(bool hack)
 {
     if (!PokemonInfo::Exists(num(), gen())) {
         reset();
         return;
     }
-
+    if (hack) {
+        return;
+    }
     if (!PokemonInfo::AFormesShown(num())) {
         num() = num().original();
     }
@@ -326,8 +367,12 @@ void PokePersonal::controlEVs(int stat)
     }
 }
 
-void PokePersonal::setEV(int stat, quint8 val)
+void PokePersonal::setEV(int stat, quint8 val, bool hack)
 {
+    if (hack) {
+        m_EVs[stat] = val;
+        return;
+    }
     if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus && gen() < 5 && val > 100)
     {
         val = 100;
@@ -532,11 +577,11 @@ void PokeTeam::setGen(Pokemon::gen gen)
     PokeGraphics::setGen(gen);
 }
 
-void PokeTeam::runCheck()
+void PokeTeam::runCheck(bool hack)
 {
     Pokemon::uniqueId num = this->num();
 
-    PokePersonal::runCheck();
+    PokePersonal::runCheck(hack);
 
     /* If the pokemon is reset to 0, we also make PokeGeneral and PokeGraphics reset */
     if (num != PokePersonal::num()) {
@@ -691,6 +736,7 @@ void Team::toXml(QDomDocument &document) const
     Team.setAttribute("gen", gen().num);
     Team.setAttribute("subgen", gen().subnum);
     Team.setAttribute("defaultTier", defaultTier());
+    Team.setAttribute("hackMons", hackMons());
     Team.setAttribute("version", 1);
     document.appendChild(Team);
 
@@ -770,7 +816,7 @@ void loadTTeamDialog(Team &team, QObject *receiver, const char *slot)
         QObject::connect(f, SIGNAL(fileSelected(QString)), receiver, slot);
 }
 
-void PokeTeam::loadFromXml(const QDomElement &poke, int version)
+void PokeTeam::loadFromXml(const QDomElement &poke, int version, bool hack)
 {
     if (poke.hasAttribute("Gen")) {
         setGen(Pokemon::gen(poke.attribute("Gen", QString::number(GenInfo::GenMax())).toInt(),
@@ -813,7 +859,6 @@ void PokeTeam::loadFromXml(const QDomElement &poke, int version)
     shiny() = QVariant(poke.attribute("Shiny")).toBool();
     happiness() = poke.attribute("Happiness").toInt();
     level() = poke.attribute("Lvl").toInt();
-
     int cptMove=0;
 
     QDomElement moveElement = poke.firstChildElement("Move");
@@ -839,10 +884,11 @@ void PokeTeam::loadFromXml(const QDomElement &poke, int version)
     QDomElement EVElement = poke.firstChildElement("EV");
     while(!EVElement.isNull())
     {
-        setEV(outdated ? NatureInfo::ConvertToStat(cptEV) : cptEV,EVElement.text().toInt());
+        setEV(outdated ? NatureInfo::ConvertToStat(cptEV) : cptEV,EVElement.text().toInt(), hack);
         cptEV++;
         EVElement = EVElement.nextSiblingElement("EV");
     }
+    illegal() = hack;
 }
 
 Pokemon::gen PokeTeam::gen() const
@@ -886,12 +932,12 @@ bool Team::loadFromFile(const QString &path)
     setGen(Pokemon::gen(team.attribute("gen", QString::number(GenInfo::GenMax())).toInt(),
                         team.attribute("subgen", QString::number(GenInfo::NumberOfSubgens(team.attribute("gen", QString::number(GenInfo::GenMax())).toInt())-1)).toInt()));
     defaultTier() = team.attribute("defaultTier");
-
+    hackMons() = team.attribute("hackMons", "false");
     QDomElement poke = team.firstChildElement("Pokemon");
     int cpt = 0;
     while(!poke.isNull())
     {
-        this->poke(cpt).loadFromXml(poke, version);
+        this->poke(cpt).loadFromXml(poke, version, hackMons() == "true");
 
         cpt++;
         poke = poke.nextSiblingElement("Pokemon");
@@ -900,7 +946,7 @@ bool Team::loadFromFile(const QString &path)
 }
 
 /******** Really ugly *********/
-bool Team::importFromTxt(const QString &file1)
+bool Team::importFromTxt(const QString &file1, bool hack)
 {
     QString file = file1;
     file.replace("---", "");
@@ -964,7 +1010,19 @@ bool Team::importFromTxt(const QString &file1)
         if (pokestring.indexOf('-') != -1 && pokestring.indexOf('-') <= pokestring.length() - 2) {
             pokestring[pokestring.indexOf('-')+1] = pokestring[pokestring.indexOf('-')+1].toUpper();
         }
-
+        //PS mega imports
+        if (pokestring.indexOf("-") != -1) {
+            int index = pokestring.indexOf("-");
+            QString forme = pokestring.mid(index+1);
+            if (forme.indexOf("Mega") != -1) {
+                pokestring = pokestring.mid(0, index);
+                if (forme.indexOf("-") != -1) {//Mega charizard/mewtwo
+                    pokestring = "Mega " + pokestring + " " + forme.mid(forme.indexOf("-")+1);
+                } else {
+                    pokestring = "Mega " + pokestring;
+                }
+            }
+        }
         pokenum = PokemonInfo::Number(pokestring);
 
         int item = 0;
@@ -1032,7 +1090,7 @@ bool Team::importFromTxt(const QString &file1)
                             stat = Hp;
 
                         if (key == "EVs") {
-                            p.setEV(stat, unsigned(evnum)%255);
+                            p.setEV(stat, unsigned(evnum)%255, hack);
                         } else {
                             p.setDV(stat, unsigned(evnum)%32);
                         }
@@ -1070,8 +1128,8 @@ bool Team::importFromTxt(const QString &file1)
             }
         }
 
-        /* Removes invalid move combinations */
-        p.runCheck();
+        /* Checks if hackmons are valid, if yes, fix them up in the checker */
+        p.runCheck(!hack || p.isLegal());
     }
     return true;
 /*
@@ -1228,7 +1286,7 @@ bool Team::importFromAndroid(const QString &file2)
 
     QStringList settings = teamsettings.split("@");
     Team::defaultTier() = settings[0];
-
+    Team::hackMons() = "false";
     QStringList pokes = file.split("***",QString::SkipEmptyParts);
     for (int i = 0; i < 6 && i < pokes.size(); i++) {
         PokeTeam &p = this->poke(i);
@@ -1375,6 +1433,19 @@ void Team::setFolder(const QString &folder)
     m_path = folder + "/" + QUrl::toPercentEncoding(name()) + ".tp";
 }
 
+void Team::setIllegal(bool hack)
+{
+    for(int i = 0; i < 6; i++) {
+        if (hack && !poke(i).isLegal()) {
+            poke(i).illegal() = true;
+        } else {
+            poke(i).illegal() = false;
+            poke(i).runCheck();
+        }
+    }
+    hackMons() = hack ? "true" : "false";
+}
+
 void Team::sanityCheck()
 {
     if (defaultTier().length() > 100) {
@@ -1401,7 +1472,6 @@ DataStream & operator << (DataStream & out, const Team & team)
     }
 
     v.stream << team.gen();
-
     for (int i = 0; i < 6; i++) {
         v.stream << team.poke(i);
     }
@@ -1428,14 +1498,16 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
             break;
         }
     }
-
     v.stream << network;
     v.stream << p.num();
     v.stream << p.level();
 
     Flags data;
     data.setFlag(pp::isShiny, p.shiny());
-
+    //make sure the poke is 100% illegal
+    if (p.illegal() && !p.isLegal() && p.num() != 0) {
+        data.setFlag(pp::isIllegal, p.illegal());
+    }
     v.stream << data;
 
     if (p.nickname().length() > 0) {
@@ -1496,7 +1568,7 @@ DataStream & operator >> (DataStream & in, PokePersonal & p)
     v.stream >> p.num() >> p.level() >> data;
 
     p.shiny() = data[pp::isShiny];
-
+    bool hack = data[pp::isIllegal];
     if (network[pp::hasNickname]) {
         v.stream >> p.nickname();
     }
@@ -1525,14 +1597,14 @@ DataStream & operator >> (DataStream & in, PokePersonal & p)
         }
         quint16 moveNum;
         v.stream >> moveNum;
-        p.setMove(moveNum,i);
+        p.setMove(moveNum,i, false);
     }
 
     for(int i=0;i<6;i++)
     {
         quint8 EV;
         v.stream >> EV;
-        p.setEV(i,EV);
+        p.setEV(i,EV,hack);
     }
 
     if (network[pp::hasIVs]) {
@@ -1543,6 +1615,6 @@ DataStream & operator >> (DataStream & in, PokePersonal & p)
             p.setDV(i,IV);
         }
     }
-
+    p.illegal() = hack;
     return in;
 }

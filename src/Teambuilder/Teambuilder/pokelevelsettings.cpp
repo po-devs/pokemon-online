@@ -1,8 +1,10 @@
 #include <QMessageBox>
 
+#include <QStringListModel>
 #include <PokemonInfo/pokemonstructs.h>
 #include <PokemonInfo/pokemoninfo.h>
 #include "Teambuilder/pokelevelsettings.h"
+#include "Teambuilder/pokeedit.h"
 #include "ui_pokelevelsettings.h"
 
 PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
@@ -10,14 +12,6 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     ui(new Ui::PokeLevelSettings)
 {
     ui->setupUi(this);
-    m_abilities[0] = ui->ability1;
-    m_abilities[1] = ui->ability2;
-    m_abilities[2] = ui->ability3;
-
-    QButtonGroup *abilityGroup = new QButtonGroup(this);
-    for (int i =0; i < 3; i++) {
-        abilityGroup->addButton(m_abilities[i]);
-    }
     QButtonGroup *genderGroup = new QButtonGroup(this);
     genderGroup->addButton(ui->maleButton);
     genderGroup->addButton(ui->femaleButton);
@@ -30,9 +24,6 @@ PokeLevelSettings::PokeLevelSettings(QWidget *parent) :
     // female if it is.
     //connect(ui->femaleButton, SIGNAL(toggled(bool)), this, SLOT(changeGender()));
 
-    for (int i = 0; i < 3; i++) {
-        connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
-    }
 }
 
 PokeLevelSettings::~PokeLevelSettings()
@@ -40,10 +31,53 @@ PokeLevelSettings::~PokeLevelSettings()
     delete ui;
 }
 
+void PokeLevelSettings::fillAbilities()
+{
+    if (!PokeEdit::hackMons) {
+        ui->ability->hide();
+        ui->ability1->show();
+        ui->ability2->show();
+        ui->ability3->show();
+        m_abilities[0] = ui->ability1;
+        m_abilities[1] = ui->ability2;
+        m_abilities[2] = ui->ability3;
+
+        QButtonGroup *abilityGroup = new QButtonGroup(this);
+        for (int i =0; i < 3; i++) {
+            abilityGroup->addButton(m_abilities[i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            m_abilities[i]->disconnect(SIGNAL(toggled(bool)), this);
+            connect(m_abilities[i], SIGNAL(toggled(bool)), this, SLOT(changeAbility()));
+        }
+    } else {
+        ui->ability1->hide();
+        ui->ability2->hide();
+        ui->ability3->hide();
+        QStringList abilities;
+        for (int i = 1; i < AbilityInfo::NumberOfAbilities(poke().gen().num); i++) {
+            abilities.push_back(AbilityInfo::Name(i));
+        }
+        qSort(abilities);
+        abilities.removeAll("");
+        QString ability = AbilityInfo::Name(poke().ability());
+        ui->ability->setModel(new QStringListModel(abilities, this));
+        ui->ability->show();
+        ui->ability->disconnect(SIGNAL(currentIndexChanged(int)), this);
+        connect(ui->ability, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAbility()));
+        int index = ui->ability->findText(ability);
+        if (index != -1) {
+            ui->ability->setCurrentIndex(index);
+        }
+    }
+}
+
 void PokeLevelSettings::setPoke(PokeTeam *poke)
 {
     m_poke = poke;
+    fillAbilities();
     setGender();
+    updateAll();
 }
 
 void PokeLevelSettings::updateAll()
@@ -87,16 +121,19 @@ void PokeLevelSettings::changeAbility()
     }
 
     int abilityToSet;
-    if (m_abilities[1]->isChecked()) {
-        abilityToSet = poke().abilities().ab(1);
-    } else if (m_abilities[2]->isChecked()) {
-        abilityToSet = poke().abilities().ab(2);
+    if (!PokeEdit::hackMons) {
+        if (m_abilities[1]->isChecked()) {
+            abilityToSet = poke().abilities().ab(1);
+        } else if (m_abilities[2]->isChecked()) {
+            abilityToSet = poke().abilities().ab(2);
+        } else {
+            abilityToSet = poke().abilities().ab(0);
+        }
     } else {
-        abilityToSet = poke().abilities().ab(0);
+        abilityToSet = AbilityInfo::Number(ui->ability->currentText());
     }
-
     try {
-        poke().setAbility(abilityToSet);
+        poke().setAbility(abilityToSet, PokeEdit::hackMons);
     } catch (const QString &s) {
         QMessageBox::information(NULL, tr("Invalid moveset"), s);
         for(int i = 0; i < 3; i++) {
@@ -111,17 +148,25 @@ void PokeLevelSettings::changeAbility()
 
 void PokeLevelSettings::setAbilities()
 {
-    for(int i = 0; i < 3; i++) {
-        if(poke().abilities().ab(i) != 0 && poke().gen() >= 3 && (i == 0 || poke().abilities().ab(i) != poke().abilities().ab(0))) {
-            m_abilities[i]->setVisible(true);
-            m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
-            m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
+    if (!PokeEdit::hackMons) {
+        for(int i = 0; i < 3; i++) {
+            if(poke().abilities().ab(i) != 0 && poke().gen() >= 3 && (i == 0 || poke().abilities().ab(i) != poke().abilities().ab(0))) {
+                m_abilities[i]->setVisible(true);
+                m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
+                m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
 
-            if (poke().abilities().ab(i) == poke().ability()) {
-                m_abilities[i]->setChecked(true);
+                if (poke().abilities().ab(i) == poke().ability()) {
+                    m_abilities[i]->setChecked(true);
+                }
+            } else {
+                 m_abilities[i]->setVisible(false);
             }
-        } else {
-             m_abilities[i]->setVisible(false);
+        }
+    } else {
+        ui->ability->setVisible(true);
+        int index = ui->ability->findText(AbilityInfo::Name(poke().ability()));
+        if (index != -1) {
+            ui->ability->setCurrentIndex(index);
         }
     }
 }
@@ -179,12 +224,20 @@ void PokeLevelSettings::updateAbility()
     if (poke().gen() < 3) {
         return;
     }
-    if (poke().ability() == poke().abilities().ab(0)) {
-        m_abilities[0]->setChecked(true);
-    } else if (poke().ability() == poke().abilities().ab(1)) {
-        m_abilities[1]->setChecked(true);
-    } else if (poke().ability() == poke().abilities().ab(2)) {
-        m_abilities[2]->setChecked(true);
+    if (!PokeEdit::hackMons) {
+        if (poke().ability() == poke().abilities().ab(0)) {
+            m_abilities[0]->setChecked(true);
+        } else if (poke().ability() == poke().abilities().ab(1)) {
+            m_abilities[1]->setChecked(true);
+        } else if (poke().ability() == poke().abilities().ab(2)) {
+            m_abilities[2]->setChecked(true);
+        }
+    } else {
+        ui->ability->setVisible(true);
+        int index = ui->ability->findText(AbilityInfo::Name(poke().ability()));
+        if (index != -1) {
+            ui->ability->setCurrentIndex(index);
+        }
     }
 }
 

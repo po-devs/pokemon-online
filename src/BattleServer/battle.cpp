@@ -624,7 +624,7 @@ BattleChoices BattleSituation::createChoice(int slot)
     }
 
     //Mega Evolution is not hindered by Embargo, etc.
-    if (((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) && !megas[player(slot)]) {
+    if (canMegaEvolve(slot)) {
         Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
         if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
             ret.mega = true;
@@ -902,7 +902,7 @@ void BattleSituation::megaEvolve(int slot)
     //Split to allow Mega Evo to activate on Special Pursuit
     //Mega Evolution is not hindered by Embargo, etc.
     if (choice(slot).mega()) {
-        if ((ItemInfo::isMegaStone(poke(slot).item()) && ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) || (poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
+        if (canMegaEvolve(slot)) {
             Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
             if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
                 sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
@@ -4439,6 +4439,24 @@ bool BattleSituation::preTransPoke(int s, Pokemon::uniqueId check)
 {
     if (pokeMemory(slot(s)).contains("PreTransformPoke")) {
         return PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()) != check;
+    }
+    return false;
+}
+
+bool BattleSituation::canMegaEvolve (int slot) {
+    if (megas[player(slot)]) {
+        return false;
+    }
+    if (ItemInfo::isMegaStone(poke(slot).item())) {
+        if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
+            return true;
+        }
+        if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0)) {
+            return true;
+        }
+    }
+    if ((poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
+        return true;
     }
     return false;
 }

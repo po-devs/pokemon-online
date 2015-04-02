@@ -180,7 +180,10 @@ void TeamBuilder::genChanged()
 
     for (int i = 0; i < 6; i++) {
         team().team().poke(i).load();
-        team().team().poke(i).runCheck();
+        if (team().team().hackMons() == "false" || team().team().poke(i).isLegal()) {
+            team().team().poke(i).illegal() = false;
+            team().team().poke(i).runCheck();
+        }
     }
 
     markAllUpdated();
@@ -561,3 +564,4 @@ void TeamBuilder::setTierList(const QStringList &tiers)
 {
     trainer->setTiers(tiers);
 }
+

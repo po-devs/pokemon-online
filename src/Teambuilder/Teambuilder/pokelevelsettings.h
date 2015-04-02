@@ -8,7 +8,7 @@ class QRadioButton;
 namespace Ui {
     class PokeLevelSettings;
 }
-
+class PokeEdit;
 class PokeTeam;
 
 class PokeLevelSettings : public QFrame
@@ -21,6 +21,7 @@ public:
 
     void setPoke(PokeTeam *poke);
     void updateAll();
+    void fillAbilities();
 
 signals:
     void levelUpdated();

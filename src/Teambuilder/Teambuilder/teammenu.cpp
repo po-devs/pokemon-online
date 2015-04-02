@@ -24,7 +24,7 @@ TeamMenu::TeamMenu(TeamBuilder *tb, QAbstractItemModel *pokeModel, TeamHolder *t
 {
     setMainWindow(tb);
     setTeambuilder(tb);
-
+    PokeEdit::hackMons = team->team().hackMons() == "true";
     ui->pokemonModel = pokeModel;
     setupUi();
     updateTabs();
@@ -51,8 +51,11 @@ void TeamMenu::addMenus(QMenuBar *b)
     QAction *adv = options->addAction(tr("&Advanced menu"), this, SLOT(toggleAdvanced()));
     adv->setCheckable(true);
     adv->setChecked(!PokeEdit::advancedWindowClosed);
-
+    QAction *hackmons = options->addAction(tr("&Show Illegal"), this, SLOT(toggleHackmons()));
+    hackmons->setCheckable(true);
+    hackmons->setChecked(PokeEdit::hackMons);
     advancedMenu = adv;
+    hackMons = hackmons;
 }
 
 void TeamMenu::setupUi()
@@ -165,6 +168,16 @@ void TeamMenu::toggleAdvanced()
             p->showAdvancedTab();
         }
     }
+}
+
+void TeamMenu::toggleHackmons()
+{
+    PokeEdit::hackMons = !PokeEdit::hackMons;
+    foreach(PokeEdit *p, ui->pokemons) {
+        p->toggleHackmons();
+    }
+    hackMons->setChecked(PokeEdit::hackMons);
+    team().team().setIllegal(PokeEdit::hackMons);
 }
 
 void TeamMenu::tabIconChanged()

@@ -34,6 +34,7 @@ public:
     };
 
     static bool advancedWindowClosed;
+    static bool hackMons;
 
 public slots:
     void updateStats();
@@ -52,6 +53,8 @@ public slots:
     void setNum(const QString &num);
     void setItem(int num);
     void openPokemonSelection();
+    void toggleHackmons();
+    void fillMoves();
 signals:
     void numChanged();
     void nameChanged();

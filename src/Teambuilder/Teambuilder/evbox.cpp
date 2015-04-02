@@ -3,6 +3,7 @@
 #include <TeambuilderLibrary/theme.h>
 #include "evbox.h"
 #include "ui_evbox.h"
+#include "Teambuilder/pokeedit.h"
 
 EvBox::EvBox(QWidget *parent) :
     QWidget(parent),
@@ -15,7 +16,7 @@ EvBox::EvBox(QWidget *parent) :
     QLabel *labels[6] = {ui->hplabel, ui->atklabel, ui->deflabel, ui->satklabel, ui->sdeflabel, ui->speedlabel};
     QLineEdit *edits[6] = {ui->hpedit, ui->atkedit, ui->defedit, ui->satkedit, ui->sdefedit, ui->speededit};
     QImageButtonLR *boosts[6] = {ui->hpboost, ui->atkboost, ui->defboost, ui->satkboost, ui->sdefboost, ui->speedboost};
-
+    PokeEdit::hackMons ? ui->maxEVs->show() : ui->maxEVs->hide();
     memcpy(m_sliders, sliders, sizeof(sliders));
     memcpy(m_descs, descs, sizeof(descs));
     memcpy(m_stats, labels, sizeof(labels));
@@ -34,6 +35,7 @@ EvBox::EvBox(QWidget *parent) :
         connect(m_boosts[i], SIGNAL(rightClick()), this, SLOT(changeToMinusBoost()));
         connect(m_boosts[i], SIGNAL(leftClick()), this, SLOT(changeToPlusBoost()));
     }
+    connect(ui->maxEVs, SIGNAL(clicked()), this, SLOT(maxEVs()));
 }
 
 void EvBox::updateNatureButtons()
@@ -138,10 +140,10 @@ void EvBox::updateMain()
     ui->totallabel->setText(QString::number(poke().EVSum()));
 }
 
-void EvBox::changeEV(int newValue)
+void EvBox::changeEV(int newValue, int sentStat)
 {
-    int stat = sender()->property("stat").toInt();
-    poke().setEV(stat, newValue/4*4);
+    int stat = sentStat == -1 ? sender()->property("stat").toInt() : sentStat;
+    poke().setEV(stat, newValue/4*4, PokeEdit::hackMons);
     updateEV(stat);
     updateMain();
 }
@@ -149,7 +151,7 @@ void EvBox::changeEV(int newValue)
 void EvBox::changeEV(const QString &newValue)
 {
     int stat = sender()->property("stat").toInt();
-    poke().setEV(stat, std::max(std::min(newValue.toInt(), 252), 0));
+    poke().setEV(stat, std::max(std::min(newValue.toInt(), 252), 0), PokeEdit::hackMons);
     updateEV(stat);
     updateMain();
 }
@@ -182,4 +184,17 @@ void EvBox::changeToMinusBoost()
 
     emit natureChanged(NatureInfo::NatureOf(plus,minus));
     emit natureBoostChanged();
+}
+
+void EvBox::changeMaximumEv(bool hack)
+{
+    ui->totalslider->setProperty(("maximum"), hack ? 1512 : 508);
+    hack ? ui->maxEVs->show() : ui->maxEVs->hide();
+}
+
+void EvBox::maxEVs()
+{
+    for (int i = 0; i < 6; i++) {
+        changeEV(252, i);
+    }
 }

@@ -352,6 +352,7 @@ public:
     Q_INVOKABLE QScriptValue teamPokePP(int id, int team, int slot, int moveslot);
     Q_INVOKABLE QScriptValue teamPoke(int id, quint32 teamLo, int index, quint32 teamHi = 0);
     Q_INVOKABLE QScriptValue teamPokeName(int id, int team, int pokemonnum);
+    Q_INVOKABLE bool teamPokeIllegal(int id, int team, int slot);
     Q_INVOKABLE bool hasTeamPoke(int id, int team, int pokemonnum);
     Q_INVOKABLE QScriptValue indexOfTeamPoke(int id, int team, int pokenum);
     Q_INVOKABLE bool hasDreamWorldAbility(int id, int team, int slot, int gen = 5);

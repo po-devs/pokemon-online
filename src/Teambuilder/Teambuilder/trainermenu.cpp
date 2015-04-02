@@ -101,7 +101,7 @@ void TrainerMenu::on_importTeam_clicked()
 
 void TrainerMenu::importTeam(const QString &team)
 {
-    this->team().team().importFromTxt(team);
+    this->team().team().importFromTxt(team, this->team().team().hackMons() == "true");
 }
 
 void TrainerMenu::openImportAndroidDialog()
