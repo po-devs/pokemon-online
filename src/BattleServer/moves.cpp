@@ -587,14 +587,19 @@ struct MMCurse : public MM
 
     static void ms(int s, int, BS &b) {
         if (!b.hasType(s, Pokemon::Ghost)) {
-            tmove(b,s).targets = Move::User; // so that curse works even when there is no enemy.
-            tmove(b,s).classification = Move::StatChangingMove;
-            tmove(b,s).statAffected = (Attack << 16) + (Defense << 8) + Speed;
-            tmove(b,s).boostOfStat = (1 << 16) + (1 << 8) + (uchar(-1));
-        } else {
-            tmove(b,s).classification = Move::SpecialMove;
-            turn(b,s)["CurseGhost"] = true;
+            if (b.hasWorkingAbility(s, Ability::Protean)){
+                tmove(b,s).targets = Move::User; // so that curse targets yourself. needs to be set here
+            }  else {
+                tmove(b,s).targets = Move::User; // so that curse works even when there is no enemy.
+                tmove(b,s).classification = Move::StatChangingMove;
+                tmove(b,s).statAffected = (Attack << 16) + (Defense << 8) + Speed;
+                tmove(b,s).boostOfStat = (1 << 16) + (1 << 8) + (uchar(-1));
+                return;
+            }
         }
+
+        tmove(b,s).classification = Move::SpecialMove;
+        turn(b,s)["CurseGhost"] = true;
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
