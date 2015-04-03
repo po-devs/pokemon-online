@@ -125,10 +125,12 @@ public:
     QString getRestrictedPokes() const;
     QString getBannedMoves() const;
     QString getBannedItems() const;
+    QString getBannedAbilities() const;
     void importBannedPokes(const QString &);
     void importRestrictedPokes(const QString &);
     void importBannedMoves(const QString &);
     void importBannedItems(const QString &);
+    void importBannedAbilities(const QString &);
 
     void exportDatabase() const;
     void processDailyRun();
@@ -189,6 +191,7 @@ private:
     Tier *parent;
     QSet<int> bannedItems;
     QSet<int> bannedMoves;
+    QSet<int> bannedAbilities;
     QSet<Pokemon::uniqueId> bannedPokes;
     QSet<Pokemon::uniqueId> restrictedPokes;
     int mode; /* < 0 : any, otherwise specific mode */

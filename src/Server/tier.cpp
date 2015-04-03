@@ -340,6 +340,9 @@ QString Tier::bannedReason(const PokeBattle &p) const {
         if(bannedItems.contains(p.item())) {
             errorList += QString("Item %1 is banned, ").arg(ItemInfo::Name(p.item()));
         }
+        if (bannedAbilities.contains(p.ability())) {
+            errorList += QString("Ability %1 is banned, ").arg(AbilityInfo::Name(p.ability()));
+        }
     } else {
         if(bannedPokes.size() > 0 && !bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
             errorList += QString("Pokemon %1 is banned, ").arg(PokemonInfo::Name(p.num()));
@@ -353,6 +356,9 @@ QString Tier::bannedReason(const PokeBattle &p) const {
         }
         if(bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
             errorList += QString("Item %1 is banned, ").arg(ItemInfo::Name(p.item()));
+        }
+        if (bannedAbilities.contains(p.ability())) {
+            errorList += QString("Ability %1 is banned, ").arg(AbilityInfo::Name(p.ability()));
         }
     }
     if(errorList.length() >= 2) {
@@ -376,6 +382,9 @@ bool Tier::isBanned(const PokeBattle &p) const {
         if (bannedItems.contains(p.item())) {
             return true;
         }
+        if (bannedAbilities.contains(p.ability())) {
+           return true;
+        }
         //        if (bannedSets.contains(p.num())) {
         //            foreach (BannedPoke b, bannedSets.values(p.num())) {
         //                if (b.isBanned(p))
@@ -396,6 +405,9 @@ bool Tier::isBanned(const PokeBattle &p) const {
         }
         if (bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
             return true;
+        }
+        if (bannedAbilities.contains(p.ability())) {
+           return true;
         }
         //        if (bannedSets.size() > 0 && bannedSets.contains(p.num())) {
         //            foreach (BannedPoke b, bannedSets.values(p.num())) {
@@ -891,6 +903,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     importBannedMoves(elem.attribute("moves"));
     importBannedItems(elem.attribute("items"));
     importBannedPokes(elem.attribute("pokemons"));
+    importBannedAbilities(elem.attribute("abilities", ""));
     importRestrictedPokes(elem.attribute("restrictedPokemons"));
 
     QStringList clausesL = elem.attribute("clauses").split(",");
@@ -975,6 +988,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("displayOrder", displayOrder);
     dest.setAttribute("moves", getBannedMoves());
     dest.setAttribute("items", getBannedItems());
+    dest.setAttribute("abilities", getBannedAbilities());
     dest.setAttribute("pokemons", getBannedPokes());
     dest.setAttribute("restrictedPokemons", getRestrictedPokes());
 
@@ -1048,6 +1062,16 @@ QString Tier::getBannedMoves() const
     return bannedMovesS.join(", ");
 }
 
+QString Tier::getBannedAbilities() const
+{
+    QStringList bannedAbilitiesS;
+    foreach(int move, bannedAbilities) {
+        bannedAbilitiesS.append(AbilityInfo::Name(move));
+    }
+    bannedAbilitiesS.sort();
+    return bannedAbilitiesS.join(", ");
+}
+
 QString Tier::getRestrictedPokes() const
 {
     QStringList restrictedPokesS;
@@ -1095,6 +1119,20 @@ void Tier::importBannedMoves(const QString &s)
 
         if (num != 0)
             bannedMoves.insert(num);
+    }
+}
+
+void Tier::importBannedAbilities(const QString &s)
+{
+    bannedAbilities.clear();
+    if (s.length() == 0)
+        return;
+    QStringList abilities = s.split(",");
+    foreach(QString ability, abilities) {
+        int num = AbilityInfo::Number(ability.trimmed());
+
+        if (num != 0)
+            bannedAbilities.insert(num);
     }
 }
 
@@ -1254,6 +1292,7 @@ Tier *Tier::dataClone() const
     t.banParentS = banParentS;
     t.bannedItems = bannedItems;
     t.bannedMoves = bannedMoves;
+    t.bannedAbilities = bannedAbilities;
     t.bannedPokes = bannedPokes;
     t.restrictedPokes = restrictedPokes;
     t.mode = mode;
