@@ -357,7 +357,7 @@ QString Tier::bannedReason(const PokeBattle &p) const {
         if(bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
             errorList += QString("Item %1 is banned, ").arg(ItemInfo::Name(p.item()));
         }
-        if (bannedAbilities.contains(p.ability())) {
+        if (bannedAbilities.size() > 0 && p.ability() != 0 && !bannedAbilities.contains(p.ability())) {
             errorList += QString("Ability %1 is banned, ").arg(AbilityInfo::Name(p.ability()));
         }
     }
@@ -406,8 +406,8 @@ bool Tier::isBanned(const PokeBattle &p) const {
         if (bannedItems.size() > 0 && p.item() != 0 && !bannedItems.contains(p.item())) {
             return true;
         }
-        if (bannedAbilities.contains(p.ability())) {
-           return true;
+        if (bannedAbilities.size() > 0 && p.ability() != 0 && !bannedAbilities.contains(p.ability())) {
+            return true;
         }
         //        if (bannedSets.size() > 0 && bannedSets.contains(p.num())) {
         //            foreach (BannedPoke b, bannedSets.values(p.num())) {
