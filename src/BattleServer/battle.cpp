@@ -3060,6 +3060,10 @@ int BattleSituation::calculateDamage(int p, int t)
             qA = "Stat"+QString::number(Attack);
             def = getStat(t, Defense, 1);
             qD = "Stat"+QString::number(Defense);
+            if ((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned"))
+                && !(crit && turnMemory(p).value("CritIgnoresAll").toBool())) {
+                atk = std::max(1, atk / 2);
+            }
         } else {
             atk = getStat(p, SpAttack, 1);
             qA = "Stat"+QString::number(SpAttack);
@@ -3177,12 +3181,6 @@ int BattleSituation::calculateDamage(int p, int t)
         while (typemod < 0) {
             damage /= 2;
             typemod++;
-        }
-
-        if (cat == Move::Physical
-            && (poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned"))
-            && !(crit && turnMemory(p).value("CritIgnoresAll").toBool())) {
-            damage /= 2;
         }
 
         int randnum = randint(39) + 217; // remember that randint is 0 to n-1
