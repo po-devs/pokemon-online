@@ -3076,7 +3076,7 @@ int BattleSituation::calculateDamage(int p, int t)
             qD = "Stat"+QString::number(SpDefense);
         }
 
-        if ((!crit || !turnMemory(p).value("CritIgnoresAll").toBool())
+        if (!(crit && turnMemory(p).value("CritIgnoresAll").toBool())
             && teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
             def *= 2;
         }
@@ -3188,7 +3188,9 @@ int BattleSituation::calculateDamage(int p, int t)
             typemod++;
         }
 
-        if (!turnMemory(p).value("CritIgnoresAll").toBool() && poke.status() == Pokemon::Burnt) {
+        if (cat == Move::Physical
+            && (poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned"))
+            && !(crit && turnMemory(p).value("CritIgnoresAll").toBool())) {
             damage /= 2;
         }
 
