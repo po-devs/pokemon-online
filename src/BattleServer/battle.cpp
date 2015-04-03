@@ -3853,6 +3853,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     }
     if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
         pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
+        pokeMemory(player)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
     }
 
     /* Note: &o must be defined before p.num() is replaced by newforme */
@@ -3870,7 +3871,11 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
             }
         }
 
-        p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
+        if (!pokeMemory(slot(player)).contains("PreTransformAbility")) {
+            p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
+        } else {
+            p.ability() = AbilityInfo::Number(pokeMemory(slot(player)).value("PreTransformAbility").toString());
+        }
 
         for (int i = 1; i < 6; i++)
             p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
