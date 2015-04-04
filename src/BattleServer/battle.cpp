@@ -971,7 +971,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     inc(slotMemory(slot)["SwitchCount"], 1);
     slotMemory(slot)["SwitchTurn"] = turn();
 
-    if (p.num() == Pokemon::Arceus && ItemInfo::isPlate(p.item())) {
+    //we need to check for Multitype in case Arceus doesn't have its ability
+    if (p.num() == Pokemon::Arceus && ItemInfo::isPlate(p.item()) && p.ability() == Ability::Multitype) {
         int type = ItemInfo::PlateType(p.item());
 
         if (type != Type::Normal) {
