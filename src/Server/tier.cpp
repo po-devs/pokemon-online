@@ -324,7 +324,7 @@ void Tier::addBanParent(Tier *t)
     parent = t;
 }
 
-QString Tier::bannedReason(const PokeBattle &p) const {
+QString Tier::bannedReason(const PokeBattle &p, bool child) const {
     QString errorList = "";
     if(banPokes) {
         if(bannedPokes.contains(PokemonInfo::NonAestheticForme(p.num()))) {
@@ -361,9 +361,18 @@ QString Tier::bannedReason(const PokeBattle &p) const {
             errorList += QString("Ability %1 is banned, ").arg(AbilityInfo::Name(p.ability()));
         }
     }
-    if(errorList.length() >= 2) {
-        errorList.resize(errorList.size()-2);
-        errorList += ".";
+    if (parent) {
+        errorList += parent->bannedReason(p, true);
+    }
+    if(errorList.length() >= 2 && !child) {
+        QStringList errors = errorList.split(", ").toSet().toList(); //remove duplicates
+        QMutableListIterator<QString> i(errors);
+        while (i.hasNext()) {
+            if (i.next().isEmpty()) {
+                i.remove();
+            }
+        }
+        errorList = errors.join(", ") + ".";
     }
     return errorList;
 }
