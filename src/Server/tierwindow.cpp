@@ -157,9 +157,10 @@ void TierWindow::openTierEdit(Tier *t)
     helper->addConfigHelper(new ConfigSpin("Minimum generation Pokemon obtained", t->minGen, -1, 6));
     helper->addConfigHelper(new ConfigCheck("Ban pokemon/moves/items (uncheck to restrict the choice to them instead)", t->banPokes));
     helper->addConfigHelper(new ConfigSpin("Max number of pokemon", t->numberOfPokemons, 1, 6));
-    helper->addConfigHelper(new ConfigText("Pokemon", pokemons));
+    helper->addConfigHelper(new ConfigLine("Pokemon", pokemons));
     helper->addConfigHelper(new ConfigLine("Moves", moves));
     helper->addConfigHelper(new ConfigLine("Items", items));
+    helper->addConfigHelper(new ConfigLine("Abilities", abilities));
     helper->addConfigHelper(new ConfigSpin("Max number of restricted pokemon", t->maxRestrictedPokes, 0, 6));
     helper->addConfigHelper(new ConfigLine("Restricted Pokemon", restrPokemons));
     helper->addConfigHelper(new ConfigSpin("Pokemon's max level", t->maxLevel, 1, 100));
@@ -167,6 +168,7 @@ void TierWindow::openTierEdit(Tier *t)
     pokemons = t->getBannedPokes();
     moves = t->getBannedMoves();
     items = t->getBannedItems();
+    abilities = t->getBannedAbilities();
     restrPokemons = t->getRestrictedPokes();
 
     helper->addConfigHelper(new ConfigCombo<int>("Battle Mode in Find Battle", t->mode, QStringList() << "Singles" << "Doubles" << "Triples"
@@ -262,6 +264,7 @@ void TierWindow::updateTier()
     currentTier->importBannedItems(items);
     currentTier->importBannedPokes(pokemons);
     currentTier->importBannedMoves(moves);
+    currentTier->importBannedAbilities(abilities);
     currentTier->importRestrictedPokes(restrPokemons);
 
     int clRes = 0;
