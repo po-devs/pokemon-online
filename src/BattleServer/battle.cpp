@@ -3537,7 +3537,7 @@ void BattleSituation::inflictDamage(int player, int damage, int source, bool str
         return;
     }
 
-    if (straightattack) {
+    if (straightattack && player != source) {
         //Sturdy in gen 5
         callaeffects(player, source, "BeforeTakingDamage");
         callieffects(player, source, "BeforeTakingDamage");
