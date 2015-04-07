@@ -1129,7 +1129,7 @@ bool Team::importFromTxt(const QString &file1, bool hack)
         }
 
         /* Checks if hackmons are valid, if yes, fix them up in the checker */
-        p.runCheck(!hack || p.isLegal());
+        p.runCheck(hack && !p.isLegal());
     }
     return true;
 /*
