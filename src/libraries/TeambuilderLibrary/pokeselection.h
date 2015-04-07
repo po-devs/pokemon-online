@@ -20,7 +20,7 @@ class PokeSelection : public QWidget
     Q_OBJECT
     
 public:
-    explicit PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel);
+    explicit PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel, bool hack = false);
     ~PokeSelection();
     void show();
 signals:
@@ -50,6 +50,7 @@ private:
     //ui stuff
     AdvancedSearch *search;
     int oldwidth, newwidth, oldx;
+    bool hack;
 };
 
 #endif // POKESELECTION_H

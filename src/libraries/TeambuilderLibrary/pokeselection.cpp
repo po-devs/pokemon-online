@@ -10,8 +10,8 @@
 #include "modelenum.h"
 #include "advancedsearch.h"
 
-PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel) :
-    ui(new Ui::PokeSelection), search(NULL), newwidth(0)
+PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel, bool hack) :
+    ui(new Ui::PokeSelection), search(NULL), newwidth(0), hack(hack)
 {
     ui->setupUi(this);
 
@@ -129,7 +129,7 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
 
     ui->baseStats->setNum(num);
 
-    if ((PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) || PokemonInfo::HasMegaEvo(num)) {
+    if ((PokemonInfo::HasFormes(num) && PokemonInfo::AFormesShown(num)) || PokemonInfo::HasMegaEvo(num) || hack) {
         QMenu *m = new QMenu(ui->altForme);
         QList<Pokemon::uniqueId> formes = PokemonInfo::Formes(num, getGen());
         if (formes.length() > 1) {

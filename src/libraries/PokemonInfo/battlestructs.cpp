@@ -177,7 +177,7 @@ void PokeBattle::init(PokePersonal &poke)
 
     Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
 
-    if (ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Darmanitan || ori == Pokemon::Meloetta || ori == Pokemon::Aegislash) {
+    if ((ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Darmanitan || ori == Pokemon::Meloetta || ori == Pokemon::Aegislash) && illegal() == false) {
         num().subnum = 0;
     }
 

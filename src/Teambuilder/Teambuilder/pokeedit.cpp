@@ -179,7 +179,7 @@ void PokeEdit::on_pokemonFrame_clicked()
 {
     PokeTableModel *model = (PokeTableModel*) pokemonModel;
     model->setGen(poke().gen());
-    PokeSelection *p = new PokeSelection(poke().num(), pokemonModel);
+    PokeSelection *p = new PokeSelection(poke().num(), pokemonModel, PokeEdit::hackMons);
     p->setParent(this, Qt::Popup);
     QPoint pos = ui->pokemonFrame->mapToGlobal(ui->pokemonFrame->pos());
     p->move(pos.x() + ui->pokemonFrame->width()+10, pos.y()-ui->pokemonFrame->height()/2);
