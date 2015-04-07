@@ -1031,13 +1031,15 @@ struct MMBlock : public MM
     }
 
     static void daf (int s, int t, BS &b) {
-        if (b.linked(t, "Blocked"))
+        if (b.linked(t, "Blocked") && move(b,s) != ThousandWaves)
             fturn(b,s).add(TM::Failed);
     }
 
     static void uas (int s, int t, BS &b) {
-        b.link(s, t, "Blocked");
-        b.sendMoveMessage(12, 0, s, type(b,s), t);
+        if (!b.linked(t, "Blocked")) {
+            b.link(s, t, "Blocked");
+            b.sendMoveMessage(12, 0, s, type(b,s), t);
+        }
     }
 };
 

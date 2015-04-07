@@ -313,4 +313,5 @@
 610 41#Hold Back
 614 42#Hyperspace hole-- breaks protect
 616 175#Thousand Arrows
+617 12#Thousand Waves-- Has Mean Look effect
 621 42#Hyperpsace Fury-- breaks protect

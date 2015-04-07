@@ -2140,7 +2140,7 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
     }
 
     foreach(int type, attackTypes) {
-        if (type == Type::Ground && hasFlyingEffect(target)) {
+        if (type == Type::Ground && hasFlyingEffect(target) && tmove(player).attack != Move::ThousandArrows) {
             typemod = -100;
             goto end;
         }
@@ -2167,8 +2167,13 @@ void BattleSituation::calculateTypeModStab(int orPlayer, int orTarget)
             }
             if (typeeff < -50) {
                 /* Check for grounded flying types */
-                if (type == Type::Ground && hasGroundingEffect(target)) {
-                    continue;
+                if (type == Type::Ground) {
+                    if (hasGroundingEffect(target)) {
+                        continue;
+                    } else if (tmove(player).attack == Move::ThousandArrows && def == Type::Flying) {
+                        typemod = 0;
+                        continue;
+                    }
                 }
                 if (pokeMemory(target).value(QString::number(def)+"Sleuthed").toBool() || hasWorkingItem(target, Item::RingTarget)) {
                     continue;
