@@ -221,6 +221,12 @@ bool PokePersonal::isLegal() const
     }
     QSet<int> invalidMoves;
 
+    int minLevel = PokemonInfo::AbsoluteMinLevel(num(), gen());
+
+    if (MoveSetChecker::enforceMinLevels && level() < minLevel) {
+        return false;
+    }
+
     MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
 
     while (invalidMoves.size() > 0) {
