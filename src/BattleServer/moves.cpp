@@ -219,6 +219,9 @@ struct MMBatonPass : public MM
         c.remove("HasMovedOnce");
         /* Removing attract */
         c.remove("AttractBy");
+        /* Remove so Imposter doesn't baton pass the variables */
+        c.remove("PreTransformPoke");
+        c.remove("PreTransformAbility");
         foreach( int opp, b.revs(s)) {
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
