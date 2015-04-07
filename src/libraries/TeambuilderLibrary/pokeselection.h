@@ -20,7 +20,7 @@ class PokeSelection : public QWidget
     Q_OBJECT
     
 public:
-    explicit PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel, bool hack = false);
+    explicit PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel, bool hackMons = false);
     ~PokeSelection();
     void show();
 signals:

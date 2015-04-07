@@ -10,11 +10,11 @@
 #include "modelenum.h"
 #include "advancedsearch.h"
 
-PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel, bool hack) :
-    ui(new Ui::PokeSelection), search(NULL), newwidth(0), hack(hack)
+PokeSelection::PokeSelection(Pokemon::uniqueId pokemon, QAbstractItemModel *pokemonModel, bool hackMons) :
+    ui(new Ui::PokeSelection), search(NULL), newwidth(0)
 {
     ui->setupUi(this);
-
+    hack = hackMons;
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
     proxy->setFilterRegExp(".");
     proxy->setSourceModel(pokemonModel);
