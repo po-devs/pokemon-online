@@ -836,9 +836,9 @@ struct MMFeint : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        //Only Hoopa-Unbound can use HyperspaceFury
+        //Only Hoopa-Unbound can use HyperspaceFury. Transformed pokemon also can
         if (move(b,s) == Move::HyperspaceFury) {
-            if (poke(b,s).contains("PreTransformPoke") || b.poke(s).num() != Pokemon::Hoopa_B) {
+            if (b.poke(s).num() != Pokemon::Hoopa_B) {
                 fturn(b,s).add(TM::Failed);
                 return;
             }
