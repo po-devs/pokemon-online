@@ -1135,7 +1135,7 @@ bool Team::importFromTxt(const QString &file1, bool hack)
         }
 
         /* Checks if hackmons are valid, if yes, fix them up in the checker */
-        p.runCheck(hack && !p.isLegal());
+        p.runCheck(hack);
     }
     return true;
 /*
@@ -1442,7 +1442,7 @@ void Team::setFolder(const QString &folder)
 void Team::setIllegal(bool hack)
 {
     for(int i = 0; i < 6; i++) {
-        if (hack && !poke(i).isLegal()) {
+        if (hack) {
             poke(i).illegal() = true;
         } else {
             poke(i).illegal() = false;
@@ -1511,9 +1511,10 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
     Flags data;
     data.setFlag(pp::isShiny, p.shiny());
     //make sure the poke is 100% illegal
-    if (!p.isLegal() && p.num() != 0) {
+    if (p.illegal() && !p.isLegal() && p.num() != 0) {
         data.setFlag(pp::isIllegal, true);
     }
+    v.stream << data;
 
     if (p.nickname().length() > 0) {
         v.stream << p.nickname();
