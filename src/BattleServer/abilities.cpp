@@ -1768,7 +1768,7 @@ struct AMMagicBounce : public AM
                     if (b.koed(t)) {
                         continue;
                     }
-                    if (b.hasWorkingAbility(t, Ability::MagicBounce) && !b.hasWorkingAbility(s, Ability::MoldBreaker)) {
+                    if (b.hasWorkingAbility(t, Ability::MagicBounce) && !(b.hasWorkingAbility(s, Ability::MoldBreaker) || b.hasWorkingAbility(s, Ability::TurboBlaze) ||b.hasWorkingAbility(s, Ability::TeraVolt))) {
                         target = t;
                         break;
                     }
