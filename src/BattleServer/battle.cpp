@@ -4456,7 +4456,7 @@ bool BattleSituation::canMegaEvolve (int slot) {
         if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
             return true;
         }
-        if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0)) {
+        if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0) && !pokeMemory(slot).contains("PreTransformPoke")) {
             return true;
         }
     }
