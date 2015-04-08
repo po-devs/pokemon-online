@@ -1276,11 +1276,11 @@ void Server::findBattle(int id, const FindBattleData &_f)
                     continue;
                 }
 
-                if (myengine->beforeBattleMatchup(id,key,c)) {
+                if (myengine->beforeBattleMatchup(id,key,c, f.shuffled[i], data->shuffled[j])) {
                     player(id)->lastFindBattleIp() = player(key)->ip();
                     player(key)->lastFindBattleIp() = player(id)->ip();
                     startBattle(id,key,c,f.shuffled[i], data->shuffled[j]);
-                    myengine->afterBattleMatchup(id,key,c);
+                    myengine->afterBattleMatchup(id,key,c, f.shuffled[i], data->shuffled[j]);
                     return;
                 }
             }

@@ -122,8 +122,8 @@ public:
     bool beforeChallengeIssued(int src, int dest, const ChallengeInfo &desc);
     void afterChallengeIssued(int src, int dest, const ChallengeInfo &desc);
 
-    bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc);
-    void afterBattleMatchup(int src, int dest, const ChallengeInfo &desc);
+    bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc, int team1, int team2);
+    void afterBattleMatchup(int src, int dest, const ChallengeInfo &desc, int team1, int team2);
 
     void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc, int battleid, TeamBattle &team1, TeamBattle &team2);
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc, int battleid, int team1, int team2);

@@ -582,14 +582,14 @@ void ScriptEngine::afterChallengeIssued(int src, int dest, const ChallengeInfo &
     makeEvent("afterChallengeIssued", src, dest, c.clauses, c.rated, c.mode, c.team, c.desttier);
 }
 
-bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c)
+bool ScriptEngine::beforeBattleMatchup(int src, int dest, const ChallengeInfo &c, int team1, int team2)
 {
-    return makeSEvent("beforeBattleMatchup", src, dest, c.clauses, c.rated, c.mode);
+    return makeSEvent("beforeBattleMatchup", src, dest, c.clauses, c.rated, c.mode, team1, team2);
 }
 
-void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c)
+void ScriptEngine::afterBattleMatchup(int src, int dest, const ChallengeInfo &c, int team1, int team2)
 {
-    makeEvent("afterBattleMatchup", src, dest, c.clauses, c.rated, c.mode);
+    makeEvent("afterBattleMatchup", src, dest, c.clauses, c.rated, c.mode, team1, team2);
 }
 
 
