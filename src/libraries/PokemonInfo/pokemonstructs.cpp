@@ -1512,9 +1512,8 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
     data.setFlag(pp::isShiny, p.shiny());
     //make sure the poke is 100% illegal
     if (!p.isLegal() && p.num() != 0) {
-        data.setFlag(pp::isIllegal, p.illegal());
+        data.setFlag(pp::isIllegal, true);
     }
-    v.stream << data;
 
     if (p.nickname().length() > 0) {
         v.stream << p.nickname();
