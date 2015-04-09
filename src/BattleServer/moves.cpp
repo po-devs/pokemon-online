@@ -836,12 +836,6 @@ struct MMFeint : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        //Hyperspace fury relocated to its own move function because clearer messages are helpful
-        //Also temporarily fixes a bug in Protean
-        if (turn(b,s).contains("HyperspaceFail")) {
-            b.failSilently(s);
-            return;
-        }
         const char *shields[] = {"DetectUsed", "KingsShieldUsed", "SpikyShieldUsed", "CraftyShieldUsed", "MatBlockUsed", "WideGuardUsed", "QuickGuardUsed"};
         bool remove = false;
 
@@ -7461,6 +7455,7 @@ struct MMCelebrate : public MM {
 struct MMHyperspaceFury : public MM {
     MMHyperspaceFury() {
         functions["BeforeTargetList"] = &btl;
+        functions["DetermineAttackFailure"] = &daf;
     }
 
     static void btl(int s, int, BS &b) {
@@ -7471,7 +7466,15 @@ struct MMHyperspaceFury : public MM {
             turn(b,s)["HyperspaceFail"] = true;
             b.sendMoveMessage(219, b.poke(s).num() == Pokemon::Hoopa,s,Type::Dark);
         }
-        addFunction(turn(b,s), "DetermineAttackFailure", "HyperspaceFury", &MMFeint::daf);
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (turn(b,s).contains("HyperspaceFail")) {
+            b.failSilently(s);
+            return;
+        }
+        //Breaks protect
+        MMFeint::daf(s, t, b);
     }
 };
 
