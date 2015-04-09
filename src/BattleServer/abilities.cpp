@@ -2240,9 +2240,20 @@ struct AMProtean : public AM {
     }
 
     static void aaf (int s, int, BS &b) {
-        if (type(b,s) != Pokemon::Curse && b.turnMemory(s)["MoveChosen"].toInt() != 0) {
-            b.setType(s, type(b,s));
-            b.sendAbMessage(107,0,s,0,type(b,s));
+        //Copied from snatch. The fail check is reversed because we want it to fail if snatched, instead of work
+        if (b.battleMemory().contains("Snatcher")) {
+            int snatcher = b.battleMemory()["Snatcher"].toInt();
+            if (turn(b,snatcher).value("Snatcher").toBool()) {
+                return;
+            }
+        }
+        int mc = b.turnMemory(s)["MoveChosen"].toInt();
+        if (type(b,s) != Pokemon::Curse && mc != 0 && !b.battleMemory().contains("CoatingAttackNow")) {
+            //Protean doesn't change on moves that are calling other moves. Mirror move doesn't change type, but Snatch does.
+            if (mc != Move::MirrorMove && mc != Move::SleepTalk && mc != Move::Copycat && mc != Move::MeFirst && mc != Move::NaturePower && mc != Move::Metronome && mc != Move::Assist) {
+                b.setType(s, type(b,s));
+                b.sendAbMessage(107,0,s,0,type(b,s));
+            }
         }
     }
 };

@@ -5081,7 +5081,8 @@ struct MMSnatch : public MM
                 /* Now Snatching ... */
                 removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");
                 turn(b,snatcher).remove("Snatcher");
-                b.battleMemory().remove("Snatcher");
+                b.battleMemory().remove("Snatcher");                
+                turn(b,snatcher)["SkipProtean"] = true; //The snatched move won't activate Protean. The user stays Dark
                 MoveEffect::setup(move,snatcher,s,b);
                 b.useAttack(snatcher,move,true);
                 MoveEffect::unsetup(move,snatcher,b);
