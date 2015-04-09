@@ -149,38 +149,39 @@ void PokeBattle::init(PokePersonal &poke)
     item() = poke.item();
     ability() = poke.ability();
 
-    if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O && p.gen() <= 4) {
-        item() = 0;
-    } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
-        num() = Pokemon::Giratina;
-        ability() = Ability::Pressure;
-    } else if (num() == Pokemon::Giratina && item() == Item::GriseousOrb) {
-        num() = Pokemon::Giratina_O;
-        ability() = Ability::Levitate;
-    }
+    if (!illegal()) {
+        if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O && p.gen() <= 4) {
+            item() = 0;
+        } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
+            num() = Pokemon::Giratina;
+            ability() = Ability::Pressure;
+        } else if (num() == Pokemon::Giratina && item() == Item::GriseousOrb) {
+            num() = Pokemon::Giratina_O;
+            ability() = Ability::Levitate;
+        }
 
-    if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus) {
-        if (ItemInfo::isPlate(item())) {
-            num().subnum = ItemInfo::PlateType(item());
-        } else {
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus) {
+            if (ItemInfo::isPlate(item())) {
+                num().subnum = ItemInfo::PlateType(item());
+            } else {
+                num().subnum = 0;
+            }
+        }
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Genesect) {
+            num().subnum = ItemInfo::DriveForme(item());
+        }
+
+        if (num() == Pokemon::Keldeo_R && !poke.hasMove(Move::SecretSword)) {
+            if (p.gen() < 6)
+                num() = Pokemon::Keldeo;
+        }
+
+        Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
+
+        if ((ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Darmanitan || ori == Pokemon::Meloetta || ori == Pokemon::Aegislash) && illegal() == false) {
             num().subnum = 0;
         }
     }
-    if (PokemonInfo::OriginalForme(num()) == Pokemon::Genesect) {
-        num().subnum = ItemInfo::DriveForme(item());
-    }
-
-	if (num() == Pokemon::Keldeo_R && !poke.hasMove(Move::SecretSword)) {
-        if (p.gen() < 6)
-            num() = Pokemon::Keldeo;
-	}
-
-    Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
-
-    if ((ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Darmanitan || ori == Pokemon::Meloetta || ori == Pokemon::Aegislash) && illegal() == false) {
-        num().subnum = 0;
-    }
-
     nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
