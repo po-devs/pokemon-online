@@ -406,31 +406,33 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
         poke().reset();
     }
 
-    if (num.pokenum == Pokemon::Keldeo) {
-        if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
-            try {
-                poke().addMove(Move::SecretSword);
-            } catch(const QString &) {
-                poke().setMove(Move::SecretSword, 0, false);
+    if (!PokeEdit::hackMons) {
+        if (num.pokenum == Pokemon::Keldeo) {
+            if (num == Pokemon::Keldeo_R && !poke().hasMove(Move::SecretSword)) {
+                try {
+                    poke().addMove(Move::SecretSword);
+                } catch(const QString &) {
+                    poke().setMove(Move::SecretSword, 0, false);
+                }
+            } else if (PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
+                if (poke().gen() < 6)
+                    poke().removeMove(Move::SecretSword);
             }
-        } else if (PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
-            if (poke().gen() < 6)
-                poke().removeMove(Move::SecretSword);
+        } else if (num.pokenum == Pokemon::Giratina) {
+            if (num == Pokemon::Giratina_O && poke().item() != Item::GriseousOrb) {
+                poke().item() = Item::GriseousOrb;
+            } else if (num == Pokemon::Giratina && poke().item() == Item::GriseousOrb) {
+                poke().item() = Item::NoItem;
+            }
+        } else if (num.pokenum == Pokemon::Arceus && ItemInfo::PlateType(poke().item()) != num.subnum) {
+            poke().item() = ItemInfo::PlateForType(num.subnum);
+        } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
+            poke().item() = ItemInfo::DriveForForme(num.subnum);
+        } else if (PokemonInfo::IsMegaEvo(num)) {
+            poke().item() = ItemInfo::StoneForForme(num);
+            /*Override using the mega until there's a better solution.*/
+            num = Pokemon::uniqueId(num.pokenum, 0);
         }
-    } else if (num.pokenum == Pokemon::Giratina) {
-        if (num == Pokemon::Giratina_O && poke().item() != Item::GriseousOrb) {
-            poke().item() = Item::GriseousOrb;
-        } else if (num == Pokemon::Giratina && poke().item() == Item::GriseousOrb) {
-            poke().item() = Item::NoItem;
-        }
-    } else if (num.pokenum == Pokemon::Arceus && ItemInfo::PlateType(poke().item()) != num.subnum) {
-        poke().item() = ItemInfo::PlateForType(num.subnum);
-    } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
-        poke().item() = ItemInfo::DriveForForme(num.subnum);
-    } else if (PokemonInfo::IsMegaEvo(num) && !PokeEdit::hackMons) {
-        poke().item() = ItemInfo::StoneForForme(num);
-        /*Override using the mega until there's a better solution.*/
-        num = Pokemon::uniqueId(num.pokenum, 0);
     }
 
     poke().setNum(num);
