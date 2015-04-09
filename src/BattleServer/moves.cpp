@@ -836,12 +836,11 @@ struct MMFeint : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        //Only Hoopa-Unbound can use HyperspaceFury. Transformed pokemon also can
-        if (move(b,s) == Move::HyperspaceFury) {
-            if (b.poke(s).num() != Pokemon::Hoopa_B) {
-                fturn(b,s).add(TM::Failed);
-                return;
-            }
+        //Hyperspace fury relocated to its own move function because clearer messages are helpful
+        //Also temporarily fixes a bug in Protean
+        if (turn(b,s).contains("HyperspaceFail")) {
+            b.failSilently(s);
+            return;
         }
         const char *shields[] = {"DetectUsed", "KingsShieldUsed", "SpikyShieldUsed", "CraftyShieldUsed", "MatBlockUsed", "WideGuardUsed", "QuickGuardUsed"};
         bool remove = false;
@@ -7459,6 +7458,23 @@ struct MMCelebrate : public MM {
     }
 };
 
+struct MMHyperspaceFury : public MM {
+    MMHyperspaceFury() {
+        functions["BeforeTargetList"] = &btl;
+    }
+
+    static void btl(int s, int, BS &b) {
+        //Only Hoopa-Unbound and Transformed pokemon that are Hoopa-Unbound can use this move
+        if (b.poke(s).num() != Pokemon::Hoopa_B) {
+            //SkipProtean might be temporary depending on how everything else gets fixed.
+            turn(b,s)["SkipProtean"] = true;
+            turn(b,s)["HyperspaceFail"] = true;
+            b.sendMoveMessage(219, b.poke(s).num() == Pokemon::Hoopa,s,Type::Dark);
+        }
+        addFunction(turn(b,s), "DetermineAttackFailure", "HyperspaceFury", &MMFeint::daf);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7711,7 +7727,6 @@ void MoveEffect::init()
     REGISTER_MOVE(215, Powder);
     REGISTER_MOVE(216, MagneticFlux);
     REGISTER_MOVE(217, IonDeluge);
-    REGISTER_MOVE(218, Celebrate)
+    REGISTER_MOVE(218, Celebrate);
+    REGISTER_MOVE(219, HyperspaceFury)
 }
-
-/* Not done: Ion deluge */

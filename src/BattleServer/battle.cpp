@@ -1776,11 +1776,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         goto end;
     }
 
+    calleffects(player, player, "BeforeTargetList");
     //To prevent a Snatched move from changing type
     if (!(turnMemory(player).value("SkipProtean").toBool())) {
         callaeffects(player, player, "BeforeTargetList");
     }
-    calleffects(player, player, "BeforeTargetList");
 
     /* Choice item memory, copycat in gen 4 and less */
     if (!specialOccurence && attack != Move::Struggle) {

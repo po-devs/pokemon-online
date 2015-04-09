@@ -132,3 +132,4 @@
 215 %f was covered in powder!|%s exploded!
 217 Ions are storming the terrain!
 218 Congratulations, %ts!
+219 But %s can't use the move!|But %s can't use it the way it is now!
