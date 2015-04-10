@@ -142,7 +142,7 @@ void PokeBattle::init(PokePersonal &poke)
     p.num() = poke.num();
     p.load();
 
-    QNickValidator v(NULL, 12);
+    QNickValidator v(NULL, 20);
 
     happiness() = poke.happiness();
 
