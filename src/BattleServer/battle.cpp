@@ -1798,16 +1798,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         turnMem(player).remove(TM::Failed);
         turnMem(player).add(TM::FailingMessage);
 
-        if (target != player && !testAccuracy(player, target)) {
-            calleffects(player,target,"AttackSomehowFailed");
-            continue;
-        }
         if (tmove(player).type == Type::Water && tmove(player).power > 0 && isWeatherWorking(StrongSun)) {
             sendAbMessage(126, 6, player, player, TypeInfo::TypeForWeather(StrongSun));
             continue;
         }
         if (tmove(player).type == Type::Fire && tmove(player).power > 0 && isWeatherWorking(StrongRain)) {
             sendAbMessage(126, 7, player, player, TypeInfo::TypeForWeather(StrongRain));
+            continue;
+        }
+        if (target != player && !testAccuracy(player, target)) {
+            calleffects(player,target,"AttackSomehowFailed");
             continue;
         }
 
@@ -2035,6 +2035,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
             callpeffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
+
+            //Type changing moves activate protean. We force it to check here so the actual move can fail if needed.
+            if (attack == Move::Camouflage || attack == Move::Conversion || attack == Move::Conversion2) {
+                callaeffects(player, target, "ActivateProtean");
+            }
             calleffects(player, target, "DetermineAttackFailure");
             if (testFail(player)) continue;
 
