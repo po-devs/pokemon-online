@@ -7461,7 +7461,6 @@ struct MMHyperspaceFury : public MM {
     static void btl(int s, int, BS &b) {
         //Only Hoopa-Unbound and Transformed pokemon that are Hoopa-Unbound can use this move
         if (b.poke(s).num() != Pokemon::Hoopa_B) {
-            //SkipProtean might be temporary depending on how everything else gets fixed.
             turn(b,s)["SkipProtean"] = true;
             turn(b,s)["HyperspaceFail"] = true;
             b.sendMoveMessage(219, b.poke(s).num() == Pokemon::Hoopa,s,Type::Dark);

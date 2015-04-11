@@ -2237,23 +2237,32 @@ struct AMMegaLauncher : public AM {
 struct AMProtean : public AM {
     AMProtean() {
         functions["BeforeTargetList"] = &aaf;
+        functions["ActivateProtean"] = &bh;
     }
 
     static void aaf (int s, int, BS &b) {
-        //Copied from snatch. The fail check is reversed because we want it to fail if snatched, instead of work
-        if (b.battleMemory().contains("Snatcher")) {
-            int snatcher = b.battleMemory()["Snatcher"].toInt();
-            if (turn(b,snatcher).value("Snatcher").toBool()) {
-                return;
-            }
-        }
         int mc = b.turnMemory(s)["MoveChosen"].toInt();
         if (type(b,s) != Pokemon::Curse && mc != 0 && !b.battleMemory().contains("CoatingAttackNow")) {
             //Protean doesn't change on moves that are calling other moves. Mirror move doesn't change type, but Snatch does.
             if (mc != Move::MirrorMove && mc != Move::SleepTalk && mc != Move::Copycat && mc != Move::MeFirst && mc != Move::NaturePower && mc != Move::Metronome && mc != Move::Assist) {
-                b.setType(s, type(b,s));
-                b.sendAbMessage(107,0,s,0,type(b,s));
+                fturn(b,s).stab = 3;
+                poke(b,s)["ProteanActivated"] = true;
             }
+        }
+        //Copied from snatch. The fail check is reversed because we want it to fail if snatched, instead of working
+        if (b.battleMemory().contains("Snatcher")) {
+            int snatcher = b.battleMemory()["Snatcher"].toInt();
+            if (turn(b,snatcher).value("Snatcher").toBool()) {
+                poke(b,snatcher).remove("ProteanActivated");
+            }
+        }
+    }
+
+    static void bh(int s, int, BS &b) {
+        if (poke(b,s).value("ProteanActivated").toBool()) {
+            b.sendAbMessage(107,0,s,0,type(b,s));
+            b.setType(s, type(b,s));
+            poke(b,s).remove("ProteanActivated"); //So only 1 message is displayed
         }
     }
 };

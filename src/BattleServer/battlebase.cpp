@@ -1951,6 +1951,7 @@ void BattleBase::changePP(int player, int move, int PP)
 bool BattleBase::testFail(int player)
 {
     if (turnMem(player).failed() == true) {
+        pokeMemory(player).remove("ProteanActivated");
         /* Silently or not ? */
         notify(All, Failed, player, !turnMem(player).failingMessage());
         return true;

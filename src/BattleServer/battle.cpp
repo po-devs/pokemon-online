@@ -1177,7 +1177,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     int tarChoice = tmove(player).targets;
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
-    turnMemory(target).remove("EvadeAttack");
+    turnMemory(target).remove("EvadeAttack");    
+    callaeffects(player, target, "ActivateProtean");
     callpeffects(target, player, "TestEvasion"); /*dig bounce  ... */
 
     if (pokeMemory(player).contains("LockedOn") && pokeMemory(player).value("LockedOnEnd").toInt() >= turn()
@@ -1891,6 +1892,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
                 if (tmove(player).power > 1 || tmove(player).attack == Move::GyroBall) {
                     calleffects(player, target, "BeforeHitting");
+                    callaeffects(player, target, "ActivateProtean");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
                         continue;
@@ -1901,6 +1903,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
                     hitcount += 1;
                     hitting = true;
                 } else {
+                    callaeffects(player, target, "ActivateProtean");
                     turnMemory(player).remove("CustomDamage");
                     calleffects(player, target, "CustomAttackingDamage");
 
@@ -2041,6 +2044,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
             }
 
             calleffects(player, target, "BeforeHitting");
+            callaeffects(player, target, "ActivateProtean");
 
             applyMoveStatMods(player, target);
             calleffects(player, target, "UponAttackSuccessful");
