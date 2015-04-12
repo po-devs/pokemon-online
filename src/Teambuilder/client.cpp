@@ -2952,6 +2952,12 @@ void Client::showExitWarning()
         showNextTime->setChecked(true);
         layout->addWidget(showNextTime);
 
+        QLabel *ani = new QLabel(this);
+        QMovie *movie = new QMovie("Themes/Classic/client/exit.gif");
+        ani->setMovie(movie);
+        movie->start();
+        layout->addWidget(ani);
+
         layout->addWidget(new QLabel(tr("(This can be changed by going to Options -> Show exit warning.)")));
 
         QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
