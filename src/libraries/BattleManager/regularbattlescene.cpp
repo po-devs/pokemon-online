@@ -522,9 +522,9 @@ GraphicsZone::GraphicsZone(battledata_ptr i, BattleDefaultTheme *theme) : mInfo(
         items[info()->spot(opponent())]->setPos(310 - size/2, 60 - size);
     } else {
         for (int i = 0; i < nslots/2; i++) {
-            items[info()->spot(myself(), i)]->setPos(i*65, 180-size);
+            items[info()->spot(myself(), i)]->setPos(i*65, 200-size);
             int base = 240-(nslots/2 - 1)*60;
-            items[info()->spot(opponent(), i)]->setPos(base+i*65, 150 - size);
+            items[info()->spot(opponent(), i)]->setPos(base+i*65, 165 - size);
         }
     }
 }
@@ -545,7 +545,7 @@ void GraphicsZone::updatePos(int spot)
         if (!info()->multiples()) {
             items[spot]->setPos(95 - width/2, 225 - height);
         } else {
-            items[spot]->setPos(info()->slotNum(spot)*75, 225-height);
+            items[spot]->setPos(info()->slotNum(spot)*75, 240-height);
         }
     } else {
         if (!info()->multiples()) {
@@ -553,7 +553,7 @@ void GraphicsZone::updatePos(int spot)
         } else {
             //Triples has really erratic placing at some points still in 6G.
             int base = 300-(info()->numberOfSlots()/2 - 1)*65;
-            items[spot]->setPos(base + info()->slotNum(spot)*65, 120-height);
+            items[spot]->setPos(base + info()->slotNum(spot)*65, 135-height);
         }
     }
 }
