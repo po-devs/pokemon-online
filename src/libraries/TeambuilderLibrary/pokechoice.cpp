@@ -87,7 +87,7 @@ void TB_PokeChoice::mouseMoveEvent(QMouseEvent *event)
         int distance = (event->pos()-startPos).manhattanLength();
         if(distance >= QApplication::startDragDistance())
         {
-            startDrag();
+            //startDrag();
         }
     }
     QTableView::mouseMoveEvent(event);
