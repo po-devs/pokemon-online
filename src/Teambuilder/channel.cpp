@@ -260,21 +260,22 @@ void Channel::battleStarted(int bid, const Battle &battle)
     if (!hasPlayer(battle.id1) && !hasPlayer(battle.id2))
         return;
 
+    QString fulltier = battle.tier.length() > 0 ? battle.tier : QString("Mixed Tiers");
     if (eventEnabled(Client::BattleEvent) || battle.id1 == ownId() || battle.id2 == ownId())
-        printLine(tr("%1 battle between %2 and %3 started.").arg(battle.tier,name(battle.id1), name(battle.id2)), false, false);
+        printLine(tr("%1 battle between %2 and %3 started.").arg(fulltier,name(battle.id1), name(battle.id2)), false, false);
 
     battleReceived(bid, battle);
 
     if (battle.id1 != 0 && item(battle.id1) != NULL) {
         foreach(QIdTreeWidgetItem *it, items(battle.id1)) {
-          it->setToolTip(0,tr("Battling against %1 in %2").arg(name(battle.id2),battle.tier));
+          it->setToolTip(0,tr("Battling against %1 in %2").arg(name(battle.id2),fulltier));
        }
 
         updateState(battle.id1);
     }
     if (battle.id2 != 0 && item(battle.id2) != NULL) {
         foreach(QIdTreeWidgetItem *it, items(battle.id2)) {
-            it->setToolTip(0,tr("Battling against %1 in %2").arg(name(battle.id1),battle.tier));
+            it->setToolTip(0,tr("Battling against %1 in %2").arg(name(battle.id1),fulltier));
         }
 
         updateState(battle.id2);
@@ -287,7 +288,8 @@ void Channel::battleReceived(int bid, const Battle &battle)
         return;
 
     battles.insert(bid, battle);
-    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(battle.id1) << name(battle.id2) << battle.tier);
+    QString fulltier = battle.tier.length() > 0 ? battle.tier : QString("Mixed Tiers");
+    QIdTreeWidgetItem *it = new QIdTreeWidgetItem(bid, QStringList() << name(battle.id1) << name(battle.id2) << fulltier);
     battleItems.insert(bid, it);
     battleList->addTopLevelItem(it);
 }

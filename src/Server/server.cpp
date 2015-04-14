@@ -1512,9 +1512,10 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
 
     myengine->beforeBattleStarted(id1,id2,c,id,battleTeam1,battleTeam2);
 
-    QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
+    QString fulltier = QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
+    QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : fulltier;
 
-    printLine(QString("%1 battle between %2 and %3 started").arg(tier).arg(name(id1)).arg(name(id2)));
+    printLine(QString("%1 battle between %2 and %3 started").arg(tier.length() > 0 ? tier : fulltier).arg(name(id1)).arg(name(id2)));
 
     battleList.insert(id, Battle(id1, id2, c.mode, tier));
     //myengine->battleSetup(id1, id2, id); // dispatch script event
