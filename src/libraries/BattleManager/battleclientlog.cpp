@@ -401,7 +401,7 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
     };
 
     if (ability) {
-        printLine("Weather", toColor(tu(weatherAbilityMessage[weather-1]).arg(nick(spot)), c));
+        printLine("Weather", toColor(tu(weatherAbilityMessage[weather-1].arg(nick(spot))), c));
     } else {
         printLine("Weather", toColor(tu(weatherRegularMessage[weather-1]), c));
     }
