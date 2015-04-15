@@ -518,13 +518,7 @@ struct AMForeCast : public AM {
 
         int weather = b.weather;
         if (weather != BS::Hail && weather != BS::Rain && weather != BS::Sunny) {
-            if (weather == BS::StrongRain) {
-                weather = BS::Rain;
-            } else if (weather == BS::StrongSun) {
-                weather = BS::Sunny;
-            } else {
-                weather = BS::NormalWeather;
-            }
+            weather = BS::NormalWeather;
         }
 
         //To allow the type reset every turn
