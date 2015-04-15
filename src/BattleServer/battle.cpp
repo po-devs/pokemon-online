@@ -1121,8 +1121,8 @@ void BattleSituation::callaeffects(int source, int target, const QString &name)
 
 void BattleSituation::sendBack(int player, bool silent)
 {
-    if (pokeMemory(slotNum(player)).contains("PreTransformPoke")) {
-        changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(slotNum(player)).value("PreTransformPoke").toString()));
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
     }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player).contains("PrimalForme")) {
@@ -3869,9 +3869,9 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         //Prevents crashes from pokemon accidentally turning into the same forme
         return;
     }
-    if (temp && !pokeMemory(poke).contains("PreTransformPoke")) {
-        pokeMemory(poke)["PreTransformPoke"] = PokemonInfo::Name(p.num());
-        pokeMemory(poke)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
+    if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
+        pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
+        pokeMemory(player)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
     }
 
     /* Note: &o must be defined before p.num() is replaced by newforme */
@@ -3889,10 +3889,10 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
             }
         }
 
-        if (!pokeMemory(poke).contains("PreTransformAbility")) {
+        if (!pokeMemory(slot(player)).contains("PreTransformAbility")) {
             p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
         } else {
-            p.ability() = AbilityInfo::Number(pokeMemory(poke).value("PreTransformAbility").toString());
+            p.ability() = AbilityInfo::Number(pokeMemory(slot(player)).value("PreTransformAbility").toString());
         }
 
         for (int i = 1; i < 6; i++)
@@ -3969,7 +3969,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
 
     changeHp(player, 0);
     if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
-        changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(slotNum(player)).value("PreTransformPoke").toString()));
+        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
     }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player).contains("PrimalForme")) {
@@ -4073,7 +4073,7 @@ void BattleSituation::requestSwitch(int s, bool eeffects)
     testWin();
 
     if (pokeMemory(s).contains("PreTransformPoke")) {
-        changeForme(player(s), slotNum(s), PokemonInfo::Number(pokeMemory(slotNum(s)).value("PreTransformPoke").toString()));
+        changeForme(player(s), slotNum(s), PokemonInfo::Number(pokeMemory(slot(s)).value("PreTransformPoke").toString()));
     }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player(s)).contains("PrimalForme")) {
