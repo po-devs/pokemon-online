@@ -4465,6 +4465,11 @@ bool BattleSituation::canMegaEvolve (int slot) {
         return false;
     }
     if (ItemInfo::isMegaStone(poke(slot).item())) {
+        //Pokemon can't mega into themselves
+        if (ItemInfo::MegaStoneForme(poke(slot).item()) == poke(slot).num()) {
+            return false;
+        }
+        //But they can mega between forms! (Ex: Char X -> Char Y)
         if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
             return true;
         }
