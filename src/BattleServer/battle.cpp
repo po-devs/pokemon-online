@@ -1121,8 +1121,8 @@ void BattleSituation::callaeffects(int source, int target, const QString &name)
 
 void BattleSituation::sendBack(int player, bool silent)
 {
-    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
-        changeForme(player,slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
+    if (pokeMemory(player).contains("PreTransformPoke")) {
+        changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(player).value("PreTransformPoke").toString()));
     }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player).contains("PrimalForme")) {
@@ -3869,9 +3869,10 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         //Prevents crashes from pokemon accidentally turning into the same forme
         return;
     }
-    if (temp && !pokeMemory(player).contains("PreTransformPoke")) {
-        pokeMemory(player)["PreTransformPoke"] = PokemonInfo::Name(p.num());
-        pokeMemory(player)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
+    int slot = this->slot(player, poke);
+    if (temp && !pokeMemory(poke).contains("PreTransformPoke")) {
+        pokeMemory(slot)["PreTransformPoke"] = PokemonInfo::Name(p.num());
+        pokeMemory(slot)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
     }
 
     /* Note: &o must be defined before p.num() is replaced by newforme */
@@ -3889,7 +3890,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
             }
         }
 
-        if (!pokeMemory(slot(player)).contains("PreTransformAbility")) {
+        if (!pokeMemory(slot).contains("PreTransformAbility")) {
             p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
         } else {
             p.ability() = AbilityInfo::Number(pokeMemory(slot(player)).value("PreTransformAbility").toString());
@@ -3900,7 +3901,6 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     }
 
     if (isOut(player, poke)) {
-        int slot = this->slot(player, poke);
         changeSprite(slot, newforme);
 
         fpoke(slot).id = newforme;
