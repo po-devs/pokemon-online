@@ -3870,7 +3870,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         return;
     }
     int slot = this->slot(player, poke);
-    if (temp && !pokeMemory(poke).contains("PreTransformPoke")) {
+    if (temp && !pokeMemory(slot).contains("PreTransformPoke")) {
         pokeMemory(slot)["PreTransformPoke"] = PokemonInfo::Name(p.num());
         pokeMemory(slot)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
     }
@@ -3893,7 +3893,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         if (!pokeMemory(slot).contains("PreTransformAbility")) {
             p.ability() = PokemonInfo::Abilities(newforme, gen()).ab(abnum);
         } else {
-            p.ability() = AbilityInfo::Number(pokeMemory(slot(player)).value("PreTransformAbility").toString());
+            p.ability() = AbilityInfo::Number(pokeMemory(slot).value("PreTransformAbility").toString());
         }
 
         for (int i = 1; i < 6; i++)
