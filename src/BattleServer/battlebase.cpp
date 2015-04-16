@@ -1795,8 +1795,8 @@ void BattleBase::analyzeChoice(int slot)
 
 void BattleBase::sendBack(int player, bool silent)
 {
-    if (pokeMemory(slotNum(player)).contains("PreTransformPoke")) {
-        changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(slotNum(player)).value("PreTransformPoke").toString()));
+    if (pokeMemory(player).contains("PreTransformPoke")) {
+        changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(player).value("PreTransformPoke").toString()));
     }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player).contains("PrimalForme")) {
