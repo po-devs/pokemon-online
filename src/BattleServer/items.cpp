@@ -599,7 +599,12 @@ struct IMEviolite : public IM
     }
 
     static void sm(int s, int, BS &b) {
-        if (PokemonInfo::HasEvolutions(b.poke(s).num().pokenum) && b.poke(s).num() != Pokemon::Floette_EF) {
+        Pokemon::uniqueId  id = b.poke(s).num();
+        //Eviolite Chansey with Transform gets boost. Smeargle transforming into a Chansey doesn't though.
+        if (poke(b,s).contains("PreTransformPoke")) {
+            id = PokemonInfo::Number(poke(b,s).value("PreTransformPoke").toString());
+        }
+        if (PokemonInfo::HasEvolutions(id.pokenum) && id != Pokemon::Floette_EF) {
             turn(b,s)["Stat2ItemModifier"] = 10;
             turn(b,s)["Stat4ItemModifier"] = 10;
         }
