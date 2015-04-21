@@ -2919,7 +2919,7 @@ struct MMWish : public MM
         if (turn != b.turn()) {
             return;
         }
-        if (!b.koed(s)) {
+        if (b.canHeal(s, BS::HealByMove, Wish)) {
             b.sendMoveMessage(142, 0, 0, 0, 0, 0, slot(b,s)["Wisher"].toString());
 
             int life = b.gen() >= 5 ? slot(b, s)["WishHeal"].toInt() : b.poke(s).totalLifePoints()/2;
