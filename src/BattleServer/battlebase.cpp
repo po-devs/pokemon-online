@@ -2277,7 +2277,7 @@ bool BattleBase::canSendPreventSMessage(int, int attacker)
 
 void BattleBase::inflictStatus(int player, int status, int attacker, int minTurns, int maxTurns)
 {
-    bool hb = pokeMemory(player).contains("Recharging") && poke(player).status() != Pokemon::Asleep;
+    bool hb = pokeMemory(player).contains("Recharging") && poke(player).status() != Pokemon::Asleep && status == Pokemon::Asleep;
     //fixme: mist + intimidate
     if (poke(player).status() != Pokemon::Fine) {
         if (this->attacker() == attacker &&
