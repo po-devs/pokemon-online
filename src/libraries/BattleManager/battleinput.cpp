@@ -366,9 +366,11 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         qint16 other(0);
         in >> ab >> part >> type >> foe >> other;
 
-        if (ab == 14 || ab == 126) {
+        if (ab == 14) {
             /* Weather message */
             output<BattleEnum::StartWeather>(spot, part+1, true); //true is for ability-weather
+        } else if (ab == 126) {
+            output<BattleEnum::StartWeather>(spot, part+5, true); //true is for ability-weather
         } else {
             output<BattleEnum::AbilityMessage>(spot, ab, part, type, foe, other);
         }
