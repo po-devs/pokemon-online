@@ -905,6 +905,10 @@ void BattleSituation::megaEvolve(int slot)
         if (canMegaEvolve(slot)) {
             Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
             if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
+                //The Strong weather ability is lost before mega evolution occurs. Illusion however does NOT fade, so can't just call loseAbility haphazardly
+                if (ability(player(slot)) == Ability::DesolateLand || ability(player(slot)) == Ability::PrimordialSea || ability(player(slot)) == Ability::DeltaStream) {
+                    loseAbility(player(slot));
+                }
                 sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
                 changeForme(player(slot), slotNum(slot), forme, false, false, true);
                 megas[player(slot)] = true;
