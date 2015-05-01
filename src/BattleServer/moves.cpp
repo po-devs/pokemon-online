@@ -3945,6 +3945,9 @@ struct MMImprison : public MM
     }
 
     static void mp(int s, int, BS &b) {
+        if (b.battleMemory().value("CoatingAttackNow").toBool()) {
+            return;
+        }
         QList<int> foes = b.revs(s);
 
         int attack = move(b,s);
