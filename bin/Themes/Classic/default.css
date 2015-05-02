@@ -720,6 +720,7 @@ QProgressBar#TimeOut::chunk{
 
 QProgressBar#LifePoints {
 	border: 1px solid #353535;
+    color: black;
 	border-left: 0px;
 	min-height: 13px;
 	height: 13px;
