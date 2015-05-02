@@ -1542,27 +1542,31 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     /*Normalize, Aerilate, etc. Needs to be higher than "MovesPossible" to allow proper interaction with Ion Deluge*/
     callaeffects(player, player, "MoveSettings");
 
-    if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
-        goto trueend;
-    }
+    if (!specialOccurence) {
+        if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
+            goto trueend;
+        }
 
-    callpeffects(player, player, "DetermineAttackPossible");
-    if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
-        goto trueend;
+        callpeffects(player, player, "DetermineAttackPossible");
+        if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
+            goto trueend;
+        }
     }
 
     turnMem(player).add(TM::HasPassedStatus);
 
     turnMemory(player)["MoveChosen"] = attack;
 
-    callbeffects(player,player,"MovePossible");
-    if (turnMemory(player)["ImpossibleToMove"].toBool()) {
-        goto trueend;
-    }
+    if (!specialOccurence) {
+        callbeffects(player,player,"MovePossible");
+        if (turnMemory(player)["ImpossibleToMove"].toBool()) {
+            goto trueend;
+        }
 
-    callpeffects(player, player, "MovePossible");
-    if (turnMemory(player).value("ImpossibleToMove").toBool()) {
-        goto trueend;
+        callpeffects(player, player, "MovePossible");
+        if (turnMemory(player).value("ImpossibleToMove").toBool()) {
+            goto trueend;
+        }
     }
 
     //Gen 3 Sleep Talk fails if the move selected has 0 pp
@@ -1618,8 +1622,10 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     calleffects(player, player, "AfterTellingPlayers");
 
-    if (turnMemory(player).value("ImpossibleToMove").toBool()) {
-        goto trueend;
+    if (!specialOccurence) {
+        if (turnMemory(player).value("ImpossibleToMove").toBool()) {
+            goto trueend;
+        }
     }
 
     //Follow Me takes priority over abilities

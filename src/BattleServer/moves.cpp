@@ -3945,7 +3945,7 @@ struct MMImprison : public MM
     }
 
     static void mp(int s, int, BS &b) {
-        if (b.battleMemory().value("CoatingAttackNow").toBool()) {
+        if (b.battleMemory().value("CoatingAttackNow").toBool() || b.pokeMemory(s).value("SleepTalking").toBool()) {
             return;
         }
         QList<int> foes = b.revs(s);
@@ -4978,6 +4978,7 @@ struct MMSleepTalk : public MM
     static FM forbidden_moves;
 
     static void daf(int s, int, BS &b) {
+        poke(b,s)["SleepTalking"] = true;
         b.callpeffects(s, s, "MovesPossible");
         QList<int> mp;
 
@@ -5012,6 +5013,7 @@ struct MMSleepTalk : public MM
         b.useAttack(s, mv, true);
         MoveEffect::unsetup(mv,s,b);
         MoveEffect::setup(Move::SleepTalk, s, s, b);
+        poke(b,s).remove("SleepTalking");
         tmove(b,s) = info;
     }
 };
