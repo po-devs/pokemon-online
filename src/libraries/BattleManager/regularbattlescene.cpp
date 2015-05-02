@@ -757,7 +757,7 @@ void RegularBattleScene::updateToolTip(int spot)
     }
 
     if (data()->field().weather() != Weather::NormalWeather) {
-        tooltip += "\n" + tr("Weather: %1").arg(TypeInfo::weatherName(data()->field().weather()));
+        tooltip += "\n" + tr("Weather: %1").arg(tu(TypeInfo::weatherName(data()->field().weather())));
     }
 
     if (!data()->isPlayer(spot) && data()->poke(spot).move(0)->num() != Move::NoMove) {

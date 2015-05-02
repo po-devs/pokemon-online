@@ -235,17 +235,17 @@ Item {
 
                 var zone = battle.data.field.zone(spot%2);
                 var hazards = [];
-                if (zone.stealthRocks) {
-                    hazards.push("Stealth Rocks");
-                }
-                if (zone.stickyWeb) {
-                    hazards.push("Sticky Web");
-                }
                 if (zone.spikesLevel > 0) {
                     hazards.push("Spikes level " + zone.spikesLevel);
                 }
                 if (zone.toxicSpikesLevel > 0) {
                     hazards.push("Toxic Spikes level " + zone.toxicSpikesLevel);
+                }
+                if (zone.stealthRocks) {
+                    hazards.push("Stealth Rocks");
+                }
+                if (zone.stickyWeb) {
+                    hazards.push("Sticky Web");
                 }
 
                 if (hazards.length > 0) {
