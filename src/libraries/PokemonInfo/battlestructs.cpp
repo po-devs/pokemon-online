@@ -680,6 +680,9 @@ void ShallowShownPoke::init(const PokeBattle &b)
     if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
         num = Pokemon::Arceus;
     }
+    if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect) {
+        num = Pokemon::Genesect;
+    }
 }
 
 DataStream & operator >> (DataStream &in, ShallowShownPoke &po) {
