@@ -869,7 +869,7 @@ void BattleWindow::updateChoices()
             mypzone->pokes[i]->setEnabled(poke(i).num() != 0 && poke(i).life() > 0);
         }
     }
-    
+
     if (!info().possible) {
         myattack->setEnabled(false);
         myswitch->setEnabled(false);
@@ -1015,9 +1015,16 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Poke
     QString ttext = tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\n\nDescription: %5").arg(MoveInfo::Name(b.num()), power,
                                                                                                 MoveInfo::AccS(b.num(), gen), moveCategory,
                                                                                                 MoveInfo::Description(b.num(), gen));
-
-    int type = b.num() == Move::HiddenPower ?
-                HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
+    int type = MoveInfo::Type(b.num(), gen);
+    if (b.num() == Move::HiddenPower) {
+        type = HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]);
+    } else if (b.num() == Move::Judgment && ItemInfo::isPlate(p.item())) {
+        type = ItemInfo::PlateType(p.item());
+    } else if (b.num() == Move::TechnoBlast && ItemInfo::isDrive(p.item())) {
+        type = ItemInfo::DriveType(p.item());
+    } else if (b.num() == Move::NaturalGift && ItemInfo::isBerry(p.item())) {
+        type = ItemInfo::BerryType(p.item());
+    }
     /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
     setStyleSheet(QString("background: %1;").arg(Theme::TypeColor(type).name()));
@@ -1061,8 +1068,16 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Po
                                                                                                 MoveInfo::AccS(b.num(), gen), moveCategory,
                                                                                                 MoveInfo::Description(b.num(), gen), MoveInfo::TargetS(b.num(), gen));
 
-    int type = b.num() == Move::HiddenPower ?
-                HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]) : MoveInfo::Type(b.num(), gen);
+    int type = MoveInfo::Type(b.num(), gen);
+    if (b.num() == Move::HiddenPower) {
+        type = HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]);
+    } else if (b.num() == Move::Judgment && ItemInfo::isPlate(p.item())) {
+        type = ItemInfo::PlateType(p.item());
+    } else if (b.num() == Move::TechnoBlast && ItemInfo::isDrive(p.item())) {
+        type = ItemInfo::DriveType(p.item());
+    } else if (b.num() == Move::NaturalGift && ItemInfo::isBerry(p.item())) {
+        type = ItemInfo::BerryType(p.item());
+    }
     QString model = QString("BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(Theme::path(model.arg("D")), Theme::path(model.arg("H")), Theme::path(model.arg("C")));
 
