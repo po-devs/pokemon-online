@@ -82,9 +82,10 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
         couldMove.push_back(false);
     }
 
-    if (clauses() & ChallengeInfo::ChallengeCup) {
-        team(0).generateRandom(gen());
-        team(1).generateRandom(gen());
+    if (clauses() & ChallengeInfo::ChallengeCup || clauses() & ChallengeInfo::HackmonsCC) {
+        bool hack = clauses() & ChallengeInfo::HackmonsCC;
+        team(0).generateRandom(gen(), hack);
+        team(1).generateRandom(gen(), hack);
     } else {
         /* Make sure teams are valid and koed pokemon are pushed to the back */
         for (int i = 0; i < 2; i++) {

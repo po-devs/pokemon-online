@@ -18,7 +18,8 @@ QString ChallengeInfo::clauseText[] =
     QObject::tr("Species Clause"),
     QObject::tr("Team Preview"),
     QObject::tr("Self-KO Clause"),
-    QObject::tr("Inverted Battle")
+    QObject::tr("Inverted Battle"),
+    QObject::tr("Hackmons CC")
 };
 
 QString ChallengeInfo::clauseBattleText[] =
@@ -32,6 +33,7 @@ QString ChallengeInfo::clauseBattleText[] =
     QObject::tr(""),
     QObject::tr(""),
     QObject::tr("The Self-KO Clause acted as a tiebreaker."),
+    QObject::tr(""),
     QObject::tr("")
 };
 
@@ -46,7 +48,8 @@ QString ChallengeInfo::clauseDescription[] =
     QObject::tr("One player cannot have more than one of the same pokemon per team."),
     QObject::tr("At the beginning of the battle, you can see the opponent's team and rearrange yours accordingly."),
     QObject::tr("The one who causes a tie (Recoil, Explosion, Destinybond, ...) loses the battle."),
-    QObject::tr("All Type Effectivenesses are inverted (Ex: Water is weak to Fire)")
+    QObject::tr("All Type Effectivenesses are inverted (Ex: Water is weak to Fire)"),
+    QObject::tr("Random teams are given to trainers with no restrictions on legality!")
 };
 
 QString ChallengeInfo::modeText[] =
@@ -469,7 +472,7 @@ bool TeamBattle::invalid() const
     return poke(0).ko() && poke(1).ko() && poke(2).ko() && poke(3).ko() && poke(4).ko() && poke(5).ko();
 }
 
-void TeamBattle::generateRandom(Pokemon::gen gen)
+void TeamBattle::generateRandom(Pokemon::gen gen, bool hack)
 {
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
@@ -491,10 +494,14 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         g.load();
 
         if (gen >= GEN_MIN_ABILITIES) {
-            p.ability() = g.abilities().ab(true_rand()%3);
-            /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
-            if (p.ability() == 0)
-                p.ability() = g.abilities().ab(0);
+            if (hack) {
+                p.ability() = true_rand()%AbilityInfo::NumberOfAbilities(gen);
+            } else {
+                p.ability() = g.abilities().ab(true_rand()%3);
+                /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
+                if (p.ability() == 0)
+                    p.ability() = g.abilities().ab(0);
+            }
         }
 
 
@@ -532,7 +539,12 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         p.dvs() << p2.DV(0) << p2.DV(1) << p2.DV(2) << p2.DV(3) << p2.DV(4) << p2.DV(5);
         p.evs() << p2.EV(0) << p2.EV(1) << p2.EV(2) << p2.EV(3) << p2.EV(4) << p2.EV(5);
 
-        QList<int> moves = g.moves().toList();
+        QList<int> moves;
+        if (hack) {
+            moves = MoveInfo::Moves(gen).toList();
+        } else {
+            moves = g.moves().toList();
+        }
         QList<int> movesTaken;
         int off = false;
         for (int i = 0; i < 4; i++) {
@@ -579,20 +591,22 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
-        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus) {
-            p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
-        }
-        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
-            p.num() = Pokemon::uniqueId(Pokemon::Genesect, ItemInfo::DriveForme(p.item()));
-        }
-        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Giratina) {
-            p.num() = Pokemon::uniqueId(Pokemon::Giratina, p.item() == Item::GriseousOrb);
-            //Now we have to verify the Ability generated is legal on this Giratina Forme, otherwise it needs to be fixed. This is best way to fix.
-            if (p.num() == Pokemon::Giratina && p.ability() == Ability::Levitate) {
-                p.ability() = Ability::Pressure;
+        if (!hack) {
+            if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus) {
+                p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
             }
-            if (p.num() == Pokemon::Giratina_O && p.ability() == Ability::Pressure) {
-                p.ability() = Ability::Levitate;
+            if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
+                p.num() = Pokemon::uniqueId(Pokemon::Genesect, ItemInfo::DriveForme(p.item()));
+            }
+            if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Giratina) {
+                p.num() = Pokemon::uniqueId(Pokemon::Giratina, p.item() == Item::GriseousOrb);
+                //Now we have to verify the Ability generated is legal on this Giratina Forme, otherwise it needs to be fixed. This is best way to fix.
+                if (p.num() == Pokemon::Giratina && p.ability() == Ability::Levitate) {
+                    p.ability() = Ability::Pressure;
+                }
+                if (p.num() == Pokemon::Giratina_O && p.ability() == Ability::Pressure) {
+                    p.ability() = Ability::Levitate;
+                }
             }
         }
 

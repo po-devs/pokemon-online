@@ -145,7 +145,7 @@ public:
     TeamBattle(PersonalTeam &other);
     TeamBattle(Team &other);
 
-    void generateRandom(Pokemon::gen gen);
+    void generateRandom(Pokemon::gen gen, bool hack);
 
     PokeBattle& poke(int i);
     const PokeBattle& poke(int i) const;
@@ -462,7 +462,8 @@ struct ChallengeInfo
         SpeciesClause = 64,
         RearrangeTeams = 128,
         SelfKO = 256,
-        Inverted = 512
+        Inverted = 512,
+        HackmonsCC = 1024
     };
 
     enum Mode
@@ -475,7 +476,7 @@ struct ChallengeInfo
         ModeLast = Rotation
     };
 
-    static const int numberOfClauses = 10;
+    static const int numberOfClauses = 11;
 
     static QString clauseText[numberOfClauses];
     static QString clauseBattleText[numberOfClauses];
