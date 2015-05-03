@@ -325,6 +325,7 @@ ShallowBattlePoke::ShallowBattlePoke()
     fullStatus() = 1;
     level() = 100;
     ability() = 0;
+    item() = 0;
 }
 
 ShallowBattlePoke::ShallowBattlePoke(const PokeBattle &p)

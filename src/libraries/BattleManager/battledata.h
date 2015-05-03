@@ -102,6 +102,11 @@ public:
         team(player).poke(poke)->setAbility(newAbility);
     }
 
+    void onItemChange(int player, int poke, int newItem)
+    {
+        team(player).poke(poke)->setItem(newItem);
+    }
+
     void onShiftSpots(int player, int spot1, int spot2, bool)
     {
         d()->field()->shiftSpots(spot(player, spot1), spot(player, spot2));

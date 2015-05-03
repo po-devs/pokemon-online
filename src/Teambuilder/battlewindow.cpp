@@ -704,6 +704,14 @@ void BattleWindow::onPPChange(int spot, int move, int)
     mypzone->pokes[data().slotNum(spot)]->updateToolTip();
 }
 
+void BattleWindow::onItemChange(int spot, int, int)
+{
+    if (data().isOut(spot)) {
+        updateAttacks(myazones[data().slotNum(spot)], &info().tempPoke(spot));
+    }
+    mypzone->pokes[data().slotNum(spot)]->updateToolTip();
+}
+
 void BattleWindow::onTempPPChange(int spot, int move, int)
 {
     myazones[data().slotNum(spot)]->tattacks[move]->updateAttack(info().tempPoke(spot).move(move)->exposedData(), info().tempPoke(spot), gen());

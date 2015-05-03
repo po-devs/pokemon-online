@@ -188,6 +188,9 @@ public:
     void onTempPPChange(int spot, int move, int PP) {
         makeEvent("onTempPPChange", spot, move, PP);
     }
+    void onItemChange(int spot, int poke, int item) {
+        makeEvent("onItemChange", spot, poke, item);
+    }
     void onMoveChange(int spot, int slot, int move, bool definite) {
         makeEvent("onMoveChange", spot, slot, move, definite);
     }

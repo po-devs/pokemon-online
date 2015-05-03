@@ -3807,6 +3807,7 @@ void BattleSituation::acqItem(int player, int item) {
     if (poke(player).item() != 0)
         loseItem(player, false);
     poke(player).item() = item;
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempItem), quint8(slotNum(player)), item);
 
     //Symbiosis + Eject Button. Item is not activated, but still transfered
     if (turnMemory(player).value("SendingBack").toBool())
@@ -3867,6 +3868,7 @@ bool BattleSituation::canLoseItem(int player, int attacker)
 void BattleSituation::loseItem(int player, bool real)
 {
     poke(player).item() = 0;
+    notify(this->player(player), ChangeTempPoke, player, quint8(TempItem), quint8(slotNum(player)), 0);
     if (real && slotNum(player) < numberPerSide() && hasWorkingAbility(player, Ability::Unburden)) {
         pokeMemory(player)["Unburdened"] = true;
     }

@@ -143,6 +143,7 @@ protected:
     start(TempPPChange, int spot; int move; int PP) end (spot, move, PP)
     start(MoveChange, int spot; int slot; int move; bool definite) end (spot, slot, move, definite)
     start(AbilityChange, int spot; int poke; int newAbility) end(spot, poke, newAbility)
+    start(ItemChange, int spot; int poke; int newItem) end(spot, poke, newItem)
     start(RearrangeTeam, int player; std::shared_ptr<ShallowShownTeam>* team) end (player, team)
     start(ChoiceSelection, int player) end (player)
     start(ChoiceCancelled, int player) end (player)
@@ -281,6 +282,7 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(ChooseDraw);
     addCallback(UseItem);
     addCallback(ItemCountChange);
+    addCallback(ItemChange);
 
 #undef addCallback
 }
