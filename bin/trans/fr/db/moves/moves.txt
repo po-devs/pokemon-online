@@ -511,7 +511,7 @@
 510 Calcination
 511 À la Queue
 512 Acrobatie
-513 Ten-danse
+513 Copie Type
 514 Vengeance
 515 Tout ou Rien
 516 Passe-Cadeau
