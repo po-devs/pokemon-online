@@ -79,6 +79,9 @@ CONFIG(nogui) {
     QT -= gui
     DEFINES += PO_NO_GUI
 }
+!CONFIG(nogui) {
+    QT += widgets
+}
 
 CONFIG(nowelcome):DEFINES += PO_NO_WELCOME
 CONFIG(safeonlyscript):DEFINES += PO_SCRIPT_SAFE_ONLY
