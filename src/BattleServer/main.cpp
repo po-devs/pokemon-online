@@ -1,4 +1,4 @@
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 #include <QDir>
 
 #include "battleserver.h"

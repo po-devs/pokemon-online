@@ -30,6 +30,7 @@ void RegistryCommunicator::connectToRegistry()
 
     QTcpSocket * s = new QTcpSocket(nullptr);
     s->connectToHost("registry.pokemon-online.eu", 8081);
+    //s->connectToHost("127.0.0.1", 8081);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));
     connect(s, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(regConnectionError()));
@@ -75,7 +76,7 @@ void RegistryCommunicator::regConnected()
     emit info("Connected to registry! Sending server info...");
     Server *server= Server::serverIns;
 
-    registry_connection->notify(NetworkServ::Login, server->serverName, server->serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), server->serverPlayerMax, server->serverPorts.at(0));
+    registry_connection->notify(NetworkServ::Login, server->serverName, server->serverDesc, quint16(AntiDos::obj()->numberOfDiffIps()), server->serverPlayerMax, server->serverPorts.at(0), server->isPasswordProtected());
     connect(registry_connection, SIGNAL(ipRefused()), SLOT(ipRefused()));
     connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
     connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
@@ -115,7 +116,7 @@ void RegistryCommunicator::maxChange(int numMax)
     if (!testConnection())
         return;
 
-    registry_connection->notify(NetworkServ::ServMaxChange,numMax);
+    registry_connection->notify(NetworkServ::ServMaxChange, quint16(numMax));
 }
 
 void RegistryCommunicator::passChange(bool enabled) {
