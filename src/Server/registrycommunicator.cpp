@@ -29,6 +29,8 @@ void RegistryCommunicator::connectToRegistry()
     emit info("Connecting to registry...");
 
     QTcpSocket * s = new QTcpSocket(nullptr);
+    /* Here before connecting, since windows requires it that way */
+    s->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
     s->connectToHost("registry.pokemon-online.eu", 8081);
     //s->connectToHost("127.0.0.1", 8081);
 
@@ -90,7 +92,12 @@ void RegistryCommunicator::regSendPlayers()
     if (!testConnection())
         return;
 
-    registry_connection->notify(NetworkServ::ServNumChange, quint16(AntiDos::obj()->numberOfDiffIps()));
+    static quint16 lastCountSent = -1;
+    quint16 currentCount = quint16(AntiDos::obj()->numberOfDiffIps());
+    if (lastCountSent != currentCount) {
+        registry_connection->notify(NetworkServ::ServNumChange, currentCount);
+        lastCountSent = currentCount;
+    }
     /* Sending Players at regular interval */
     QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
 }
