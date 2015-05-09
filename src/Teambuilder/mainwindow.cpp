@@ -154,7 +154,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 #endif
 
     //launchMenu(true);
-    displayer = new QMainWindow();
+    displayer = new QMainWindowPO();
 #ifdef Q_OS_MACX
     MacSupport::setupFullScreen(displayer);
 #endif

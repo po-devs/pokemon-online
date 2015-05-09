@@ -14,6 +14,7 @@
 #include <QTemporaryFile>
 #include <QDrag>
 #include <QUrl>
+#include <QMessageBox>
 
 QCompactTable::QCompactTable(int row, int column)
     : QTableWidget(row, column)
@@ -620,5 +621,15 @@ void QDragReactiveTabWidget::dragMoveEvent(QDragMoveEvent *event)
 
     if (tab != -1) {
         setCurrentIndex(tab);
+    }
+}
+
+void QMainWindowPO::closeEvent(QCloseEvent *event)
+{
+    QMessageBox::StandardButton resBtn = QMessageBox::question( this, tr("Pok\303\251mon Online Client"), tr("Are you sure you want to quit?\n"),QMessageBox::No | QMessageBox::Yes);
+    if (resBtn != QMessageBox::Yes) {
+        event->ignore();
+    } else {
+        event->accept();
     }
 }

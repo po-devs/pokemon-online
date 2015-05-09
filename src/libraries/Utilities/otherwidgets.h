@@ -12,6 +12,7 @@
 #include <QLineEdit>
 #include <QMimeData>
 #include <QLabel>
+#include <QMainWindow>
 
 class QVBoxLayout;
 class QCompleter;
@@ -235,4 +236,9 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
 };
 
+class QMainWindowPO : public QMainWindow
+{
+private:
+    void closeEvent(QCloseEvent *event);
+};
 #endif // OTHERWIDGETS_H
