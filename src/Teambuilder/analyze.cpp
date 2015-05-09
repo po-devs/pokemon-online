@@ -459,11 +459,16 @@ void Analyzer::commandReceived(const QByteArray &commandline)
     }
     case AskForPass: {
         QByteArray salt;
+        bool registerRequest;
         in >> salt;
-
+        if(!in.atEnd()) {
+            in >> registerRequest;
+        } else {
+            registerRequest = false;
+        }
         if (salt.length() < 6 || strlen((" " + salt).data()) < 7)
             emit protocolError(5080, tr("The server requires insecure authentication."));
-        emit passRequired(salt);
+        emit passRequired(salt,registerRequest);
         break;
     }
     case Register: {

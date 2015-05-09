@@ -1464,7 +1464,7 @@ void Player::registerRequest() {
     } while (m.salt.contains('%'));
 
     SecurityManager::updateMember(m);
-    relay().notify(NetworkServ::AskForPass, QString(m.salt));
+    relay().notify(NetworkServ::AskForPass, QString(m.salt), true);
 }
 
 void Player::userInfoAsked(const QString &name)
