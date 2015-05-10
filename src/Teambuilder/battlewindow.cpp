@@ -908,18 +908,20 @@ void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
 
 void BattleWindow::sendRearrangedTeam()
 {
-    RearrangeChoice r;
+    if (!started()) {
+        RearrangeChoice r;
 
-    for (int i = 0; i < 6; i++)
-        r.pokeIndexes[i] = info()._myteam.internalId(info()._myteam.poke(i));
+        for (int i = 0; i < 6; i++)
+            r.pokeIndexes[i] = info()._myteam.internalId(info()._myteam.poke(i));
 
-    BattleChoice c = BattleChoice(data().spot(info().myself), r);
-    sendChoice(c);
+        BattleChoice c = BattleChoice(data().spot(info().myself), r);
+        sendChoice(c);
 
-    /* If the team was rearranged... */
-    reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
-    for (int i = 0; i < 6; i++) {
-        mypzone->pokes[i]->changePokemon(poke(i));
+        /* If the team was rearranged... */
+        reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
+        for (int i = 0; i < 6; i++) {
+            mypzone->pokes[i]->changePokemon(poke(i));
+        }
     }
     QSettings settings;
     if (settings.value("Battle/AlwaysOnTop").toBool()) {
