@@ -1121,6 +1121,7 @@ void Player::loggedIn(LoginInfo *info)
     spec().setFlag(SupportsZipCompression, info->data[PlayerFlags::SupportsZipCompression]);
     spec().setFlag(IdsWithMessage, info->data[PlayerFlags::IdsWithMessage]);
     spec().setFlag(ReconnectEnabled, info->network[NetworkServ::LoginCommand::HasReconnect]);
+    spec().setFlag(HasRegisterCheck, info->data[PlayerFlags::HasRegisterCheck]);
     state().setFlag(LadderEnabled, info->data[PlayerFlags::LadderEnabled]);
     state().setFlag(Away, info->data[PlayerFlags::Idle]);
     reconnectBits() = info->reconnectBits;
@@ -1464,7 +1465,11 @@ void Player::registerRequest() {
     } while (m.salt.contains('%'));
 
     SecurityManager::updateMember(m);
-    relay().notify(NetworkServ::AskForPass, QString(m.salt), true);
+    if (spec()[HasRegisterCheck]) {
+        relay().notify(NetworkServ::AskForPass, QString(m.salt), true);
+    } else {
+        relay().notify(NetworkServ::AskForPass, QString(m.salt));
+    }
 }
 
 void Player::userInfoAsked(const QString &name)

@@ -50,7 +50,8 @@ namespace PlayerFlags {
         SupportsZipCompression,
         LadderEnabled,
         IdsWithMessage,
-        Idle
+        Idle,
+        HasRegisterCheck
     };
     enum {
         NoReconnectData,
