@@ -127,7 +127,9 @@ DataStream & operator >> (DataStream &in, TrainerInfo &i)
 
 void TrainerInfo::sanitize()
 {
-    if (info.length() > 300) {
+    //filter html before counting
+    QString infoStrip = info;
+    if (infoStrip.remove(QRegExp("<([^>]+)>")).length() > 300) {
         info.resize(300);
     }
     if (winning.length() > 200) {
@@ -208,7 +210,7 @@ LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInf
 
 LoginInfo::~LoginInfo()
 {
-    delete teams, delete channel, delete additionalChannels, delete trainerInfo, delete plugins; delete cookie; delete uniqueId;
+    delete teams, delete channel, delete additionalChannels, delete trainerInfo, delete plugins, delete cookie, delete uniqueId;
 }
 
 DataStream & operator >> (DataStream &in, LoginInfo &l)
@@ -257,8 +259,8 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
 
     test(events, HasEventSpecification);
     load(plugins, HasPluginList);
-    load(cookie, HasCookie)
-    load(uniqueId, HasUniqueId)
+    load(cookie, HasCookie);
+    load(uniqueId, HasUniqueId);
 #undef load
 #undef test
 
