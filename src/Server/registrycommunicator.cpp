@@ -9,6 +9,11 @@ RegistryCommunicator::RegistryCommunicator(QObject *parent) :
     Server *server= Server::serverIns;
 
     connect(this, SIGNAL(info(QString)), server, SLOT(printLine(QString)));
+
+    /* Sending Players at regular interval */
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(regSendPlayers()));
+    timer->start(2500);
 }
 
 void RegistryCommunicator::connectToRegistry()
@@ -83,8 +88,6 @@ void RegistryCommunicator::regConnected()
     connect(registry_connection, SIGNAL(invalidName()), SLOT(invalidName()));
     connect(registry_connection, SIGNAL(nameTaken()), SLOT(nameTaken()));
     connect(registry_connection, SIGNAL(accepted()), SLOT(accepted()));
-    /* Sending Players at regular interval */
-    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
 }
 
 void RegistryCommunicator::regSendPlayers()
@@ -98,8 +101,6 @@ void RegistryCommunicator::regSendPlayers()
         registry_connection->notify(NetworkServ::ServNumChange, currentCount);
         lastCountSent = currentCount;
     }
-    /* Sending Players at regular interval */
-    QTimer::singleShot(2500, this, SLOT(regSendPlayers()));
 }
 
 void RegistryCommunicator::nameChange(const QString &name)
