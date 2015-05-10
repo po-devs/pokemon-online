@@ -129,7 +129,10 @@ void TrainerInfo::sanitize()
 {
     //filter html before counting
     QString infoStrip = info;
-    if (infoStrip.remove(QRegExp("<([^>]+)>")).length() > 300) {
+    if (info.length() > 500) {
+        info.resize(500);
+    }
+    if (info.length() > 300 && infoStrip.remove(QRegExp("<([^>]+)>")).length() > 300) {
         info.resize(300);
     }
     if (winning.length() > 200) {
