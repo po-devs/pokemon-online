@@ -90,6 +90,7 @@ static void setDefaultValues()
     setDefaultValue(s, "Mods/CurrentMod", QString());
     setDefaultValue(s, "TeamBuilder/ShowAllItems", false);
     setDefaultValue(s, "animated_sprites", false);
+    setDefaultValue(s, "Battle/AlwaysOnTop", false);
 }
 
 MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)

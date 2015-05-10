@@ -888,6 +888,11 @@ void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
 {
     RearrangeWindow *r = new RearrangeWindow(info()._myteam, t);
     r->setParent(this, Qt::Window | Qt::Dialog);
+    //since this is a temp window, we won't bother going through changing it when the tick box is toggled
+    QSettings settings;
+    if (settings.value("Battle/AlwaysOnTop").toBool()) {
+        r->setWindowFlags(r->windowFlags() | Qt::WindowStaysOnTopHint);
+    }
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
     r->show();
     r->move(x() + (width()-r->width())/2, y() + (height()-r->height())/2);
@@ -895,7 +900,7 @@ void BattleWindow::openRearrangeWindow(const ShallowShownTeam &t)
     if (r->x() < 0 || r->y() < 0) {
         r->move(std::max(r->x(), 0), std::max(r->y(), 0));
     }
-
+    this->alwaysOnTopChanged(false, false);
     connect(r, SIGNAL(forfeit()), SLOT(clickClose()));
     connect(r, SIGNAL(done()), SLOT(sendRearrangedTeam()));
     connect(r, SIGNAL(done()), r, SLOT(deleteLater()));
@@ -915,6 +920,10 @@ void BattleWindow::sendRearrangedTeam()
     reloadTeam(ownid()==conf().ids[0] ? 0 : 1);
     for (int i = 0; i < 6; i++) {
         mypzone->pokes[i]->changePokemon(poke(i));
+    }
+    QSettings settings;
+    if (settings.value("Battle/AlwaysOnTop").toBool()) {
+        this->alwaysOnTopChanged(true, false);
     }
 }
 
