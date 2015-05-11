@@ -44,6 +44,7 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
     loseMessage[1] = p2.lose;
     tieMessage[0] = p1.tie;
     tieMessage[1] = p2.tie;
+    allowIllegal = (p1.allowIllegal || p2.allowIllegal);
     attacked() = -1;
     attacker() = -1;
     selfKoer() = -1;
@@ -83,8 +84,8 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
     }
 
     if (clauses() & ChallengeInfo::ChallengeCup) {
-        team(0).generateRandom(gen());
-        team(1).generateRandom(gen());
+        team(0).generateRandom(gen(), allowIllegal);
+        team(1).generateRandom(gen(), allowIllegal);
     } else {
         /* Make sure teams are valid and koed pokemon are pushed to the back */
         for (int i = 0; i < 2; i++) {

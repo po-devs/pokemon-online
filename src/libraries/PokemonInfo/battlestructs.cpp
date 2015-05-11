@@ -469,7 +469,7 @@ bool TeamBattle::invalid() const
     return poke(0).ko() && poke(1).ko() && poke(2).ko() && poke(3).ko() && poke(4).ko() && poke(5).ko();
 }
 
-void TeamBattle::generateRandom(Pokemon::gen gen)
+void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
 {
     QList<Pokemon::uniqueId> pokes;
     for (int i = 0; i < 6; i++) {
@@ -491,10 +491,14 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         g.load();
 
         if (gen >= GEN_MIN_ABILITIES) {
-            p.ability() = g.abilities().ab(true_rand()%3);
-            /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
-            if (p.ability() == 0)
-                p.ability() = g.abilities().ab(0);
+            if (illegal) {
+                p.ability() = true_rand()%AbilityInfo::NumberOfAbilities(gen);
+            } else {
+                p.ability() = g.abilities().ab(true_rand()%3);
+                /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
+                if (p.ability() == 0)
+                    p.ability() = g.abilities().ab(0);
+            }
         }
 
 
@@ -521,9 +525,14 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
                 p2.setEV(i, 255);
             }
         } else {
-            while (p2.EVSum() < 510) {
+            int total = 510;
+
+            if (illegal) {
+                total = true_rand() % (1530 - 510) + 510; //maybe not the best way to do this
+            }
+            while (p2.EVSum() < total) {
                 int stat = true_rand() % 6;
-                p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), long(255)));
+                p2.setEV(stat, std::min(int(p2.EV(stat)) + (true_rand()%255), long(255)), illegal);
             }
         }
 
@@ -533,6 +542,12 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         p.evs() << p2.EV(0) << p2.EV(1) << p2.EV(2) << p2.EV(3) << p2.EV(4) << p2.EV(5);
 
         QList<int> moves = g.moves().toList();
+        if (illegal) {
+            QSet<int> allMoves = MoveInfo::Moves(gen);
+            allMoves.remove(Move::NoMove);
+            allMoves.remove(Move::Struggle);
+            moves = allMoves.toList();
+        }
         QList<int> movesTaken;
         int off = false;
         for (int i = 0; i < 4; i++) {
@@ -579,7 +594,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen)
         if (gen >= GEN_MIN_ITEMS)
             p.item() = ItemInfo::Number(ItemInfo::SortedUsefulNames(gen)[true_rand()%ItemInfo::SortedUsefulNames(gen).size()]);
 
-        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus) {
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus && p.ability() == Ability::Multitype) {
             p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
         }
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
