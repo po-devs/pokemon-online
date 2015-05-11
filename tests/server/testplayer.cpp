@@ -27,7 +27,7 @@ void TestPlayer::createAnalyzer()
     connect(analyzer, SIGNAL(PMReceived(int,QString)), SLOT(onPm(int, QString)));
     connect(analyzer, SIGNAL(battleMessage(int,QByteArray)), SLOT(onBattleMessage(int, QByteArray)));
     connect(analyzer, SIGNAL(battleStarted(int,Battle,TeamBattle,BattleConfiguration)), SLOT(onBattleStarted(int,Battle,TeamBattle,BattleConfiguration)));
-    connect(analyzer, SIGNAL(passRequired(QByteArray,bool)), SLOT(onPassRequired(QByteArray)));
+    connect(analyzer, SIGNAL(passRequired(QByteArray,bool)), SLOT(onPassRequired(QByteArray,bool)));
     connect(analyzer, SIGNAL(reconnectSuccess()), SLOT(onReconnectSuccess()));
     connect(analyzer, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
 
