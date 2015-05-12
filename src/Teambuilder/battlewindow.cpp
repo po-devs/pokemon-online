@@ -223,11 +223,21 @@ void BattleWindow::changeAttackText(int i)
     }
 }
 
-void BattleWindow::closeEvent(QCloseEvent *)
+void BattleWindow::closeEvent(QCloseEvent *event)
 {
-    checkAndSaveLog();
-    emit forfeit(battleId());
-    close();
+    if (battleEnded || canLeaveBattle) {
+        checkAndSaveLog();
+        emit forfeit(battleId());
+    } else {
+        QMessageBox::StandardButton die = QMessageBox::question( this, tr("Losing your battle"), tr("Do you mean to forfeit?"),QMessageBox::No | QMessageBox::Yes);
+        if (die != QMessageBox::Yes) {
+            event->ignore();
+        } else {
+            checkAndSaveLog();
+            emit forfeit(battleId());
+            event->accept();
+        }
+    }
 }
 
 void BattleWindow::cancel()

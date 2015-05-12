@@ -144,7 +144,7 @@ signals:
     void forfeit(int battleid);
     void offerTie(int battleid);
 protected:
-    void closeEvent(QCloseEvent *);
+    void closeEvent(QCloseEvent *event);
 protected slots:
     void changeAttackText(int i);
     void targetChosen(int i);
