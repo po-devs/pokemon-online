@@ -86,15 +86,20 @@ void Analyzer::sendPM(int dest, const QString &mess)
     notify(SendPM, qint32(dest), mess);
 }
 
-void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers, const QByteArray &reconnectPass)
+void Analyzer::sendLogin(const PlayerInfo &p, const QStringList &tiers, const QByteArray &reconnectPass, int minHTML)
 {
     QByteArray tosend;
     DataStream out(&tosend, QIODevice::WriteOnly);
-
-    out << uchar(Login) << Flags((!reconnectPass.isEmpty()) << LoginCommand::HasReconnectPass);
+    Flags flag;
+    flag.setFlag(0, !reconnectPass.isEmpty());
+    flag.setFlag(1, minHTML > -1);
+    out << uchar(Login) << flag;
 
     if (!reconnectPass.isEmpty()) {
         out << reconnectPass;
+    }
+    if (minHTML > -1) {
+        out << minHTML;
     }
 
     out << p << tiers;

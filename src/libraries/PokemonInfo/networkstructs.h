@@ -51,7 +51,8 @@ namespace PlayerFlags {
         LadderEnabled,
         IdsWithMessage,
         Idle,
-        HasRegisterCheck
+        HasRegisterCheck,
+        WantsHTML
     };
     enum {
         NoReconnectData,

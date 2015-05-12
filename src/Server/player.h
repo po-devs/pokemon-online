@@ -57,7 +57,8 @@ public:
         SupportsZipCompression,
         IdsWithMessage,
         ReconnectEnabled,
-        HasRegisterCheck
+        HasRegisterCheck,
+        WantsHTML
     };
 
     QSet<int> battlesSpectated;

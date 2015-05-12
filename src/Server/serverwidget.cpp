@@ -203,6 +203,7 @@ void ServerWidget::openConfig()
     connect(w, SIGNAL(proxyServersChanged(QString)), server, SLOT(proxyServersChanged(QString)));
     connect(w, SIGNAL(serverPasswordChanged(QString)), server, SLOT(serverPasswordChanged(QString)));
     connect(w, SIGNAL(usePasswordChanged(bool)), server, SLOT(usePasswordChanged(bool)));
+    connect(w, SIGNAL(minHtmlChanged(int)), server, SLOT(minHtmlChanged(int)));
 
     connect(w, SIGNAL(destroyed()), SLOT(loadGuiSettings()));
 }

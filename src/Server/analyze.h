@@ -47,7 +47,7 @@ public:
     void sendChannelPlayers(int channelid, const QVector<qint32> &ids);
     void sendJoin(int channelid, int playerid);
     void sendChannelBattle(int chanid, int battleid, const Battle &battle);
-    void sendLogin(const PlayerInfo &p, const QStringList&, const QByteArray &reconnectPass);
+    void sendLogin(const PlayerInfo &p, const QStringList&, const QByteArray &reconnectPass, int minHTML = -1);
     void sendLogout(int num);
     void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, const QString& tier);
     void spectateBattle(int battleid, const BattleConfiguration &conf);

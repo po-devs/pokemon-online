@@ -33,6 +33,7 @@ signals:
     void showTrayPopupChanged(bool show);
     void minimizeToTrayChanged(bool allow);
     void clickConditionChanged(bool click);
+    void minHtmlChanged(int auth);
 
 private slots:
     void apply();
@@ -56,6 +57,7 @@ private:
     QLineEdit *proxyServers;
     QLineEdit *serverPassword;
     QCheckBox *usePassword;
+    QComboBox *minHtml;
 };
 
 #endif // SERVERCONFIG_H

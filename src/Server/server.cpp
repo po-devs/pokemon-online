@@ -117,6 +117,7 @@ void Server::start(){
     setDefaultValue("Server/Announcement", QString());
     setDefaultValue("Server/Description", QString());
     setDefaultValue("Server/MaxPlayers", 0);
+    setDefaultValue("Server/MinimumHTML", -1); // -1 is disabled
     setDefaultValue("Channels/LoggingEnabled", false);
     setDefaultValue("Channels/MainChannel", QString());
     setDefaultValue("Ladder/MonthsExpiration", 3);
@@ -248,6 +249,7 @@ void Server::start(){
     passwordProtected = s.value("Server/RequirePassword").toBool();
     serverPassword = s.value("Server/Password").toByteArray();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
+    minimumHtml = s.value("Server/MinimumHTML").toInt();
 
     /* Adds the main channel */
     addChannel();
@@ -892,6 +894,11 @@ void Server::processLoginDetails(Player *p)
             groups[IdsWithMessage].insert(p);
         } else {
             oppGroups[IdsWithMessage].insert(p);
+        }
+        if (p->spec()[Player::WantsHTML]) {
+            groups[WantsHTML].insert(p);
+        } else {
+            oppGroups[WantsHTML].insert(p);
         }
         if(!myengine->beforeLogIn(id, channel) && playerExist(id)) {
             mynames.remove(p->name().toLower());
@@ -2055,6 +2062,11 @@ void Server::notifyGroup(PlayerGroupFlags group, const QByteArray &packet)
 void Server::scriptKillBattleServer()
 {
     battles->killServer();
+}
+
+void Server::minHtmlChanged(int auth) {
+    minimumHtml = auth;
+    notifyGroup(WantsHTML, NetworkServ::HtmlAuthChange, minimumHtml);
 }
 
 #include "server.tpp"

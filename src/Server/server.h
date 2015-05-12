@@ -39,6 +39,7 @@ public:
         All = 0,
         SupportsZip = 1,
         IdsWithMessage = 2,
+        WantsHTML = 3,
         LastGroup
     };
     enum {
@@ -147,6 +148,7 @@ public slots:
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePass);
     void changeDbMod(const QString &mod);
+    void minHtmlChanged(int auth);
 
     /* means a new connection is about to start from the TCP server */
     /* i is the number of the listening port */
@@ -227,6 +229,7 @@ private:
     bool overactiveShow;
     bool passwordProtected;
     QByteArray serverPassword;
+    int minimumHtml;
 
     quint16 numPlayers() {
         return myplayers.size();

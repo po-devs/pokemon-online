@@ -130,6 +130,8 @@ signals:
     void reconnectPassGiven(const QByteArray&);
     void reconnectSuccess();
     void reconnectFailure(int reason);
+    void minHTMLGiven(int auth);
+
 public slots:
     /* slots called by the network */
     void error();

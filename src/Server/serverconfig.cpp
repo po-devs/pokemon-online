@@ -95,6 +95,16 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     l->addRow(usePassword = new QCheckBox("Require Password: "), serverPassword = new QLineEdit(settings.value("Server/Password").toString()));
     usePassword->setChecked(settings.value("Server/RequirePassword").toBool());
 
+    minHtml = new QComboBox;
+    minHtml->addItem("Disabled");
+    minHtml->addItem("All users");
+    minHtml->addItem("Moderators and above");
+    minHtml->addItem("Administrators and above");
+    minHtml->addItem("Owners and above");
+    minHtml->addItem("Auth 4 only");
+    minHtml->setCurrentIndex(settings.value("Server/MinimumHTML").toInt() + 1);
+    l->addRow("Set who can use html: ", minHtml);
+
     ok = new QPushButton("&Apply");
     cancel = new QPushButton("&Cancel");
 
@@ -133,6 +143,7 @@ void ServerWindow::apply()
     settings.setValue("Network/ProxyServers", proxyServers->text());
     settings.setValue("Server/Password", serverPassword->text());
     settings.setValue("Server/RequirePassword", usePassword->isChecked());
+    settings.setValue("Server/MinimumHTML", minHtml->currentIndex() - 1);
 
     emit descChanged(serverDesc->toPlainText());
     emit nameChanged(serverName->text());
@@ -152,6 +163,7 @@ void ServerWindow::apply()
     emit minimizeToTrayChanged(minimizeToTray->isChecked());
     emit showTrayPopupChanged(trayPopup->isChecked());
     emit clickConditionChanged(doubleClick->isChecked());
+    emit minHtmlChanged(minHtml->currentIndex() - 1);
 
     close();
 }

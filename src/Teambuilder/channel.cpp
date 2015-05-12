@@ -704,13 +704,16 @@ void Channel::printLine(const QString &_line, bool flashing, bool act, bool glob
     int pos = line.indexOf(':');
     if ( pos != -1 ) {
         QString beg = line.left(pos);
-        QString end = escapeHtml(line.right(line.length()-pos-1));
+        QString end = line.right(line.length()-pos-1);
         int id = client->id(beg);
-
         if (flashing)
             checkFlash(end, QString("\\b%1\\b").arg(QRegExp::escape(name(ownId()))));
 
-        end = addChannelLinks(end);
+        if (client->auth(id) >= client->minHTMLauth && client->minHTMLauth != -1) {
+            end = addChannelLinks(end);
+        } else {
+            end = addChannelLinks(escapeHtml(end));
+        }
 
         const QRegExp nameNotInsideTag(QString("\\b(%1)\\b(?![^\\s<]*>)").arg(QRegExp::escape(name(ownId()))), Qt::CaseInsensitive);
         const QString addHilightClass("<span class='name-hilight'>\\1</span>");

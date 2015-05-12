@@ -1122,6 +1122,7 @@ void Player::loggedIn(LoginInfo *info)
     spec().setFlag(IdsWithMessage, info->data[PlayerFlags::IdsWithMessage]);
     spec().setFlag(ReconnectEnabled, info->network[NetworkServ::LoginCommand::HasReconnect]);
     spec().setFlag(HasRegisterCheck, info->data[PlayerFlags::HasRegisterCheck]);
+    spec().setFlag(WantsHTML, info->data[PlayerFlags::WantsHTML]);
     state().setFlag(LadderEnabled, info->data[PlayerFlags::LadderEnabled]);
     state().setFlag(Away, info->data[PlayerFlags::Idle]);
     reconnectBits() = info->reconnectBits;
@@ -1394,7 +1395,12 @@ void Player::sendLoginInfo()
             generateReconnectPass();
         }
     }
-    relay().sendLogin(bundle(), getTierList(), waiting_pass);
+    if (spec()[WantsHTML]) {
+        QSettings s("config", QSettings::IniFormat);
+        relay().sendLogin(bundle(), getTierList(), waiting_pass, s.value("Server/MinimumHTML").toInt());
+    } else {
+        relay().sendLogin(bundle(), getTierList(), waiting_pass);
+    }
 }
 
 static uchar random_character()

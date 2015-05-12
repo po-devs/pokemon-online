@@ -237,6 +237,7 @@ void Client::initRelay()
     connect(relay, SIGNAL(reconnectPassGiven(QByteArray)), SLOT(setReconnectPass(QByteArray)));
     connect(relay, SIGNAL(reconnectSuccess()), SLOT(cleanData()));
     connect(relay, SIGNAL(reconnectFailure(int)), SLOT(onReconnectFailure(int)));
+    connect(relay, SIGNAL(minHTMLGiven(int)), SLOT(changeMinHTMLAuth(int)));
 }
 
 class TierActionFactoryTeams : public TierActionFactory
@@ -1660,6 +1661,12 @@ void Client::onReconnectFailure(int reason)
     }
     failedBefore = true;
 }
+
+void Client::changeMinHTMLAuth(int auth)
+{
+    minHTMLauth = auth;
+}
+
 void Client::newConnection() {
     printLine(tr("Attempting a new connection."));
     foreach(Channel *chan, mychannels) {

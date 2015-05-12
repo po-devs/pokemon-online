@@ -66,7 +66,7 @@ enum Command {
     ChannelBattle,
     RemoveChannel,
     AddChannel = 50,
-    Unused51,
+    HtmlAuthChange,
     ChanNameChange,
     Unused53,
     Unused54,

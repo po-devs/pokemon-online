@@ -137,6 +137,10 @@ public:
         return tierList;
     }
 
+    Q_INVOKABLE int getAuthHtml() const {
+        return minHTMLauth;
+    }
+
     void printEvent(int event, int playerid, const QString &line);
     /* Show player events, sort by tier, show timestamps */
     enum PlayerEvent {
@@ -158,6 +162,7 @@ public:
     bool pmReject;
 
     bool flashingToggled;
+    int minHTMLauth;
 
     TierNode tierRoot;
     QStringList tierList;
@@ -188,6 +193,7 @@ public slots:
     void setReconnectPass(const QByteArray&);
     void cleanData();
     void onReconnectFailure(int reason);
+    void changeMinHTMLAuth(int auth);
     /* removes the pointer to the challenge window when it is destroyed */
     void clearChallenge();
     /* Display the info for that player */
