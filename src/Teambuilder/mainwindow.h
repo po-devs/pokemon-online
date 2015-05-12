@@ -7,6 +7,7 @@
 #include "centralwidget.h"
 #include <PokemonInfo/teamholder.h>
 #include "downloadmanager.h"
+#include <Utilities/otherwidgets.h>
 
 class QScrollDownTextBrowser;
 class ClientPluginManager;
@@ -54,6 +55,7 @@ public slots:
     /* Shows a notification with the tray icon */
     void showMessage(const QString &title, const QString &msg);
     void raiseLastNotificationSender();
+    void exitWarningChanged(bool warn);
 private slots:
     /* Relies on ((QAction*)(sender()))->text() */
     void openPluginConfiguration();
@@ -70,7 +72,7 @@ private slots:
 private:
     void rebuildThemeMenu();
 
-    QMainWindow *displayer;
+    QMainWindowPO *displayer;
     ClientPluginManager *pluginManager;
 
     QMenuBar* transformMenuBar(QMenuBar *param);

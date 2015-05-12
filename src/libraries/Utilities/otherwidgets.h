@@ -238,7 +238,10 @@ protected:
 
 class QMainWindowPO : public QMainWindow
 {
+public:
+    void setWarningSetting(bool warning);
 private:
     void closeEvent(QCloseEvent *event);
+    bool warn;
 };
 #endif // OTHERWIDGETS_H

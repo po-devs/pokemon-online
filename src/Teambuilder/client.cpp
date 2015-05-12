@@ -2953,6 +2953,7 @@ void Client::changeExitWarning(bool show)
 {
     exitWarning = show;
     globals.setValue("Client/ShowExitWarning", show);
+    emit exitWarningChanged(show);
 }
 
 void Client::showExitWarning()

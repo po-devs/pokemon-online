@@ -341,6 +341,7 @@ signals:
     void PMDisconnected(bool disconnected);
     void pmNotificationsChanged(bool notify);
     void titleChanged();
+    void exitWarningChanged(bool warn);
 protected:
     void paintEvent(QPaintEvent *)
     {

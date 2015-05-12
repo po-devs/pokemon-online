@@ -156,6 +156,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     //launchMenu(true);
     displayer = new QMainWindowPO();
+    displayer->setWarningSetting(s.value("Client/ShowExitWarning").toBool());
 #ifdef Q_OS_MACX
     MacSupport::setupFullScreen(displayer);
 #endif
@@ -523,6 +524,7 @@ void MainEngine::goOnline(const QString &url, const quint16 port, const QString&
     connect(client, SIGNAL(done()), SLOT(launchServerChoice()));
     connect(client, SIGNAL(titleChanged()), main, SLOT(updateTabNames()));
     connect(client, SIGNAL(pmNotificationsChanged(bool)), SLOT(pmNotificationsChanged(bool)));
+    connect(client, SIGNAL(exitWarningChanged(bool)), SLOT(exitWarningChanged(bool)));
 }
 
 void MainEngine::updateMenuBar()
@@ -704,4 +706,7 @@ void MainEngine::reloadThemes()
     rebuildThemeMenu();
 }
 
+void MainEngine::exitWarningChanged(bool warn) {
+    displayer->setWarningSetting(warn);
+}
 

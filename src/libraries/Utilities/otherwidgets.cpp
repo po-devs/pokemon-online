@@ -624,8 +624,16 @@ void QDragReactiveTabWidget::dragMoveEvent(QDragMoveEvent *event)
     }
 }
 
+void QMainWindowPO::setWarningSetting(bool warning)
+{
+    warn = warning;
+}
+
 void QMainWindowPO::closeEvent(QCloseEvent *event)
 {
+    if (!warn) {
+        return;
+    }
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, tr("Pok\303\251mon Online Client"), tr("Are you sure you want to quit?\n"),QMessageBox::No | QMessageBox::Yes);
     if (resBtn != QMessageBox::Yes) {
         event->ignore();
