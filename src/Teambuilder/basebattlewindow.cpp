@@ -131,7 +131,7 @@ void BaseBattleWindow::init()
     QHBoxLayout *columns = new QHBoxLayout(this);
     columns->addLayout(mylayout = new QGridLayout());
 
-    mylayout->addWidget(getSceneWidget(), 0, 0, 1, 3);
+    mylayout->addWidget(getSceneWidget(), 0, 0, 1, 4);
     QSettings settings;
     bool saveLog = settings.value("Battle/SaveLogs").toBool();
     mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 1);
