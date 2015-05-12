@@ -24,6 +24,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     authgrade[1] = "Mod";
     authgrade[2] = "Admin";
     authgrade[3] = "Owner";
+    authgrade[4] = "Hidden";
 
     QStringList headers;
     headers << "Player" << "Authority" << "Banned Status" << "Registered" << "IP" << "Last Appearance" << "Expires In";
@@ -37,7 +38,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         QTableWidgetItem *witem = new QTableWidgetItem(m.name);
         mytable->setItem(i, 0, witem);
 
-        witem = new QTableWidgetItem(authgrade[m.authority()]);
+        witem = new QTableWidgetItem(authgrade[m.authority() > 4 ? 4 : m.authority()]);
         mytable->setItem(i, 1, witem);
 
         QString bannedString = "Banned";
@@ -91,6 +92,7 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
     m->addAction(tr("Moderator"), this, SLOT(mod()));
     m->addAction(tr("Administrator"), this, SLOT(admin()));
     m->addAction(tr("Owner"), this, SLOT(owner()));
+    m->addAction(tr("Hidden"), this, SLOT(hidden()));
     _authority->setMenu(m);
 
     QPushButton *_ban = new QPushButton(tr("&Ban"));
@@ -177,6 +179,16 @@ void PlayersWindow::owner()
         SecurityManager::setAuth(name, 3);
         mytable->item(mytable->currentRow(), 1)->setText("Owner");
         emit authChanged(name,3);
+    }
+}
+
+void PlayersWindow::hidden()
+{
+    QString name = currentName();
+    if(!name.isNull()) {
+        SecurityManager::setAuth(name, 4);
+        mytable->item(mytable->currentRow(), 1)->setText("Hidden");
+        emit authChanged(name,4);
     }
 }
 

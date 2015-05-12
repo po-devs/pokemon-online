@@ -21,6 +21,7 @@ private slots:
     void mod();
     void admin();
     void owner();
+    void hidden();
     void clpass();
 
     void enableSorting(bool);

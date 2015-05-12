@@ -55,6 +55,8 @@ QString ControlPanel::authorityText(int auth) const
         return tr("Administrator");
     } else if (auth == 3) {
         return tr("Owner");
+    } else if (auth >= 4) {
+        return tr("Hidden");
     } else {
         return "";
     }
