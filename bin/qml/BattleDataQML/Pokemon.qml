@@ -2,6 +2,7 @@ import QtQuick 1.1
 import pokemononline.battlemanager.proxies 1.0
 import Qt.labs.shaders 1.0
 import "colors.js" as Colors
+import "status.js" as Status
 import "Utilities" 1.0
 
 Item {
@@ -44,7 +45,8 @@ Item {
 
     Tooltip {
         shown: mouseArea.containsMouse
-        text: pokemon.numRef === 0 ? "" : pokemon.nick + (pokemon.nick !== pokemon.pokeName ? " (" + pokemon.pokeName + ")" : "") + " - " + pokemon.lifePercent + "%"
+        text: pokemon.numRef === 0 ? "" : pokemon.nick + (pokemon.nick !== pokemon.pokeName ? " (" + pokemon.pokeName + ")" : "") + " - " + pokemon.lifePercent + "%" + Status.statusName(pokemon.status)
+
     }
 
     MouseArea {
