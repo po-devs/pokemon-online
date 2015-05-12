@@ -22,6 +22,12 @@
         <string>&amp;Types</string>
        </property>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="1">
+         <widget class="QComboBox" name="type1"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="type2"/>
+        </item>
         <item row="0" column="0">
          <widget class="QCheckBox" name="useType1">
           <property name="text">
@@ -29,18 +35,12 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="type1"/>
-        </item>
         <item row="1" column="0">
          <widget class="QCheckBox" name="useType2">
           <property name="text">
            <string>Type 2</string>
           </property>
          </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QComboBox" name="type2"/>
         </item>
        </layout>
       </widget>
@@ -52,7 +52,21 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QComboBox" name="ability"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QCheckBox" name="abilityCheck">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="ability"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -72,11 +86,6 @@
         </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="hpbox">
-          <item>
-           <property name="text">
-            <string/>
-           </property>
-          </item>
           <item>
            <property name="text">
             <string>&gt;=</string>
@@ -115,11 +124,6 @@
          <widget class="QComboBox" name="atkbox">
           <item>
            <property name="text">
-            <string/>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>&gt;=</string>
            </property>
           </item>
@@ -154,11 +158,6 @@
         </item>
         <item row="2" column="1">
          <widget class="QComboBox" name="defbox">
-          <item>
-           <property name="text">
-            <string/>
-           </property>
-          </item>
           <item>
            <property name="text">
             <string>&gt;=</string>
@@ -197,11 +196,6 @@
          <widget class="QComboBox" name="spatkbox">
           <item>
            <property name="text">
-            <string/>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>&gt;=</string>
            </property>
           </item>
@@ -238,11 +232,6 @@
          <widget class="QComboBox" name="spdefbox">
           <item>
            <property name="text">
-            <string/>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>&gt;=</string>
            </property>
           </item>
@@ -277,11 +266,6 @@
         </item>
         <item row="5" column="1">
          <widget class="QComboBox" name="speedbox">
-          <item>
-           <property name="text">
-            <string/>
-           </property>
-          </item>
           <item>
            <property name="text">
             <string>&gt;=</string>
