@@ -1201,9 +1201,8 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             return true;
     }
 
-    //No Guard, as wall as Mimic, Transform & Swift in Gen 1.
-    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen().num == 1 && (move == Move::Swift || move == Move::Mimic
-                                                                                                                            || move == Move::Transform))) {
+    //No Guard. Acc 102 is used for Gen 1 moves that bypass Accuracy check
+    if ((hasWorkingAbility(player, Ability::NoGuard) || hasWorkingAbility(target, Ability::NoGuard)) || (gen().num == 1 && acc == 102)) {
         return true;
     }
 
