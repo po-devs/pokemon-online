@@ -65,6 +65,7 @@ QHash<int,int> ItemInfo::m_BerryTypes;
 QHash<int, bool> ItemInfo::m_UsefulItems, ItemInfo::m_UsefulBerries;
 QVector<QSet<int> > ItemInfo::m_GenItems;
 QHash<int,QString> ItemInfo::m_ItemDesc;
+QHash<int,QString> ItemInfo::m_BerryDesc;
 QHash<Pokemon::uniqueId,int> ItemInfo::m_StoneFormes;
 
 QHash<int, QString> TypeInfo::m_Names;
@@ -2296,6 +2297,7 @@ void ItemInfo::loadMessages()
 void ItemInfo::loadDescriptions()
 {
     fill_int_str(m_ItemDesc, path("items_description.txt"));
+    fill_int_str(m_BerryDesc, path("berries_description.txt"));
 }
 
 void ItemInfo::loadFlingData()
@@ -2389,7 +2391,11 @@ QString ItemInfo::path(const QString &file)
 
 QString ItemInfo::ItemDesc(int item)
 {
-    return m_ItemDesc[item];
+    if (isBerry(item)) {
+        return m_BerryDesc[item-8000];
+    } else {
+        return m_ItemDesc[item];
+    }
 }
 
 int ItemInfo::NumberOfItems()

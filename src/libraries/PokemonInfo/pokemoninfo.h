@@ -403,6 +403,7 @@ private:
     static QHash<int, bool> m_UsefulItems, m_UsefulBerries;
     static QVector<QSet<int> > m_GenItems;
     static QHash<int,QString> m_ItemDesc;
+    static QHash<int,QString> m_BerryDesc;
     static QHash<Pokemon::uniqueId,int> m_StoneFormes;
 
     static void loadNames();

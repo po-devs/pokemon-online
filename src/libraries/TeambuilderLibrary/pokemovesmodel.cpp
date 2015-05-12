@@ -169,7 +169,14 @@ QVariant PokeMovesModel::data(const QModelIndex &index, int role) const
     case CustomModel::MovenumRole:
         return movenum;
     case Qt::ToolTipRole:
-        return MoveInfo::Description(movenum, gen);
+        QString tip = MoveInfo::Description(movenum, gen);
+        //Defaults to "Deals normal damage." if no description is defined.
+        if (tip.length() == 0) {
+            tip = MoveInfo::Description(1, gen);
+        }
+        //Hack to make the tooltip wrap, especially for long descriptions like Substitue or Thunder.
+        return QString("<FONT>%1</FONT>").arg(tip);
+
     }
 
     return QVariant();

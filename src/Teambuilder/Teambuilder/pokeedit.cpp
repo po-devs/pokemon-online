@@ -351,6 +351,8 @@ void PokeEdit::updateGender()
 void PokeEdit::updateItemSprite(int newItem)
 {
     ui->itemSprite->setPixmap(ItemInfo::Icon(newItem));
+    //Hack to make the tooltip wrap
+    ui->item->setToolTip(QString("<FONT>%1</FONT>").arg(ItemInfo::ItemDesc(newItem)));
 }
 
 void PokeEdit::setItem(int itemnum)

@@ -1,4 +1,5 @@
 ﻿0 No Effect
+1 Deals normal damage.
 2 The critical hit chance for this move is raised by 1 stage.
 3 Multi-hit attack, attacks two to five times in a turn. 37.5% chance for 2 or 3 hits; 12.5% chance for 4 or 5 hits.
 4 Multi-hit attack, attacks two to five times in a turn. 37.5% chance for 2 or 3 hits; 12.5% chance for 4 or 5 hits.
