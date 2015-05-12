@@ -1249,6 +1249,11 @@ void Server::findBattle(int id, const FindBattleData &_f)
                 if ( (f.sameTier || data->sameTier) && t1.tier != t2.tier)
                     continue;
 
+                /* skip if one side doesn't allow illegal pokemon */
+                if (TierMachine::obj()->tier(t1.tier).allowIllegal != TierMachine::obj()->tier(t2.tier).allowIllegal) {
+                    continue;
+                }
+
                 /* We check both allow rated if needed */
                 if (f.rated || data->rated) {
                     if (!canHaveRatedBattle(id, key, t1, t2, f.rated, data->rated))

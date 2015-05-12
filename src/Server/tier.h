@@ -151,6 +151,7 @@ public:
 
     int maxRestrictedPokes;
     int numberOfPokemons;
+    QString allowIllegal;
 
 protected:
     enum GetQueryType {
@@ -187,7 +188,6 @@ private:
     int maxLevel;
     Pokemon::gen m_gen;
     int minGen;
-    QString allowIllegal;
     QString banParentS;
     Tier *parent;
     QSet<int> bannedItems;
