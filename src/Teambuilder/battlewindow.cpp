@@ -225,7 +225,8 @@ void BattleWindow::changeAttackText(int i)
 
 void BattleWindow::closeEvent(QCloseEvent *event)
 {
-    if (battleEnded || canLeaveBattle) {
+    QSettings s;
+    if (battleEnded || canLeaveBattle || s.value("Client/ShowExitWarning").toBool() != true) {
         checkAndSaveLog();
         emit forfeit(battleId());
     } else {
