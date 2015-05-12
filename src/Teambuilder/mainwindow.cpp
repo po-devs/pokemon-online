@@ -76,6 +76,7 @@ static void setDefaultValues()
     setDefaultValue(s, "Client/SortChannelsByName", true);
     setDefaultValue(s, "Client/ShowTimestamps", true);
     setDefaultValue(s, "Client/DisplayTIs", true);
+    setDefaultValue(s, "Client/ShowExitWarning", true);
     setDefaultValue(s, "PlayerEvents/ShowIdle", false);
     setDefaultValue(s, "PlayerEvents/ShowBattle", false);
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);
