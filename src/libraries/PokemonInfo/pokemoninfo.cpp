@@ -2295,7 +2295,7 @@ void ItemInfo::loadMessages()
 
 void ItemInfo::loadDescriptions()
 {
-    fill_int_str(m_ItemDesc, path("item_descriptions.txt"));
+    fill_int_str(m_ItemDesc, path("items_description.txt"));
 }
 
 void ItemInfo::loadFlingData()
