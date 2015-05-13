@@ -296,6 +296,14 @@ void TrainerMenu::on_winningMessage_textEdited()
 
 void TrainerMenu::on_infos_textChanged()
 {
+    ui->infoLength->setText(tr("%1/500").arg(ui->infos->toPlainText().length()));
+    if (ui->infos->toPlainText().length() > 500) {
+        QString newinfo = ui->infos->toPlainText();
+        newinfo.chop(ui->infos->toPlainText().length() - 500);
+        ui->infos->setPlainText(newinfo);
+        ui->infos->moveCursor(QTextCursor::End,QTextCursor::MoveAnchor);
+        ui->infoLength->setText(tr("%1/500 (Limit Reached)").arg(ui->infos->toPlainText().length()));
+    }
     team().info().info = ui->infos->toPlainText();
 }
 
