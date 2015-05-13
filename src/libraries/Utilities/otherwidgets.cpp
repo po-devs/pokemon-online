@@ -501,7 +501,7 @@ void QIRCLineEdit::setPlayers(QAbstractItemModel *players)
 bool QIRCLineEdit::event(QEvent *e)
 {
     if (e->type() == QEvent::KeyPress) {
-        if (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab) {
+        if (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab && !(static_cast<QKeyEvent*>(e)->modifiers() & Qt::ControlModifier)) {
             if (completer) {
                 if (completeIndex == -1) {
                     int split = text().lastIndexOf(QChar(' '));
@@ -514,6 +514,23 @@ bool QIRCLineEdit::event(QEvent *e)
                 } else { // try from beginning
                     completeIndex = 0;
                     if (completer->setCurrentRow(completeIndex++))
+                        setText(beginning + completer->currentCompletion());
+                }
+            }
+            return true;
+        } else if (static_cast<QKeyEvent*>(e)->key() == Qt::Key_Tab && static_cast<QKeyEvent*>(e)->modifiers() & Qt::ControlModifier) {
+            if (completer) {
+                if (completeIndex == -1) {
+                    int split = text().lastIndexOf(QChar(' '));
+                    completer->setCompletionPrefix(text().mid(split+1));
+                    beginning = text().left(split+1);
+                    completeIndex = completer->completionCount() - 1;
+                }
+                if (completer->setCurrentRow(completeIndex--)) {
+                    setText(beginning + completer->currentCompletion());
+                } else { // try from beginning
+                    completeIndex = completer->completionCount() - 1;
+                    if (completer->setCurrentRow(completeIndex--))
                         setText(beginning + completer->currentCompletion());
                 }
             }
