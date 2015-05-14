@@ -21,7 +21,7 @@
 20 Prevents a Pokémon with this ability from becoming Confused.
 21 Prevents the opponent from forcing a Pokémon with this ability to switch out.
 22 Lowers the opponent Pokémon's Attack one stage when a Pokémon with this ability switches in.
-23 Prevents opponent Pokémon, except for Ghost Pokémon, from switching out or running away as long as a Pokémon with this ability is on the field.
+23 Prevents opponent Pokémon, except for Ghost Pokémon and Pokémon with Shadow Tag themselves, from switching out or running away as long as a Pokémon with this ability is on the field.
 24 Damages Pokémon for 1/8 their max HP every time they use a contact move on a Pokémon with this ability.
 25 Makes a Pokémon with this ability only vulnerable to super-effective attacks.
 26 Makes a Pokémon with this ability immune to Ground moves, Spikes, Toxic Spikes and Sticky Web, as well as the effect of Arena Trap.
