@@ -1021,12 +1021,12 @@ DataStream & operator << (DataStream &out, const ChallengeInfo & c) {
 }
 
 DataStream & operator >> (DataStream &in, BattlePlayer & c) {
-    in >> c.id >> c.name >> c.avatar >> c.rating >> c.win >> c.lose >> c.tie >> c.restrictedCount >> c.restrictedPokes >> c.teamCount >> c.maxlevel >> c.bannedPokes;
+    in >> c.id >> c.name >> c.avatar >> c.rating >> c.win >> c.lose >> c.tie >> c.restrictedCount >> c.restrictedPokes >> c.teamCount >> c.maxlevel >> c.bannedPokes >> c.allowIllegal;
     return in;
 }
 
 DataStream & operator << (DataStream &out, const BattlePlayer & c) {
-    out << c.id << c.name << c.avatar << c.rating << c.win << c.lose << c.tie << c.restrictedCount << c.restrictedPokes << c.teamCount << c.maxlevel << c.bannedPokes;
+    out << c.id << c.name << c.avatar << c.rating << c.win << c.lose << c.tie << c.restrictedCount << c.restrictedPokes << c.teamCount << c.maxlevel << c.bannedPokes << c.allowIllegal;
     return out;
 }
 
