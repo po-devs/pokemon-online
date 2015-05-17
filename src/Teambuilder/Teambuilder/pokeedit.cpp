@@ -469,24 +469,26 @@ void PokeEdit::changeItem(const QString &itemName)
 {
     int itemNum = ItemInfo::Number(itemName);
     poke().item() = itemNum;
-    if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb && PokemonInfo::Released(Pokemon::Giratina_O, poke().gen())) {
-        setNum(Pokemon::Giratina_O); 
-    } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
-        setNum(Pokemon::Giratina); 
-    } else if (itemNum == Item::GriseousOrb && poke().gen() <= 4 && poke().num().pokenum != Pokemon::Giratina) {
-        poke().item() = 0;
-    }
-    if (poke().num().pokenum == Pokemon::Arceus) {
-        int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
-        setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
-    }
-    if (poke().num().pokenum == Pokemon::Genesect) {
-        int subnum = ItemInfo::isDrive(itemNum) ? ItemInfo::DriveForme(itemNum) : 0;
-        setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
-    }
-    if (itemNum != ItemInfo::StoneForForme(poke().num())) {
-        if (PokemonInfo::IsMegaEvo(poke().num()) && !PokeEdit::hackMons) {
-            setNum(Pokemon::uniqueId(poke().num().pokenum,0));
+    if (!PokeEdit::hackMons) {
+        if (poke().num() == Pokemon::Giratina && itemNum == Item::GriseousOrb && PokemonInfo::Released(Pokemon::Giratina_O, poke().gen())) {
+            setNum(Pokemon::Giratina_O);
+        } else if (poke().num() == Pokemon::Giratina_O && itemNum != Item::GriseousOrb) {
+            setNum(Pokemon::Giratina);
+        } else if (itemNum == Item::GriseousOrb && poke().gen() <= 4 && poke().num().pokenum != Pokemon::Giratina) {
+            poke().item() = 0;
+        }
+        if (poke().num().pokenum == Pokemon::Arceus) {
+            int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
+            setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+        }
+        if (poke().num().pokenum == Pokemon::Genesect) {
+            int subnum = ItemInfo::isDrive(itemNum) ? ItemInfo::DriveForme(itemNum) : 0;
+            setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+        }
+        if (itemNum != ItemInfo::StoneForForme(poke().num())) {
+            if (PokemonInfo::IsMegaEvo(poke().num()) && !PokeEdit::hackMons) {
+                setNum(Pokemon::uniqueId(poke().num().pokenum,0));
+            }
         }
     }
     updateItemSprite(poke().item());
