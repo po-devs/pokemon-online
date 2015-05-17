@@ -255,7 +255,9 @@ QMenuBar *MainEngine::transformMenuBar(QMenuBar *param)
         QMenu *m = param->addMenu(tr("Plugins"));
         m->addAction(tr("Plugin Manager"), this, SLOT(openPluginManager()));
         m->addSeparator();
-
+        if (pluginManager == NULL) {
+            pluginManager = new ClientPluginManager(this);
+        }
         foreach(QString plugin, pluginManager->getVisiblePlugins()) {
             m->addAction(plugin, this, SLOT(openPluginConfiguration()));
         }
