@@ -226,16 +226,16 @@ void BattleWindow::changeAttackText(int i)
 void BattleWindow::closeEvent(QCloseEvent *event)
 {
     QSettings s;
-    if (battleEnded || canLeaveBattle || s.value("Client/ShowExitWarning").toBool() != true) {
+    if (battleEnded || canLeaveBattle || !s.value("Client/ShowExitWarning").toBool()) {
         checkAndSaveLog();
-        emit forfeit(battleId());
+        forfeit();
     } else {
         QMessageBox::StandardButton die = QMessageBox::question( this, tr("Losing your battle"), tr("Do you mean to forfeit?"),QMessageBox::No | QMessageBox::Yes);
         if (die != QMessageBox::Yes) {
             event->ignore();
         } else {
             checkAndSaveLog();
-            emit forfeit(battleId());
+            forfeit();
             event->accept();
         }
     }
@@ -305,7 +305,8 @@ void BattleWindow::targetChosen(int i)
 
 void BattleWindow::clickClose()
 {
-    if (battleEnded || canLeaveBattle) {
+    QSettings s;
+    if (battleEnded || canLeaveBattle || !s.value("Client/ShowExitWarning").toBool()) {
         forfeit();
         return;
     }
@@ -327,7 +328,8 @@ void BattleWindow::clickClose()
     connect(question, SIGNAL(destroyed()), this, SLOT(nullQuestion()));
 }
 
-void BattleWindow::forfeit() {
+void BattleWindow::forfeit() {    
+    battleEnded = true;
     emit forfeit(battleId());
 }
 
