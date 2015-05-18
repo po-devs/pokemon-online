@@ -492,7 +492,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
 
         if (gen >= GEN_MIN_ABILITIES) {
             if (illegal) {
-                p.ability() = true_rand()%AbilityInfo::NumberOfAbilities(gen);
+                p.ability() = true_rand()%(AbilityInfo::NumberOfAbilities(gen) - 1) + 1;
             } else {
                 p.ability() = g.abilities().ab(true_rand()%3);
                 /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
