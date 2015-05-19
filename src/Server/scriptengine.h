@@ -515,6 +515,10 @@ public:
 
     Q_INVOKABLE void killBattleServer();
 
+    Q_INVOKABLE bool isPokeBannedFromTier(int pokeid, const QString &tier);
+    Q_INVOKABLE bool isAbilityBannedFromTier(int abid, const QString &tier);
+    Q_INVOKABLE bool isItemBannedFromTier(int itemid, const QString &tier);
+    Q_INVOKABLE bool isMoveBannedFromTier(int moveid, const QString &tier);
     inline quint64 getProcessID(const QProcess* proc)
     {
         #ifdef Q_OS_WIN

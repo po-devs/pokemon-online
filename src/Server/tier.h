@@ -121,7 +121,7 @@ public:
 
     quint8 restricted(TeamBattle &t) const;
 
-    QString getBannedPokes() const;
+    QString getBannedPokes(bool parentNeeded = false) const;
     QString getRestrictedPokes() const;
     QString getBannedMoves() const;
     QString getBannedItems() const;

@@ -3882,6 +3882,46 @@ void ScriptEngine::killBattleServer()
     myserver->scriptKillBattleServer();
 }
 
+bool ScriptEngine::isPokeBannedFromTier(int pokeid, const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        Tier & t = TierMachine::obj()->tier(tier);
+        QStringList banned = t.getBannedPokes(true).split(", ");
+        return banned.contains(PokemonInfo::Name(pokeid));
+    }
+    warn("isPokeBannedFromTier(pokeid, tier)", "not a valid tier", true);
+    return false;
+}
+
+bool ScriptEngine::isAbilityBannedFromTier(int abid, const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        Tier & t = TierMachine::obj()->tier(tier);
+        QStringList banned = t.getBannedAbilities().split(", ");
+        return banned.contains(AbilityInfo::Name(abid));
+    }
+    warn("isAbilityBannedFromTier(abilityid, tier)", "not a valid tier", true);
+    return false;
+}
+
+bool ScriptEngine::isItemBannedFromTier(int itemid, const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        Tier & t = TierMachine::obj()->tier(tier);
+        QStringList banned = t.getBannedItems().split(", ");
+        return banned.contains(ItemInfo::Name(itemid));
+    }
+    warn("isItemBannedFromTier(itemid, tier)", "not a valid tier", true);
+    return false;
+}
+
+bool ScriptEngine::isMoveBannedFromTier(int moveid, const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        Tier & t = TierMachine::obj()->tier(tier);
+        QStringList banned = t.getBannedPokes().split(", ");
+        return banned.contains(MoveInfo::Name(moveid));
+    }
+    warn("isMoveBannedFromTier(moveid, tier)", "not a valid tier", true);
+    return false;
+}
+
 QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
 {
     ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());

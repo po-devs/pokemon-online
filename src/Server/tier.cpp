@@ -1048,11 +1048,14 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     return dest;
 }
 
-QString Tier::getBannedPokes() const
+QString Tier::getBannedPokes(bool parentNeeded) const
 {
     QStringList bannedPokesS;
     foreach(Pokemon::uniqueId poke, bannedPokes) {
         bannedPokesS.append(PokemonInfo::Name(poke));
+    }
+    if (parent && parentNeeded) {
+        bannedPokesS.append(parent->getBannedPokes(true));
     }
     bannedPokesS.sort();
     return bannedPokesS.join(", ");
