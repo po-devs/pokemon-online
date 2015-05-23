@@ -3397,8 +3397,7 @@ Efecto: %5</translation>
     <message>
         <location filename="../Teambuilder/loadline.ui" line="14"/>
         <source>Form</source>
-        <translatorcomment>What is this?</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
 </context>
 <context>
@@ -3436,7 +3435,7 @@ Efecto: %5</translation>
         <location filename="../Teambuilder/loadwindow.ui" line="178"/>
         <location filename="../Teambuilder/loadwindow.ui" line="211"/>
         <source>...</source>
-        <translation></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../Teambuilder/loadwindow.ui" line="231"/>
@@ -3543,8 +3542,7 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
     <message>
         <location filename="../Teambuilder/mainwidget.ui" line="14"/>
         <source>Form</source>
-        <translatorcomment>Is this visible? lol</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message utf8="true">
         <location filename="../Teambuilder/mainwidget.ui" line="62"/>
@@ -4388,8 +4386,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebuttonsholder.ui" line="14"/>
         <source>Form</source>
-        <translatorcomment>Is this visible? lol</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
 </context>
 <context>
@@ -4397,8 +4394,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.ui" line="14"/>
         <source>Form</source>
-        <translatorcomment>Is this visible? lol</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.ui" line="255"/>
@@ -4643,8 +4639,7 @@ Movimientos:
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokeselection.ui" line="14"/>
         <source>Form</source>
-        <translatorcomment>lol.</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokeselection.ui" line="33"/>
@@ -4706,7 +4701,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="47"/>
@@ -4743,7 +4738,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="35"/>
@@ -4845,7 +4840,6 @@ Movimientos:
     <message>
         <location filename="../libraries/QJson/parserrunnable.cpp" line="64"/>
         <source>An error occurred while parsing json: %1</source>
-        <translatorcomment>No clue...</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5214,7 +5208,6 @@ txt (*.txt)</translation>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3255"/>
         <source>koed</source>
-        <translatorcomment>I do not know where is this.</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5555,7 +5548,7 @@ txt (*.txt)</translation>
     <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="334"/>
         <source>%1 lv %2 -- %3%%4</source>
-        <translation type="unfinished">%1 Nv. %2 -- %3% {1 ?} {2 ?} {3%%4?}</translation>
+        <translation>%1 Nv. %2 -- %3%%4</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="744"/>
@@ -5744,7 +5737,6 @@ txt (*.txt)</translation>
     <message>
         <location filename="../Server/server.cpp" line="164"/>
         <source>Starting loading pokemon database...</source>
-        <translatorcomment>I prefer not to start translating this context.</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5894,7 +5886,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoice.ui" line="130"/>
         <source>&amp;Teambuilder</source>
-        <translation type="unfinished">&amp;Editor de equipo</translation>
+        <translation>&amp;Editor de equipo</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.ui" line="137"/>
@@ -6064,7 +6056,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Server/serverconfig.cpp" line="45"/>
         <source>unlimited</source>
-        <translatorcomment>I prefer not to start translating this string.</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6086,7 +6077,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../client-plugins/SmogonPlugin/smogonsinglepokedialog.ui" line="14"/>
         <source>Choose Smogon build</source>
-        <translatorcomment>I did not use this plugin.</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7041,7 +7031,6 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../client-plugins/SmogonPlugin/teambuildersmogonplugin.cpp" line="38"/>
         <source>Choose Smogon build...</source>
-        <translatorcomment>I did not use this plugin.</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7069,7 +7058,6 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../client-plugins/ThemeManager/thememanagerwidget.ui" line="20"/>
         <source>Dialog</source>
-        <translatorcomment>Is this visible? lol</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7093,8 +7081,7 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../client-plugins/ThemeManager/themewidget.ui" line="20"/>
         <source>Form</source>
-        <translatorcomment>Is this visible?</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message>
         <location filename="../client-plugins/ThemeManager/themewidget.ui" line="80"/>
@@ -7137,8 +7124,7 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../Teambuilder/tierratingbutton.ui" line="20"/>
         <source>Form</source>
-        <translatorcomment>lol</translatorcomment>
-        <translation type="unfinished">Forma</translation>
+        <translation>Forma</translation>
     </message>
     <message>
         <location filename="../Teambuilder/tierratingbutton.ui" line="35"/>
@@ -7161,7 +7147,6 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="14"/>
         <source>Frame</source>
-        <translatorcomment>lol</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7197,7 +7182,7 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="339"/>
         <source>0/500</source>
-        <translation type="unfinished"></translation>
+        <translation>0/500</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="346"/>
@@ -7212,7 +7197,7 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="489"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="505"/>
@@ -7319,7 +7304,7 @@ Your language needs to be set to English to import English teams.</source>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="299"/>
         <source>%1/500</source>
-        <translation type="unfinished">%1/500</translation>
+        <translation>%1/500</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="305"/>
@@ -7364,7 +7349,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
     <message>
         <location filename="../server-plugins/WebServerPlugin/webserverconfig.ui" line="14"/>
         <source>Dialog</source>
-        <translatorcomment>lolz</translatorcomment>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -1473,7 +1473,7 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldBattleWindow, SIGNAL(triggered(bool)), SLOT(changeBattleWindow(bool)));
     oldBattleWindow->setChecked(globals.value("Battle/OldWindow", true).toBool());
 
-    QAction *useBalls = battleMenu->addAction(tr("Use Ball Icons"));
+    QAction *useBalls = battleMenu->addAction(tr("Use Pokéball Icons"));
     useBalls->setCheckable(true);
     connect(useBalls, SIGNAL(triggered(bool)), SLOT(useBallIcons(bool)));
     useBalls->setChecked(globals.value("Battle/UseBalls").toBool());
