@@ -5975,7 +5975,7 @@ struct MMSoak : public MM {
     static void daf(int s, int t, BS &b) {
         //Soak works on Water Pokemon, ForestCurse/TrickOrTreat don't work on Grass/Ghost
         int type = turn(b,s)["Soak_Arg"].toInt();
-        if (b.pokenum(t).pokenum == Pokemon::Arceus || (move(b,s) != Move::Soak && b.hasType(t,type)))
+        if ((move(b,s) == Move::Soak && b.poke(t).ability() == Ability::Multitype) || (move(b,s) != Move::Soak && b.hasType(t,type)))
             fturn(b,s).add(TM::Failed);
     }
 
