@@ -2360,11 +2360,6 @@ It is advised to use a slightly different password for each server. (The server 
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Teambuilder/client.cpp" line="1476"/>
-        <source>Use Ball Icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1498"/>
         <source>Use 3D Models</source>
         <translation type="unfinished"></translation>
@@ -2575,6 +2570,11 @@ This server requires a password to log in.</source>
         <location filename="../Teambuilder/client.cpp" line="1471"/>
         <source>Old battle window</source>
         <translation>Altes Kampffenster</translation>
+    </message>
+    <message>
+        <location filename="../Teambuilder/client.cpp" line="1476"/>
+        <source>Use Pokéball Icons</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1481"/>
@@ -5584,27 +5584,27 @@ Attacken:
         <translation>Einstellungen bearbeiten</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="117"/>
+        <location filename="../Server/security.cpp" line="118"/>
         <source>Error: cannot open the file that contains the members </source>
         <translation>Fehler: Kann die Datei mit den Mitgliedern nicht öffnen.</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="221"/>
+        <location filename="../Server/security.cpp" line="222"/>
         <source>Error: cannot open the file that contains the members (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="259"/>
+        <location filename="../Server/security.cpp" line="260"/>
         <source>Impossible to change %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="276"/>
+        <location filename="../Server/security.cpp" line="277"/>
         <source>Error: cannot rename the file that contains the members (%1 -&gt; %2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="282"/>
+        <location filename="../Server/security.cpp" line="283"/>
         <source>Error: cannot reopen the file that contains the members (%1)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5904,7 +5904,7 @@ Attacken:
     </message>
     <message>
         <location filename="../client-plugins/ClientScripting/scriptwindow.cpp" line="78"/>
-        <source>You need to be connected to a server to load moogle&apos;s scripts.</source>
+        <source>You need to be connected to a server to load Moogle&apos;s scripts.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

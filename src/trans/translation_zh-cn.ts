@@ -2189,9 +2189,8 @@ Moves:
         <translation>旧版对战窗口（无动画）</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/client.cpp" line="1476"/>
         <source>Use Ball Icons</source>
-        <translation>显示精灵球图标</translation>
+        <translation type="obsolete">显示精灵球图标</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1481"/>
@@ -2419,6 +2418,11 @@ This server requires a password to log in.</source>
         <location filename="../Teambuilder/client.cpp" line="1416"/>
         <source>Sort players by auth &amp;level</source>
         <translation>按等级分类玩家</translation>
+    </message>
+    <message>
+        <location filename="../Teambuilder/client.cpp" line="1476"/>
+        <source>Use Pokéball Icons</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1506"/>
@@ -5407,27 +5411,27 @@ Moves:
         <translation type="obsolete">载入widget时错误，压缩队伍失败：%1</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="117"/>
+        <location filename="../Server/security.cpp" line="118"/>
         <source>Error: cannot open the file that contains the members </source>
         <translation>无法打开含有成员的文件</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="221"/>
+        <location filename="../Server/security.cpp" line="222"/>
         <source>Error: cannot open the file that contains the members (%1)</source>
         <translation>错误：无法打开文件(%1)</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="259"/>
+        <location filename="../Server/security.cpp" line="260"/>
         <source>Impossible to change %1</source>
         <translation>无法修改%1</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="276"/>
+        <location filename="../Server/security.cpp" line="277"/>
         <source>Error: cannot rename the file that contains the members (%1 -&gt; %2)</source>
         <translation>错误：无法重命名文件（%1 -&gt; %2）</translation>
     </message>
     <message>
-        <location filename="../Server/security.cpp" line="282"/>
+        <location filename="../Server/security.cpp" line="283"/>
         <source>Error: cannot reopen the file that contains the members (%1)</source>
         <translation>错误：无法重新打开文件(%1)</translation>
     </message>
@@ -5788,7 +5792,7 @@ Moves:
     </message>
     <message>
         <location filename="../client-plugins/ClientScripting/scriptwindow.cpp" line="78"/>
-        <source>You need to be connected to a server to load moogle&apos;s scripts.</source>
+        <source>You need to be connected to a server to load Moogle&apos;s scripts.</source>
         <translation>你需要连接到服务器以载入Moogle脚本</translation>
     </message>
 </context>
