@@ -4,10 +4,6 @@
 <context>
     <name>AdvancedSearch</name>
     <message>
-        <source>Types</source>
-        <translation type="obsolete">Tipos</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="34"/>
         <source>Type 1</source>
         <translation>Tipo 1</translation>
@@ -16,10 +12,6 @@
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="41"/>
         <source>Type 2</source>
         <translation>Tipo 2</translation>
-    </message>
-    <message>
-        <source>Ability</source>
-        <translation type="obsolete">Abilidade</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="14"/>
@@ -107,10 +99,6 @@
         <translation type="unfinished">&amp;Ataques</translation>
     </message>
     <message>
-        <source>Moves</source>
-        <translation type="obsolete">Ataques</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="327"/>
         <source>&amp;Search !</source>
         <translation>&amp;Procurar !</translation>
@@ -128,10 +116,6 @@
 </context>
 <context>
     <name>Analyzer</name>
-    <message>
-        <source>The server requires insecure authentification.</source>
-        <translation type="obsolete">O servidor requeriu uma autentificação insegura.</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/analyze.cpp" line="478"/>
         <source>The server requires insecure authentication.</source>
@@ -193,27 +177,6 @@
     </message>
 </context>
 <context>
-    <name>AttackButton</name>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-Poderr: %2
-Prescisão: %3
-
-Descrição: %4
-
-Efeito: %5</translation>
-    </message>
-</context>
-<context>
     <name>AttackZone</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1007"/>
@@ -249,10 +212,6 @@ Efeito: %5</translation>
 </context>
 <context>
     <name>BaseBattleWindow</name>
-    <message>
-        <source>Battle between %1 and %2 is underway!</source>
-        <translation type="obsolete">Batalha entre %1 e %2 em andamento!</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="118"/>
         <source>%1 vs %2</source>
@@ -310,84 +269,9 @@ Efeito: %5</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Sen&amp;d</source>
-        <translation type="obsolete">Envia&amp;r</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1 escolheu %2!</translation>
-    </message>
-    <message>
-        <source>%1 called %2 back!</source>
-        <translation type="obsolete">%1 chamou %2 de volta!</translation>
-    </message>
-    <message>
-        <source>Start of turn %1</source>
-        <translation type="obsolete">Inicio do turno %1</translation>
-    </message>
-    <message>
-        <source>%1 is watching the battle.</source>
-        <translation type="obsolete">%1 está assistindo a batalha.</translation>
-    </message>
-    <message>
-        <source>%1 stopped watching the battle.</source>
-        <translation type="obsolete">%1 parou de assistir a batalha.</translation>
-    </message>
-    <message>
-        <source>But there is no target pokÃ©mon!</source>
-        <translation type="obsolete">Mas aí não há alvo pokémon!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="156"/>
         <source>C&amp;hat</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ignore Spectators</source>
-        <translation type="obsolete">&amp;Ignorar Espectadores</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">%1 escolheu %2! (%3)</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1 perdeu %2% da sua vida!</translation>
-    </message>
-    <message>
-        <source>Tie between %1 and %2!</source>
-        <translation type="obsolete">Empate entre %1 e %2!</translation>
-    </message>
-    <message>
-        <source>%1 won the battle!</source>
-        <translation type="obsolete">%1 venceu a batalha!</translation>
-    </message>
-    <message>
-        <source>Rule: </source>
-        <translation type="obsolete">Regra: </translation>
-    </message>
-    <message>
-        <source>Tier: </source>
-        <translation type="obsolete">Categoria: </translation>
-    </message>
-    <message>
-        <source>Unknown command received, are you up to date?</source>
-        <translation type="obsolete">Comando desconhecido recebido, você está atualizado?</translation>
-    </message>
-</context>
-<context>
-    <name>BaseChallengeWindow</name>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">Solo</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">Duplas</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">Triplas</translation>
     </message>
 </context>
 <context>
@@ -980,68 +864,7 @@ Efeito: %5</translation>
     </message>
 </context>
 <context>
-    <name>BattleFinder</name>
-    <message>
-        <source>Force rated battles</source>
-        <translation type="obsolete">Forçar batalhas rated</translation>
-    </message>
-    <message>
-        <source>Force same tier</source>
-        <translation type="obsolete">Forçar mesma categoria</translation>
-    </message>
-    <message>
-        <source>Double battle</source>
-        <translation type="obsolete">Batalha em dupla</translation>
-    </message>
-    <message>
-        <source>Only battle players with a max rating difference of </source>
-        <translation type="obsolete">Apenas jogadores com uma diferença máxima de rating</translation>
-    </message>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">Solo</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">Duplas</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">Triplas</translation>
-    </message>
-    <message>
-        <source>Find Battle</source>
-        <translation type="obsolete">Procurar Batalha</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="obsolete">Cancelar</translation>
-    </message>
-</context>
-<context>
     <name>BattlePokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Item:%3
-Abilidade:%4
-
-Ataques:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1182"/>
         <source> - %1/%2 PP</source>
@@ -1127,10 +950,6 @@ Moves:
         <translation>&amp;Desistir</translation>
     </message>
     <message>
-        <source>Sen&amp;d</source>
-        <translation type="obsolete">Envia&amp;r</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="112"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Cancelar</translation>
@@ -1185,10 +1004,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Battle between %1 and %2 started!</source>
-        <translation type="obsolete">Batalha entre %1 e %2 começou!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="222"/>
         <source>&amp;Go Back</source>
         <translation>&amp;Voltar</translation>
@@ -1211,34 +1026,10 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">%1 escolheu %2 (%3)</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1 escolheu %2!</translation>
-    </message>
-    <message>
-        <source>%1 lost %2 HP! (%3% of its health)</source>
-        <translation type="obsolete">%1 perdeu %2  de HP!(%3% do HP)</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1 perdeu %2% do HP!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="736"/>
         <location filename="../Teambuilder/battlewindow.cpp" line="816"/>
         <source>&amp;Close</source>
         <translation>&amp;Fechar</translation>
-    </message>
-    <message>
-        <source>Variation: </source>
-        <translation type="obsolete">Variação: </translation>
-    </message>
-    <message>
-        <source>Rule: </source>
-        <translation type="obsolete">Regra(s): </translation>
     </message>
 </context>
 <context>
@@ -1267,25 +1058,6 @@ Moves:
         <location filename="../Server/battlingoptions.cpp" line="58"/>
         <source>&amp;Apply</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>BigOpenPokeBall</name>
-    <message>
-        <source>Type: </source>
-        <translation type="obsolete">Tipo: </translation>
-    </message>
-    <message>
-        <source>Gender: </source>
-        <translation type="obsolete">Gênero: </translation>
-    </message>
-    <message>
-        <source>&amp;Evolution</source>
-        <translation type="obsolete">&amp;Evolução</translation>
-    </message>
-    <message>
-        <source>&amp;Other Formes</source>
-        <translation type="obsolete">&amp;Outras Formas</translation>
     </message>
 </context>
 <context>
@@ -1356,36 +1128,6 @@ Moves:
         <location filename="../Teambuilder/challengedialog.cpp" line="240"/>
         <source>%1&apos;s info</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ChallengeWindow</name>
-    <message>
-        <source>%1&apos;s Info</source>
-        <translation type="obsolete">Info de %1</translation>
-    </message>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;Desafiar</translation>
-    </message>
-    <message>
-        <source>Go &amp;Back</source>
-        <translation type="obsolete">&amp;Fechar</translation>
-    </message>
-</context>
-<context>
-    <name>ChallengedWindow</name>
-    <message>
-        <source>%1 challenged you!</source>
-        <translation type="obsolete">%1 está desafiando você!</translation>
-    </message>
-    <message>
-        <source>&amp;Accept</source>
-        <translation type="obsolete">&amp;Aceitar</translation>
-    </message>
-    <message>
-        <source>&amp;Refuse</source>
-        <translation type="obsolete">&amp;Recusar</translation>
     </message>
 </context>
 <context>
@@ -1472,10 +1214,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">&amp;Painel de Controle</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="101"/>
         <source>&amp;Kick</source>
         <translation>&amp;Kickar</translation>
@@ -1489,18 +1227,6 @@ Moves:
         <location filename="../Teambuilder/channel.cpp" line="105"/>
         <source>24 hours</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">&amp;Banir</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">Batalha entre %1 e %2 começou.</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">Batalhando contra %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="324"/>
@@ -1538,10 +1264,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;i&gt;Unkown command received: %1. Maybe the client should be updated?&lt;/i&gt;</source>
-        <translation type="obsolete">&lt;i&gt;Comando deconhecido recebido: %1. Talvez seja a hora de atualizar o cliente.&lt;/i&gt;</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="543"/>
         <source>%1 logged out.</source>
         <translation>%1 saiu do server.</translation>
@@ -1566,45 +1288,9 @@ Moves:
         <translation>&amp;Enviar</translation>
     </message>
     <message>
-        <source>&amp;Challenge Window</source>
-        <translation type="obsolete">Janela de &amp;Desafio</translation>
-    </message>
-    <message>
-        <source>Go &amp;Back</source>
-        <translation type="obsolete">Sair do &amp;Away</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="104"/>
         <source>&amp;Find Battle</source>
         <translation>&amp;Procurar Batalha</translation>
-    </message>
-    <message>
-        <source>Go &amp;Away</source>
-        <translation type="obsolete">Ficar &amp;Away</translation>
-    </message>
-    <message>
-        <source>&amp;Watch Battle</source>
-        <translation type="obsolete">&amp;Ver Batalha</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Ignore</source>
-        <translation type="obsolete">&amp;Remover Ignorar</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">&amp;Ignorar</translation>
-    </message>
-    <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">&amp;Painel de Controle</translation>
-    </message>
-    <message>
-        <source>&amp;Kick</source>
-        <translation type="obsolete">&amp;Kickar</translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">&amp;Banir</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1278"/>
@@ -1612,33 +1298,9 @@ Moves:
         <translation>&amp;Arquivo</translation>
     </message>
     <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;Carregar Equipe</translation>
-    </message>
-    <message>
-        <source>Open &amp;TeamBuilder</source>
-        <translation type="obsolete">Abrir &amp;TeamBuilder</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;Tema</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">Recaregar StyleSheet</translation>
-    </message>
-    <message>
-        <source>&amp;Actions</source>
-        <translation type="obsolete">&amp;Ações</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1452"/>
         <source>Save &amp;Battle Logs</source>
         <translation>Salvar Logs de &amp;Batalha</translation>
-    </message>
-    <message>
-        <source>&amp;Show Team</source>
-        <translation type="obsolete">&amp;Mostrar Equipe</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1298"/>
@@ -1646,21 +1308,9 @@ Moves:
         <translation>&amp;Opções</translation>
     </message>
     <message>
-        <source>Enable &amp;Ladder</source>
-        <translation type="obsolete">Ativar &amp;Ladder</translation>
-    </message>
-    <message>
-        <source>Show Player &amp;Events</source>
-        <translation type="obsolete">Mostrar &amp;Eventos do Jogador</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1461"/>
         <source>Animate HP Bar</source>
         <translation>HP Bar Animada</translation>
-    </message>
-    <message>
-        <source>Old School buttons</source>
-        <translation type="obsolete">Botões Antigos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1537"/>
@@ -1702,26 +1352,6 @@ Moves:
         <location filename="../Teambuilder/client.cpp" line="1581"/>
         <source>Enter your password</source>
         <translation>Digite sua senha</translation>
-    </message>
-    <message>
-        <source>Enter your password.
-
-It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation type="obsolete">Digite sua senha.
-
-É aconselhável usar uma senha ligeiramente diferente para cada servidor. (O servidor só vê a forma criptografada da senha, mas mesmo assim ...)</translation>
-    </message>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;Desafiar</translation>
-    </message>
-    <message>
-        <source>&amp;View Ranking</source>
-        <translation type="obsolete">&amp;Ver Ranking</translation>
-    </message>
-    <message>
-        <source>&amp;Send Message</source>
-        <translation type="obsolete">&amp;Enviar Mensagem</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="59"/>
@@ -2080,17 +1710,9 @@ This server requires a password to log in.</source>
         <translation type="unfinished">&amp;Carregar Equipe</translation>
     </message>
     <message>
-        <source>Open &amp;teamBuilder</source>
-        <translation type="obsolete">Abrir &amp;teamBuinder</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1299"/>
         <source>&amp;Idle</source>
         <translation>&amp;Inativo</translation>
-    </message>
-    <message>
-        <source>&amp;Show team</source>
-        <translation type="obsolete">&amp;Mostrar time</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1304"/>
@@ -2143,10 +1765,6 @@ This server requires a password to log in.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Enable player events</source>
-        <translation type="obsolete">&amp;Ativar eventos</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1365"/>
         <source>Enable &amp;timestamps</source>
         <translation>Ativar &amp;timestamps</translation>
@@ -2160,10 +1778,6 @@ This server requires a password to log in.</source>
         <location filename="../Teambuilder/client.cpp" line="1383"/>
         <source>Enable logs in &amp;PM</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable timestamps in &amp;PMs</source>
-        <translation type="obsolete">Ativar relógio nas &amp;PMs</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1398"/>
@@ -2222,87 +1836,14 @@ This server requires a password to log in.</source>
         <translation>Mudar pasta de &amp;logs...</translation>
     </message>
     <message>
-        <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
-        <translation type="obsolete">&amp;Ativar sons (Testando! Remova se tiver problemas)</translation>
-    </message>
-    <message>
-        <source>Change &amp;music folder ...</source>
-        <translation type="obsolete">Mudar pasta de &amp;músicas...</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1466"/>
         <source>Old school buttons</source>
         <translation>Botões antigos</translation>
     </message>
     <message>
-        <source>&amp;Battle Options</source>
-        <comment>Menu</comment>
-        <translation type="obsolete">Opções de &amp;Batalha</translation>
-    </message>
-    <message>
-        <source>Change &amp;log folder</source>
-        <translation type="obsolete">Mudar pasta dos &amp;logs</translation>
-    </message>
-    <message>
-        <source>Enter the password for your current name.
-
-It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation type="obsolete">Digite a senha para o seu nome atual.
-
-É aconselhável usar uma senha ligeiramente diferentes para cada servidor. (O servidor só vê a forma criptografada do passe, mas mesmo assim ...)</translation>
-    </message>
-    <message>
-        <source>Battle Music Directory</source>
-        <translation type="obsolete">Pasta da Música de Batalha</translation>
-    </message>
-    <message>
-        <source>Battle Logs Directory</source>
-        <translation type="obsolete">Diretório de Logs de Batalha</translation>
-    </message>
-    <message>
-        <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation type="obsolete">Sua versão do cliente (%2) não é compatível com a do servidor (%1).</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1857"/>
         <source>Old Version</source>
         <translation>Versão Antiga</translation>
-    </message>
-    <message>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-http://www.pokemon-online.eu/downloads.php for updates.</source>
-        <translation type="obsolete">Sua versão é mais velha que o server, existe algumas coisas que você não pode fazer.
-
-http://www.pokemon-online.eu/downloads.php para atualizar</translation>
-    </message>
-    <message>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-It is recommended to update.</source>
-        <translation type="obsolete">Sua versão é mais antiga que a do servidor, pode haver algumas coisas que você não pode fazer.
-
-É recomendável uma atualização.</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">Batalha entre %1 e %2 começou.</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">Batalhando contra %1</translation>
-    </message>
-    <message>
-        <source>%1 forfeited against %2.</source>
-        <translation type="obsolete">%1 desistiu contra %2.</translation>
-    </message>
-    <message>
-        <source>%1 and %2 tied.</source>
-        <translation type="obsolete">%1 e %2 empataram.</translation>
-    </message>
-    <message>
-        <source>%1 won against %2.</source>
-        <translation type="obsolete">%1 venceu %2.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2230"/>
@@ -2350,18 +1891,6 @@ It is recommended to update.</source>
         <translation>%1 está ativo e pronto para batalhar.</translation>
     </message>
     <message>
-        <source>%1 is away.</source>
-        <translation type="obsolete">%1 está ausente.</translation>
-    </message>
-    <message>
-        <source>%1 has returned.</source>
-        <translation type="obsolete">%1 retornou.</translation>
-    </message>
-    <message>
-        <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation type="obsolete">Erro ao conectar com o servidor -- Erro recebido nº%1: %2</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="2336"/>
         <source>Connected to Server!</source>
         <translation>Conectado ao Servidor!</translation>
@@ -2375,22 +1904,6 @@ It is recommended to update.</source>
         <location filename="../Teambuilder/client.cpp" line="2373"/>
         <source>Disconnected from Server!</source>
         <translation type="unfinished">Desconectado do Servidor!</translation>
-    </message>
-    <message>
-        <source>%1 logged in.</source>
-        <translation type="obsolete">%1 entrou no server.</translation>
-    </message>
-    <message>
-        <source>%1 logged out.</source>
-        <translation type="obsolete">%1 saiu do server.</translation>
-    </message>
-    <message>
-        <source>%1 changed teams and is now known as %2.</source>
-        <translation type="obsolete">%1 modificou a equipe e agora se chama %2.</translation>
-    </message>
-    <message>
-        <source>%1 changed teams.</source>
-        <translation type="obsolete">%1 modificou a equipe.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2811"/>
@@ -2512,22 +2025,6 @@ It is recommended to update.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Temporary bans</source>
-        <translation type="obsolete">Bans Temporários</translation>
-    </message>
-    <message>
-        <source>Time left</source>
-        <translation type="obsolete">Tempo restante</translation>
-    </message>
-    <message>
-        <source>User Alias</source>
-        <translation type="obsolete">Nomes dos Usuários</translation>
-    </message>
-    <message>
-        <source>Ban List</source>
-        <translation type="obsolete">Lista de Banidos</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/controlpanel.ui" line="393"/>
         <source>Username</source>
         <translation>Nome</translation>
@@ -2551,10 +2048,6 @@ It is recommended to update.</source>
         <location filename="../Teambuilder/controlpanel.ui" line="256"/>
         <source>User alias</source>
         <translation>Nicks do usuário</translation>
-    </message>
-    <message>
-        <source>Ban list</source>
-        <translation type="obsolete">Lista de banidos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="327"/>
@@ -2708,13 +2201,6 @@ It is recommended to update.</source>
         <location filename="../client-plugins/CSSChanger/dialog.ui" line="65"/>
         <source>Mass color replace</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DockAdvanced</name>
-    <message>
-        <source>Advanced Options</source>
-        <translation type="obsolete">Opcoes Avancadas</translation>
     </message>
 </context>
 <context>
@@ -2911,24 +2397,6 @@ Range: %6
 Description: %5</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-Poder: %2
-Prescisão: %3
-
-Descrição: %4
-
-Efeito: %5</translation>
-    </message>
 </context>
 <context>
     <name>IvBox</name>
@@ -3016,10 +2484,6 @@ Efeito: %5</translation>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="277"/>
         <source>Spd</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">&amp;Abilidade</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="202"/>
@@ -3194,21 +2658,9 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Language Change</source>
-        <translation type="obsolete">Mudar Idioma</translation>
-    </message>
-    <message>
-        <source>Restart the application to see the changes.</source>
-        <translation type="obsolete">Reinicie o programa para ver as mudanças.</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="620"/>
         <source>&amp;Style</source>
         <translation>&amp;Tema</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">Recaregar StyleSheet</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="614"/>
@@ -3231,10 +2683,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Language Change</source>
-        <translation type="obsolete">Mudar Idioma</translation>
-    </message>
     <message>
         <location filename="../Server/mainwindow.cpp" line="15"/>
         <source>Pokemon Online Server v%1</source>
@@ -3368,10 +2816,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation type="unfinished">&amp;Arquivo</translation>
     </message>
     <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;Carregar Equipe</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.cpp" line="61"/>
         <source>%1 / %2</source>
         <translation type="unfinished"></translation>
@@ -3423,10 +2867,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Sair</translation>
     </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">&amp;Idioma</translation>
-    </message>
 </context>
 <context>
     <name>ModsWindow</name>
@@ -3473,34 +2913,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>MoveTab</name>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">Tipo</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">Nome</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">PP</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">Poder</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">Acc</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">Categoria</translation>
-    </message>
-</context>
-<context>
     <name>OldAttackButton</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1032"/>
@@ -3517,46 +2929,6 @@ Category: %4
 
 Description: %5</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Category: %5
-
-Effect: %6</source>
-        <translation type="obsolete">%1
-
-Poder: %2
-Precisão: %3
-
-Descrição: %4
-
-Categoria: %5
-
-Efeito: %6</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-Poder: %2
-Prescisão: %3
-
-Descrição: %4
-
-Efeito: %5</translation>
     </message>
 </context>
 <context>
@@ -3614,25 +2986,6 @@ Efeito: %5</translation>
         <location filename="../Teambuilder/pmsystem.cpp" line="187"/>
         <source>PokÃ©mon Online PM</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PMWindow</name>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;Desafiar</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">&amp;Ignorar</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="obsolete">&amp;Enviar</translation>
-    </message>
-    <message>
-        <source>The other party left the server, so the window was disabled.</source>
-        <translation type="obsolete">A outra pessoa saiu do servidor, por isso a janela foi desativada.</translation>
     </message>
 </context>
 <context>
@@ -3757,17 +3110,6 @@ Efeito: %5</translation>
         <location filename="../libraries/Utilities/pluginmanagerdialog.cpp" line="62"/>
         <source>Error loading plugin</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PluginManagerWidget</name>
-    <message>
-        <source>Add Plugin...</source>
-        <translation type="obsolete">Adicionar Plugin...</translation>
-    </message>
-    <message>
-        <source>Remove Plugin</source>
-        <translation type="obsolete">Remover Plugin</translation>
     </message>
 </context>
 <context>
@@ -3957,10 +3299,6 @@ Move4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">Você deseja deletar o box %1?</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="278"/>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="289"/>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="308"/>
@@ -3971,50 +3309,6 @@ Move4</source>
 </context>
 <context>
     <name>PokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5
---%6
---%7
---%8</source>
-        <translation type="obsolete">%1 lv %2
-
-Item:%3
-Abilidade:%4
-
-Ataques:
---%5
---%6
---%7
---%8</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Item:%3
-Abilidade:%4
-
-Ataques:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebutton.ui" line="57"/>
         <source>Lv. 100</source>
@@ -4115,10 +3409,6 @@ Ataques:
         <location filename="../Teambuilder/Teambuilder/pokeedit.ui" line="199"/>
         <source>&amp;Happiness</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">Felicidade</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.cpp" line="44"/>
@@ -4349,14 +3639,6 @@ Ataques:
 <context>
     <name>Pokedex</name>
     <message>
-        <source>&amp;Type Chart</source>
-        <translation type="obsolete">&amp;BattleDex</translation>
-    </message>
-    <message>
-        <source>&amp;Damage Calculator</source>
-        <translation type="obsolete">Calculadora de &amp;Dano</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="14"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
@@ -4370,25 +3652,6 @@ Ataques:
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="57"/>
         <source>&amp;Damage calculator</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PokedexBody</name>
-    <message>
-        <source>&amp;Advanced Search</source>
-        <translation type="obsolete">Busca &amp;Avançada</translation>
-    </message>
-    <message>
-        <source>Sort Pokemon List</source>
-        <translation type="obsolete">Lista de Pokemons</translation>
-    </message>
-    <message>
-        <source>PROFILE</source>
-        <translation type="obsolete">PERFIL</translation>
-    </message>
-    <message>
-        <source>MOVES</source>
-        <translation type="obsolete">ATAQUES</translation>
     </message>
 </context>
 <context>
@@ -4422,24 +3685,6 @@ Ataques:
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="115"/>
         <source>&amp;Advanced search</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBox</name>
-    <message>
-        <source>The box is full!</source>
-        <translation type="obsolete">O box está cheio!</translation>
-    </message>
-    <message>
-        <source>There is no pokemon there!</source>
-        <translation type="obsolete">Não têm pokémon aí!</translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBoxButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">Pokémon &amp;%1</translation>
     </message>
 </context>
 <context>
@@ -4483,17 +3728,6 @@ Ataques:
     </message>
 </context>
 <context>
-    <name>ProfileTab</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">Descrição</translation>
-    </message>
-    <message>
-        <source>Abilities</source>
-        <translation type="obsolete">Habilidades</translation>
-    </message>
-</context>
-<context>
     <name>QJson::ParserRunnable</name>
     <message>
         <location filename="../libraries/QJson/parserrunnable.cpp" line="64"/>
@@ -4521,14 +3755,6 @@ Ataques:
         <location filename="../libraries/PokemonInfo/pokemonstructs.cpp" line="172"/>
         <source>%1 already has move %2.</source>
         <translation type="unfinished">%1 já tem o ataque %2.</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn %2 with moves from the third gen.</source>
-        <translation type="obsolete">%1 não pode aprender %2 com ataques da terceira geração.</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn the combination of %2.</source>
-        <translation type="obsolete">%1 não pode aprender a combinação de %2.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="188"/>
@@ -4584,10 +3810,6 @@ Ataques:
         <location filename="../libraries/PokemonInfo/pokemonstructs.cpp" line="931"/>
         <source>Error while loading the team, the client is outdated.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No Time Out</source>
-        <translation type="obsolete">Sem Tempo Limite</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="12"/>
@@ -4699,30 +3921,6 @@ Ataques:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation type="obsolete">Evasion Clause previne o aumento da evasão por um ataque.</translation>
-    </message>
-    <message>
-        <source>OHKO Clause prevented the One Hit KO from happening.</source>
-        <translation type="obsolete">OHKO Clause previne que One Hit KO aconteça.</translation>
-    </message>
-    <message>
-        <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
-        <translation type="obsolete">Você não pode por mais de um Pokémon do adversário para durmir ao mesmo tempo.</translation>
-    </message>
-    <message>
-        <source>You can not freeze more than one Pokémon of the opposing team at the same time.</source>
-        <translation type="obsolete">Você não pode congelar mais de um Pokémon do adversário ao mesmo tempo.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use evasion moves like Double Team.</source>
-        <translation type="obsolete">Você não pode usar ataques de evasão como Double Team.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use One Hit KO moves like Fissure.</source>
-        <translation type="obsolete">Você não pode usar ataques One Hit KO como Fissure.</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="42"/>
         <source>Nobody can watch your battle.</source>
         <translation type="unfinished">Ninguém pode assistir sua batalha.</translation>
@@ -4731,10 +3929,6 @@ Ataques:
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="43"/>
         <source>No more than one of the same items is allowed per team.</source>
         <translation type="unfinished">Não mais que um item do mesmo time permitido por equipe.</translation>
-    </message>
-    <message>
-        <source>Pokémons levels are changed according to their strength.</source>
-        <translation type="obsolete">Os leveis dos Pokémons foram mudados de acordo com sua força.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="44"/>
@@ -4750,10 +3944,6 @@ Ataques:
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="46"/>
         <source>One player cannot have more than one of the same pokemon per team.</source>
         <translation type="unfinished">Um jogador não pode ter pokémons iguais no mesmo time.</translation>
-    </message>
-    <message>
-        <source>Saving the battle</source>
-        <translation type="obsolete">Salvando a batalha.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="239"/>
@@ -5438,14 +4628,6 @@ Ataques:
 <context>
     <name>ServerChoice</name>
     <message>
-        <source>Server Name</source>
-        <translation type="obsolete">Nome do Server</translation>
-    </message>
-    <message>
-        <source>Players / Max</source>
-        <translation type="obsolete">Jogadores / Max</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/serverchoice.ui" line="14"/>
         <source>Server list</source>
         <translation type="unfinished"></translation>
@@ -5495,14 +4677,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/serverchoice.ui" line="164"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Players</source>
-        <translation type="obsolete">Jogadores</translation>
-    </message>
-    <message>
-        <source>Advanced connection</source>
-        <translation type="obsolete">Conecção Avançada</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="142"/>
@@ -5722,314 +4896,7 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>StatTab</name>
-    <message>
-        <source>Statistics</source>
-        <translation type="obsolete">Estatisticas</translation>
-    </message>
-    <message>
-        <source>Weakness</source>
-        <translation type="obsolete">Fraqueza a</translation>
-    </message>
-    <message>
-        <source>Resistance</source>
-        <translation type="obsolete">Resistência a</translation>
-    </message>
-    <message>
-        <source>Immunity</source>
-        <translation type="obsolete">Imunidade a</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Advanced</name>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="obsolete">&amp;Tipo:</translation>
-    </message>
-    <message>
-        <source>Power:</source>
-        <translation type="obsolete">Poder:</translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">Felicidade</translation>
-    </message>
-    <message>
-        <source>&amp;Gender</source>
-        <translation type="obsolete">&amp;Gênero</translation>
-    </message>
-    <message>
-        <source>Male</source>
-        <translation type="obsolete">Macho</translation>
-    </message>
-    <message>
-        <source>Female</source>
-        <translation type="obsolete">Fêmea</translation>
-    </message>
-    <message>
-        <source>Neutral</source>
-        <translation type="obsolete">Indefinido</translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">&amp;Abilidade</translation>
-    </message>
-    <message>
-        <source>Alternate Formes</source>
-        <translation type="obsolete">Formas Alternativas</translation>
-    </message>
-    <message>
-        <source>Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</source>
-        <translation type="obsolete">Erro fatal no TB_Advanced:: stat (QObject *): o ponteiro fornecido não corresponde a qualquer dvchoice</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Menu</name>
-    <message>
-        <source>&amp;File</source>
-        <translation type="obsolete">&amp;Arquivo</translation>
-    </message>
-    <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;Carregar Equipe</translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation type="obsolete">&amp;Sair</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;Tema</translation>
-    </message>
-    <message>
-        <source>&amp;Language</source>
-        <oldsource>Language</oldsource>
-        <translation type="obsolete">&amp;Idioma</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBody</name>
-    <message>
-        <source>&amp;Nickname</source>
-        <translation type="obsolete">&amp;Apelido</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="obsolete">&amp;Importar</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="obsolete">&amp;Exportar</translation>
-    </message>
-    <message>
-        <source>&amp;Advanced</source>
-        <translation type="obsolete">&amp;Avançado</translation>
-    </message>
-    <message>
-        <source>&amp;Moves</source>
-        <translation type="obsolete">&amp;Ataques</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">Tipo</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">Nome</translation>
-    </message>
-    <message>
-        <source>Learning</source>
-        <translation type="obsolete">Aprende</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">PP</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">Poder</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">Acc</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">Categoria</translation>
-    </message>
-    <message>
-        <source>Type 1: %1</source>
-        <translation type="obsolete">Tipo 1: %1</translation>
-    </message>
-    <message>
-        <source>Type 2: %1</source>
-        <translation type="obsolete">Tipo 2: %1</translation>
-    </message>
-    <message>
-        <source>PokÃ©mon %1</source>
-        <translation type="obsolete">Pokémon %1</translation>
-    </message>
-    <message>
-        <source>Side Window</source>
-        <translation type="obsolete">Janela Lateral</translation>
-    </message>
-    <message>
-        <source>New Window</source>
-        <translation type="obsolete">Janela Separada</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Erro</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBoxes</name>
-    <message>
-        <source>Change Order</source>
-        <translation type="obsolete">Mudar Ordem</translation>
-    </message>
-    <message>
-        <source>&amp;Store</source>
-        <translation type="obsolete">&amp;Depositar</translation>
-    </message>
-    <message>
-        <source>&amp;Withdraw</source>
-        <translation type="obsolete">&amp;Retirar</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Box Name...</source>
-        <translation type="obsolete">&amp;Editar Nome do Box</translation>
-    </message>
-    <message>
-        <source>&amp;Add New Box</source>
-        <translation type="obsolete">&amp;Adicionar Novo Box</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Current Box</source>
-        <translation type="obsolete">&amp;Deletar Box Atual</translation>
-    </message>
-    <message>
-        <source>Edit Box Name</source>
-        <translation type="obsolete">Editando nome do Box</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the box %1:</source>
-        <translation type="obsolete">Digite um novo nome para o box %1:</translation>
-    </message>
-    <message>
-        <source>New Box</source>
-        <translation type="obsolete">Novo Box</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the new box:</source>
-        <translation type="obsolete">Digite um novo nome para o novo box:</translation>
-    </message>
-    <message>
-        <source>Destroying a box</source>
-        <translation type="obsolete">Destruindo um box</translation>
-    </message>
-    <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">Você deseja deletar o box %1?</translation>
-    </message>
-    <message>
-        <source>Switc&amp;h</source>
-        <translation type="obsolete">Tro&amp;car</translation>
-    </message>
-    <message>
-        <source>Dele&amp;te</source>
-        <translation type="obsolete">Dele&amp;tar</translation>
-    </message>
-    <message>
-        <source>Full Box</source>
-        <translation type="obsolete">Box Cheio</translation>
-    </message>
-    <message>
-        <source>Empty Box</source>
-        <translation type="obsolete">Box Vazio</translation>
-    </message>
-    <message>
-        <source>Box Empty</source>
-        <translation type="obsolete">Box Esvaziado</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonDetail</name>
-    <message>
-        <source>Moves:</source>
-        <translation type="obsolete">Ataques:</translation>
-    </message>
-</context>
-<context>
-    <name>TB_TrainerBody</name>
-    <message>
-        <source>T&amp;rainer</source>
-        <translation type="obsolete">T&amp;reinador</translation>
-    </message>
-    <message>
-        <source>Player &amp;Info</source>
-        <translation type="obsolete">&amp;Informação do Jogador</translation>
-    </message>
-    <message>
-        <source>Avatar</source>
-        <translation type="obsolete">Avatar</translation>
-    </message>
-    <message>
-        <source>Trainer &amp;Name</source>
-        <translation type="obsolete">&amp;Nome do Treinador</translation>
-    </message>
-    <message>
-        <source>Name Color</source>
-        <translation type="obsolete">Cor do Nome</translation>
-    </message>
-    <message>
-        <source>Change &amp;Color</source>
-        <translation type="obsolete">Trocar &amp;Cor</translation>
-    </message>
-    <message>
-        <source>Team Tier</source>
-        <translation type="obsolete">Categoria da Equipe</translation>
-    </message>
-    <message>
-        <source>Trainer I&amp;nformation</source>
-        <translation type="obsolete">&amp;Informação Pessoal</translation>
-    </message>
-    <message>
-        <source>&amp;Winning Message</source>
-        <translation type="obsolete">&amp;Mensagem ao vencer</translation>
-    </message>
-    <message>
-        <source>L&amp;osing Message</source>
-        <translation type="obsolete">Mensagem ao &amp;Perder</translation>
-    </message>
-    <message>
-        <source>&amp;Losing Message</source>
-        <translation type="obsolete">&amp;Mensagem ao perder</translation>
-    </message>
-    <message>
-        <source>&amp;Save</source>
-        <translation type="obsolete">&amp;Salvar</translation>
-    </message>
-    <message>
-        <source>&amp;Load</source>
-        <translation type="obsolete">&amp;Carregar</translation>
-    </message>
-    <message>
-        <source>&amp;Done</source>
-        <translation type="obsolete">&amp;Concluído</translation>
-    </message>
-</context>
-<context>
     <name>TeamBuilder</name>
-    <message>
-        <source>New Team</source>
-        <translation type="obsolete">Nova Equipe</translation>
-    </message>
-    <message>
-        <source>You sure?</source>
-        <translation type="obsolete">Tem certeza?</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="39"/>
         <source>Teambuilder</source>
@@ -6234,23 +5101,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;New Team</source>
-        <translation type="obsolete">&amp;Nova Equipe</translation>
-    </message>
-    <message>
-        <source>&amp;New team</source>
-        <oldsource>&amp;Save Team</oldsource>
-        <translation type="obsolete">&amp;Nova Equipe</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="87"/>
         <source>&amp;Save team</source>
         <oldsource>&amp;Load Team</oldsource>
         <translation>&amp;Salvar Equipe</translation>
-    </message>
-    <message>
-        <source>&amp;Import From Txt</source>
-        <translation type="obsolete">&amp;Importar do Txt</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="86"/>
@@ -6258,64 +5112,18 @@ p, li { white-space: pre-wrap; }
         <translation>&amp;Carregar equipe</translation>
     </message>
     <message>
-        <source>&amp;Import from text</source>
-        <translation type="obsolete">&amp;Importar do texto</translation>
-    </message>
-    <message>
-        <source>&amp;Export to text</source>
-        <translation type="obsolete">&amp;Exportar para texto</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="78"/>
         <source>&amp;Quit</source>
         <translation>&amp;Sair</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;Tema</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">Recaregar StyleSheet</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="126"/>
         <source>&amp;Gen.</source>
         <translation type="unfinished">&amp;Geração</translation>
     </message>
-    <message>
-        <source>Advance (&amp;3rd gen)</source>
-        <translation type="obsolete">Advance (&amp;3ª geração)</translation>
-    </message>
-    <message>
-        <source>HGSS (&amp;4th gen)</source>
-        <translation type="obsolete">HGSS (&amp;4ª Geração)</translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation type="obsolete">&amp;Vizualizar</translation>
-    </message>
-    <message>
-        <source>&amp;Show all items</source>
-        <translation type="obsolete">&amp;Mostrar todos os items</translation>
-    </message>
-    <message>
-        <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translation type="obsolete">&amp;Tela Cheia (Somente para netbooks)</translation>
-    </message>
 </context>
 <context>
     <name>TeamImporter</name>
-    <message>
-        <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle</source>
-        <translation type="obsolete">Cole sua equipe exportada do Netbattle Supremacy / Shoddy Battle</translation>
-    </message>
-    <message>
-        <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
-Your language needs to be set to English to import English teams.</source>
-        <translation type="obsolete">Cole sua equipe exportado do Netbattle Supremacy / Shattle
-Sua linguagem precisa estar em Inglês para poder importar times.</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="12"/>
         <source>Paste your exported team here.
@@ -6403,17 +5211,6 @@ Your language needs to be set to English to import English teams.</source>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="77"/>
         <source>Boxes (#&amp;%1)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Gen.</source>
-        <translation type="obsolete">&amp;Geração</translation>
-    </message>
-</context>
-<context>
-    <name>TeamPokeButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">Pokémon &amp;%1</translation>
     </message>
 </context>
 <context>

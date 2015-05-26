@@ -4,10 +4,6 @@
 <context>
     <name>AdvancedSearch</name>
     <message>
-        <source>Types</source>
-        <translation type="obsolete">属性</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="34"/>
         <source>Type 1</source>
         <translation>属性1</translation>
@@ -16,18 +12,6 @@
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="41"/>
         <source>Type 2</source>
         <translation>属性2</translation>
-    </message>
-    <message>
-        <source>Ability</source>
-        <translation type="obsolete">特性</translation>
-    </message>
-    <message>
-        <source>Base Stats</source>
-        <translation type="obsolete">种族值</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation type="obsolete"> </translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="14"/>
@@ -48,10 +32,6 @@
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="77"/>
         <source>&amp;Base Stats</source>
         <translation>种族值</translation>
-    </message>
-    <message>
-        <source>Life Points</source>
-        <translation type="obsolete">HP</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="83"/>
@@ -119,10 +99,6 @@
         <translation>技能</translation>
     </message>
     <message>
-        <source>Moves</source>
-        <translation type="obsolete">技能</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="327"/>
         <source>&amp;Search !</source>
         <translation>搜索！</translation>
@@ -140,10 +116,6 @@
 </context>
 <context>
     <name>Analyzer</name>
-    <message>
-        <source>The server requires insecure authentification.</source>
-        <translation type="obsolete">服务器请求不安全的认证。</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/analyze.cpp" line="478"/>
         <source>The server requires insecure authentication.</source>
@@ -199,10 +171,6 @@
         <translation>显示“过于频繁”信息的频道：</translation>
     </message>
     <message>
-        <source>Trusted IPs (seperated by comma)</source>
-        <translation type="obsolete">信任IP（逗号分隔）</translation>
-    </message>
-    <message>
         <location filename="../libraries/Utilities/antidoswindow.cpp" line="51"/>
         <source>Turn AntiDos ON</source>
         <translation>开启反DOS</translation>
@@ -243,34 +211,7 @@
     </message>
 </context>
 <context>
-    <name>BaseBattleDisplay</name>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Lv. %1</translation>
-    </message>
-    <message>
-        <source>%1 lv %2 -- %3%</source>
-        <translation type="obsolete">%1 lv %2 -- %3%</translation>
-    </message>
-    <message>
-        <source>Spikes level %1</source>
-        <translation type="obsolete">撒菱次数 %1</translation>
-    </message>
-    <message>
-        <source>Toxic Spikes level %1</source>
-        <translation type="obsolete">毒菱次数 %1</translation>
-    </message>
-    <message>
-        <source>Stealth Rock</source>
-        <translation type="obsolete">隐秘岩石</translation>
-    </message>
-</context>
-<context>
     <name>BaseBattleWindow</name>
-    <message>
-        <source>Battle between %1 and %2 is underway!</source>
-        <translation type="obsolete">%1与%2的战斗正在进行！</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="129"/>
         <source>Battle between %1 and %2</source>
@@ -295,94 +236,6 @@
         <location filename="../Teambuilder/basebattlewindow.cpp" line="156"/>
         <source>C&amp;hat</source>
         <translation>聊天</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore Spectators</source>
-        <translation type="obsolete">忽略观战者</translation>
-    </message>
-    <message>
-        <source>%1&apos;s %2</source>
-        <translation type="obsolete">%1的%2</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">%1放出了%2！ (%3)</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1放出了%2！</translation>
-    </message>
-    <message>
-        <source>%1 called %2 back!</source>
-        <translation type="obsolete">%1收回了%2！</translation>
-    </message>
-    <message>
-        <source>%1 used %2!</source>
-        <translation type="obsolete">%1使用了%2！</translation>
-    </message>
-    <message>
-        <source>Start of turn %1</source>
-        <translation type="obsolete">开始回合%1</translation>
-    </message>
-    <message>
-        <source>%1 fainted!</source>
-        <translation type="obsolete">%1倒下了！</translation>
-    </message>
-    <message>
-        <source>Hit %1 times!</source>
-        <translation type="obsolete">击中%1次！</translation>
-    </message>
-    <message>
-        <source>It had no effect!</source>
-        <translation type="obsolete">攻击没有效果！</translation>
-    </message>
-    <message>
-        <source>It&apos;s not very effective...</source>
-        <translation type="obsolete">这不是很有效...</translation>
-    </message>
-    <message>
-        <source>It&apos;s super effective!</source>
-        <translation type="obsolete">这非常有效！</translation>
-    </message>
-    <message>
-        <source>A critical hit!</source>
-        <translation type="obsolete">会心一击！</translation>
-    </message>
-    <message>
-        <source>The attack of %1 missed!</source>
-        <translation type="obsolete">%1的攻击没有命中！</translation>
-    </message>
-    <message>
-        <source>%1 avoided the attack!</source>
-        <translation type="obsolete">%1避开了攻击！</translation>
-    </message>
-    <message>
-        <source>%1&apos;s %2 %3%4!</source>
-        <translation type="obsolete">%1的%2%3%4！</translation>
-    </message>
-    <message>
-        <source>sharply </source>
-        <translation type="obsolete">迅速</translation>
-    </message>
-    <message>
-        <source>rose</source>
-        <translation type="obsolete">提升</translation>
-    </message>
-    <message>
-        <source>fell</source>
-        <translation type="obsolete">下降</translation>
-    </message>
-    <message>
-        <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation type="obsolete">%1麻痹了！它将可能无法行动！</translation>
-    </message>
-    <message>
-        <source>%1 was burned!</source>
-        <translation type="obsolete">%1烧伤了！</translation>
-    </message>
-    <message>
-        <source>%1 was frozen solid!</source>
-        <translation type="obsolete">%1冻结了！</translation>
     </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="118"/>
@@ -419,177 +272,6 @@
         <location filename="../Teambuilder/basebattlewindow.cpp" line="476"/>
         <source>Stop &amp;ignoring</source>
         <translation>停止忽略</translation>
-    </message>
-    <message>
-        <source>%1 fell asleep!</source>
-        <translation type="obsolete">%1睡着了！</translation>
-    </message>
-    <message>
-        <source>%1 was poisoned!</source>
-        <translation type="obsolete">%1中毒了！</translation>
-    </message>
-    <message>
-        <source>%1 was badly poisoned!</source>
-        <translation type="obsolete">%1中了剧毒！</translation>
-    </message>
-    <message>
-        <source>%1 became confused!</source>
-        <translation type="obsolete">%1混乱了！</translation>
-    </message>
-    <message>
-        <source>%1 is already %2.</source>
-        <translation type="obsolete">%1已经处于%2状态。</translation>
-    </message>
-    <message>
-        <source>%1 is confused!</source>
-        <translation type="obsolete">%1混乱了！</translation>
-    </message>
-    <message>
-        <source>It hurt itself in its confusion!</source>
-        <translation type="obsolete">它在混乱中攻击了自己！</translation>
-    </message>
-    <message>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="obsolete">%1的混乱解除了！</translation>
-    </message>
-    <message>
-        <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation type="obsolete">%1麻痹了！它无法行动！</translation>
-    </message>
-    <message>
-        <source>%1 is fast asleep!</source>
-        <translation type="obsolete">%1正在睡觉。</translation>
-    </message>
-    <message>
-        <source>%1 woke up!</source>
-        <translation type="obsolete">%1醒来了！</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="obsolete">%1因烧伤而受到伤害！</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by poison!</source>
-        <translation type="obsolete">%1受到了毒素的伤害！</translation>
-    </message>
-    <message>
-        <source>%1 is frozen solid!</source>
-        <translation type="obsolete">%1因冻结而无法行动。</translation>
-    </message>
-    <message>
-        <source>%1 thawed out!</source>
-        <translation type="obsolete">%1解冻了！</translation>
-    </message>
-    <message>
-        <source>But it failed!</source>
-        <translation type="obsolete">但它失败了！</translation>
-    </message>
-    <message>
-        <source>But there was no target...</source>
-        <translation type="obsolete">但是攻击没有目标...</translation>
-    </message>
-    <message>
-        <source>%1 flinched!</source>
-        <translation type="obsolete">%1害怕了！</translation>
-    </message>
-    <message>
-        <source>%1 is hit with recoil!</source>
-        <translation type="obsolete">%1受到了伤害反弹！</translation>
-    </message>
-    <message>
-        <source>The hail subsided!</source>
-        <translation type="obsolete">冰雹停止了！</translation>
-    </message>
-    <message>
-        <source>The sandstorm subsided!</source>
-        <translation type="obsolete">沙尘暴停止了！</translation>
-    </message>
-    <message>
-        <source>The sunlight faded!</source>
-        <translation type="obsolete">阳光变弱了！</translation>
-    </message>
-    <message>
-        <source>The rain stopped!</source>
-        <translation type="obsolete">雨停了！</translation>
-    </message>
-    <message>
-        <source>%1 is buffeted by the hail!</source>
-        <translation type="obsolete">%1被冰雹击中！</translation>
-    </message>
-    <message>
-        <source>%1 is buffeted by the sandstorm!</source>
-        <translation type="obsolete">%1被沙尘暴击中！</translation>
-    </message>
-    <message>
-        <source>Hail continues to fall!</source>
-        <translation type="obsolete">冰雹继续下着。</translation>
-    </message>
-    <message>
-        <source>The sandstorm rages!</source>
-        <translation type="obsolete">沙尘暴继续刮着。</translation>
-    </message>
-    <message>
-        <source>The sunlight is strong!</source>
-        <translation type="obsolete">阳光很强。</translation>
-    </message>
-    <message>
-        <source>Rain continues to fall!</source>
-        <translation type="obsolete">雨一直下。</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1失去了%2%的HP！</translation>
-    </message>
-    <message>
-        <source>Tie between %1 and %2!</source>
-        <translation type="obsolete">%1与%2打成了平手！</translation>
-    </message>
-    <message>
-        <source>%1 won the battle!</source>
-        <translation type="obsolete">%1获得了胜利！</translation>
-    </message>
-    <message>
-        <source>Rule: </source>
-        <translation type="obsolete">规则： </translation>
-    </message>
-    <message>
-        <source>Rated</source>
-        <translation type="obsolete">已分级</translation>
-    </message>
-    <message>
-        <source>Unrated</source>
-        <translation type="obsolete">未分级</translation>
-    </message>
-    <message>
-        <source>Tier: </source>
-        <translation type="obsolete">分级： </translation>
-    </message>
-    <message>
-        <source>Unknown command received, are you up to date?</source>
-        <translation type="obsolete">收到未知命令，你的版本是最新的吗？</translation>
-    </message>
-    <message>
-        <source>%1 is watching the battle.</source>
-        <translation type="obsolete">%1正在观战。</translation>
-    </message>
-    <message>
-        <source>%1 stopped watching the battle.</source>
-        <translation type="obsolete">%1停止了观战。</translation>
-    </message>
-</context>
-<context>
-    <name>BaseChallengeWindow</name>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">单打</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">双打</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">三打</translation>
     </message>
 </context>
 <context>
@@ -744,14 +426,6 @@
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="157"/>
         <source>%1&apos;s new HP is %2%.</source>
         <translation>%1的新HP是%2%。</translation>
-    </message>
-    <message>
-        <source>Hit %1 times!</source>
-        <translation type="obsolete">击中%1次！</translation>
-    </message>
-    <message>
-        <source>It had no effect!</source>
-        <translation type="obsolete">攻击没有效果！</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="163"/>
@@ -1024,10 +698,6 @@
         <translation>%1断线了！</translation>
     </message>
     <message>
-        <source>%1 is fast asleep!</source>
-        <translation type="obsolete">%1正在睡觉。</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="256"/>
         <source>%1 is frozen solid!</source>
         <translation>%1因冻结而无法行动。</translation>
@@ -1036,18 +706,6 @@
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="266"/>
         <source>It hurt itself in its confusion!</source>
         <translation>在混乱中攻击了自己！</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="obsolete">%1因烧伤而受到伤害！</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by poison!</source>
-        <translation type="obsolete">%1受到了毒素的伤害！</translation>
-    </message>
-    <message>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="obsolete">%1的混乱解除了！</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="285"/>
@@ -1080,14 +738,6 @@
         <translation>但是攻击没有目标...</translation>
     </message>
     <message>
-        <source>%1 flinched!</source>
-        <translation type="obsolete">%1害怕了！</translation>
-    </message>
-    <message>
-        <source>%1 is hit with recoil!</source>
-        <translation type="obsolete">%1受到了伤害反弹！</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="379"/>
         <source>%1 had its energy drained!</source>
         <translation>%1的能量被吸收了！</translation>
@@ -1113,54 +763,14 @@
         <translation>%1的干旱特性加强了阳光！</translation>
     </message>
     <message>
-        <source>A hailstorm brewed!</source>
-        <translation type="obsolete">一场冰雹正在酝酿！</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="398"/>
         <source>It started to rain!</source>
         <translation>开始下雨了！</translation>
     </message>
     <message>
-        <source>A sandstorm brewed!</source>
-        <translation type="obsolete">一场沙暴正在酝酿！</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="400"/>
         <source>The sunlight turned harsh!</source>
         <translation>阳光增强了！</translation>
-    </message>
-    <message>
-        <source>Hail continues to fall!</source>
-        <translation type="obsolete">冰雹继续下着。</translation>
-    </message>
-    <message>
-        <source>The sandstorm rages!</source>
-        <translation type="obsolete">沙尘暴继续刮着。</translation>
-    </message>
-    <message>
-        <source>The sunlight is strong!</source>
-        <translation type="obsolete">阳光很强。</translation>
-    </message>
-    <message>
-        <source>Rain continues to fall!</source>
-        <translation type="obsolete">雨一直下。</translation>
-    </message>
-    <message>
-        <source>The hail subsided!</source>
-        <translation type="obsolete">冰雹停止了！</translation>
-    </message>
-    <message>
-        <source>The sandstorm subsided!</source>
-        <translation type="obsolete">沙尘暴停止了！</translation>
-    </message>
-    <message>
-        <source>The sunlight faded!</source>
-        <translation type="obsolete">阳光变弱了！</translation>
-    </message>
-    <message>
-        <source>The rain stopped!</source>
-        <translation type="obsolete">雨停了！</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="445"/>
@@ -1228,10 +838,6 @@
         <translation>模式：</translation>
     </message>
     <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1移动到了中间！</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="546"/>
         <source>%1 shifted spots with %2!</source>
         <translation>%1和%2交换了位置！</translation>
@@ -1258,117 +864,7 @@
     </message>
 </context>
 <context>
-    <name>BattleDisplay</name>
-    <message>
-        <source>Spikes level %1</source>
-        <translation type="obsolete">撒菱次数 %1</translation>
-    </message>
-    <message>
-        <source>Toxic Spikes level %1</source>
-        <translation type="obsolete">毒菱次数 %1</translation>
-    </message>
-    <message>
-        <source>Stealth Rock</source>
-        <translation type="obsolete">隐秘岩石</translation>
-    </message>
-</context>
-<context>
-    <name>BattleFinder</name>
-    <message>
-        <source>Force rated battles</source>
-        <translation type="obsolete">只允许已分级战斗</translation>
-    </message>
-    <message>
-        <source>Force same tier</source>
-        <translation type="obsolete">只允许相同分级</translation>
-    </message>
-    <message>
-        <source>Double battle</source>
-        <translation type="obsolete">双打战斗</translation>
-    </message>
-    <message>
-        <source>Only battle players with a max rating difference of </source>
-        <translation type="obsolete">允许的最大分数差距：</translation>
-    </message>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">单打</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">双打</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">三打</translation>
-    </message>
-    <message>
-        <source>Find Battle</source>
-        <translation type="obsolete">寻找对手</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="obsolete">取消</translation>
-    </message>
-</context>
-<context>
     <name>BattlePokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 等级 %2
-
-道具:%3
-特性:%4
-
-技能:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-Item:%3
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 等级 %2
-道具:%3
-
-技能:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 等级 %2
-
-技能:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1182"/>
         <source> - %1/%2 PP</source>
@@ -1508,17 +1004,9 @@ Moves:
         <translation>使用道具</translation>
     </message>
     <message>
-        <source>Battle between %1 and %2 started!</source>
-        <translation type="obsolete">%1与%2的战斗开始了！</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="222"/>
         <source>&amp;Go Back</source>
         <translation>返回</translation>
-    </message>
-    <message>
-        <source>the foe&apos;s %1</source>
-        <translation type="obsolete">对手的%1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="233"/>
@@ -1538,30 +1026,10 @@ Moves:
         <translation>交换到中间</translation>
     </message>
     <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">%1放出了%2！ (%3)</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1放出了%2！</translation>
-    </message>
-    <message>
-        <source>%1 lost %2 HP! (%3% of its health)</source>
-        <translation type="obsolete">%1失去了%2HP！(%3%的HP)</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1失去了%2%的HP！</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="736"/>
         <location filename="../Teambuilder/battlewindow.cpp" line="816"/>
         <source>&amp;Close</source>
         <translation>关闭</translation>
-    </message>
-    <message>
-        <source>Variation: </source>
-        <translation type="obsolete">变动： </translation>
     </message>
 </context>
 <context>
@@ -1590,42 +1058,6 @@ Moves:
         <location filename="../Server/battlingoptions.cpp" line="58"/>
         <source>&amp;Apply</source>
         <translation>应用</translation>
-    </message>
-</context>
-<context>
-    <name>BigOpenPokeBall</name>
-    <message>
-        <source>Type: </source>
-        <translation type="obsolete">属性： </translation>
-    </message>
-    <message>
-        <source>Gender: </source>
-        <translation type="obsolete">性别： </translation>
-    </message>
-    <message>
-        <source>&amp;Evolution</source>
-        <translation type="obsolete">进化</translation>
-    </message>
-    <message>
-        <source>&amp;Other Formes</source>
-        <translation type="obsolete">其它形态</translation>
-    </message>
-    <message>
-        <source>Shiny</source>
-        <translation type="obsolete">闪光</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Ht:&lt;/b&gt; %1 m</source>
-        <oldsource>&lt;b&gt;Ht:&lt;/b&gt; %1</oldsource>
-        <translation type="obsolete">&lt;b&gt;身高：&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 kg</source>
-        <translation type="obsolete">&lt;b&gt;体重：&lt;/b&gt; %1 kg</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</source>
-        <translation type="obsolete">&lt;b&gt;体重：&lt;/b&gt; %1 lbs</translation>
     </message>
 </context>
 <context>
@@ -1696,20 +1128,6 @@ Moves:
         <location filename="../Teambuilder/challengedialog.cpp" line="240"/>
         <source>%1&apos;s info</source>
         <translation>%1训练师简介</translation>
-    </message>
-</context>
-<context>
-    <name>ChallengeWindow</name>
-    <message>
-        <source>%1&apos;s Info</source>
-        <translation type="obsolete">%1的信息</translation>
-    </message>
-</context>
-<context>
-    <name>ChallengedWindow</name>
-    <message>
-        <source>%1 challenged you!</source>
-        <translation type="obsolete">%1挑战了你！</translation>
     </message>
 </context>
 <context>
@@ -1796,17 +1214,9 @@ Moves:
         <translation>%1在%2中的战斗</translation>
     </message>
     <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">控制面板</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="101"/>
         <source>&amp;Kick</source>
         <translation>踢出</translation>
-    </message>
-    <message>
-        <source>&amp;Ban for...</source>
-        <translation type="obsolete">高级封禁</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="104"/>
@@ -1817,18 +1227,6 @@ Moves:
         <location filename="../Teambuilder/channel.cpp" line="105"/>
         <source>24 hours</source>
         <translation>24小时</translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">封禁</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">%1与%2的战斗开始了。</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">与%1战斗中</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="324"/>
@@ -1893,54 +1291,6 @@ Moves:
         <location filename="../Teambuilder/client.cpp" line="107"/>
         <source>&amp;Send</source>
         <translation>发送</translation>
-    </message>
-    <message>
-        <source>&amp;Report a Bug</source>
-        <translation type="obsolete">报告Bug</translation>
-    </message>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">挑战</translation>
-    </message>
-    <message>
-        <source>&amp;View Ranking</source>
-        <translation type="obsolete">查看排名</translation>
-    </message>
-    <message>
-        <source>Go &amp;Back</source>
-        <translation type="obsolete">在线</translation>
-    </message>
-    <message>
-        <source>Go &amp;Away</source>
-        <translation type="obsolete">离开</translation>
-    </message>
-    <message>
-        <source>&amp;Send Message</source>
-        <translation type="obsolete">发送消息</translation>
-    </message>
-    <message>
-        <source>&amp;Watch Battle</source>
-        <translation type="obsolete">观战</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Ignore</source>
-        <translation type="obsolete">解除忽略</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">忽略</translation>
-    </message>
-    <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">控制面板</translation>
-    </message>
-    <message>
-        <source>&amp;Kick</source>
-        <translation type="obsolete">踢出</translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">封禁</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="59"/>
@@ -2008,10 +1358,6 @@ Moves:
         <translation>提示频道消息</translation>
     </message>
     <message>
-        <source>Enable team change events</source>
-        <translation type="obsolete">提示玩家更换队伍消息</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="546"/>
         <source>Auto-join</source>
         <translation>自动加入</translation>
@@ -2032,10 +1378,6 @@ Moves:
         <translation>文件</translation>
     </message>
     <message>
-        <source>&amp;New tab</source>
-        <translation type="obsolete">新建标签</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1285"/>
         <source>Close tab</source>
         <translation>关闭标签</translation>
@@ -2046,17 +1388,9 @@ Moves:
         <translation>载入队伍</translation>
     </message>
     <message>
-        <source>Open &amp;TeamBuilder</source>
-        <translation type="obsolete">打开队伍编辑器</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1293"/>
         <source>Open &amp;Replay</source>
         <translation>查看录像</translation>
-    </message>
-    <message>
-        <source>Open &amp;replay</source>
-        <translation type="obsolete">打开录像</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="531"/>
@@ -2189,10 +1523,6 @@ Moves:
         <translation>旧版对战窗口（无动画）</translation>
     </message>
     <message>
-        <source>Use Ball Icons</source>
-        <translation type="obsolete">显示精灵球图标</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1481"/>
         <source>New battle window</source>
         <translation>新版战斗窗口（有动画）</translation>
@@ -2260,10 +1590,6 @@ Moves:
         <location filename="../Teambuilder/client.cpp" line="1599"/>
         <source>&lt;html&gt;Type your password again&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;Enter the password for your current name.&lt;br/&gt;If you don&apos;t have it, the name you have chosen might be already taken. Choose different name.&lt;br/&gt;&lt;br/&gt;It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation type="obsolete">&lt;html&gt;请键入您当前用户名对应的密码&lt;br/&gt;如果您没有设置密码，此用户名可能已经被抢注，请更换用户名&lt;br/&gt;&lt;br/&gt;建议不同服务器使用不同密码（密码在通信时已经加密，但是你懂的）</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1605"/>
@@ -2368,14 +1694,6 @@ This server requires a password to log in.</source>
         <translation>连接服务器出错——收到错误号n°%1:%2</translation>
     </message>
     <message>
-        <source>&lt;hr&gt;&lt;br&gt;Disconnected from Server! If the disconnect is due to an internet problem, try to &lt;a href=&quot;po:reconnect&quot;&gt;reconnect&lt;/a&gt; once the issue is solved.&lt;br&gt;&lt;hr&gt;</source>
-        <translation type="obsolete">&lt;hr&gt;&lt;br&gt;与服务器断开了连接。如果由于网络问题断开，请尝试&lt;a href=&quot;po:reconnect&quot;&gt;重连&lt;/a&gt;&lt;br&gt;&lt;hr&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;hr&gt;&lt;br&gt;Disconnected from Server!&lt;br&gt;&lt;hr&gt;</source>
-        <translation type="obsolete">&lt;hr&gt;&lt;br&gt;与服务器断开连接！&lt;br&gt;&lt;hr&gt;</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="2380"/>
         <source>&amp;Reconnect</source>
         <translation>重新连接</translation>
@@ -2406,10 +1724,6 @@ This server requires a password to log in.</source>
         <translation>（也可以在 选项-退出时警告 中修改）</translation>
     </message>
     <message>
-        <source>Open &amp;teamBuilder</source>
-        <translation type="obsolete">打开队伍编辑器</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1309"/>
         <source>Player events</source>
         <translation>玩家事件</translation>
@@ -2430,24 +1744,6 @@ This server requires a password to log in.</source>
         <translation>不显示精灵昵称（只显示种类）</translation>
     </message>
     <message>
-        <source>Enter the password for your current name.
-If you don&apos;t have it, the name you have chosen might be already taken. Choose different name.
-
-It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation type="obsolete">请出入当前用户名对应的密码。
-如果你不知道的话，这表明你的用户名已经被人注册了。请使用其他用户名。
-
-建议：请在不同服务器上使用不同的密码。（服务器只保存加密密码， 但是你知道的……）</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">风格</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">重新载入风格列表</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1298"/>
         <source>&amp;Options</source>
         <translation>选项</translation>
@@ -2458,17 +1754,9 @@ It is advised to use a slightly different password for each server. (The server 
         <translation>离开</translation>
     </message>
     <message>
-        <source>&amp;Show team</source>
-        <translation type="obsolete">显示队伍</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1304"/>
         <source>Enable &amp;ladder</source>
         <translation>启用分级</translation>
-    </message>
-    <message>
-        <source>&amp;Enable player events</source>
-        <translation type="obsolete">显示玩家事件</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1365"/>
@@ -2476,21 +1764,9 @@ It is advised to use a slightly different password for each server. (The server 
         <translation>显示时间</translation>
     </message>
     <message>
-        <source>Show PM in tabs</source>
-        <translation type="obsolete">在标签页中显示PM</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1383"/>
         <source>Enable logs in &amp;PM</source>
         <translation>启用消息日志</translation>
-    </message>
-    <message>
-        <source>Enable timestamps in &amp;PMs</source>
-        <translation type="obsolete">私聊时显示时间</translation>
-    </message>
-    <message>
-        <source>Make new PMs &amp;flash</source>
-        <translation type="obsolete">PM登场时闪动</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1398"/>
@@ -2529,27 +1805,14 @@ It is advised to use a slightly different password for each server. (The server 
         <translation>旧版风格按钮</translation>
     </message>
     <message>
-        <source>&amp;Battle Options</source>
-        <comment>Menu</comment>
-        <translation type="obsolete">战斗选项</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1452"/>
         <source>Save &amp;Battle Logs</source>
         <translation>保存战报</translation>
     </message>
     <message>
-        <source>Change &amp;log folder</source>
-        <translation type="obsolete">改变战报文件夹</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1461"/>
         <source>Animate HP Bar</source>
         <translation>动画显示HP条</translation>
-    </message>
-    <message>
-        <source>Old School buttons</source>
-        <translation type="obsolete">旧式按钮</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1537"/>
@@ -2577,55 +1840,15 @@ It is advised to use a slightly different password for each server. (The server 
         <translation>输入密码</translation>
     </message>
     <message>
-        <source>Enter the password for your current name.
-
-It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation type="obsolete">输入你当前名字的密码。
-
-建议在每个服务器上使用稍微不同的密码。 （服务器只能看到加密后的密码，但还是...）</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1744"/>
         <source>Logs Directory</source>
         <oldsource>Battle Logs Directory</oldsource>
         <translation>战报保存目录</translation>
     </message>
     <message>
-        <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation type="obsolete">你的客户端的版本(%2)与服务器的版本(%1)不符。</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1857"/>
         <source>Old Version</source>
         <translation>旧版本</translation>
-    </message>
-    <message>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-http://www.pokemon-online.eu/downloads.php for updates.</source>
-        <translation type="obsolete">你的版本比服务器的版本老旧。可能会有一些功能无法实现。
-
-请到http://www.pokemon-online.eu/downloads.php检查更新。</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">%1与%2的战斗开始了。</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">与%1战斗中</translation>
-    </message>
-    <message>
-        <source>%1 forfeited against %2.</source>
-        <translation type="obsolete">%1向%2认输了。</translation>
-    </message>
-    <message>
-        <source>%1 and %2 tied.</source>
-        <translation type="obsolete">%1与%2打成了平手。</translation>
-    </message>
-    <message>
-        <source>%1 won against %2.</source>
-        <translation type="obsolete">%1战胜了%2。</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2230"/>
@@ -2668,10 +1891,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation>%1在线了，可以战斗。</translation>
     </message>
     <message>
-        <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation type="obsolete">连接服务器出错——收到错误号%1： %2</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="2336"/>
         <source>Connected to Server!</source>
         <translation>连接服务器成功！</translation>
@@ -2685,22 +1904,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <location filename="../Teambuilder/client.cpp" line="2373"/>
         <source>Disconnected from Server!</source>
         <translation>与服务器连接中断！</translation>
-    </message>
-    <message>
-        <source>%1 logged in.</source>
-        <translation type="obsolete">%1登录了。</translation>
-    </message>
-    <message>
-        <source>%1 logged out.</source>
-        <translation type="obsolete">%1退出了。</translation>
-    </message>
-    <message>
-        <source>%1 changed teams and is now known as %2.</source>
-        <translation type="obsolete">%1更换了队伍并改名为%2。</translation>
-    </message>
-    <message>
-        <source>%1 changed teams.</source>
-        <translation type="obsolete">%1更换了队伍。</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2811"/>
@@ -2822,22 +2025,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Temporary bans</source>
-        <translation type="obsolete">临时封禁列表</translation>
-    </message>
-    <message>
-        <source>Time left</source>
-        <translation type="obsolete">剩余时间</translation>
-    </message>
-    <message>
-        <source>User Alias</source>
-        <translation type="obsolete">用户别名</translation>
-    </message>
-    <message>
-        <source>Ban List</source>
-        <translation type="obsolete">封禁列表</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/controlpanel.ui" line="393"/>
         <source>Username</source>
         <translation>用户名</translation>
@@ -2861,10 +2048,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <location filename="../Teambuilder/controlpanel.ui" line="256"/>
         <source>User alias</source>
         <translation>用户别名</translation>
-    </message>
-    <message>
-        <source>Ban list</source>
-        <translation type="obsolete">封禁列表</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="327"/>
@@ -3018,13 +2201,6 @@ http://www.pokemon-online.eu/downloads.php for updates.</source>
         <location filename="../client-plugins/CSSChanger/dialog.ui" line="65"/>
         <source>Mass color replace</source>
         <translation>批量颜色替换</translation>
-    </message>
-</context>
-<context>
-    <name>DockAdvanced</name>
-    <message>
-        <source>Advanced Options</source>
-        <translation type="obsolete">高级选项</translation>
     </message>
 </context>
 <context>
@@ -3227,24 +2403,6 @@ Description: %5</source>
 范围: %6
 
 描述: %5</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-威力： %2
-命中： %3
-
-描述： %4
-
-效果： %5</translation>
     </message>
 </context>
 <context>
@@ -3473,21 +2631,9 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation>你还没有设定名字。请在队伍编辑器中设定。</translation>
     </message>
     <message>
-        <source>Language Change</source>
-        <translation type="obsolete">语言已改变</translation>
-    </message>
-    <message>
-        <source>Restart the application to see the changes.</source>
-        <translation type="obsolete">重启程序以应用改变。</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="620"/>
         <source>&amp;Style</source>
         <translation>风格</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">重新载入风格列表</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="614"/>
@@ -3730,10 +2876,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <source>&amp;Quit</source>
         <translation>退出</translation>
     </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">语言</translation>
-    </message>
 </context>
 <context>
     <name>ModsWindow</name>
@@ -3791,34 +2933,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>MoveTab</name>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">属性</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">名称</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">PP</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">威力</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">命中</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">类型</translation>
-    </message>
-</context>
-<context>
     <name>OldAttackButton</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1032"/>
@@ -3841,46 +2955,6 @@ Description: %5</source>
 分类: %4
 
 描述: %5</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Category: %5
-
-Effect: %6</source>
-        <translation type="obsolete">%1
-
-威力: %2
-命中: %3
-
-描述: %4
-
-分类: %5
-
-特效: %6</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-威力： %2
-命中： %3
-
-描述： %4
-
-效果： %5</translation>
     </message>
 </context>
 <context>
@@ -3938,25 +3012,6 @@ Effect: %5</source>
         <location filename="../Teambuilder/pmsystem.cpp" line="187"/>
         <source>PokÃ©mon Online PM</source>
         <translation></translation>
-    </message>
-</context>
-<context>
-    <name>PMWindow</name>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">挑战</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">忽略</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="obsolete">发送</translation>
-    </message>
-    <message>
-        <source>The other party left the server, so the window was disabled.</source>
-        <translation type="obsolete">另一方离开了服务器，故此窗口已失效。</translation>
     </message>
 </context>
 <context>
@@ -4081,64 +3136,6 @@ Effect: %5</source>
         <location filename="../libraries/Utilities/pluginmanagerdialog.cpp" line="62"/>
         <source>Error loading plugin</source>
         <translation>载入插件失败</translation>
-    </message>
-</context>
-<context>
-    <name>PluginManagerWidget</name>
-    <message>
-        <source>Add Plugin...</source>
-        <translation type="obsolete">添加插件……</translation>
-    </message>
-    <message>
-        <source>Remove Plugin</source>
-        <translation type="obsolete">移除插件</translation>
-    </message>
-</context>
-<context>
-    <name>PokeBodyWidget</name>
-    <message>
-        <source>&amp;Nickname</source>
-        <translation type="obsolete">昵称</translation>
-    </message>
-    <message>
-        <source>&amp;Item</source>
-        <translation type="obsolete">道具</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="obsolete">导入</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="obsolete">导出</translation>
-    </message>
-    <message>
-        <source>&amp;Advanced</source>
-        <translation type="obsolete">高级</translation>
-    </message>
-    <message>
-        <source>Side Window</source>
-        <translation type="obsolete">侧边窗口</translation>
-    </message>
-    <message>
-        <source>New Window</source>
-        <translation type="obsolete">新窗口</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">属性</translation>
-    </message>
-    <message>
-        <source>N&amp;ature</source>
-        <translation type="obsolete">性格</translation>
-    </message>
-    <message>
-        <source>PokÃ©mon %1</source>
-        <translation type="obsolete">精灵 %1</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Lv. %1</translation>
     </message>
 </context>
 <context>
@@ -4275,10 +3272,6 @@ Move4</source>
         <translation>删除盒子</translation>
     </message>
     <message>
-        <source>&amp;Trainer home</source>
-        <translation type="obsolete">训练师窗口</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="87"/>
         <source>Box %1 slot %2</source>
         <translation>盒子%1 编号%2</translation>
@@ -4346,84 +3339,6 @@ Move4</source>
 <context>
     <name>PokeButton</name>
     <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5
---%6
---%7
---%8</source>
-        <translation type="obsolete">%1 lv %2
-
-道具：%3
-特性：%4
-
-技能：
---%5
---%6
---%7
---%8</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 等级 %2
-
-道具:%3
-特性:%4
-
-技能:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-Item:%3
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 等级 %2
-道具:%3
-
-技能:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 等级 %2
-
-技能:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokebutton.ui" line="57"/>
         <source>Lv. 100</source>
         <translation>等级</translation>
@@ -4478,10 +3393,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokeedit.ui" line="14"/>
         <source>Form</source>
         <translation>窗口</translation>
-    </message>
-    <message>
-        <source>&amp;Trainer Home</source>
-        <translation type="obsolete">训练员窗口</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.ui" line="96"/>
@@ -4681,10 +3592,6 @@ Moves:
         <translation>技能的优先度</translation>
     </message>
     <message>
-        <source>The way the pokemon learns the attack. There may be several ways a pokemon learns an attack, in which case only the most recent/easy way is displayed.</source>
-        <translation type="obsolete">精灵学习这一技能的来源。一个技能可以有多种来源，但总是只显示最新的一个。</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="106"/>
         <source>The total number of PP for the attack, including PP ups.</source>
         <translation>使用PP增加药后技能最大的PP数。</translation>
@@ -4761,14 +3668,6 @@ Moves:
 <context>
     <name>Pokedex</name>
     <message>
-        <source>&amp;Type Chart</source>
-        <translation type="obsolete">属性相克表</translation>
-    </message>
-    <message>
-        <source>&amp;Damage Calculator</source>
-        <translation type="obsolete">伤害计算器</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="14"/>
         <source>Form</source>
         <translation>窗体</translation>
@@ -4782,33 +3681,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="57"/>
         <source>&amp;Damage calculator</source>
         <translation>伤害计算器</translation>
-    </message>
-</context>
-<context>
-    <name>PokedexBody</name>
-    <message>
-        <source>&amp;Advanced Search</source>
-        <translation type="obsolete">高级搜索</translation>
-    </message>
-    <message>
-        <source>Sort Pokemon List</source>
-        <translation type="obsolete">排序精灵列表</translation>
-    </message>
-    <message>
-        <source>A-Z</source>
-        <translation type="obsolete">A-Z</translation>
-    </message>
-    <message>
-        <source>PROFILE</source>
-        <translation type="obsolete">简介</translation>
-    </message>
-    <message>
-        <source>STATS</source>
-        <translation type="obsolete">种族值</translation>
-    </message>
-    <message>
-        <source>MOVES</source>
-        <translation type="obsolete">技能</translation>
     </message>
 </context>
 <context>
@@ -4842,24 +3714,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="115"/>
         <source>&amp;Advanced search</source>
         <translation>高级搜索</translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBox</name>
-    <message>
-        <source>The box is full!</source>
-        <translation type="obsolete">箱子已满！</translation>
-    </message>
-    <message>
-        <source>There is no pokemon there!</source>
-        <translation type="obsolete">箱子里没有精灵！</translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBoxButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">精灵 &amp;%1</translation>
     </message>
 </context>
 <context>
@@ -4903,29 +3757,6 @@ Moves:
     </message>
 </context>
 <context>
-    <name>ProfileTab</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">描述</translation>
-    </message>
-    <message>
-        <source>Abilities</source>
-        <translation type="obsolete">特性</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Soul Silver:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;魂银：&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Heart Gold:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;心金：&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Platinum:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;白金：&lt;/b&gt; %1</translation>
-    </message>
-</context>
-<context>
     <name>QJson::ParserRunnable</name>
     <message>
         <location filename="../libraries/QJson/parserrunnable.cpp" line="64"/>
@@ -4960,14 +3791,6 @@ Moves:
         <translation>冰冻条款</translation>
     </message>
     <message>
-        <source>Evasion Clause</source>
-        <translation type="obsolete">禁止提升回避率</translation>
-    </message>
-    <message>
-        <source>OHKO Clause</source>
-        <translation type="obsolete">禁止一击必杀</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="14"/>
         <source>Disallow Spects</source>
         <translation>禁止观战</translation>
@@ -4991,10 +3814,6 @@ Moves:
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="18"/>
         <source>Species Clause</source>
         <translation>禁止重复精灵</translation>
-    </message>
-    <message>
-        <source>Wifi Battle</source>
-        <translation type="obsolete">Wifi规则（战斗前看队）</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="19"/>
@@ -5071,30 +3890,6 @@ Moves:
         <translation>轮盘</translation>
     </message>
     <message>
-        <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation type="obsolete">禁止提升回避率阻止了该技能对回避率的提升。</translation>
-    </message>
-    <message>
-        <source>OHKO Clause prevented the One Hit KO from happening.</source>
-        <translation type="obsolete">禁止一击必杀阻止了一击必杀技能。</translation>
-    </message>
-    <message>
-        <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
-        <translation type="obsolete">你不能同时使对手超过一个精灵处于睡眠状态。</translation>
-    </message>
-    <message>
-        <source>You can not freeze more than one Pokémon of the opposing team at the same time.</source>
-        <translation type="obsolete">你不能同时使对手超过一个精灵处于冻结状态。</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use evasion moves like Double Team.</source>
-        <translation type="obsolete">你不能使用影分身等提高回避率的技能。</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use One Hit KO moves like Fissure.</source>
-        <translation type="obsolete">你不能使用地裂等一击必杀技能。</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="42"/>
         <source>Nobody can watch your battle.</source>
         <translation>不允许其他人观战。</translation>
@@ -5123,14 +3918,6 @@ Moves:
         <location filename="../libraries/PokemonInfo/pokemonstructs.cpp" line="172"/>
         <source>%1 already has move %2.</source>
         <translation>%1已经有技能%2。</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn %2 with moves from the third gen.</source>
-        <translation type="obsolete">%1的%2和第三代的技能不能共存。</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn the combination of %2.</source>
-        <translation type="obsolete">%1不能习得技能组合%2。</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="188"/>
@@ -5186,14 +3973,6 @@ Moves:
         <location filename="../libraries/PokemonInfo/pokemonstructs.cpp" line="931"/>
         <source>Error while loading the team, the client is outdated.</source>
         <translation>载入队伍时出错：程序版本过旧，不支持新版队伍</translation>
-    </message>
-    <message>
-        <source>Error when loading plugin at %1: %2</source>
-        <translation type="obsolete">载入插件时出错%1:%2</translation>
-    </message>
-    <message>
-        <source>%1 is not a Pokemon Online plugin.</source>
-        <translation type="obsolete">%1不是Pokemon Online插件。</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="27"/>
@@ -5407,10 +4186,6 @@ Moves:
         <translation>混乱</translation>
     </message>
     <message>
-        <source>Error while loading the widget, zipping of the team failed: %1</source>
-        <translation type="obsolete">载入widget时错误，压缩队伍失败：%1</translation>
-    </message>
-    <message>
         <location filename="../Server/security.cpp" line="118"/>
         <source>Error: cannot open the file that contains the members </source>
         <translation>无法打开含有成员的文件</translation>
@@ -5600,10 +4375,6 @@ Moves:
 </context>
 <context>
     <name>RegularBattleScene</name>
-    <message>
-        <source>%1 lv %2 -- %3%</source>
-        <translation type="obsolete">%1 lv %2 -- %3%</translation>
-    </message>
     <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="334"/>
         <source>%1 lv %2 -- %3%%4</source>
@@ -5887,25 +4658,9 @@ Moves:
 <context>
     <name>ServerChoice</name>
     <message>
-        <source>Server Name</source>
-        <translation type="obsolete">服务器名称</translation>
-    </message>
-    <message>
-        <source>Players / Max</source>
-        <translation type="obsolete">玩家/最大</translation>
-    </message>
-    <message>
-        <source>Advanced connection</source>
-        <translation type="obsolete">高级连接</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="142"/>
         <source>&amp;File</source>
         <translation>文件</translation>
-    </message>
-    <message>
-        <source>&amp;New tab</source>
-        <translation type="obsolete">新建标签页</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="143"/>
@@ -6029,31 +4784,9 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Connecting to registry...&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="obsolete">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;正在连接服务器列表……&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>&amp;Trainer name</source>
-        <translation type="obsolete">训练师姓名</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/serverchoice.ui" line="120"/>
         <source>&amp;Advanced connection</source>
         <translation>高级连接选项</translation>
-    </message>
-    <message>
-        <source>&amp;Go back</source>
-        <translation type="obsolete">返回</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.ui" line="137"/>
@@ -6196,531 +4929,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/soundconfigwindow.cpp" line="35"/>
         <source>Sound config window</source>
         <translation>声音设置窗口</translation>
-    </message>
-</context>
-<context>
-    <name>SpectatingWindow</name>
-    <message>
-        <source>Save log</source>
-        <translation type="obsolete">保存战报</translation>
-    </message>
-</context>
-<context>
-    <name>StatTab</name>
-    <message>
-        <source>Statistics</source>
-        <translation type="obsolete">统计</translation>
-    </message>
-    <message>
-        <source>Base Stats</source>
-        <translation type="obsolete">种族值</translation>
-    </message>
-    <message>
-        <source>Min</source>
-        <translation type="obsolete">最低</translation>
-    </message>
-    <message>
-        <source>Max</source>
-        <translation type="obsolete">极限</translation>
-    </message>
-    <message>
-        <source>Hit Points</source>
-        <translation type="obsolete">HP</translation>
-    </message>
-    <message>
-        <source>Attack</source>
-        <translation type="obsolete">物攻</translation>
-    </message>
-    <message>
-        <source>Defense</source>
-        <translation type="obsolete">物防</translation>
-    </message>
-    <message>
-        <source>Speed</source>
-        <translation type="obsolete">速度</translation>
-    </message>
-    <message>
-        <source>Special Attack</source>
-        <translation type="obsolete">特攻</translation>
-    </message>
-    <message>
-        <source>Special Defense</source>
-        <translation type="obsolete">特防</translation>
-    </message>
-    <message>
-        <source>Weakness</source>
-        <translation type="obsolete">弱点</translation>
-    </message>
-    <message>
-        <source>Resistance</source>
-        <translation type="obsolete">抗性</translation>
-    </message>
-    <message>
-        <source>Immunity</source>
-        <translation type="obsolete">免疫</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Advanced</name>
-    <message>
-        <source>&amp;Hidden Power</source>
-        <translation type="obsolete">觉醒力量</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="obsolete">属性：</translation>
-    </message>
-    <message>
-        <source>Power:</source>
-        <translation type="obsolete">威力：</translation>
-    </message>
-    <message>
-        <source>&amp;DVs</source>
-        <translation type="obsolete">个体值</translation>
-    </message>
-    <message>
-        <source>HP:</source>
-        <translation type="obsolete">HP：</translation>
-    </message>
-    <message>
-        <source>Att:</source>
-        <translation type="obsolete">物攻：</translation>
-    </message>
-    <message>
-        <source>Def:</source>
-        <translation type="obsolete">物防：</translation>
-    </message>
-    <message>
-        <source>Speed:</source>
-        <translation type="obsolete">速度：</translation>
-    </message>
-    <message>
-        <source>Sp.Att:</source>
-        <translation type="obsolete">特攻：</translation>
-    </message>
-    <message>
-        <source>Sp.Def:</source>
-        <translation type="obsolete">特防：</translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">亲密度</translation>
-    </message>
-    <message>
-        <source>&amp;Level</source>
-        <translation type="obsolete">等级</translation>
-    </message>
-    <message>
-        <source>&amp;Gender</source>
-        <translation type="obsolete">性别</translation>
-    </message>
-    <message>
-        <source>Male</source>
-        <translation type="obsolete">雄性</translation>
-    </message>
-    <message>
-        <source>Female</source>
-        <translation type="obsolete">雌性</translation>
-    </message>
-    <message>
-        <source>Neutral</source>
-        <translation type="obsolete">无性别</translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">特性</translation>
-    </message>
-    <message>
-        <source>&amp;Shiny</source>
-        <translation type="obsolete">闪光</translation>
-    </message>
-    <message>
-        <source>Alternate Formes</source>
-        <translation type="obsolete">其它形态</translation>
-    </message>
-    <message>
-        <source>HP</source>
-        <translation type="obsolete">HP</translation>
-    </message>
-    <message>
-        <source>Att</source>
-        <translation type="obsolete">物攻</translation>
-    </message>
-    <message>
-        <source>Def</source>
-        <translation type="obsolete">物防</translation>
-    </message>
-    <message>
-        <source>Speed</source>
-        <translation type="obsolete">速度</translation>
-    </message>
-    <message>
-        <source>Sp Att</source>
-        <translation type="obsolete">特攻</translation>
-    </message>
-    <message>
-        <source>Sp Def</source>
-        <translation type="obsolete">特防</translation>
-    </message>
-    <message>
-        <source>Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</source>
-        <translation type="obsolete">Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</translation>
-    </message>
-</context>
-<context>
-    <name>TB_EVManager</name>
-    <message>
-        <source>Hit Points:</source>
-        <translation type="obsolete">HP：</translation>
-    </message>
-    <message>
-        <source>Attack:</source>
-        <translation type="obsolete">物攻：</translation>
-    </message>
-    <message>
-        <source>Defense:</source>
-        <translation type="obsolete">物防：</translation>
-    </message>
-    <message>
-        <source>Speed:</source>
-        <translation type="obsolete">速度：</translation>
-    </message>
-    <message>
-        <source>Special Attack:</source>
-        <translation type="obsolete">特攻：</translation>
-    </message>
-    <message>
-        <source>Special Defense:</source>
-        <translation type="obsolete">特防：</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Menu</name>
-    <message>
-        <source>Menu</source>
-        <translation type="obsolete">菜单</translation>
-    </message>
-    <message>
-        <source>Teambuilder</source>
-        <translation type="obsolete">队伍编辑器</translation>
-    </message>
-    <message>
-        <source>Go online</source>
-        <translation type="obsolete">连接服务器</translation>
-    </message>
-    <message>
-        <source>Credits</source>
-        <translation type="obsolete">致谢</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="obsolete">文件</translation>
-    </message>
-    <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">载入队伍</translation>
-    </message>
-    <message>
-        <source>Open &amp;replay</source>
-        <translation type="obsolete">载入录像</translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation type="obsolete">退出</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">风格</translation>
-    </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">语言</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBody</name>
-    <message>
-        <source>&amp;Nickname</source>
-        <translation type="obsolete">昵称</translation>
-    </message>
-    <message>
-        <source>&amp;Item</source>
-        <translation type="obsolete">道具</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="obsolete">导入</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="obsolete">导出</translation>
-    </message>
-    <message>
-        <source>PokÃ©mon %1</source>
-        <translation type="obsolete">精灵 %1</translation>
-    </message>
-    <message>
-        <source>&amp;Advanced</source>
-        <translation type="obsolete">高级</translation>
-    </message>
-    <message>
-        <source>Side Window</source>
-        <translation type="obsolete">侧边窗口</translation>
-    </message>
-    <message>
-        <source>New Window</source>
-        <translation type="obsolete">新窗口</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">属性</translation>
-    </message>
-    <message>
-        <source>N&amp;ature</source>
-        <translation type="obsolete">性格</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">名称</translation>
-    </message>
-    <message>
-        <source>Learning</source>
-        <translation type="obsolete">习得方式</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">PP</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">威力</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">命中</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">类型</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Lv. %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">错误</translation>
-    </message>
-    <message>
-        <source>TM/HM</source>
-        <translation type="obsolete">TM/HM</translation>
-    </message>
-    <message>
-        <source>4G Tutor</source>
-        <translation type="obsolete">4G定点</translation>
-    </message>
-    <message>
-        <source>4G Level</source>
-        <translation type="obsolete">4G等级</translation>
-    </message>
-    <message>
-        <source>4G Pre Evo</source>
-        <translation type="obsolete">4G进化前</translation>
-    </message>
-    <message>
-        <source>4G Breeding</source>
-        <translation type="obsolete">4G遗传</translation>
-    </message>
-    <message>
-        <source>4G Special</source>
-        <translation type="obsolete">4G特别技能</translation>
-    </message>
-    <message>
-        <source>3G Tutor</source>
-        <translation type="obsolete">3G定点</translation>
-    </message>
-    <message>
-        <source>1G Level</source>
-        <translation type="obsolete">3G等级 {1G?}</translation>
-    </message>
-    <message>
-        <source>1G Pre Evo</source>
-        <translation type="obsolete">3G进化前 {1G?}</translation>
-    </message>
-    <message>
-        <source>1G Special</source>
-        <translation type="obsolete">3G特别技能 {1G?}</translation>
-    </message>
-    <message>
-        <source>3G Level</source>
-        <translation type="obsolete">3G等级</translation>
-    </message>
-    <message>
-        <source>3G Pre Evo</source>
-        <translation type="obsolete">3G进化前</translation>
-    </message>
-    <message>
-        <source>3G Breeding</source>
-        <translation type="obsolete">3G遗传</translation>
-    </message>
-    <message>
-        <source>3G Special</source>
-        <translation type="obsolete">3G特别技能</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBoxes</name>
-    <message>
-        <source>Change Order</source>
-        <translation type="obsolete">改变顺序</translation>
-    </message>
-    <message>
-        <source>&amp;Store</source>
-        <translation type="obsolete">存放</translation>
-    </message>
-    <message>
-        <source>&amp;Withdraw</source>
-        <translation type="obsolete">取出</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Box Name...</source>
-        <translation type="obsolete">编辑盒子名字...</translation>
-    </message>
-    <message>
-        <source>&amp;Add New Box</source>
-        <translation type="obsolete">增加盒子</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Current Box</source>
-        <translation type="obsolete">删除当前盒子</translation>
-    </message>
-    <message>
-        <source>Edit Box Name</source>
-        <translation type="obsolete">编辑盒子名字</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the box %1:</source>
-        <translation type="obsolete">输出新盒子的名字 %1:</translation>
-    </message>
-    <message>
-        <source>New Box</source>
-        <translation type="obsolete">新建盒子</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the new box:</source>
-        <translation type="obsolete">输入新盒子的名字：</translation>
-    </message>
-    <message>
-        <source>Destroying a box</source>
-        <translation type="obsolete">删除盒子</translation>
-    </message>
-    <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">确定要删除盒子%1?</translation>
-    </message>
-    <message>
-        <source>Switc&amp;h</source>
-        <translation type="obsolete">交换</translation>
-    </message>
-    <message>
-        <source>Dele&amp;te</source>
-        <translation type="obsolete">删除</translation>
-    </message>
-    <message>
-        <source>BOX &amp;%1</source>
-        <translation type="obsolete">箱子&amp;%1</translation>
-    </message>
-    <message>
-        <source>Full Box</source>
-        <translation type="obsolete">满箱子</translation>
-    </message>
-    <message>
-        <source>Empty Box</source>
-        <translation type="obsolete">空箱子</translation>
-    </message>
-    <message>
-        <source>Box Empty</source>
-        <translation type="obsolete">箱子空</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonDetail</name>
-    <message>
-        <source>Item: </source>
-        <translation type="obsolete">道具： </translation>
-    </message>
-    <message>
-        <source>Moves:</source>
-        <translation type="obsolete">技能：</translation>
-    </message>
-    <message>
-        <source>Nature: %1</source>
-        <translation type="obsolete">性格： %1</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Lv. %1</translation>
-    </message>
-</context>
-<context>
-    <name>TB_TrainerBody</name>
-    <message>
-        <source>Avatar</source>
-        <translation type="obsolete">头像</translation>
-    </message>
-    <message>
-        <source>Trainer &amp;Name</source>
-        <translation type="obsolete">训练师姓名</translation>
-    </message>
-    <message>
-        <source>Trainer name</source>
-        <comment>TB accessible name</comment>
-        <translation type="obsolete">训练师姓名</translation>
-    </message>
-    <message>
-        <source>Name Color</source>
-        <translation type="obsolete">名字颜色</translation>
-    </message>
-    <message>
-        <source>Change &amp;Color</source>
-        <translation type="obsolete">改变颜色</translation>
-    </message>
-    <message>
-        <source>Team Tier</source>
-        <translation type="obsolete">队伍分级</translation>
-    </message>
-    <message>
-        <source>Team tier</source>
-        <comment>TB accessible name</comment>
-        <translation type="obsolete">队伍分级</translation>
-    </message>
-    <message>
-        <source>Trainer I&amp;nformation</source>
-        <translation type="obsolete">训练师信息</translation>
-    </message>
-    <message>
-        <source>Trainer information</source>
-        <comment>TB accessible name</comment>
-        <translation type="obsolete">训练师姓名</translation>
-    </message>
-    <message>
-        <source>&amp;Winning Message</source>
-        <translation type="obsolete">胜利感言</translation>
-    </message>
-    <message>
-        <source>Winning message</source>
-        <comment>TB accessible name</comment>
-        <translation type="obsolete">胜利感言</translation>
-    </message>
-    <message>
-        <source>L&amp;osing Message</source>
-        <translation type="obsolete">失败感言</translation>
-    </message>
-    <message>
-        <source>Losing message</source>
-        <comment>TB accessible name</comment>
-        <translation type="obsolete">失败感言</translation>
     </message>
 </context>
 <context>
@@ -6919,57 +5127,9 @@ p, li { white-space: pre-wrap; }
         <translation>移除mod</translation>
     </message>
     <message>
-        <source>Trainer</source>
-        <translation type="obsolete">训练师</translation>
-    </message>
-    <message>
-        <source>Team</source>
-        <translation type="obsolete">队伍</translation>
-    </message>
-    <message>
-        <source>Box</source>
-        <translation type="obsolete">盒子</translation>
-    </message>
-    <message>
-        <source>Pokedex</source>
-        <translation type="obsolete">图鉴</translation>
-    </message>
-    <message>
-        <source>New team</source>
-        <translation type="obsolete">新建队伍</translation>
-    </message>
-    <message>
-        <source>Load team</source>
-        <translation type="obsolete">载入队伍</translation>
-    </message>
-    <message>
-        <source>Save team</source>
-        <translation type="obsolete">保存队伍</translation>
-    </message>
-    <message>
-        <source>Close teambuilder</source>
-        <translation type="obsolete">关闭队伍编辑器</translation>
-    </message>
-    <message>
-        <source>Closes the teambuilder and applies the changes to the team</source>
-        <translation type="obsolete">关闭队伍编辑器并且应用当前队伍的修改</translation>
-    </message>
-    <message>
-        <source>New Team</source>
-        <translation type="obsolete">新队伍</translation>
-    </message>
-    <message>
-        <source>You sure?</source>
-        <translation type="obsolete">确定吗？</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="73"/>
         <source>&amp;File</source>
         <translation>文件</translation>
-    </message>
-    <message>
-        <source>&amp;New team</source>
-        <translation type="obsolete">新队伍</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="87"/>
@@ -6982,29 +5142,9 @@ p, li { white-space: pre-wrap; }
         <translation>载入队伍</translation>
     </message>
     <message>
-        <source>&amp;Import from text</source>
-        <translation type="obsolete">从文本导入</translation>
-    </message>
-    <message>
-        <source>&amp;Export to text</source>
-        <translation type="obsolete">导出到文本</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="78"/>
         <source>&amp;Quit</source>
         <translation>退出</translation>
-    </message>
-    <message>
-        <source>Stadium (&amp;1st gen)</source>
-        <translation type="obsolete">竞技场（第1世代）</translation>
-    </message>
-    <message>
-        <source>&amp;Options</source>
-        <translation type="obsolete">选项</translation>
-    </message>
-    <message>
-        <source>Enforce &amp;minimum levels</source>
-        <translation type="obsolete">强制最小等级</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="97"/>
@@ -7012,61 +5152,13 @@ p, li { white-space: pre-wrap; }
         <translation>Mods</translation>
     </message>
     <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">风格</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">重新载入风格列表</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="126"/>
         <source>&amp;Gen.</source>
         <translation>世代</translation>
     </message>
-    <message>
-        <source>Advance (&amp;3rd gen)</source>
-        <translation type="obsolete">宝石（第3世代）</translation>
-    </message>
-    <message>
-        <source>GSC (&amp;2nd gen)</source>
-        <translation type="obsolete">金银水晶（第2世代）</translation>
-    </message>
-    <message>
-        <source>HGSS (&amp;4th gen)</source>
-        <translation type="obsolete">心金魂银（第4世代）</translation>
-    </message>
-    <message>
-        <source>B/W (&amp;5th gen)</source>
-        <translation type="obsolete">黑白（第5世代）</translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation type="obsolete">查看</translation>
-    </message>
-    <message>
-        <source>&amp;Show all items</source>
-        <translation type="obsolete">显示所有道具</translation>
-    </message>
-    <message>
-        <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translation type="obsolete">全屏幕（只适用于上网本）</translation>
-    </message>
 </context>
 <context>
     <name>TeamImporter</name>
-    <message>
-        <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
-Your language needs to be set to English to import English teams.</source>
-        <translation type="obsolete">粘贴你从Netbattle Supremacy / Shoddy Battle导出的队伍
-你的语言需要设置成英文才能导入英文队伍。</translation>
-    </message>
-    <message>
-        <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle.
-Your language needs to be set to English to import English teams.</source>
-        <translation type="obsolete">请将从Netbattle Supremacy / Shoddy Battle导出的队伍粘贴于此处。
-你的语言必须设置为英语才能导入英语队伍。</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="12"/>
         <source>Paste your exported team here.
@@ -7154,21 +5246,6 @@ Your language needs to be set to English to import English teams.</source>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="77"/>
         <source>Boxes (#&amp;%1)</source>
         <translation>盒子 (#&amp;%1)</translation>
-    </message>
-</context>
-<context>
-    <name>TeamPokeButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">精灵 &amp;%1</translation>
-    </message>
-    <message>
-        <source>Item</source>
-        <translation type="obsolete">道具</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Lv. %1</translation>
     </message>
 </context>
 <context>
@@ -7487,13 +5564,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation>你的颜色必须绿色小于200，亮度和明度小于140.
 
 你当前选择的为绿色%1，亮度%2，明度%3。</translation>
-    </message>
-</context>
-<context>
-    <name>TypeChart</name>
-    <message>
-        <source>A \ D</source>
-        <translation type="obsolete">攻\守</translation>
     </message>
 </context>
 <context>

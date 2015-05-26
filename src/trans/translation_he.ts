@@ -4,10 +4,6 @@
 <context>
     <name>AdvancedSearch</name>
     <message>
-        <source>Types</source>
-        <translation type="obsolete">סוגים</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="34"/>
         <source>Type 1</source>
         <translation>סוג 1</translation>
@@ -16,18 +12,6 @@
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="41"/>
         <source>Type 2</source>
         <translation>סוג 2</translation>
-    </message>
-    <message>
-        <source>Ability</source>
-        <translation type="obsolete">יכולת</translation>
-    </message>
-    <message>
-        <source>Base Stats</source>
-        <translation type="obsolete">נתונים בסיסיים</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation type="obsolete"> </translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="14"/>
@@ -115,10 +99,6 @@
         <translation type="unfinished">&amp;מתקפות</translation>
     </message>
     <message>
-        <source>Moves</source>
-        <translation type="obsolete">מהלכים</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="327"/>
         <source>&amp;Search !</source>
         <translation>&amp;! חיפוש</translation>
@@ -136,10 +116,6 @@
 </context>
 <context>
     <name>Analyzer</name>
-    <message>
-        <source>The server requires insecure authentification.</source>
-        <translation type="obsolete">הסרבר צורך הרשאה לא בטוחה.</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/analyze.cpp" line="478"/>
         <source>The server requires insecure authentication.</source>
@@ -201,31 +177,6 @@
     </message>
 </context>
 <context>
-    <name>AttackButton</name>
-    <message>
-        <source>PP %1/%2</source>
-        <translation type="obsolete">נקודות כוח %2/%1</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-כוח: %2
-סיכויי פגיעה: %3
-
-תיאור: %4
-
-אפקט: %5</translation>
-    </message>
-</context>
-<context>
     <name>AttackZone</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1007"/>
@@ -260,34 +211,7 @@ Effect: %5</source>
     </message>
 </context>
 <context>
-    <name>BaseBattleDisplay</name>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">רמה %1</translation>
-    </message>
-    <message>
-        <source>%1 lv %2 -- %3%</source>
-        <translation type="obsolete">%1 רמה %2 -- %3%</translation>
-    </message>
-    <message>
-        <source>Spikes level %1</source>
-        <translation type="obsolete">קוצים רמה %1</translation>
-    </message>
-    <message>
-        <source>Toxic Spikes level %1</source>
-        <translation type="obsolete">קוצים רעילים רמה %1</translation>
-    </message>
-    <message>
-        <source>Stealth Rock</source>
-        <translation type="obsolete">אבנים מתגנבות</translation>
-    </message>
-</context>
-<context>
     <name>BaseBattleWindow</name>
-    <message>
-        <source>Battle between %1 and %2 is underway!</source>
-        <translation type="obsolete">!%2 לבין %1 בין תיקו</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="118"/>
         <source>%1 vs %2</source>
@@ -348,277 +272,6 @@ Effect: %5</source>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="156"/>
         <source>C&amp;hat</source>
         <translation>&amp;צ&apos;אט</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore Spectators</source>
-        <translation type="obsolete">&amp;התעלם מצופים</translation>
-    </message>
-    <message>
-        <source>%1&apos;s %2</source>
-        <translation type="obsolete">%2 של ה%1</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">(%3) !%2 את שלח %1</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">!%2 שלח את %1</translation>
-    </message>
-    <message>
-        <source>%1 called %2 back!</source>
-        <translation type="obsolete">!לחזור ל%2 קרא %1</translation>
-    </message>
-    <message>
-        <source>%1 used %2!</source>
-        <translation type="obsolete">!%2ב השתמש %1</translation>
-    </message>
-    <message>
-        <source>Start of turn %1</source>
-        <translation type="obsolete">התחלת תור %1</translation>
-    </message>
-    <message>
-        <source>%1 fainted!</source>
-        <translation type="obsolete">!התעלף %1</translation>
-    </message>
-    <message>
-        <source>Hit %1 times!</source>
-        <translation type="obsolete">!פעמים %1 פגע</translation>
-    </message>
-    <message>
-        <source>It had no effect!</source>
-        <translation type="obsolete">אין לזה השפעה!</translation>
-    </message>
-    <message>
-        <source>It&apos;s not very effective...</source>
-        <translation type="obsolete">זה לא משפיע במיוחד...</translation>
-    </message>
-    <message>
-        <source>It&apos;s super effective!</source>
-        <translation type="obsolete">זה משפיע מאוד!</translation>
-    </message>
-    <message>
-        <source>A critical hit!</source>
-        <translation type="obsolete">מכה קריטית!</translation>
-    </message>
-    <message>
-        <source>The attack of %1 missed!</source>
-        <translation type="obsolete">!פספסה %1 של ההתקפה</translation>
-    </message>
-    <message>
-        <source>%1 avoided the attack!</source>
-        <translation type="obsolete">! %1 התחמק מהמתקפה</translation>
-    </message>
-    <message>
-        <source>%1&apos;s %2 %3%4!</source>
-        <translation type="obsolete">!%4 %3 %2 של ה%1</translation>
-    </message>
-    <message>
-        <source>sharply </source>
-        <translation type="obsolete">בצורה משמעותית</translation>
-    </message>
-    <message>
-        <source>rose</source>
-        <translation type="obsolete">השתפרה</translation>
-    </message>
-    <message>
-        <source>fell</source>
-        <translation type="obsolete">התדרדרה</translation>
-    </message>
-    <message>
-        <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation type="obsolete">!לזוז יוכל לא הוא כי ייתכן משותק! %1</translation>
-    </message>
-    <message>
-        <source>%1 was burned!</source>
-        <translation type="obsolete">!נשרף %1</translation>
-    </message>
-    <message>
-        <source>%1 was frozen solid!</source>
-        <translation type="obsolete">!קפוא %1</translation>
-    </message>
-    <message>
-        <source>%1 fell asleep!</source>
-        <translation type="obsolete">!נרדם %1</translation>
-    </message>
-    <message>
-        <source>%1 was poisoned!</source>
-        <translation type="obsolete">!הורעל %1</translation>
-    </message>
-    <message>
-        <source>%1 was badly poisoned!</source>
-        <translation type="obsolete">!חמורה בצורה הורעל %1</translation>
-    </message>
-    <message>
-        <source>%1 became confused!</source>
-        <translation type="obsolete">!התבלבל %1</translation>
-    </message>
-    <message>
-        <source>%1 is already %2!</source>
-        <translation type="obsolete">!%2 כבר %1</translation>
-    </message>
-    <message>
-        <source>%1 is already %2.</source>
-        <translation type="obsolete">! %2 כבר %1</translation>
-    </message>
-    <message>
-        <source>%1 is confused!</source>
-        <translation type="obsolete">!מבולבל %1</translation>
-    </message>
-    <message>
-        <source>It hurt itself in its confusion!</source>
-        <translation type="obsolete">הבלבול גרם לו לפגוע בעצמו!</translation>
-    </message>
-    <message>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="obsolete">הפסיק להיות מבולבל %1 !</translation>
-    </message>
-    <message>
-        <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation type="obsolete">!לזוז יכול לא הוא משותק! %1</translation>
-    </message>
-    <message>
-        <source>%1 is fast asleep!</source>
-        <translation type="obsolete">!נרדם %1</translation>
-    </message>
-    <message>
-        <source>%1 woke up!</source>
-        <translation type="obsolete">!התעורר %1</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="obsolete">!מהשריפה כוויה קבל %1</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by poison!</source>
-        <translation type="obsolete">!ניזוק מההרעלה %1</translation>
-    </message>
-    <message>
-        <source>%1 is frozen solid!</source>
-        <translation type="obsolete">!קפוא במקום %1</translation>
-    </message>
-    <message>
-        <source>%1 thawed out!</source>
-        <translation type="obsolete">!הפשיר %1</translation>
-    </message>
-    <message>
-        <source>But it failed!</source>
-        <translation type="obsolete">אבל זה נכשל!</translation>
-    </message>
-    <message>
-        <source>But there was no target...</source>
-        <translation type="obsolete">אבל אין מטרה...</translation>
-    </message>
-    <message>
-        <source>%1 flinched!</source>
-        <translation type="obsolete">!נרתע %1</translation>
-    </message>
-    <message>
-        <source>%1 is hit with recoil!</source>
-        <translation type="obsolete">!מההדף מכה קבל %1</translation>
-    </message>
-    <message>
-        <source>The hail subsided!</source>
-        <translation type="obsolete">הברד נפסק!</translation>
-    </message>
-    <message>
-        <source>The sandstorm subsided!</source>
-        <translation type="obsolete">סופת החול נפסקה!</translation>
-    </message>
-    <message>
-        <source>The sunlight faded!</source>
-        <translation type="obsolete">השמש הפסיקה!</translation>
-    </message>
-    <message>
-        <source>The rain stopped!</source>
-        <translation type="obsolete">הגשם נפסק!</translation>
-    </message>
-    <message>
-        <source>%1 is buffeted by the hail!</source>
-        <translation type="obsolete">!מהברד קר ל%1</translation>
-    </message>
-    <message>
-        <source>%1 is buffeted by the sandstorm!</source>
-        <translation type="obsolete">!החול מסופת נפגע %1</translation>
-    </message>
-    <message>
-        <source>Hail continues to fall!</source>
-        <translation type="obsolete">!הברד ממשיך לרדת</translation>
-    </message>
-    <message>
-        <source>The sandstorm rages!</source>
-        <translation type="obsolete">סופת החול !ממשיכה</translation>
-    </message>
-    <message>
-        <source>The sunlight is strong!</source>
-        <translation type="obsolete">!השמש חזקה</translation>
-    </message>
-    <message>
-        <source>Rain continues to fall!</source>
-        <translation type="obsolete">!הגשם ממשיך לרדת</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">!חיים נקודות %2 ירדו ל%1</translation>
-    </message>
-    <message>
-        <source>Tie between %1 and %2!</source>
-        <translation type="obsolete">!%2 לבין %1 בין תיקו</translation>
-    </message>
-    <message>
-        <source>%1 won the battle!</source>
-        <translation type="obsolete">%1 ניצח בקרב!</translation>
-    </message>
-    <message>
-        <source>Rule: </source>
-        <translation type="obsolete">חוק: </translation>
-    </message>
-    <message>
-        <source>Rated</source>
-        <translation type="obsolete">מדורג</translation>
-    </message>
-    <message>
-        <source>Unrated</source>
-        <translation type="obsolete">לא מדורג</translation>
-    </message>
-    <message>
-        <source>Tier: </source>
-        <translation type="obsolete">טייר: </translation>
-    </message>
-    <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1 שינה מקומות באמצע!</translation>
-    </message>
-    <message>
-        <source>%1 shifted spots with %2!</source>
-        <translation type="obsolete">%1 החליף מקום עם %2!</translation>
-    </message>
-    <message>
-        <source>Unknown command received, are you up to date?</source>
-        <translation type="obsolete">פקודה לא מוכרת התקבלה, האם אתה מעודכן?</translation>
-    </message>
-    <message>
-        <source>%1 is watching the battle.</source>
-        <translation type="obsolete">.בקרב צופה %1</translation>
-    </message>
-    <message>
-        <source>%1 stopped watching the battle.</source>
-        <translation type="obsolete">.בקרב לצפות הפסיק %1</translation>
-    </message>
-</context>
-<context>
-    <name>BaseChallengeWindow</name>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">יחידים</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">זוגות</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">שלישיות</translation>
     </message>
 </context>
 <context>
@@ -773,14 +426,6 @@ Effect: %5</source>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="157"/>
         <source>%1&apos;s new HP is %2%.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hit %1 times!</source>
-        <translation type="obsolete">!פעמים %1 פגע</translation>
-    </message>
-    <message>
-        <source>It had no effect!</source>
-        <translation type="obsolete">אין לזה השפעה!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="163"/>
@@ -1038,10 +683,6 @@ Effect: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 is fast asleep!</source>
-        <translation type="obsolete">!נרדם %1</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="256"/>
         <source>%1 is frozen solid!</source>
         <translation type="unfinished">!קפוא במקום %1</translation>
@@ -1050,18 +691,6 @@ Effect: %5</source>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="266"/>
         <source>It hurt itself in its confusion!</source>
         <translation type="unfinished">הבלבול גרם לו לפגוע בעצמו!</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="obsolete">!מהשריפה כוויה קבל %1</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by poison!</source>
-        <translation type="obsolete">!ניזוק מההרעלה %1</translation>
-    </message>
-    <message>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="obsolete">הפסיק להיות מבולבל %1 !</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="285"/>
@@ -1092,14 +721,6 @@ Effect: %5</source>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="344"/>
         <source>But there was no target...</source>
         <translation type="unfinished">אבל אין מטרה...</translation>
-    </message>
-    <message>
-        <source>%1 flinched!</source>
-        <translation type="obsolete">!נרתע %1</translation>
-    </message>
-    <message>
-        <source>%1 is hit with recoil!</source>
-        <translation type="obsolete">!מההדף מכה קבל %1</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="379"/>
@@ -1135,38 +756,6 @@ Effect: %5</source>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="400"/>
         <source>The sunlight turned harsh!</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hail continues to fall!</source>
-        <translation type="obsolete">!הברד ממשיך לרדת</translation>
-    </message>
-    <message>
-        <source>The sandstorm rages!</source>
-        <translation type="obsolete">סופת החול !ממשיכה</translation>
-    </message>
-    <message>
-        <source>The sunlight is strong!</source>
-        <translation type="obsolete">!השמש חזקה</translation>
-    </message>
-    <message>
-        <source>Rain continues to fall!</source>
-        <translation type="obsolete">!הגשם ממשיך לרדת</translation>
-    </message>
-    <message>
-        <source>The hail subsided!</source>
-        <translation type="obsolete">הברד נפסק!</translation>
-    </message>
-    <message>
-        <source>The sandstorm subsided!</source>
-        <translation type="obsolete">סופת החול נפסקה!</translation>
-    </message>
-    <message>
-        <source>The sunlight faded!</source>
-        <translation type="obsolete">השמש הפסיקה!</translation>
-    </message>
-    <message>
-        <source>The rain stopped!</source>
-        <translation type="obsolete">הגשם נפסק!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="445"/>
@@ -1235,10 +824,6 @@ Effect: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1 שינה מקומות באמצע!</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="546"/>
         <source>%1 shifted spots with %2!</source>
         <translation type="unfinished"></translation>
@@ -1280,84 +865,7 @@ Effect: %5</source>
     </message>
 </context>
 <context>
-    <name>BattleDisplay</name>
-    <message>
-        <source>Spikes level %1</source>
-        <translation type="obsolete">הרמה של Spikes היא %1</translation>
-    </message>
-    <message>
-        <source>Toxic Spikes level %1</source>
-        <translation type="obsolete">Toxic Spikes level %1</translation>
-    </message>
-    <message>
-        <source>Stealth Rock</source>
-        <translation type="obsolete">Stealth Rock</translation>
-    </message>
-</context>
-<context>
-    <name>BattleFinder</name>
-    <message>
-        <source>Force rated battles</source>
-        <translation type="obsolete">חייב קרב מדורג</translation>
-    </message>
-    <message>
-        <source>Force same tier</source>
-        <translation type="obsolete">חייב אותו טייר</translation>
-    </message>
-    <message>
-        <source>Double battle</source>
-        <translation type="obsolete">קרב זוגות</translation>
-    </message>
-    <message>
-        <source>Only battle players with a max rating difference of </source>
-        <translation type="obsolete">שחק רק נגד יריבים שהפרש הנקודות שלהם קטן מ: </translation>
-    </message>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">יחידים</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">זוגות</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">שלישיות</translation>
-    </message>
-    <message>
-        <source>Find Battle</source>
-        <translation type="obsolete">מצא קרב</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="obsolete">ביטול</translation>
-    </message>
-</context>
-<context>
     <name>BattlePokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 רמה %2
-
-חפץ:%3
-אביליטי:%4
-
-מהלכים:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP
-</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1182"/>
         <source> - %1/%2 PP</source>
@@ -1497,17 +1005,9 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Battle between %1 and %2 started!</source>
-        <translation type="obsolete">בין קרב %1 לבין %2 התחיל!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="222"/>
         <source>&amp;Go Back</source>
         <translation>&amp;חזור</translation>
-    </message>
-    <message>
-        <source>the foe&apos;s %1</source>
-        <translation type="obsolete">%1 ה של היריב</translation>
     </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="233"/>
@@ -1527,39 +1027,10 @@ Moves:
         <translation>%החלף למרכז</translation>
     </message>
     <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">(%3) %2 שלח את %1</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1 שלח החוצה את %2!</translation>
-    </message>
-    <message>
-        <source>%1 lost %2 HP! (%3% of its health)</source>
-        <translation type="obsolete">%1 איבד %2 נקודות חיים! (%3% מכלל נקודות החיים)
-</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1 אבד %2 מהבריאות שלו!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="736"/>
         <location filename="../Teambuilder/battlewindow.cpp" line="816"/>
         <source>&amp;Close</source>
         <translation>&amp;סגור</translation>
-    </message>
-    <message>
-        <source>Variation: </source>
-        <translation type="obsolete">וריאציה:</translation>
-    </message>
-    <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1 שינה מקומות באמצע!</translation>
-    </message>
-    <message>
-        <source>%1 shifted spots with %2!</source>
-        <translation type="obsolete">%1 שינה מקומות עם %2!</translation>
     </message>
 </context>
 <context>
@@ -1588,42 +1059,6 @@ Moves:
         <location filename="../Server/battlingoptions.cpp" line="58"/>
         <source>&amp;Apply</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>BigOpenPokeBall</name>
-    <message>
-        <source>Type: </source>
-        <translation type="obsolete">סוג:</translation>
-    </message>
-    <message>
-        <source>Gender: </source>
-        <translation type="obsolete">מגדר:</translation>
-    </message>
-    <message>
-        <source>&amp;Evolution</source>
-        <translation type="obsolete">&amp;התפתחות</translation>
-    </message>
-    <message>
-        <source>&amp;Other Formes</source>
-        <translation type="obsolete">&amp;צורות חילופיות</translation>
-    </message>
-    <message>
-        <source>Shiny</source>
-        <translation type="obsolete">נוצץ</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Ht:&lt;/b&gt; %1 m</source>
-        <oldsource>&lt;b&gt;Ht:&lt;/b&gt; %1</oldsource>
-        <translation type="obsolete">&lt;b&gt;גובה:&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 kg</source>
-        <translation type="obsolete">&lt;b&gt;כובד:&lt;/b&gt; %1 kg</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs</source>
-        <translation type="obsolete">&lt;b&gt;משקל:&lt;/b&gt; %1 lbs</translation>
     </message>
 </context>
 <context>
@@ -1694,20 +1129,6 @@ Moves:
         <location filename="../Teambuilder/challengedialog.cpp" line="240"/>
         <source>%1&apos;s info</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ChallengeWindow</name>
-    <message>
-        <source>%1&apos;s Info</source>
-        <translation type="obsolete">%1 המידע על</translation>
-    </message>
-</context>
-<context>
-    <name>ChallengedWindow</name>
-    <message>
-        <source>%1 challenged you!</source>
-        <translation type="obsolete">הזמין אותך לקרב %1!</translation>
     </message>
 </context>
 <context>
@@ -1794,10 +1215,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">&amp;לוח בקרה</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="101"/>
         <source>&amp;Kick</source>
         <translation>&amp;העף</translation>
@@ -1811,19 +1228,6 @@ Moves:
         <location filename="../Teambuilder/channel.cpp" line="105"/>
         <source>24 hours</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">&amp;באן</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">קרב בין %1 לבין %2 החל.
-</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">נלחם מול %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="324"/>
@@ -1861,10 +1265,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;i&gt;Unkown command received: %1. Maybe the client should be updated?&lt;/i&gt;</source>
-        <translation type="obsolete">&lt;i&gt;פקודה לא ידועה התקבלה: %1. האם עדכנת לגרסא החדשה ביותר?&lt;/i&gt;</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="543"/>
         <source>%1 logged out.</source>
         <translation>%1 התנתק.</translation>
@@ -1892,50 +1292,6 @@ Moves:
         <location filename="../Teambuilder/client.cpp" line="107"/>
         <source>&amp;Send</source>
         <translation>&amp;שלח</translation>
-    </message>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;הזמן לקרב</translation>
-    </message>
-    <message>
-        <source>&amp;View Ranking</source>
-        <translation type="obsolete">&amp;הצג דירוג</translation>
-    </message>
-    <message>
-        <source>Go &amp;Back</source>
-        <translation type="obsolete">&amp;חזור</translation>
-    </message>
-    <message>
-        <source>Go &amp;Away</source>
-        <translation type="obsolete">&amp;חוזר</translation>
-    </message>
-    <message>
-        <source>&amp;Send Message</source>
-        <translation type="obsolete">&amp;שלח הודעה</translation>
-    </message>
-    <message>
-        <source>&amp;Watch Battle</source>
-        <translation type="obsolete">&amp;צפה בקרב</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Ignore</source>
-        <translation type="obsolete">&amp;הסר התעלמות</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">&amp;התעלם</translation>
-    </message>
-    <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">&amp;לוח בקרה</translation>
-    </message>
-    <message>
-        <source>&amp;Kick</source>
-        <translation type="obsolete">&amp;העף</translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">&amp;באן</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="59"/>
@@ -2324,10 +1680,6 @@ This server requires a password to log in.</source>
         <translation type="unfinished">&amp;טען קבוצה</translation>
     </message>
     <message>
-        <source>Open &amp;teamBuilder</source>
-        <translation type="obsolete">&amp;פתח את בונה הקבוצות</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1309"/>
         <source>Player events</source>
         <translation type="unfinished"></translation>
@@ -2358,14 +1710,6 @@ This server requires a password to log in.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;סגנון</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">טען מחדש את הסגנונות</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1298"/>
         <source>&amp;Options</source>
         <translation>&amp;אפשרויות</translation>
@@ -2376,17 +1720,9 @@ This server requires a password to log in.</source>
         <translation>&amp;לא פעיל</translation>
     </message>
     <message>
-        <source>&amp;Show team</source>
-        <translation type="obsolete">&amp;הצג קבוצה</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1304"/>
         <source>Enable &amp;ladder</source>
         <translation>אפשר &amp;דירוג</translation>
-    </message>
-    <message>
-        <source>&amp;Enable player events</source>
-        <translation type="obsolete">&amp;אפשר צפייה בפעולות משתמשים</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1365"/>
@@ -2402,10 +1738,6 @@ This server requires a password to log in.</source>
         <location filename="../Teambuilder/client.cpp" line="1383"/>
         <source>Enable logs in &amp;PM</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable timestamps in &amp;PMs</source>
-        <translation type="obsolete">הצג זמן ב&amp;הודעות פרטיות</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1398"/>
@@ -2454,22 +1786,9 @@ This server requires a password to log in.</source>
         <translation>החלף את תיקיית ה&amp;יומנים ...</translation>
     </message>
     <message>
-        <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
-        <translation type="obsolete">&amp;אפשר צלילים. )בנסיון! הסר במקרה ויש בעיות בסים)</translation>
-    </message>
-    <message>
-        <source>Change &amp;music folder ...</source>
-        <translation type="obsolete">החלף את תיקיית ה&amp;מוזיקה ...</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1466"/>
         <source>Old school buttons</source>
         <translation>כפתורים ישנים</translation>
-    </message>
-    <message>
-        <source>&amp;Battle Options</source>
-        <comment>Menu</comment>
-        <translation type="obsolete">&amp;אפשרויות קרב</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1452"/>
@@ -2477,34 +1796,9 @@ This server requires a password to log in.</source>
         <translation>שמור את &amp;רשומות הקרב</translation>
     </message>
     <message>
-        <source>Change &amp;log folder</source>
-        <translation type="obsolete">שנה &amp;את תיקיית הרשומות</translation>
-    </message>
-    <message>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-http://www.pokemon-online.eu/downloads.php for updates.</source>
-        <translation type="obsolete">הגרסה שלך ישנה יותר מזו של הסרבר. יתכן ויהיו דברים אשר לא תוכל לבצע.
-
-http://www.pokemon-online.eu/downloads.php לעדכונים.
-</translation>
-    </message>
-    <message>
-        <source>&amp;Enable sounds</source>
-        <translation type="obsolete">&amp;אפשר קולות</translation>
-    </message>
-    <message>
-        <source>Change &amp;sound folder</source>
-        <translation type="obsolete">שנה &amp;תיקיית קולות</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1461"/>
         <source>Animate HP Bar</source>
         <translation>הנפש את תיבת נקודות החיים</translation>
-    </message>
-    <message>
-        <source>Old School buttons</source>
-        <translation type="obsolete">מקשים בסגנון הדורות הישנים</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1537"/>
@@ -2548,56 +1842,9 @@ http://www.pokemon-online.eu/downloads.php לעדכונים.
         <translation>אנא הכנס סיסמה</translation>
     </message>
     <message>
-        <source>Enter the password for your current name.
-
-It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translatorcomment>לבדוק</translatorcomment>
-        <translation type="obsolete">הקלד סיסמתך לשם המשתמש הנוכחי שלך.
-
-מומלץ להשתמש בסיסמה שונה במעט בכל שרת. (השרת רואה רק את הקוד המוצפן של סיסמתך, אך ליתר בטחון...)</translation>
-    </message>
-    <message>
-        <source>Battle Music Directory</source>
-        <translation type="obsolete">ספריית מנגינות הקרב</translation>
-    </message>
-    <message>
-        <source>Battle Logs Directory</source>
-        <translation type="obsolete">ספריית רשומות של קרבות</translation>
-    </message>
-    <message>
-        <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation type="obsolete">.(%2) הסרבר של את תואמת לא (%1) שלך התוכנית גרסת</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1857"/>
         <source>Old Version</source>
         <translation>גרסה ישנה</translation>
-    </message>
-    <message>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-It is recommended to update.</source>
-        <translation type="obsolete">גרסתך ישנה מזו של השרת, לכן ייתכן שיהיו פעולות שלא תוכל לעשות</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">החל %1 לבין %2 קרב בין</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">%1 נגד נלחם</translation>
-    </message>
-    <message>
-        <source>%1 forfeited against %2.</source>
-        <translation type="obsolete">%2 נכנע ל %1</translation>
-    </message>
-    <message>
-        <source>%1 and %2 tied.</source>
-        <translation type="obsolete">סיימו בתיקו ו%2 %1</translation>
-    </message>
-    <message>
-        <source>%1 won against %2.</source>
-        <translation type="obsolete">%2 ניצח נגד %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2230"/>
@@ -2645,10 +1892,6 @@ It is recommended to update.</source>
         <translation>פעיל ומוכן לקרב %1</translation>
     </message>
     <message>
-        <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation type="obsolete">בעייה בהתחברות לשרת -- התקבלה תקלה %1: %2</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="2336"/>
         <source>Connected to Server!</source>
         <translation>התחברת לשרת!</translation>
@@ -2662,22 +1905,6 @@ It is recommended to update.</source>
         <location filename="../Teambuilder/client.cpp" line="2373"/>
         <source>Disconnected from Server!</source>
         <translation type="unfinished">התנתקת מהשרת!</translation>
-    </message>
-    <message>
-        <source>%1 logged in.</source>
-        <translation type="obsolete">התחבר %1</translation>
-    </message>
-    <message>
-        <source>%1 logged out.</source>
-        <translation type="obsolete">התנתק %1</translation>
-    </message>
-    <message>
-        <source>%1 changed teams and is now known as %2.</source>
-        <translation type="obsolete">%2 שינה את קבוצתו וידוע כעת כ %1</translation>
-    </message>
-    <message>
-        <source>%1 changed teams.</source>
-        <translation type="obsolete">שינה את קבוצתו %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2811"/>
@@ -2799,18 +2026,6 @@ It is recommended to update.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Time left</source>
-        <translation type="obsolete">זמן נותר</translation>
-    </message>
-    <message>
-        <source>User Alias</source>
-        <translation type="obsolete">כינויים נוספים</translation>
-    </message>
-    <message>
-        <source>Ban List</source>
-        <translation type="obsolete">רשימת באנים</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/controlpanel.ui" line="393"/>
         <source>Username</source>
         <translation>שם משתמש</translation>
@@ -2834,10 +2049,6 @@ It is recommended to update.</source>
         <location filename="../Teambuilder/controlpanel.ui" line="256"/>
         <source>User alias</source>
         <translation>כינויי משתמש</translation>
-    </message>
-    <message>
-        <source>Ban list</source>
-        <translation type="obsolete">רשימת באנים</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="327"/>
@@ -2991,13 +2202,6 @@ It is recommended to update.</source>
         <location filename="../client-plugins/CSSChanger/dialog.ui" line="65"/>
         <source>Mass color replace</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DockAdvanced</name>
-    <message>
-        <source>Advanced Options</source>
-        <translation type="obsolete">אפשרויות מתקדמות</translation>
     </message>
 </context>
 <context>
@@ -3194,24 +2398,6 @@ Range: %6
 Description: %5</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-כוח: %2
-סיכויי פגיעה: %3
-
-תיאור: %4
-
-השפעה: %5</translation>
-    </message>
 </context>
 <context>
     <name>IvBox</name>
@@ -3299,10 +2485,6 @@ Effect: %5</source>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="277"/>
         <source>Spd</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">&amp;יכולת</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="202"/>
@@ -3478,21 +2660,9 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Language Change</source>
-        <translation type="obsolete">שינוי שפה</translation>
-    </message>
-    <message>
-        <source>Restart the application to see the changes.</source>
-        <translation type="obsolete">התחל מחדש את התוכנה, וראה את השינויים.</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="620"/>
         <source>&amp;Style</source>
         <translation>&amp;סגנון</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">רענן StyleSheet</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="614"/>
@@ -3592,10 +2762,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
 <context>
     <name>Menu</name>
     <message>
-        <source>Teambuilder</source>
-        <translation type="obsolete">בנה קבוצה</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.ui" line="14"/>
         <location filename="../Teambuilder/menu.cpp" line="21"/>
         <source>Menu</source>
@@ -3652,10 +2818,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation type="unfinished">&amp;קובץ</translation>
     </message>
     <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;טען קבוצה</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.cpp" line="61"/>
         <source>%1 / %2</source>
         <translation type="unfinished"></translation>
@@ -3707,10 +2869,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;סגור</translation>
     </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">&amp;שפה</translation>
-    </message>
 </context>
 <context>
     <name>ModsWindow</name>
@@ -3757,34 +2915,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>MoveTab</name>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">סוג</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">שם</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">נקודות כוח</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">כוח</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">סיכויי פגיעה</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">קטגוריה</translation>
-    </message>
-</context>
-<context>
     <name>OldAttackButton</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1032"/>
@@ -3801,47 +2931,6 @@ Category: %4
 
 Description: %5</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Category: %5
-
-Effect: %6</source>
-        <translation type="obsolete">%1
-
-כוח: %2
-דיוק: %3
-
-מידע: %4
-
-קטגוריה: %5
-
-אפקט: %6
-</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-כוח: %2
-סיכויי פגיעה: %3
-
-תיאור: %4
-
-השפעה: %5</translation>
     </message>
 </context>
 <context>
@@ -3899,26 +2988,6 @@ Effect: %5</source>
         <location filename="../Teambuilder/pmsystem.cpp" line="187"/>
         <source>PokÃ©mon Online PM</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PMWindow</name>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;הזמן לקרב</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">&amp;התעלם</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="obsolete">&amp;שלח</translation>
-    </message>
-    <message>
-        <source>The other party left the server, so the window was disabled.</source>
-        <translatorcomment>לבדוק</translatorcomment>
-        <translation type="obsolete">המשתמש התנתק מהשרת, לכן החלון נוטרל.</translation>
     </message>
 </context>
 <context>
@@ -4043,17 +3112,6 @@ Effect: %5</source>
         <location filename="../libraries/Utilities/pluginmanagerdialog.cpp" line="62"/>
         <source>Error loading plugin</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PluginManagerWidget</name>
-    <message>
-        <source>Add Plugin...</source>
-        <translation type="obsolete">הוסף תוסף ...</translation>
-    </message>
-    <message>
-        <source>Remove Plugin</source>
-        <translation type="obsolete">הסר תוסף</translation>
     </message>
 </context>
 <context>
@@ -4243,10 +3301,6 @@ Move4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">האם ברצונך למחוק את קופסא %1?</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="278"/>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="289"/>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="308"/>
@@ -4257,51 +3311,6 @@ Move4</source>
 </context>
 <context>
     <name>PokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5
---%6
---%7
---%8</source>
-        <translation type="obsolete">%1 lv %2
-
-אבזר:%3
-יכולת:%4
-
-מתקפות:
---%5
---%6
---%7
---%8</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 רמה %2
-
-חפץ:%3
-אביליטי:%4
-
-מהלכים:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP
-</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebutton.ui" line="57"/>
         <source>Lv. 100</source>
@@ -4404,14 +3413,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Item</source>
-        <translation type="obsolete">אבזר</translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">שמחה</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.cpp" line="44"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
@@ -4438,10 +3439,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="20"/>
         <source>Level and gender</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Level</source>
-        <translation type="obsolete">רמה</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="37"/>
@@ -4487,10 +3484,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="162"/>
         <source>DW Ability</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shiny</source>
-        <translation type="obsolete">נוצץ</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.cpp" line="138"/>
@@ -4648,14 +3641,6 @@ Moves:
 <context>
     <name>Pokedex</name>
     <message>
-        <source>&amp;Type Chart</source>
-        <translation type="obsolete">&amp;טבלת סוגים</translation>
-    </message>
-    <message>
-        <source>&amp;Damage Calculator</source>
-        <translation type="obsolete">&amp;מחשבון נזק</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="14"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
@@ -4669,33 +3654,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="57"/>
         <source>&amp;Damage calculator</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PokedexBody</name>
-    <message>
-        <source>&amp;Advanced Search</source>
-        <translation type="obsolete">&amp;חיפוש מתקדם</translation>
-    </message>
-    <message>
-        <source>Sort Pokemon List</source>
-        <translation type="obsolete">מיין רשימת פוקימונים</translation>
-    </message>
-    <message>
-        <source>A-Z</source>
-        <translation type="obsolete">A-Z</translation>
-    </message>
-    <message>
-        <source>PROFILE</source>
-        <translation type="obsolete">פרופיל</translation>
-    </message>
-    <message>
-        <source>STATS</source>
-        <translation type="obsolete">נתונים</translation>
-    </message>
-    <message>
-        <source>MOVES</source>
-        <translation type="obsolete">מתקפות</translation>
     </message>
 </context>
 <context>
@@ -4729,24 +3687,6 @@ Moves:
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="115"/>
         <source>&amp;Advanced search</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBox</name>
-    <message>
-        <source>The box is full!</source>
-        <translation type="obsolete">הקופסה מלאה!</translation>
-    </message>
-    <message>
-        <source>There is no pokemon there!</source>
-        <translation type="obsolete">אין שם אף פוקימון!</translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBoxButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">פוקימון &amp;%1</translation>
     </message>
 </context>
 <context>
@@ -4790,29 +3730,6 @@ Moves:
     </message>
 </context>
 <context>
-    <name>ProfileTab</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">תיאור</translation>
-    </message>
-    <message>
-        <source>Abilities</source>
-        <translation type="obsolete">יכולות</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Soul Silver:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;כסף נשמה:&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Heart Gold:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;זהב לב:&lt;/b&gt; %1</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Platinum:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;פלאטינה:&lt;/b&gt; %1</translation>
-    </message>
-</context>
-<context>
     <name>QJson::ParserRunnable</name>
     <message>
         <location filename="../libraries/QJson/parserrunnable.cpp" line="64"/>
@@ -4847,21 +3764,9 @@ Moves:
         <translation type="unfinished">סעיף קפאון</translation>
     </message>
     <message>
-        <source>Evasion Clause</source>
-        <translation type="obsolete">סעיף התחמקות</translation>
-    </message>
-    <message>
-        <source>OHKO Clause</source>
-        <translation type="obsolete">סעיף התעלפות במתקפה בודדת</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="14"/>
         <source>Disallow Spects</source>
         <translation type="unfinished">ללא צופים</translation>
-    </message>
-    <message>
-        <source>Level Balance</source>
-        <translation type="obsolete">איזון רמות</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="15"/>
@@ -4958,30 +3863,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation type="obsolete">סעיף ההתחמקות מנע מהפוקימון מלהעלות את רמת ההתחמקות .שלו</translation>
-    </message>
-    <message>
-        <source>OHKO Clause prevented the One Hit KO from happening.</source>
-        <translation type="obsolete">סעיף העילפון במכה בודדת מנע מהמכה להתרחש</translation>
-    </message>
-    <message>
-        <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
-        <translation type="obsolete">אינך יכול להרדים יותר מפוקימון יריב אחד באותו זמן.</translation>
-    </message>
-    <message>
-        <source>You can not freeze more than one Pokémon of the opposing team at the same time.</source>
-        <translation type="obsolete">אתה לא יכול להקפיא יותר מפוקימון אחד של היריב שלך בו זמנית.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use evasion moves like Double Team.</source>
-        <translation type="obsolete">אתה לא יכול להשתמש במהלכים שמשנים סיכויי פגיעה בכל דרך שהיא, כמו Double Team.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use One Hit KO moves like Fissure.</source>
-        <translation type="obsolete">אין אתה יכול להתשמש במהלכים שמעלפים במכה אחת כמו Fissure.</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="42"/>
         <source>Nobody can watch your battle.</source>
         <translation type="unfinished">אף אחד לא יכול לצפות בקרב שלך.</translation>
@@ -4990,10 +3871,6 @@ Moves:
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="43"/>
         <source>No more than one of the same items is allowed per team.</source>
         <translation type="unfinished">לא יותר מאבזר אחד מאותו סוג בכל קבוצה.</translation>
-    </message>
-    <message>
-        <source>Pokémons levels are changed according to their strength.</source>
-        <translation type="obsolete">הרמות של הפוקימונים משתנות כדי ליצור איזון כוחות.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="44"/>
@@ -5014,14 +3891,6 @@ Moves:
         <location filename="../libraries/PokemonInfo/pokemonstructs.cpp" line="172"/>
         <source>%1 already has move %2.</source>
         <translation type="unfinished">%2 יודע כבר %1.</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn %2 with moves from the third gen.</source>
-        <translation type="obsolete">%1 לא יכול ללמוד %2 על מהלכים מהדור השלישי.</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn the combination of %2.</source>
-        <translation type="obsolete">%1 לא יכול לדעת את הקומבינציה של %2.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="188"/>
@@ -5480,17 +4349,9 @@ Moves:
 <context>
     <name>RegularBattleScene</name>
     <message>
-        <source>%1 lv %2 -- %3%</source>
-        <translation type="obsolete">%1 רמה %2 -- %3%</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="367"/>
         <source>Lv. %1</source>
         <translation type="unfinished">רמה %1</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <translation type="obsolete">מיוחד</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="334"/>
@@ -5770,10 +4631,6 @@ Moves:
 <context>
     <name>ServerChoice</name>
     <message>
-        <source>Server Name</source>
-        <translation type="obsolete">שם השרת</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/serverchoice.ui" line="14"/>
         <source>Server list</source>
         <translation type="unfinished"></translation>
@@ -5823,18 +4680,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/serverchoice.ui" line="164"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Players/Max Players</source>
-        <translation type="obsolete">מקסימום משתמשים/משתמשים</translation>
-    </message>
-    <message>
-        <source>Advanced connection</source>
-        <translation type="obsolete">חיבור מתקדם</translation>
-    </message>
-    <message>
-        <source>Players / Max</source>
-        <translation type="obsolete">מקסימום / שחקנים</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="142"/>
@@ -6055,546 +4900,12 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>StatTab</name>
-    <message>
-        <source>Statistics</source>
-        <translation type="obsolete">סטטיסטיקה</translation>
-    </message>
-    <message>
-        <source>Base Stats</source>
-        <translation type="obsolete">נתונים בסיסיים</translation>
-    </message>
-    <message>
-        <source>Min</source>
-        <translation type="obsolete">מינימום</translation>
-    </message>
-    <message>
-        <source>Max</source>
-        <translation type="obsolete">מקסימום</translation>
-    </message>
-    <message>
-        <source>Hit Points</source>
-        <translation type="obsolete">נקודות חיים</translation>
-    </message>
-    <message>
-        <source>Attack</source>
-        <translation type="obsolete">התקפה</translation>
-    </message>
-    <message>
-        <source>Defense</source>
-        <translation type="obsolete">הגנה</translation>
-    </message>
-    <message>
-        <source>Speed</source>
-        <translation type="obsolete">מהירות</translation>
-    </message>
-    <message>
-        <source>Special Attack</source>
-        <translation type="obsolete">התקפה מיוחדת</translation>
-    </message>
-    <message>
-        <source>Special Defense</source>
-        <translation type="obsolete">הגנה מיוחדת</translation>
-    </message>
-    <message>
-        <source>Weakness</source>
-        <translation type="obsolete">חולשה</translation>
-    </message>
-    <message>
-        <source>Resistance</source>
-        <translation type="obsolete">התנגדות</translation>
-    </message>
-    <message>
-        <source>Immunity</source>
-        <translation type="obsolete">חסינות</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Advanced</name>
-    <message>
-        <source>&amp;Hidden Power</source>
-        <translation type="obsolete">&amp;כוח נסתר</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="obsolete">&amp;סוג:</translation>
-    </message>
-    <message>
-        <source>Power:</source>
-        <translation type="obsolete">כוח:</translation>
-    </message>
-    <message>
-        <source>&amp;DVs</source>
-        <translation type="obsolete">&amp;DVs</translation>
-    </message>
-    <message>
-        <source>HP:</source>
-        <translation type="obsolete">נקודות חיים:</translation>
-    </message>
-    <message>
-        <source>Att:</source>
-        <translation type="obsolete">התקפה:</translation>
-    </message>
-    <message>
-        <source>Def:</source>
-        <translation type="obsolete">הגנה:</translation>
-    </message>
-    <message>
-        <source>Speed:</source>
-        <translation type="obsolete">מהירות:</translation>
-    </message>
-    <message>
-        <source>Sp.Att:</source>
-        <translation type="obsolete">התקפה מיוחדת:</translation>
-    </message>
-    <message>
-        <source>Sp.Def:</source>
-        <translation type="obsolete">הגנה מיוחדת:</translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">שמחה</translation>
-    </message>
-    <message>
-        <source>&amp;Level</source>
-        <translation type="obsolete">&amp;רמה</translation>
-    </message>
-    <message>
-        <source>&amp;Gender</source>
-        <translation type="obsolete">&amp;מגדר</translation>
-    </message>
-    <message>
-        <source>Male</source>
-        <translation type="obsolete">זכר</translation>
-    </message>
-    <message>
-        <source>Female</source>
-        <translation type="obsolete">נקבה</translation>
-    </message>
-    <message>
-        <source>Neutral</source>
-        <translation type="obsolete">נייטרלי</translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">&amp;יכולת</translation>
-    </message>
-    <message>
-        <source>&amp;Shiny</source>
-        <translation type="obsolete">&amp;נוצץ</translation>
-    </message>
-    <message>
-        <source>Alternate Formes</source>
-        <translation type="obsolete">צורות חילופיות</translation>
-    </message>
-    <message>
-        <source>HP</source>
-        <translation type="obsolete">נקודות חיים</translation>
-    </message>
-    <message>
-        <source>Att</source>
-        <translation type="obsolete">התקפה</translation>
-    </message>
-    <message>
-        <source>Def</source>
-        <translation type="obsolete">הגנה</translation>
-    </message>
-    <message>
-        <source>Speed</source>
-        <translation type="obsolete">מהירות</translation>
-    </message>
-    <message>
-        <source>Sp Att</source>
-        <translation type="obsolete">התקפה מיוחדת</translation>
-    </message>
-    <message>
-        <source>Sp Def</source>
-        <translation type="obsolete">הגנה מיוחדת</translation>
-    </message>
-    <message>
-        <source>Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</source>
-        <translation type="obsolete">Fatal error in TB_Advanced::stat(QObject *) : the pointer provided does not correspond to any dvchoice</translation>
-    </message>
-</context>
-<context>
-    <name>TB_EVManager</name>
-    <message>
-        <source>Hit Points:</source>
-        <translation type="obsolete">נקודות חיים:</translation>
-    </message>
-    <message>
-        <source>Attack:</source>
-        <translation type="obsolete">התקפה:</translation>
-    </message>
-    <message>
-        <source>Defense:</source>
-        <translation type="obsolete">הגנה:</translation>
-    </message>
-    <message>
-        <source>Speed:</source>
-        <translation type="obsolete">מהירות:</translation>
-    </message>
-    <message>
-        <source>Special Attack:</source>
-        <translation type="obsolete">התקפה מיוחדת:</translation>
-    </message>
-    <message>
-        <source>Special Defense:</source>
-        <translation type="obsolete">הגנה מיוחדת:</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Menu</name>
-    <message>
-        <source>Menu</source>
-        <translation type="obsolete">תפריט</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="obsolete">&amp;קובץ</translation>
-    </message>
-    <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;טען קבוצה</translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation type="obsolete">&amp;סגור</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;סגנון</translation>
-    </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">&amp;שפה</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBody</name>
-    <message>
-        <source>&amp;Nickname</source>
-        <translation type="obsolete">&amp;כינוי</translation>
-    </message>
-    <message>
-        <source>&amp;Item</source>
-        <translation type="obsolete">&amp;אבזר</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="obsolete">&amp;ייבוא</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="obsolete">&amp;ייצוא</translation>
-    </message>
-    <message>
-        <source>PokÃ©mon %1</source>
-        <translation type="obsolete">פוקימון %1</translation>
-    </message>
-    <message>
-        <source>&amp;Advanced</source>
-        <translation type="obsolete">&amp;מתקדם</translation>
-    </message>
-    <message>
-        <source>Side Window</source>
-        <translation type="obsolete">חלון צדדי</translation>
-    </message>
-    <message>
-        <source>New Window</source>
-        <translation type="obsolete">חלון חדש</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">סוג</translation>
-    </message>
-    <message>
-        <source>N&amp;ature</source>
-        <translation type="obsolete">&amp;אופי</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">שם מתקפה</translation>
-    </message>
-    <message>
-        <source>Learning</source>
-        <translation type="obsolete">לומד</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">נקודות כוח</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">כוח</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">סיכויי פגיעה</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">קטגוריה</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">רמה %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">שגיאה</translation>
-    </message>
-    <message>
-        <source>TM/HM</source>
-        <translation type="obsolete">TM/HM</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <comment>Learning</comment>
-        <translation type="obsolete">מיוחד</translation>
-    </message>
-    <message>
-        <source>Tutor</source>
-        <translation type="obsolete">מלמד</translation>
-    </message>
-    <message>
-        <source>Level</source>
-        <translation type="obsolete">רמה</translation>
-    </message>
-    <message>
-        <source>Pre Evo</source>
-        <translation type="obsolete">לפני התפתחות</translation>
-    </message>
-    <message>
-        <source>Breeding</source>
-        <translation type="obsolete">רבייה</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <translation type="obsolete">מיוחד</translation>
-    </message>
-    <message>
-        <source>Move Tutor</source>
-        <translation type="obsolete">מלמד מהלכים</translation>
-    </message>
-    <message>
-        <source>3G TM/HM</source>
-        <translation type="obsolete">דור שלישי TM/HM</translation>
-    </message>
-    <message>
-        <source>Dream World</source>
-        <translation type="obsolete">Dream World</translation>
-    </message>
-    <message>
-        <source>4G TM/HM</source>
-        <translation type="obsolete">דור רביעי TM/HM</translation>
-    </message>
-    <message>
-        <source>4G Move Tutor</source>
-        <translation type="obsolete">דור רביעי מלמד מהלכים</translation>
-    </message>
-    <message>
-        <source>4G Tutor</source>
-        <translation type="obsolete">מלמד בדור 4</translation>
-    </message>
-    <message>
-        <source>4G Level</source>
-        <translation type="obsolete">ברמה בדור 4</translation>
-    </message>
-    <message>
-        <source>4G Pre Evo</source>
-        <translation type="obsolete">תת מתפתח בדור 4</translation>
-    </message>
-    <message>
-        <source>4G Breeding</source>
-        <translation type="obsolete">רבייה בדור 4</translation>
-    </message>
-    <message>
-        <source>4G Special</source>
-        <translation type="obsolete">דור רביעי מיוחד</translation>
-    </message>
-    <message>
-        <source>3G Tutor</source>
-        <translation type="obsolete">מלמד בדור 3</translation>
-    </message>
-    <message>
-        <source>1G TM/HM</source>
-        <translation type="obsolete">דור רביעי TM/HM {1G?}</translation>
-    </message>
-    <message>
-        <source>1G Level</source>
-        <translation type="obsolete">רמה בדור 3 {1G?}</translation>
-    </message>
-    <message>
-        <source>1G Pre Evo</source>
-        <translation type="obsolete">תת התפתחות בדור 3 {1G?}</translation>
-    </message>
-    <message>
-        <source>1G Special</source>
-        <translation type="obsolete">ספיישל דור 3 {1G?}</translation>
-    </message>
-    <message>
-        <source>3G Level</source>
-        <translation type="obsolete">רמה בדור 3</translation>
-    </message>
-    <message>
-        <source>3G Pre Evo</source>
-        <translation type="obsolete">תת התפתחות בדור 3</translation>
-    </message>
-    <message>
-        <source>3G Breeding</source>
-        <translation type="obsolete">רבייה בדור 3</translation>
-    </message>
-    <message>
-        <source>3G Special</source>
-        <translation type="obsolete">ספיישל דור 3</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBoxes</name>
-    <message>
-        <source>Change Order</source>
-        <translation type="obsolete">שנה סדר</translation>
-    </message>
-    <message>
-        <source>&amp;Store</source>
-        <translation type="obsolete">&amp;אכסון</translation>
-    </message>
-    <message>
-        <source>&amp;Withdraw</source>
-        <translation type="obsolete">&amp;משיכה</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Box Name...</source>
-        <translation type="obsolete">&amp;ערוך שם קופסא...</translation>
-    </message>
-    <message>
-        <source>&amp;Add New Box</source>
-        <translation type="obsolete">&amp;הוסף קופסה חדשה</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Current Box</source>
-        <translation type="obsolete">&amp;מחק קופסא קיימת</translation>
-    </message>
-    <message>
-        <source>Edit Box Name</source>
-        <translation type="obsolete">ערוך שם קופסא</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the box %1:</source>
-        <translation type="obsolete">הקש את שם הקופסא החדש %1:</translation>
-    </message>
-    <message>
-        <source>New Box</source>
-        <translation type="obsolete">קופסא חדשה</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the new box:</source>
-        <translation type="obsolete">הקש את השם החדש בשביל הקופסא:</translation>
-    </message>
-    <message>
-        <source>Destroying a box</source>
-        <translation type="obsolete">הרוס קופסא</translation>
-    </message>
-    <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">האם ברצונך למחוק את קופסא %1?</translation>
-    </message>
-    <message>
-        <source>Switc&amp;h</source>
-        <translation type="obsolete">&amp;החלפה</translation>
-    </message>
-    <message>
-        <source>Dele&amp;te</source>
-        <translation type="obsolete">&amp;מחיקה</translation>
-    </message>
-    <message>
-        <source>BOX &amp;%1</source>
-        <translation type="obsolete">קופסה &amp;%1</translation>
-    </message>
-    <message>
-        <source>Full Box</source>
-        <translation type="obsolete">קופסה מלאה</translation>
-    </message>
-    <message>
-        <source>Empty Box</source>
-        <translation type="obsolete">קופסה ריקה</translation>
-    </message>
-    <message>
-        <source>Box Empty</source>
-        <translation type="obsolete">קופסה ריקה</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonDetail</name>
-    <message>
-        <source>Item: </source>
-        <translation type="obsolete">אבזר:</translation>
-    </message>
-    <message>
-        <source>Moves:</source>
-        <translation type="obsolete">מתקפות:</translation>
-    </message>
-    <message>
-        <source>Nature: %1</source>
-        <translation type="obsolete">אופי: %1</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">רמה %1</translation>
-    </message>
-</context>
-<context>
-    <name>TB_TrainerBody</name>
-    <message>
-        <source>Avatar</source>
-        <translation type="obsolete">אווטאר</translation>
-    </message>
-    <message>
-        <source>Trainer &amp;Name</source>
-        <translation type="obsolete">שם &amp;משתמש</translation>
-    </message>
-    <message>
-        <source>Name Color</source>
-        <translation type="obsolete">צבע השם</translation>
-    </message>
-    <message>
-        <source>Change &amp;Color</source>
-        <translation type="obsolete">שנה &amp;צבע</translation>
-    </message>
-    <message>
-        <source>Team Tier</source>
-        <translation type="obsolete">טייר הקבוצה</translation>
-    </message>
-    <message>
-        <source>Trainer I&amp;nformation</source>
-        <translation type="obsolete">&amp;מידע על המשתמש</translation>
-    </message>
-    <message>
-        <source>&amp;Winning Message</source>
-        <translation type="obsolete">&amp;הודעת ניצחון</translation>
-    </message>
-    <message>
-        <source>L&amp;osing Message</source>
-        <translation type="obsolete">&amp;הודעת הפסד</translation>
-    </message>
-</context>
-<context>
     <name>TeamBuilder</name>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="39"/>
         <source>Teambuilder</source>
         <translatorcomment>לבדוק</translatorcomment>
         <translation type="unfinished">בנה קבוצה</translation>
-    </message>
-    <message>
-        <source>New Team</source>
-        <translation type="obsolete">קבוצה חדשה</translation>
-    </message>
-    <message>
-        <source>You sure?</source>
-        <translation type="obsolete">האם הנך בטוח?</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="73"/>
@@ -6795,23 +5106,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;New Team</source>
-        <translation type="obsolete">&amp;קבוצה חדשה</translation>
-    </message>
-    <message>
-        <source>&amp;New team</source>
-        <oldsource>&amp;Save Team</oldsource>
-        <translation type="obsolete">&amp;קבוצה חדשה</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="87"/>
         <source>&amp;Save team</source>
         <oldsource>&amp;Load Team</oldsource>
         <translation>&amp;שמור קבוצה</translation>
-    </message>
-    <message>
-        <source>&amp;Import From Txt</source>
-        <translation type="obsolete">&amp;המר מטקסט</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="86"/>
@@ -6819,80 +5117,18 @@ p, li { white-space: pre-wrap; }
         <translation>&amp;טען קבוצה</translation>
     </message>
     <message>
-        <source>&amp;Import from text</source>
-        <translation type="obsolete">&amp;יבא קבוצה מטקסט</translation>
-    </message>
-    <message>
-        <source>&amp;Export to text</source>
-        <translatorcomment>לבדוק</translatorcomment>
-        <translation type="obsolete">&amp;המר לטקסט</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="78"/>
         <source>&amp;Quit</source>
         <translation>&amp;סגור</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;סגנון</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translatorcomment>לבדוק</translatorcomment>
-        <translation type="obsolete">רענן רשימת סגנונות</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="126"/>
         <source>&amp;Gen.</source>
         <translation type="unfinished">&amp;דור.</translation>
     </message>
-    <message>
-        <source>Advance (&amp;3rd gen)</source>
-        <translation type="obsolete">אדוונס (&amp;דור שלישי)</translation>
-    </message>
-    <message>
-        <source>RBY (&amp;1st gen)</source>
-        <translation type="obsolete">אדום כחול צהוב (&amp;דור ראשון)</translation>
-    </message>
-    <message>
-        <source>GSC (&amp;2nd gen)</source>
-        <translation type="obsolete">זהב כסף קריסטל (&amp;דור שני)</translation>
-    </message>
-    <message>
-        <source>HGSS (&amp;4th gen)</source>
-        <translation type="obsolete">לב זהב נשמת  כסף (&amp;דור רביעי)</translation>
-    </message>
-    <message>
-        <source>B/W (&amp;5th gen)</source>
-        <translation type="obsolete">לבן/שחור (&amp;דור חמישי)</translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation type="obsolete">&amp;הצג</translation>
-    </message>
-    <message>
-        <source>&amp;Show all items</source>
-        <translation type="obsolete">&amp;הצג את כל החפצים</translation>
-    </message>
-    <message>
-        <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translatorcomment>האנגלית הופך את המילים - הסדר הגיוני</translatorcomment>
-        <translation type="obsolete">&amp;בלבד Netbook מסך מלא - למשתמשי</translation>
-    </message>
-    <message>
-        <source>&amp;Import from .txt</source>
-        <translation type="obsolete">&amp;המר ממקום</translation>
-    </message>
 </context>
 <context>
     <name>TeamImporter</name>
-    <message>
-        <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
-Your language needs to be set to English to import English teams.</source>
-        <translatorcomment>לבדוק</translatorcomment>
-        <translation type="obsolete">הדבר את הקבוצה המומרת שלך מNet Battle Supremacy / Shoddy Battle.
-השפה צריכה להיות אנגלית.</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="12"/>
         <source>Paste your exported team here.
@@ -6980,25 +5216,6 @@ Your language needs to be set to English to import English teams.</source>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="77"/>
         <source>Boxes (#&amp;%1)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Gen.</source>
-        <translation type="obsolete">&amp;דור.</translation>
-    </message>
-</context>
-<context>
-    <name>TeamPokeButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">פוקימון &amp;%1</translation>
-    </message>
-    <message>
-        <source>Item</source>
-        <translation type="obsolete">אבזר</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">רמה %1</translation>
     </message>
 </context>
 <context>
@@ -7317,13 +5534,6 @@ Your language needs to be set to English to import English teams.</source>
 
 Your selected color currently has %1 parts green, a brightness of %2, and a lightness of %3.</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TypeChart</name>
-    <message>
-        <source>A \ D</source>
-        <translation type="obsolete">A \ D</translation>
     </message>
 </context>
 <context>

@@ -4,10 +4,6 @@
 <context>
     <name>AdvancedSearch</name>
     <message>
-        <source>Types</source>
-        <translation type="obsolete">Tyypit</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="34"/>
         <source>Type 1</source>
         <translation>Tyyppi 1</translation>
@@ -16,18 +12,6 @@
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="41"/>
         <source>Type 2</source>
         <translation>Tyyppi 2</translation>
-    </message>
-    <message>
-        <source>Ability</source>
-        <translation type="obsolete">Kyky</translation>
-    </message>
-    <message>
-        <source>Base Stats</source>
-        <translation type="obsolete">Base Stats</translation>
-    </message>
-    <message>
-        <source> </source>
-        <translation type="obsolete"> </translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="14"/>
@@ -115,10 +99,6 @@
         <translation type="unfinished">&amp;Liikkeet</translation>
     </message>
     <message>
-        <source>Moves</source>
-        <translation type="obsolete">Liikkeet</translation>
-    </message>
-    <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="327"/>
         <source>&amp;Search !</source>
         <translation>&amp;Etsi !</translation>
@@ -136,10 +116,6 @@
 </context>
 <context>
     <name>Analyzer</name>
-    <message>
-        <source>The server requires insecure authentification.</source>
-        <translation type="obsolete">Palvelin käyttää epäluotettavaa varmennusta.</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/analyze.cpp" line="478"/>
         <source>The server requires insecure authentication.</source>
@@ -201,31 +177,6 @@
     </message>
 </context>
 <context>
-    <name>AttackButton</name>
-    <message>
-        <source>PP %1/%2</source>
-        <translation type="obsolete">PP %1/%2</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-Voima: %2
-Tarkkuus: %3
-
-Kuvaus: %4
-
-Vaikutus: %5</translation>
-    </message>
-</context>
-<context>
     <name>AttackZone</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1007"/>
@@ -260,37 +211,7 @@ Vaikutus: %5</translation>
     </message>
 </context>
 <context>
-    <name>BaseBattleDisplay</name>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Taso. %1</translation>
-    </message>
-    <message>
-        <source>%1 lv %2 -- %3%</source>
-        <translation type="obsolete">%1 taso %2 -- %3%</translation>
-    </message>
-    <message>
-        <source>Spikes level %1</source>
-        <translatorcomment>I&apos;m going to keep all the move names in English</translatorcomment>
-        <translation type="obsolete">Spikes taso %1</translation>
-    </message>
-    <message>
-        <source>Toxic Spikes level %1</source>
-        <translatorcomment>I&apos;m going to keep all the move names in English</translatorcomment>
-        <translation type="obsolete">Toxic Spikes taso %1</translation>
-    </message>
-    <message>
-        <source>Stealth Rock</source>
-        <translatorcomment>I&apos;m going to keep all the move names in English</translatorcomment>
-        <translation type="obsolete">Stealth Rock</translation>
-    </message>
-</context>
-<context>
     <name>BaseBattleWindow</name>
-    <message>
-        <source>Battle between %1 and %2 is underway!</source>
-        <translation type="obsolete">Ottelu pelaajien %1 ja %2 välillä on käynnissä!</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="118"/>
         <source>%1 vs %2</source>
@@ -351,285 +272,6 @@ Vaikutus: %5</translation>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="156"/>
         <source>C&amp;hat</source>
         <translation>L&amp;ähetä</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore Spectators</source>
-        <translation type="obsolete">Älä &amp;huomioi katsojia</translation>
-    </message>
-    <message>
-        <source>%1&apos;s %2</source>
-        <translation type="obsolete">%1:n %2</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">%1 valitsi pokemonin %2 (%3)</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1 valitsi pokemonin %2!</translation>
-    </message>
-    <message>
-        <source>%1 called %2 back!</source>
-        <translation type="obsolete">%1 kutsui pokemonin %2 takaisin!</translation>
-    </message>
-    <message>
-        <source>%1 used %2!</source>
-        <translation type="obsolete">%1 käytti iskua %2!</translation>
-    </message>
-    <message>
-        <source>Start of turn %1</source>
-        <translation type="obsolete">Vuoron %1 alku</translation>
-    </message>
-    <message>
-        <source>%1 fainted!</source>
-        <translation type="obsolete">%1 pyörtyi!</translation>
-    </message>
-    <message>
-        <source>Hit %1 times!</source>
-        <translation type="obsolete">Osui %1 kertaa!</translation>
-    </message>
-    <message>
-        <source>It had no effect!</source>
-        <translation type="obsolete">Sillä ei ollut vaikutusta!</translation>
-    </message>
-    <message>
-        <source>It&apos;s not very effective...</source>
-        <translation type="obsolete">Se ei ollut kovin tehokas...</translation>
-    </message>
-    <message>
-        <source>It&apos;s super effective!</source>
-        <translation type="obsolete">Se oli supertehokas!</translation>
-    </message>
-    <message>
-        <source>A critical hit!</source>
-        <translation type="obsolete">Kriittinen osuma!</translation>
-    </message>
-    <message>
-        <source>The attack of %1 missed!</source>
-        <translation type="obsolete">%1:n isku ei osunut!</translation>
-    </message>
-    <message>
-        <source>%1 avoided the attack!</source>
-        <translation type="obsolete">%1 väisti hyökkäyksen!</translation>
-    </message>
-    <message>
-        <source>%1&apos;s %2 %3%4!</source>
-        <translation type="obsolete">Pelaajan %1 pokémonin %2 %4%3!</translation>
-    </message>
-    <message>
-        <source>sharply </source>
-        <translation type="obsolete">voimakkaasti</translation>
-    </message>
-    <message>
-        <source>rose</source>
-        <translation type="obsolete">nousi </translation>
-    </message>
-    <message>
-        <source>fell</source>
-        <translation type="obsolete">tippui </translation>
-    </message>
-    <message>
-        <source>%1 is paralyzed! It may be unable to move!</source>
-        <translation type="obsolete">%1 halvaantui! Se ei saata pystyä iskemään!</translation>
-    </message>
-    <message>
-        <source>%1 was burned!</source>
-        <translation type="obsolete">%1 paloi!</translation>
-    </message>
-    <message>
-        <source>%1 was frozen solid!</source>
-        <translation type="obsolete">%1 jäätyi täysin!</translation>
-    </message>
-    <message>
-        <source>%1 fell asleep!</source>
-        <translation type="obsolete">%1 nukahti!</translation>
-    </message>
-    <message>
-        <source>%1 was poisoned!</source>
-        <translation type="obsolete">%1 sai myrkytyksen!</translation>
-    </message>
-    <message>
-        <source>%1 was badly poisoned!</source>
-        <translation type="obsolete">%1 sai pahan myrkytyksen!</translation>
-    </message>
-    <message>
-        <source>%1 became confused!</source>
-        <translation type="obsolete">%1 meni sekaisin!</translation>
-    </message>
-    <message>
-        <source>%1 is already %2.</source>
-        <translation type="obsolete">%1 on jo %2!.</translation>
-    </message>
-    <message>
-        <source>%1 is already %2!</source>
-        <translation type="obsolete">%1 on jo %2!</translation>
-    </message>
-    <message>
-        <source>%1 is confused!</source>
-        <translation type="obsolete">%1 on sekaisin!</translation>
-    </message>
-    <message>
-        <source>It hurt itself in its confusion!</source>
-        <translation type="obsolete">Se vahingoitti itseään sekaantuneena!</translation>
-    </message>
-    <message>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="obsolete">%1 ei ole enää sekaisin!</translation>
-    </message>
-    <message>
-        <source>%1 is paralyzed! It can&apos;t move!</source>
-        <translation type="obsolete">%1 on halvaantunut! Se ei voi liikkua!</translation>
-    </message>
-    <message>
-        <source>%1 is fast asleep!</source>
-        <translation type="obsolete">%1 nukkuu sikeästi!</translation>
-    </message>
-    <message>
-        <source>%1 woke up!</source>
-        <translation type="obsolete">%1 heräsi!</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="obsolete">Palovamma vahingoitti %1 pokémonia!</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by poison!</source>
-        <translation type="obsolete">Myrkytys vahingoitti %1 pokémonia!</translation>
-    </message>
-    <message>
-        <source>%1 is frozen solid!</source>
-        <translation type="obsolete">%1 on umpijäässä!</translation>
-    </message>
-    <message>
-        <source>%1 thawed out!</source>
-        <translation type="obsolete">%1 suli kokonaan!</translation>
-    </message>
-    <message>
-        <source>But it failed!</source>
-        <translation type="obsolete">Mutta se epäonnistui!</translation>
-    </message>
-    <message>
-        <source>But there was no target...</source>
-        <translation type="obsolete">Mutta kohdetta ei ole...</translation>
-    </message>
-    <message>
-        <source>But there is no target pokÃ©mon!</source>
-        <translation type="obsolete">Mutta ei ole kohdepokémonia!</translation>
-    </message>
-    <message>
-        <source>%1 flinched!</source>
-        <translation type="obsolete">%1 säpsähti!</translation>
-    </message>
-    <message>
-        <source>%1 is hit with recoil!</source>
-        <translation type="obsolete">Rekyyli vahingoitti %1!</translation>
-    </message>
-    <message>
-        <source>%1 had its energy drained!</source>
-        <translation type="obsolete">Pokémonilta %1 imettiin energiat!</translation>
-    </message>
-    <message>
-        <source>The hail subsided!</source>
-        <translation type="obsolete">Lumimyrsky taantui!</translation>
-    </message>
-    <message>
-        <source>The sandstorm subsided!</source>
-        <translation type="obsolete">Hiekkamyrsky taantui!</translation>
-    </message>
-    <message>
-        <source>The sunlight faded!</source>
-        <translation type="obsolete">Auringonpaiste hiipui!</translation>
-    </message>
-    <message>
-        <source>The rain stopped!</source>
-        <translation type="obsolete">Sade loppui!</translation>
-    </message>
-    <message>
-        <source>%1 is buffeted by the hail!</source>
-        <translation type="obsolete">Lumimyrsky vahingoitti pokémonia %1!</translation>
-    </message>
-    <message>
-        <source>%1 is buffeted by the sandstorm!</source>
-        <translation type="obsolete">Hiekkamyrsky vahingoitti pokémonia %1!</translation>
-    </message>
-    <message>
-        <source>Hail continues to fall!</source>
-        <translation type="obsolete">Lumimyrsky jatkuu!</translation>
-    </message>
-    <message>
-        <source>The sandstorm rages!</source>
-        <translation type="obsolete">Hiekkamyrsky raivoaa!</translation>
-    </message>
-    <message>
-        <source>The sunlight is strong!</source>
-        <translation type="obsolete">Aurinko paistaa kirkkaana!</translation>
-    </message>
-    <message>
-        <source>Rain continues to fall!</source>
-        <translation type="obsolete">Sade jatkuu!</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1 menetti %2% terveydestään!</translation>
-    </message>
-    <message>
-        <source>Tie between %1 and %2!</source>
-        <translation type="obsolete">Tasapeli pelaajien %1 ja %2 välillä!</translation>
-    </message>
-    <message>
-        <source>%1 won the battle!</source>
-        <translation type="obsolete">%1 voitti ottelun!</translation>
-    </message>
-    <message>
-        <source>Rule: </source>
-        <translation type="obsolete">Sääntö: </translation>
-    </message>
-    <message>
-        <source>Rated</source>
-        <translation type="obsolete">Vaikuttaa tasoon</translation>
-    </message>
-    <message>
-        <source>Unrated</source>
-        <translation type="obsolete">Ei vaikuta tasoon</translation>
-    </message>
-    <message>
-        <source>Tier: </source>
-        <translation type="obsolete">Sarja: </translation>
-    </message>
-    <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1 siirtyi keskelle!</translation>
-    </message>
-    <message>
-        <source>%1 shifted spots with %2!</source>
-        <translation type="obsolete">%1 vaihtoi paikkaa pokémonin %2 kanssa!</translation>
-    </message>
-    <message>
-        <source>Unknown command received, are you up to date?</source>
-        <translation type="obsolete">Vastaanotettiin tuntematon käsky, onko ohjelma päivitetty?</translation>
-    </message>
-    <message>
-        <source>%1 is watching the battle.</source>
-        <translation type="obsolete">%1 seuraa ottelua.</translation>
-    </message>
-    <message>
-        <source>%1 stopped watching the battle.</source>
-        <translation type="obsolete">%1 lopetti ottelun seuraamisen.</translation>
-    </message>
-</context>
-<context>
-    <name>BaseChallengeWindow</name>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">Yksi vastaan yksi</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">Kaksi vastaan kaksi</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">Kolme vastaan kolme</translation>
     </message>
 </context>
 <context>
@@ -784,14 +426,6 @@ Vaikutus: %5</translation>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="157"/>
         <source>%1&apos;s new HP is %2%.</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hit %1 times!</source>
-        <translation type="obsolete">Osui %1 kertaa!</translation>
-    </message>
-    <message>
-        <source>It had no effect!</source>
-        <translation type="obsolete">Sillä ei ollut vaikutusta!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="163"/>
@@ -1049,10 +683,6 @@ Vaikutus: %5</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 is fast asleep!</source>
-        <translation type="obsolete">%1 nukkuu sikeästi!</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="256"/>
         <source>%1 is frozen solid!</source>
         <translation type="unfinished">%1 on umpijäässä!</translation>
@@ -1061,18 +691,6 @@ Vaikutus: %5</translation>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="266"/>
         <source>It hurt itself in its confusion!</source>
         <translation type="unfinished">Se vahingoitti itseään sekaantuneena!</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by its burn!</source>
-        <translation type="obsolete">Palovamma vahingoitti %1 pokémonia!</translation>
-    </message>
-    <message>
-        <source>%1 is hurt by poison!</source>
-        <translation type="obsolete">Myrkytys vahingoitti %1 pokémonia!</translation>
-    </message>
-    <message>
-        <source>%1 snapped out its confusion!</source>
-        <translation type="obsolete">%1 ei ole enää sekaisin!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="285"/>
@@ -1103,14 +721,6 @@ Vaikutus: %5</translation>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="344"/>
         <source>But there was no target...</source>
         <translation type="unfinished">Mutta kohdetta ei ole...</translation>
-    </message>
-    <message>
-        <source>%1 flinched!</source>
-        <translation type="obsolete">%1 säpsähti!</translation>
-    </message>
-    <message>
-        <source>%1 is hit with recoil!</source>
-        <translation type="obsolete">Rekyyli vahingoitti %1!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="379"/>
@@ -1146,38 +756,6 @@ Vaikutus: %5</translation>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="400"/>
         <source>The sunlight turned harsh!</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hail continues to fall!</source>
-        <translation type="obsolete">Lumimyrsky jatkuu!</translation>
-    </message>
-    <message>
-        <source>The sandstorm rages!</source>
-        <translation type="obsolete">Hiekkamyrsky raivoaa!</translation>
-    </message>
-    <message>
-        <source>The sunlight is strong!</source>
-        <translation type="obsolete">Aurinko paistaa kirkkaana!</translation>
-    </message>
-    <message>
-        <source>Rain continues to fall!</source>
-        <translation type="obsolete">Sade jatkuu!</translation>
-    </message>
-    <message>
-        <source>The hail subsided!</source>
-        <translation type="obsolete">Lumimyrsky taantui!</translation>
-    </message>
-    <message>
-        <source>The sandstorm subsided!</source>
-        <translation type="obsolete">Hiekkamyrsky taantui!</translation>
-    </message>
-    <message>
-        <source>The sunlight faded!</source>
-        <translation type="obsolete">Auringonpaiste hiipui!</translation>
-    </message>
-    <message>
-        <source>The rain stopped!</source>
-        <translation type="obsolete">Sade loppui!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="445"/>
@@ -1245,10 +823,6 @@ Vaikutus: %5</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1 siirtyi keskelle!</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="546"/>
         <source>%1 shifted spots with %2!</source>
         <translation type="unfinished">%1 vaihtoi paikkaa pokémonin %2 kanssa!</translation>
@@ -1290,114 +864,7 @@ Vaikutus: %5</translation>
     </message>
 </context>
 <context>
-    <name>BattleDisplay</name>
-    <message>
-        <source>Spikes level %1</source>
-        <translation type="obsolete">Spikes taso %1</translation>
-    </message>
-    <message>
-        <source>Toxic Spikes level %1</source>
-        <translation type="obsolete">Toxic Spikes taso %1</translation>
-    </message>
-    <message>
-        <source>Stealth Rock</source>
-        <translation type="obsolete">Stealth Rock</translation>
-    </message>
-</context>
-<context>
-    <name>BattleFinder</name>
-    <message>
-        <source>Force rated battles</source>
-        <translation type="obsolete">Vain tasoon vaikuttavia otteluita</translation>
-    </message>
-    <message>
-        <source>Force same tier</source>
-        <translation type="obsolete">Vain saman sarjan otteluita</translation>
-    </message>
-    <message>
-        <source>Only battle players with a max rating difference of </source>
-        <translation type="obsolete">Max. Tasoero</translation>
-    </message>
-    <message>
-        <source>Singles</source>
-        <translation type="obsolete">Yksi vastaan yksi</translation>
-    </message>
-    <message>
-        <source>Doubles</source>
-        <translation type="obsolete">Kaksi vastaan kaksi</translation>
-    </message>
-    <message>
-        <source>Triples</source>
-        <translation type="obsolete">Kolme vastaan kolme</translation>
-    </message>
-    <message>
-        <source>Find Battle</source>
-        <translation type="obsolete">Otteluhaku</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="obsolete">Peruuta</translation>
-    </message>
-</context>
-<context>
     <name>BattlePokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Esine:%3
-Kyky:%4
-
-Liikkeet:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-Item:%3
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Esine:%3
-
-Liikkeet:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Liikkeet:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1182"/>
         <source> - %1/%2 PP</source>
@@ -1537,17 +1004,9 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Battle between %1 and %2 started!</source>
-        <translation type="obsolete">Ottelu pelaajien %1 ja %2 välillä alkoi!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="222"/>
         <source>&amp;Go Back</source>
         <translation>&amp;Mene takaisin</translation>
-    </message>
-    <message>
-        <source>the foe&apos;s %1</source>
-        <translation type="obsolete">vihollisen %1</translation>
     </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="233"/>
@@ -1567,38 +1026,10 @@ Moves:
         <translation>&amp;Siirry keskelle</translation>
     </message>
     <message>
-        <source>%1 sent out %2! (%3)</source>
-        <translation type="obsolete">%1 valitsi pokemonin %2! (%3)</translation>
-    </message>
-    <message>
-        <source>%1 sent out %2!</source>
-        <translation type="obsolete">%1 valitsi pokemonin %2!</translation>
-    </message>
-    <message>
-        <source>%1 lost %2 HP! (%3% of its health)</source>
-        <translation type="obsolete">%1 menetti %2 HP! (%3% terveydestään)</translation>
-    </message>
-    <message>
-        <source>%1 lost %2% of its health!</source>
-        <translation type="obsolete">%1 menetti %2% terveydestään!</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="736"/>
         <location filename="../Teambuilder/battlewindow.cpp" line="816"/>
         <source>&amp;Close</source>
         <translation>&amp;Sulje</translation>
-    </message>
-    <message>
-        <source>Variation: </source>
-        <translation type="obsolete">Variaatio:</translation>
-    </message>
-    <message>
-        <source>%1 shifted spots to the middle!</source>
-        <translation type="obsolete">%1 siirtyi keskelle!</translation>
-    </message>
-    <message>
-        <source>%1 shifted spots with %2!</source>
-        <translation type="obsolete">%1 vaihtoi paikkaa pokémonin %2 kanssa!</translation>
     </message>
 </context>
 <context>
@@ -1627,42 +1058,6 @@ Moves:
         <location filename="../Server/battlingoptions.cpp" line="58"/>
         <source>&amp;Apply</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>BigOpenPokeBall</name>
-    <message>
-        <source>Type: </source>
-        <translation type="obsolete">Tyyppi: </translation>
-    </message>
-    <message>
-        <source>Gender: </source>
-        <translation type="obsolete">Sukupuoli: </translation>
-    </message>
-    <message>
-        <source>&amp;Evolution</source>
-        <translation type="obsolete">&amp;Evoluutio</translation>
-    </message>
-    <message>
-        <source>&amp;Other Formes</source>
-        <translation type="obsolete">&amp;Muut muodot</translation>
-    </message>
-    <message>
-        <source>Shiny</source>
-        <translation type="obsolete">Kiiltävä</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Ht:&lt;/b&gt; %1 m</source>
-        <oldsource>&lt;b&gt;Ht:&lt;/b&gt; %1</oldsource>
-        <translation type="obsolete">&lt;b&gt;Pituus:&lt;/b&gt; %1 m</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 kg</source>
-        <translation type="obsolete">&lt;b&gt;Paino:&lt;/b&gt; %1 kg</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Wt:&lt;/b&gt; %1 lbs.</source>
-        <translation type="obsolete">&lt;b&gt;Paino:&lt;/b&gt; %1 paunaa.</translation>
     </message>
 </context>
 <context>
@@ -1733,20 +1128,6 @@ Moves:
         <location filename="../Teambuilder/challengedialog.cpp" line="240"/>
         <source>%1&apos;s info</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ChallengeWindow</name>
-    <message>
-        <source>%1&apos;s Info</source>
-        <translation type="obsolete">Pelaajan %1 Tiedot</translation>
-    </message>
-</context>
-<context>
-    <name>ChallengedWindow</name>
-    <message>
-        <source>%1 challenged you!</source>
-        <translation type="obsolete">%1 haastoi sinut!</translation>
     </message>
 </context>
 <context>
@@ -1833,10 +1214,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">&amp;Ohjauspaneeli</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="101"/>
         <source>&amp;Kick</source>
         <translation>&amp;Potki</translation>
@@ -1850,18 +1227,6 @@ Moves:
         <location filename="../Teambuilder/channel.cpp" line="105"/>
         <source>24 hours</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">&amp;Bannaa</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">Ottelu pelaajien %1 ja %2 kesken alkoi.</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">Otellaan pelaajaa %1 vastaan</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="324"/>
@@ -1899,10 +1264,6 @@ Moves:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;i&gt;Unkown command received: %1. Maybe the client should be updated?&lt;/i&gt;</source>
-        <translation type="obsolete">&lt;i&gt;Tuntematon komento: %1. Ehkö ohjelma täytyy päivittää?&lt;/i&gt;</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/channel.cpp" line="543"/>
         <source>%1 logged out.</source>
         <translation>%1 kirjautui ulos.</translation>
@@ -1932,69 +1293,9 @@ Moves:
         <translation>&amp;Lähetä</translation>
     </message>
     <message>
-        <source>&amp;Challenge Window</source>
-        <translation type="obsolete">&amp;Haasteikkuna</translation>
-    </message>
-    <message>
-        <source>&amp;Ranking</source>
-        <translation type="obsolete">&amp;Sijoitus</translation>
-    </message>
-    <message>
-        <source>Go &amp;Back</source>
-        <translation type="obsolete">&amp;Takaisin</translation>
-    </message>
-    <message>
-        <source>Go &amp;Away</source>
-        <translation type="obsolete">&amp;Poissa</translation>
-    </message>
-    <message>
-        <source>&amp;PM</source>
-        <translation type="obsolete">&amp;PM</translation>
-    </message>
-    <message>
-        <source>&amp;Watch Battle</source>
-        <translation type="obsolete">&amp;Katso Ottelu</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Ignore</source>
-        <translation type="obsolete">&amp;Huomioi</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">&amp;Estä</translation>
-    </message>
-    <message>
-        <source>&amp;Control Panel</source>
-        <translation type="obsolete">&amp;Ohjauspaneeli</translation>
-    </message>
-    <message>
-        <source>&amp;Kick</source>
-        <translation type="obsolete">&amp;Potki</translation>
-    </message>
-    <message>
-        <source>&amp;Ban</source>
-        <translation type="obsolete">&amp;Bannaa</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1278"/>
         <source>&amp;File</source>
         <translation>&amp;Tiedosto</translation>
-    </message>
-    <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;Lataa Tiimi</translation>
-    </message>
-    <message>
-        <source>Open &amp;TeamBuilder</source>
-        <translation type="obsolete">Avaa &amp;TeamBuilder</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">&amp;Tyyli</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">Päivitä tyylilista</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1298"/>
@@ -2002,55 +1303,14 @@ Moves:
         <translation>&amp;Asetukset</translation>
     </message>
     <message>
-        <source>&amp;Show Team</source>
-        <translation type="obsolete">&amp;Näytä Tiimi</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Ladder</source>
-        <translation type="obsolete">Pelaa &amp;sijoituksista</translation>
-    </message>
-    <message>
-        <source>Show Player &amp;Events</source>
-        <translation type="obsolete">Näytä Pelin &amp;Tapahtumat</translation>
-    </message>
-    <message>
-        <source>&amp;Show Timestamps</source>
-        <translation type="obsolete">&amp;Näytä Aikamerkinnät</translation>
-    </message>
-    <message>
-        <source>&amp;Tier</source>
-        <translation type="obsolete">&amp;Sarja</translation>
-    </message>
-    <message>
-        <source>&amp;Battles</source>
-        <comment>Menu</comment>
-        <translation type="obsolete">&amp;Ottelut</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1452"/>
         <source>Save &amp;Battle Logs</source>
         <translation>Tallenna &amp;Ottelulokit</translation>
     </message>
     <message>
-        <source>Change &amp;Log Folder</source>
-        <translation type="obsolete">Vaihda &amp;Lokikansiota</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1461"/>
         <source>Animate HP Bar</source>
         <translation>Animoi HP-palkki</translation>
-    </message>
-    <message>
-        <source>&amp;Play Music and Sounds</source>
-        <translation type="obsolete">&amp;Soita Musiikkia ja Ääniä</translation>
-    </message>
-    <message>
-        <source>Change &amp;Music Folder</source>
-        <translation type="obsolete">Vaihda &amp;Musiikkikansiota</translation>
-    </message>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;Haasta</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="59"/>
@@ -2160,10 +1420,6 @@ Moves:
         <translation type="unfinished">&amp;Lataa tiimi</translation>
     </message>
     <message>
-        <source>Open &amp;teamBuilder</source>
-        <translation type="obsolete">Avaa &amp;TeamBuilder</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1293"/>
         <source>Ctrl+R</source>
         <comment>Open replay</comment>
@@ -2180,17 +1436,9 @@ Moves:
         <translation>&amp;Jouten</translation>
     </message>
     <message>
-        <source>&amp;Show team</source>
-        <translation type="obsolete">&amp;Näytä tiimi</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1304"/>
         <source>Enable &amp;ladder</source>
         <translation>Käytä &amp;tikapuita</translation>
-    </message>
-    <message>
-        <source>&amp;Enable player events</source>
-        <translation type="obsolete">Näytä &amp;pelaajien tapahtumat</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1365"/>
@@ -2206,10 +1454,6 @@ Moves:
         <location filename="../Teambuilder/client.cpp" line="1383"/>
         <source>Enable logs in &amp;PM</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable timestamps in &amp;PMs</source>
-        <translation type="obsolete">Käytä aikaleimoja &amp;yksityisviesteissä</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1398"/>
@@ -2486,14 +1730,6 @@ This server requires a password to log in.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Enable sounds (Testing! Remove if problems with the sim)</source>
-        <translation type="obsolete">Käytä &amp;ääniä (Testausvaiheessa! Älä käytä jos tuottaa ongelmia)</translation>
-    </message>
-    <message>
-        <source>Change &amp;music folder ...</source>
-        <translation type="obsolete">Vaihda &amp;musiikkikansio ...</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1466"/>
         <source>Old school buttons</source>
         <translation>Old school -napit</translation>
@@ -2570,26 +1806,6 @@ This server requires a password to log in.</source>
         <translation>Syötä salasanasi</translation>
     </message>
     <message>
-        <source>Enter the password for your current name.
-
-It is advised to use a slightly different password for each server. (The server only sees the encrypted form of the pass, but still...)</source>
-        <translation type="obsolete">Syötä salasana nykyiselle nimellesi.
-
-On suositeltavaa käyttää vähän erilaista salasanaa jokaiselle palvelimelle. (Palvelin näkee vain salatun muodon salasanasta, mutta silti...)</translation>
-    </message>
-    <message>
-        <source>Your version is older than the server&apos;s, there might be some things you can&apos;t do.
-
-http://www.pokemon-online.eu/downloads.php for updates.</source>
-        <translation type="obsolete">Versiosi on vanhempi kuin palvelimen. Päivityksessä saattaa olla uusia ominaisuuksia.
-
-Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</translation>
-    </message>
-    <message>
-        <source>Battle Music Directory</source>
-        <translation type="obsolete">Ottelumusiikin Kansio</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1309"/>
         <source>Player events</source>
         <translation>Pelaajatapahtumat</translation>
@@ -2625,41 +1841,9 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <translation>Näytä kanavatapahtumat</translation>
     </message>
     <message>
-        <source>Enable team change events</source>
-        <translation type="obsolete">Näytä joukkueen vaihtamiset</translation>
-    </message>
-    <message>
-        <source>Battle Logs Directory</source>
-        <translation type="obsolete">Ottelulokien Kansio</translation>
-    </message>
-    <message>
-        <source>Your client version (%2) doesn&apos;t match with the server&apos;s (%1).</source>
-        <translation type="obsolete">Sinun asiakasohjelmasi versio (%2) ei ole sama palvelimen kanssa (%1).</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="1857"/>
         <source>Old Version</source>
         <translation>Vanha versio</translation>
-    </message>
-    <message>
-        <source>Battle between %1 and %2 started.</source>
-        <translation type="obsolete">Ottelu pelaajien %1 ja %2 kesken alkoi.</translation>
-    </message>
-    <message>
-        <source>Battling against %1</source>
-        <translation type="obsolete">Otellaan pelaajaa %1 vastaan</translation>
-    </message>
-    <message>
-        <source>%1 forfeited against %2.</source>
-        <translation type="obsolete">%1 luovutti pelaajaa %2 vastaan.</translation>
-    </message>
-    <message>
-        <source>%1 and %2 tied.</source>
-        <translation type="obsolete">%1 ja %2 ottelivat tasapelin.</translation>
-    </message>
-    <message>
-        <source>%1 won against %2.</source>
-        <translation type="obsolete">%1 voitti pelaajan %2.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2230"/>
@@ -2707,18 +1891,6 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <translation>%1 on aktiivinen ja valmiina taistelemaan.</translation>
     </message>
     <message>
-        <source>%1 is away.</source>
-        <translation type="obsolete">%1 on poissa.</translation>
-    </message>
-    <message>
-        <source>%1 has returned.</source>
-        <translation type="obsolete">%1 on palannut.</translation>
-    </message>
-    <message>
-        <source>Error while connected to server -- Received error nÂ°%1: %2</source>
-        <translation type="obsolete">Virhe yhdistettäessä palvelimelle -- Vastaanotettiin virhe nÂ°%1: %2</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/client.cpp" line="2336"/>
         <source>Connected to Server!</source>
         <translation>Yhdistettiin palvelimelle!</translation>
@@ -2732,22 +1904,6 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <location filename="../Teambuilder/client.cpp" line="2373"/>
         <source>Disconnected from Server!</source>
         <translation type="unfinished">Katkaistiin yhteys Palvelimelta!</translation>
-    </message>
-    <message>
-        <source>%1 logged in.</source>
-        <translation type="obsolete">%1 kirjautui sisään.</translation>
-    </message>
-    <message>
-        <source>%1 logged out.</source>
-        <translation type="obsolete">%1 kirjautui ulos.</translation>
-    </message>
-    <message>
-        <source>%1 changed teams and is now known as %2.</source>
-        <translation type="obsolete">%1 vaihtoi tiimiään ja tunnetaan nyt nimellä %2.</translation>
-    </message>
-    <message>
-        <source>%1 changed teams.</source>
-        <translation type="obsolete">%1 vaihtoi tiimiään.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="2811"/>
@@ -2869,22 +2025,6 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Temporary bans</source>
-        <translation type="obsolete">Valiaikaiset bannit</translation>
-    </message>
-    <message>
-        <source>Time left</source>
-        <translation type="obsolete">Aikaa jäljellä</translation>
-    </message>
-    <message>
-        <source>User Alias</source>
-        <translation type="obsolete">Käyttäjän Alias</translation>
-    </message>
-    <message>
-        <source>Ban List</source>
-        <translation type="obsolete">Bannilista</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/controlpanel.ui" line="393"/>
         <source>Username</source>
         <translation>Käyttäjän nimi</translation>
@@ -2908,10 +2048,6 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <location filename="../Teambuilder/controlpanel.ui" line="256"/>
         <source>User alias</source>
         <translation>Käyttäjän alias</translation>
-    </message>
-    <message>
-        <source>Ban list</source>
-        <translation type="obsolete">Bannilista</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.ui" line="327"/>
@@ -3065,13 +2201,6 @@ Lataa uusi versio sivulta http://www.pokemon-online.eu/downloads.php  ..</transl
         <location filename="../client-plugins/CSSChanger/dialog.ui" line="65"/>
         <source>Mass color replace</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DockAdvanced</name>
-    <message>
-        <source>Advanced Options</source>
-        <translation type="obsolete">Lisäasetukset</translation>
     </message>
 </context>
 <context>
@@ -3268,24 +2397,6 @@ Range: %6
 Description: %5</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-Voima: %2
-Tarkkuus: %3
-
-Kuvaus: %4
-
-Vaikutus: %5</translation>
-    </message>
 </context>
 <context>
     <name>IvBox</name>
@@ -3373,10 +2484,6 @@ Vaikutus: %5</translation>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="277"/>
         <source>Spd</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">&amp;Kyky</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.ui" line="202"/>
@@ -3551,21 +2658,9 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Language Change</source>
-        <translation type="obsolete">Vaihda Kieltä</translation>
-    </message>
-    <message>
-        <source>Restart the application to see the changes.</source>
-        <translation type="obsolete">Käynnistä ohjelma uudelleen nähdäksesi muutokset.</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="620"/>
         <source>&amp;Style</source>
         <translation>&amp;Tyyli</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">Päivitä tyylilista</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="614"/>
@@ -3665,10 +2760,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
 <context>
     <name>Menu</name>
     <message>
-        <source>Teambuilder</source>
-        <translation type="obsolete">TeamBuilder</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.ui" line="14"/>
         <location filename="../Teambuilder/menu.cpp" line="21"/>
         <source>Menu</source>
@@ -3725,10 +2816,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <translation type="unfinished">&amp;Tiedosto</translation>
     </message>
     <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;Lataa Tiimi</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/menu.cpp" line="61"/>
         <source>%1 / %2</source>
         <translation type="unfinished"></translation>
@@ -3780,10 +2867,6 @@ Your selected color currently has %1 parts green, a brightness of %2, and a ligh
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Poistu</translation>
     </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">&amp;Kieli</translation>
-    </message>
 </context>
 <context>
     <name>ModsWindow</name>
@@ -3830,34 +2913,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>MoveTab</name>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">Tyyppi</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">Nimi</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">PP</translation>
-    </message>
-    <message>
-        <source>Pow</source>
-        <translation type="obsolete">Voima</translation>
-    </message>
-    <message>
-        <source>Acc</source>
-        <translation type="obsolete">Tarkkuus</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">Kategoria</translation>
-    </message>
-</context>
-<context>
     <name>OldAttackButton</name>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1032"/>
@@ -3874,46 +2929,6 @@ Category: %4
 
 Description: %5</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Category: %5
-
-Effect: %6</source>
-        <translation type="obsolete">%1
-
-Voima: %2
-Tarkkuus: %3
-
-Kuvaus: %4
-
-Kategoria %5
-
-Vaikutus: %6</translation>
-    </message>
-    <message>
-        <source>%1
-
-Power: %2
-Accuracy: %3
-
-Description: %4
-
-Effect: %5</source>
-        <translation type="obsolete">%1
-
-Voima: %2
-Tarkkuus: %3
-
-Kuvaus: %4
-
-Vaikutus: %5</translation>
     </message>
 </context>
 <context>
@@ -3971,25 +2986,6 @@ Vaikutus: %5</translation>
         <location filename="../Teambuilder/pmsystem.cpp" line="187"/>
         <source>PokÃ©mon Online PM</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PMWindow</name>
-    <message>
-        <source>&amp;Challenge</source>
-        <translation type="obsolete">&amp;Haasta</translation>
-    </message>
-    <message>
-        <source>&amp;Ignore</source>
-        <translation type="obsolete">&amp;Estä</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <translation type="obsolete">&amp;Lähetä</translation>
-    </message>
-    <message>
-        <source>The other party left the server, so the window was disabled.</source>
-        <translation type="obsolete">Toinen pelaaja lähti palvelimelta, joten ikkuna suljettiin.</translation>
     </message>
 </context>
 <context>
@@ -4114,17 +3110,6 @@ Vaikutus: %5</translation>
         <location filename="../libraries/Utilities/pluginmanagerdialog.cpp" line="62"/>
         <source>Error loading plugin</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PluginManagerWidget</name>
-    <message>
-        <source>Add Plugin...</source>
-        <translation type="obsolete">Lisää liitännäinen...</translation>
-    </message>
-    <message>
-        <source>Remove Plugin</source>
-        <translation type="obsolete">Poista liitännäinen</translation>
     </message>
 </context>
 <context>
@@ -4314,10 +3299,6 @@ Move4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">Haluatko poistaa laatikon %1?</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="278"/>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="289"/>
         <location filename="../Teambuilder/Teambuilder/pokeboxes.cpp" line="308"/>
@@ -4328,85 +3309,6 @@ Move4</source>
 </context>
 <context>
     <name>PokeButton</name>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5
---%6
---%7
---%8</source>
-        <translation type="obsolete">%1 taso %2
-
-Esine:%3
-Kyky:%4
-
-Liikkeet:
---%5
---%6
---%7
---%8</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Item:%3
-Ability:%4
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Esine:%3
-Kyky:%4
-
-Liikkeet:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-Item:%3
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Esine:%3
-
-Liikkeet:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
-    <message>
-        <source>%1 lv %2
-
-Moves:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</source>
-        <translation type="obsolete">%1 lv %2
-
-Liikkeet:
---%5 - %9 PP
---%6 - %10 PP
---%7 - %11 PP
---%8 - %12 PP</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokebutton.ui" line="57"/>
         <source>Lv. 100</source>
@@ -4509,14 +3411,6 @@ Liikkeet:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Item</source>
-        <translation type="obsolete">Esine</translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">Iloisuus</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokeedit.cpp" line="44"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
@@ -4543,10 +3437,6 @@ Liikkeet:
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="20"/>
         <source>Level and gender</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Level</source>
-        <translation type="obsolete">Taso</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="37"/>
@@ -4592,10 +3482,6 @@ Liikkeet:
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.ui" line="162"/>
         <source>DW Ability</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shiny</source>
-        <translation type="obsolete">Kiiltävä</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokelevelsettings.cpp" line="138"/>
@@ -4753,14 +3639,6 @@ Liikkeet:
 <context>
     <name>Pokedex</name>
     <message>
-        <source>&amp;Type Chart</source>
-        <translation type="obsolete">&amp;Tyyppikartta</translation>
-    </message>
-    <message>
-        <source>&amp;Damage Calculator</source>
-        <translation type="obsolete">&amp;Vahinkolaskuri</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="14"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
@@ -4774,33 +3652,6 @@ Liikkeet:
         <location filename="../Teambuilder/Teambuilder/pokedex.ui" line="57"/>
         <source>&amp;Damage calculator</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PokedexBody</name>
-    <message>
-        <source>&amp;Advanced Search</source>
-        <translation type="obsolete">&amp;Edistynyt Haku</translation>
-    </message>
-    <message>
-        <source>Sort Pokemon List</source>
-        <translation type="obsolete">Lajittele Pokemonlista</translation>
-    </message>
-    <message>
-        <source>A-Z</source>
-        <translation type="obsolete">A-Z</translation>
-    </message>
-    <message>
-        <source>PROFILE</source>
-        <translation type="obsolete">PROFIILI</translation>
-    </message>
-    <message>
-        <source>STATS</source>
-        <translation type="obsolete">STATS</translation>
-    </message>
-    <message>
-        <source>MOVES</source>
-        <translation type="obsolete">LIIKKEET</translation>
     </message>
 </context>
 <context>
@@ -4834,24 +3685,6 @@ Liikkeet:
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="115"/>
         <source>&amp;Advanced search</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBox</name>
-    <message>
-        <source>The box is full!</source>
-        <translation type="obsolete">Laatikko on täynnä!</translation>
-    </message>
-    <message>
-        <source>There is no pokemon there!</source>
-        <translation type="obsolete">Siellä ei ole pokemoneja!</translation>
-    </message>
-</context>
-<context>
-    <name>PokemonBoxButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">Pokémon &amp;%1</translation>
     </message>
 </context>
 <context>
@@ -4895,21 +3728,6 @@ Liikkeet:
     </message>
 </context>
 <context>
-    <name>ProfileTab</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">Kuvaus</translation>
-    </message>
-    <message>
-        <source>Abilities</source>
-        <translation type="obsolete">Kyvyt</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Heart Gold:&lt;/b&gt; %1</source>
-        <translation type="obsolete">&lt;b&gt;Heart Gold:&lt;/b&gt; %1</translation>
-    </message>
-</context>
-<context>
     <name>QJson::ParserRunnable</name>
     <message>
         <location filename="../libraries/QJson/parserrunnable.cpp" line="64"/>
@@ -4939,17 +3757,9 @@ Liikkeet:
         <translation type="unfinished">Estä Katsominen</translation>
     </message>
     <message>
-        <source>Level Balance</source>
-        <translation type="obsolete">Tasotasapaino</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="16"/>
         <source>Challenge Cup</source>
         <translation type="unfinished">Haaste Cup</translation>
-    </message>
-    <message>
-        <source>No Time Out</source>
-        <translation type="obsolete">Ei Aikakatkaisua</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="26"/>
@@ -4962,37 +3772,9 @@ Liikkeet:
         <translation type="unfinished">Freeze Clause esti liikkeen jäädyttävän vaikutuksen toimimasta.</translation>
     </message>
     <message>
-        <source>Evasion Clause prevented the evasion increase of the move.</source>
-        <translation type="obsolete">Evasion Clause esti väistön nostamisen liikkeellä.</translation>
-    </message>
-    <message>
-        <source>OHKO Clause prevented the One Hit KO from happening.</source>
-        <translation type="obsolete">OHKO Clause esti One Hit KO:ta tapahtumasta.</translation>
-    </message>
-    <message>
-        <source>You can not put more than one Pokémon of the opposing team to sleep at the same time.</source>
-        <translation type="obsolete">Et voi nukuttaa yhtä enempää Pokémonia vastapuolen tiimistä samaan aikaan.</translation>
-    </message>
-    <message>
-        <source>You can not freeze more than one Pokémon of the opposing team at the same time.</source>
-        <translation type="obsolete">Et voi jäädyttää enempää kuin yhden Pokémonin vastapuoleisesta tiimistä samaan aikaan.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use evasion moves like Double Team.</source>
-        <translation type="obsolete">Et voi käyttää väistäviä liikkeitä kuten Double Teamia.</translation>
-    </message>
-    <message>
-        <source>You can&apos;t use One Hit KO moves like Fissure.</source>
-        <translation type="obsolete">Et voi käyttää One Hit KO liikkeitä kuten Fissurea.</translation>
-    </message>
-    <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="42"/>
         <source>Nobody can watch your battle.</source>
         <translation type="unfinished">Kukaan ei voi seurata ottelua.</translation>
-    </message>
-    <message>
-        <source>Pokémons levels are changed according to their strength.</source>
-        <translation type="obsolete">Pokémonien tasot muutetaan niiden voimakkuuden mukaan.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="12"/>
@@ -5107,14 +3889,6 @@ Liikkeet:
         <location filename="../libraries/PokemonInfo/pokemonstructs.cpp" line="172"/>
         <source>%1 already has move %2.</source>
         <translation type="unfinished">Pokemonilla %1 on jo liike %2.</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn %2 with moves from the third gen.</source>
-        <translation type="obsolete">%1 ei voi oppia liikettä %2 kolmannen sukupolven liikkeiden kanssa.</translation>
-    </message>
-    <message>
-        <source>%1 can&apos;t learn the combination of %2.</source>
-        <translation type="obsolete">%1 ei voi opetella kombinaatiota %2.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="188"/>
@@ -5572,17 +4346,9 @@ Liikkeet:
 <context>
     <name>RegularBattleScene</name>
     <message>
-        <source>%1 lv %2 -- %3%</source>
-        <translation type="obsolete">%1 taso %2 -- %3%</translation>
-    </message>
-    <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="367"/>
         <source>Lv. %1</source>
         <translation type="unfinished">Taso. %1</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <translation type="obsolete">Erikois</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/regularbattlescene.cpp" line="334"/>
@@ -5862,10 +4628,6 @@ Liikkeet:
 <context>
     <name>ServerChoice</name>
     <message>
-        <source>Server Name</source>
-        <translation type="obsolete">Palvelimen Nimi</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/serverchoice.ui" line="14"/>
         <source>Server list</source>
         <translation type="unfinished"></translation>
@@ -5915,18 +4677,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/serverchoice.ui" line="164"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Players/Max Players</source>
-        <translation type="obsolete">Pelaajat/Max. Pelaajat</translation>
-    </message>
-    <message>
-        <source>Advanced connection</source>
-        <translation type="obsolete">Lisäyhteys</translation>
-    </message>
-    <message>
-        <source>Players / Max</source>
-        <translation type="obsolete">Pelaajat / Maksimi</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="142"/>
@@ -6146,507 +4896,11 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>StatTab</name>
-    <message>
-        <source>Statistics</source>
-        <translation type="obsolete">Tilastot</translation>
-    </message>
-    <message>
-        <source>Base Stats</source>
-        <translation type="obsolete">Base Stats</translation>
-    </message>
-    <message>
-        <source>Min</source>
-        <translation type="obsolete">Minimi</translation>
-    </message>
-    <message>
-        <source>Max</source>
-        <translation type="obsolete">Maksimi</translation>
-    </message>
-    <message>
-        <source>Hit Points</source>
-        <translation type="obsolete">Hit Points</translation>
-    </message>
-    <message>
-        <source>Attack</source>
-        <translation type="obsolete">Attack</translation>
-    </message>
-    <message>
-        <source>Defense</source>
-        <translation type="obsolete">Defence</translation>
-    </message>
-    <message>
-        <source>Speed</source>
-        <translation type="obsolete">Speed</translation>
-    </message>
-    <message>
-        <source>Special Attack</source>
-        <translation type="obsolete">Special Attack</translation>
-    </message>
-    <message>
-        <source>Special Defense</source>
-        <translation type="obsolete">Special Defence</translation>
-    </message>
-    <message>
-        <source>Weakness</source>
-        <translation type="obsolete">Heikkous</translation>
-    </message>
-    <message>
-        <source>Resistance</source>
-        <translation type="obsolete">Kestävyys</translation>
-    </message>
-    <message>
-        <source>Immunity</source>
-        <translation type="obsolete">Immuniteetti</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Advanced</name>
-    <message>
-        <source>&amp;Hidden Power</source>
-        <translation type="obsolete">&amp;Hidden Power</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="obsolete">&amp;Tyyppi:</translation>
-    </message>
-    <message>
-        <source>Power:</source>
-        <translation type="obsolete">Power:</translation>
-    </message>
-    <message>
-        <source>HP:</source>
-        <translation type="obsolete">HP:</translation>
-    </message>
-    <message>
-        <source>Att:</source>
-        <translation type="obsolete">Att:</translation>
-    </message>
-    <message>
-        <source>Def:</source>
-        <translation type="obsolete">Def:</translation>
-    </message>
-    <message>
-        <source>Speed:</source>
-        <translation type="obsolete">Speed:</translation>
-    </message>
-    <message>
-        <source>Sp.Att:</source>
-        <translation type="obsolete">Sp.Att:</translation>
-    </message>
-    <message>
-        <source>Sp.Def:</source>
-        <translation type="obsolete">Sp.Def:</translation>
-    </message>
-    <message>
-        <source>Special:</source>
-        <comment>Stat</comment>
-        <translation type="obsolete">Special:</translation>
-    </message>
-    <message>
-        <source>Happiness</source>
-        <translation type="obsolete">Iloisuus</translation>
-    </message>
-    <message>
-        <source>&amp;Level</source>
-        <translation type="obsolete">&amp;Taso</translation>
-    </message>
-    <message>
-        <source>&amp;Gender</source>
-        <translation type="obsolete">&amp;Sukupuoli</translation>
-    </message>
-    <message>
-        <source>Male</source>
-        <translation type="obsolete">Uros</translation>
-    </message>
-    <message>
-        <source>Female</source>
-        <translation type="obsolete">Naaras</translation>
-    </message>
-    <message>
-        <source>Neutral</source>
-        <translation type="obsolete">Neutraali</translation>
-    </message>
-    <message>
-        <source>&amp;Ability</source>
-        <translation type="obsolete">&amp;Kyky</translation>
-    </message>
-    <message>
-        <source>&amp;Shiny</source>
-        <translation type="obsolete">K&amp;iiltävä</translation>
-    </message>
-    <message>
-        <source>Alternate Formes</source>
-        <translation type="obsolete">Vaihtoehtoiset Muodot</translation>
-    </message>
-    <message>
-        <source>HP</source>
-        <translation type="obsolete">HP</translation>
-    </message>
-    <message>
-        <source>Att</source>
-        <translation type="obsolete">Att</translation>
-    </message>
-    <message>
-        <source>Def</source>
-        <translation type="obsolete">Def</translation>
-    </message>
-    <message>
-        <source>Speed</source>
-        <translation type="obsolete">Speed</translation>
-    </message>
-    <message>
-        <source>Sp Att</source>
-        <translation type="obsolete">Sp Att</translation>
-    </message>
-    <message>
-        <source>Sp Def</source>
-        <translation type="obsolete">Sp Def</translation>
-    </message>
-</context>
-<context>
-    <name>TB_EVManager</name>
-    <message>
-        <source>Special:</source>
-        <comment>Stat</comment>
-        <translation type="obsolete">Special:</translation>
-    </message>
-</context>
-<context>
-    <name>TB_Menu</name>
-    <message>
-        <source>Menu</source>
-        <translation type="obsolete">Valikko</translation>
-    </message>
-    <message>
-        <source>&amp;File</source>
-        <translation type="obsolete">&amp;Tiedosto</translation>
-    </message>
-    <message>
-        <source>&amp;Load Team</source>
-        <translation type="obsolete">&amp;Lataa Tiimi</translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation type="obsolete">&amp;Poistu</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">T&amp;yyli</translation>
-    </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="obsolete">&amp;Kieli</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBody</name>
-    <message>
-        <source>&amp;Nickname</source>
-        <translation type="obsolete">&amp;Lempinimi</translation>
-    </message>
-    <message>
-        <source>&amp;Item</source>
-        <translation type="obsolete">&amp;Esine</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="obsolete">&amp;Tuo</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="obsolete">&amp;Vie</translation>
-    </message>
-    <message>
-        <source>PokÃ©mon %1</source>
-        <translation type="obsolete">Pokémon %1</translation>
-    </message>
-    <message>
-        <source>&amp;Advanced</source>
-        <translation type="obsolete">&amp;Lisäsäädöt</translation>
-    </message>
-    <message>
-        <source>Side Window</source>
-        <translation type="obsolete">Sivuikkuna</translation>
-    </message>
-    <message>
-        <source>Separate Window</source>
-        <translation type="obsolete">Erillinen ikkuna</translation>
-    </message>
-    <message>
-        <source>New Window</source>
-        <translation type="obsolete">Uusi ikkuna</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation type="obsolete">Tyyppi</translation>
-    </message>
-    <message>
-        <source>N&amp;ature</source>
-        <translation type="obsolete">L&amp;uonne</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <comment>AttackName</comment>
-        <translation type="obsolete">Nimi</translation>
-    </message>
-    <message>
-        <source>Learning</source>
-        <translation type="obsolete">Oppii</translation>
-    </message>
-    <message>
-        <source>PP</source>
-        <translation type="obsolete">PP</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="obsolete">Kategoria</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Taso. %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Virhe</translation>
-    </message>
-    <message>
-        <source>TM/HM</source>
-        <translation type="obsolete">TM/HM</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <comment>Learning</comment>
-        <translation type="obsolete">Erikois</translation>
-    </message>
-    <message>
-        <source>Tutor</source>
-        <translation type="obsolete">Opettaja</translation>
-    </message>
-    <message>
-        <source>Level</source>
-        <translation type="obsolete">Taso</translation>
-    </message>
-    <message>
-        <source>Pre Evo</source>
-        <translation type="obsolete">Aiempi kehitysmuoto</translation>
-    </message>
-    <message>
-        <source>Breeding</source>
-        <translation type="obsolete">Jalostamalla</translation>
-    </message>
-    <message>
-        <source>Move Tutor</source>
-        <translation type="obsolete">Liikeopettaja</translation>
-    </message>
-    <message>
-        <source>3G TM/HM</source>
-        <translation type="obsolete">3G TM/HM</translation>
-    </message>
-    <message>
-        <source>Dream World</source>
-        <translation type="obsolete">Unimaailma</translation>
-    </message>
-    <message>
-        <source>4G TM/HM</source>
-        <translation type="obsolete">4G TM/HM</translation>
-    </message>
-    <message>
-        <source>4G Move Tutor</source>
-        <translation type="obsolete">4G Liikeopettaja</translation>
-    </message>
-    <message>
-        <source>4G Level</source>
-        <translation type="obsolete">4G Taso</translation>
-    </message>
-    <message>
-        <source>4G Pre Evo</source>
-        <translation type="obsolete">4G Aiempi kehitysmuoto</translation>
-    </message>
-    <message>
-        <source>4G Tutor</source>
-        <translation type="obsolete">4G Tutori</translation>
-    </message>
-    <message>
-        <source>4G Breeding</source>
-        <translation type="obsolete">4G Jalostus</translation>
-    </message>
-    <message>
-        <source>4G Special</source>
-        <translation type="obsolete">4G Erikois</translation>
-    </message>
-    <message>
-        <source>3G Tutor</source>
-        <translation type="obsolete">3G Tutori</translation>
-    </message>
-    <message>
-        <source>1G TM/HM</source>
-        <translation type="obsolete">1G TM/HM</translation>
-    </message>
-    <message>
-        <source>1G Level</source>
-        <translation type="obsolete">1G Taso</translation>
-    </message>
-    <message>
-        <source>1G Pre Evo</source>
-        <translation type="obsolete">1G Aiempi kehitysmuoto</translation>
-    </message>
-    <message>
-        <source>1G Special</source>
-        <translation type="obsolete">1G Erikois</translation>
-    </message>
-    <message>
-        <source>3G Breeding</source>
-        <translation type="obsolete">3G Jalostus</translation>
-    </message>
-    <message>
-        <source>3G Special</source>
-        <translation type="obsolete">3G Erikois</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonBoxes</name>
-    <message>
-        <source>Change Order</source>
-        <translation type="obsolete">Vaihda Järjestystä</translation>
-    </message>
-    <message>
-        <source>&amp;Store</source>
-        <translation type="obsolete">&amp;Varastoi</translation>
-    </message>
-    <message>
-        <source>&amp;Withdraw</source>
-        <translation type="obsolete">&amp;Nosta</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Box Name...</source>
-        <translation type="obsolete">&amp;Muuta laatikon nimeä</translation>
-    </message>
-    <message>
-        <source>&amp;Add New Box</source>
-        <translation type="obsolete">&amp;Lisää uusi laatikko</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Current Box</source>
-        <translation type="obsolete">&amp;Poista nykyinen laatikko</translation>
-    </message>
-    <message>
-        <source>Edit Box Name</source>
-        <translation type="obsolete">Muuta laatikon nimeä</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the box %1:</source>
-        <translation type="obsolete">Syötä uusi nimi laatikolle %1:</translation>
-    </message>
-    <message>
-        <source>New Box</source>
-        <translation type="obsolete">Uusi laatikko</translation>
-    </message>
-    <message>
-        <source>Enter the new name for the new box:</source>
-        <translation type="obsolete">Valitse nimi uudelle laatikolle:</translation>
-    </message>
-    <message>
-        <source>Destroying a box</source>
-        <translation type="obsolete">Tuhotaan laatikko</translation>
-    </message>
-    <message>
-        <source>Do you want to delete box %1?</source>
-        <translation type="obsolete">Haluatko poistaa laatikon %1?</translation>
-    </message>
-    <message>
-        <source>Switc&amp;h</source>
-        <translation type="obsolete">Vaih&amp;da</translation>
-    </message>
-    <message>
-        <source>Dele&amp;te</source>
-        <translation type="obsolete">&amp;Poista</translation>
-    </message>
-    <message>
-        <source>BOX &amp;%1</source>
-        <translation type="obsolete">LAATIKKO &amp;%1</translation>
-    </message>
-    <message>
-        <source>Full Box</source>
-        <translation type="obsolete">Täysi Laatikko</translation>
-    </message>
-    <message>
-        <source>Empty Box</source>
-        <translation type="obsolete">Tyhjä laatikko</translation>
-    </message>
-    <message>
-        <source>Box Empty</source>
-        <translation type="obsolete">Laatikko on tyhjä</translation>
-    </message>
-</context>
-<context>
-    <name>TB_PokemonDetail</name>
-    <message>
-        <source>Item: </source>
-        <translation type="obsolete">Esine:</translation>
-    </message>
-    <message>
-        <source>Moves:</source>
-        <translation type="obsolete">Liikkeet:</translation>
-    </message>
-    <message>
-        <source>Nature: %1</source>
-        <translation type="obsolete">Luonne: %1</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Taso. %1</translation>
-    </message>
-</context>
-<context>
-    <name>TB_TrainerBody</name>
-    <message>
-        <source>Avatar</source>
-        <translation type="obsolete">Kuva</translation>
-    </message>
-    <message>
-        <source>Trainer &amp;Name</source>
-        <translation type="obsolete">Kouluttajan &amp;Nimi</translation>
-    </message>
-    <message>
-        <source>Name Color</source>
-        <translation type="obsolete">Nimen Väri</translation>
-    </message>
-    <message>
-        <source>Change &amp;Color</source>
-        <translation type="obsolete">Vaihda &amp;Väriä</translation>
-    </message>
-    <message>
-        <source>Team Tier</source>
-        <translation type="obsolete">Tiimin sarja</translation>
-    </message>
-    <message>
-        <source>Trainer I&amp;nformation</source>
-        <translation type="obsolete">Kouluttajan &amp;Tiedot</translation>
-    </message>
-    <message>
-        <source>&amp;Winning Message</source>
-        <translation type="obsolete">V&amp;oittamisviesti</translation>
-    </message>
-    <message>
-        <source>L&amp;osing Message</source>
-        <translation type="obsolete">&amp;Häviämisviesti</translation>
-    </message>
-</context>
-<context>
     <name>TeamBuilder</name>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="39"/>
         <source>Teambuilder</source>
         <translation type="unfinished">TeamBuilder</translation>
-    </message>
-    <message>
-        <source>New Team</source>
-        <translation type="obsolete">Uusi Tiimi</translation>
-    </message>
-    <message>
-        <source>You sure?</source>
-        <translation type="obsolete">Oletko varma?</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="73"/>
@@ -6847,23 +5101,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;New Team</source>
-        <translation type="obsolete">&amp;Uusi Tiimi</translation>
-    </message>
-    <message>
-        <source>&amp;New team</source>
-        <oldsource>&amp;Save Team</oldsource>
-        <translation type="obsolete">&amp;Uusi tiimi</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="87"/>
         <source>&amp;Save team</source>
         <oldsource>&amp;Load Team</oldsource>
         <translation>&amp;Lataa tiimi</translation>
-    </message>
-    <message>
-        <source>&amp;Import From Txt</source>
-        <translation type="obsolete">Tu&amp;o Tekstitiedostosta</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="86"/>
@@ -6871,76 +5112,18 @@ p, li { white-space: pre-wrap; }
         <translation>&amp;Lataa tiimi</translation>
     </message>
     <message>
-        <source>&amp;Import from text</source>
-        <translation type="obsolete">&amp;Tuo tekstitiedostosta</translation>
-    </message>
-    <message>
-        <source>&amp;Export to text</source>
-        <translation type="obsolete">&amp;Vie tekstiksi</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="78"/>
         <source>&amp;Quit</source>
         <translation>&amp;Poistu</translation>
-    </message>
-    <message>
-        <source>&amp;Style</source>
-        <translation type="obsolete">T&amp;yyli</translation>
-    </message>
-    <message>
-        <source>Reload StyleSheet</source>
-        <translation type="obsolete">Päivitä Tyylilista</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="126"/>
         <source>&amp;Gen.</source>
         <translation type="unfinished">&amp;Sukup.</translation>
     </message>
-    <message>
-        <source>Advance (&amp;3rd gen)</source>
-        <translation type="obsolete">Advance (&amp;3. sukupolvi)</translation>
-    </message>
-    <message>
-        <source>RBY (&amp;1st gen)</source>
-        <translation type="obsolete">RBY (&amp;1. sukupolvi)</translation>
-    </message>
-    <message>
-        <source>GSC (&amp;2nd gen)</source>
-        <translation type="obsolete">GSC (&amp;2. sukupolvi)</translation>
-    </message>
-    <message>
-        <source>HGSS (&amp;4th gen)</source>
-        <translation type="obsolete">HGSS (&amp;4th sukupolvi)</translation>
-    </message>
-    <message>
-        <source>B/W (&amp;5th gen)</source>
-        <translation type="obsolete">B/W (&amp;5. sukupolvi)</translation>
-    </message>
-    <message>
-        <source>&amp;View</source>
-        <translation type="obsolete">&amp;Näkymä</translation>
-    </message>
-    <message>
-        <source>&amp;Show all items</source>
-        <translation type="obsolete">&amp;Näytä kaikki esineet</translation>
-    </message>
-    <message>
-        <source>&amp;Full Screen (for netbook users ONLY)</source>
-        <translation type="obsolete">&amp;Fullscreen (minikannettavan käyttäjille)</translation>
-    </message>
-    <message>
-        <source>&amp;Import from .txt</source>
-        <translation type="obsolete">T&amp;uo tekstitiedostosta</translation>
-    </message>
 </context>
 <context>
     <name>TeamImporter</name>
-    <message>
-        <source>Paste your exported team from Netbattle Supremacy / Shoddy Battle
-Your language needs to be set to English to import English teams.</source>
-        <translation type="obsolete">Liitä sinun tiimisi NetBattle Supremacy tai Shoddy Battle peleistä
-Sinun kielesi pitää olla asetettu englanniksi tuodaksesi englanninkielisiä tiimejä.</translation>
-    </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="12"/>
         <source>Paste your exported team here.
@@ -7028,29 +5211,6 @@ Your language needs to be set to English to import English teams.</source>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="77"/>
         <source>Boxes (#&amp;%1)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Gen.</source>
-        <translation type="obsolete">&amp;Sukup.</translation>
-    </message>
-</context>
-<context>
-    <name>TeamPokeButton</name>
-    <message>
-        <source>PokÃ©mon &amp;%1</source>
-        <translation type="obsolete">Pokémon &amp;%1</translation>
-    </message>
-    <message>
-        <source>Item</source>
-        <translation type="obsolete">Esine</translation>
-    </message>
-    <message>
-        <source>item</source>
-        <translation type="obsolete">Esine</translation>
-    </message>
-    <message>
-        <source>Lv. %1</source>
-        <translation type="obsolete">Taso. %1</translation>
     </message>
 </context>
 <context>
@@ -7369,13 +5529,6 @@ Your language needs to be set to English to import English teams.</source>
 
 Your selected color currently has %1 parts green, a brightness of %2, and a lightness of %3.</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TypeChart</name>
-    <message>
-        <source>A \ D</source>
-        <translation type="obsolete">H \ P</translation>
     </message>
 </context>
 <context>

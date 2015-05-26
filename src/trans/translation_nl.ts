@@ -4695,11 +4695,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ctrl+N</source>
-        <comment>New tab</comment>
-        <translation type="obsolete">Ctrl+N</translation>
-    </message>
-    <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="143"/>
         <source>&amp;Load team</source>
         <translation type="unfinished"></translation>
