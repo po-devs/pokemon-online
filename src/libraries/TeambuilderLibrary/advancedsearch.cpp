@@ -114,11 +114,11 @@ void AdvancedSearch::search() {
     QLineEdit *stats[] = {ui->hpedit, ui->atkedit, ui->defedit, ui->spatkedit, ui->spdefedit, ui->speededit};
     QComboBox *statSymbols[] = {ui->hpbox, ui->atkbox, ui->defbox, ui->spatkbox, ui->spdefbox, ui->speedbox};
     for (int i = 0; i < 6; i++) {
-        if (statSymbols[i]->currentIndex() == 1) {
+        if (statSymbols[i]->currentIndex() == 0) {
             minStats.push_back(QPair<int, int> (i,stats[i]->text().toInt()));
-        } else if (statSymbols[i]->currentIndex() == 2) {
+        } else if (statSymbols[i]->currentIndex() == 1) {
             equalStats.push_back(QPair<int, int> (i,stats[i]->text().toInt()));
-        } else if (statSymbols[i]->currentIndex() == 3) {
+        } else if (statSymbols[i]->currentIndex() == 2) {
             maxStats.push_back(QPair<int, int> (i,stats[i]->text().toInt()));
         }
     }
