@@ -133,9 +133,10 @@ void PokeBattle::init(PokePersonal &poke)
 
     num() = poke.num();
 
-    if (num() == Pokemon::NoPoke)
+    if (num() == Pokemon::NoPoke) {
         illegal() = false;
         return;
+    }
 
 
     PokeGeneral p;
