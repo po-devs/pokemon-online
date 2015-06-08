@@ -811,7 +811,7 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
 bool BattleRBY::gainStatMod(int player, int stat, int bonus, int, bool tell)
 {
     int boost = fpoke(player).boosts[stat];
-    if (boost < 6 && getStat(player, stat) < 999) {
+    if (boost < 6 && (getStat(player, stat) < 999 || stat == Evasion)) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
     } else {
