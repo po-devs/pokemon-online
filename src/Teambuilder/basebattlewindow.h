@@ -107,6 +107,7 @@ public slots:
 
     void sendMessage();
     void clickClose();
+    void openCalc();
     void delay(qint64 msec=0);
     void undelay();
     void playCry(int pokemon);
@@ -135,7 +136,7 @@ protected:
     QGridLayout *mylayout;
     QScrollDownTextBrowser *mychat;
     QIRCLineEdit *myline;
-    QPushButton *myclose, *mysend, *myignore;
+    QPushButton *myclose, *mysend, *myignore, *mycalc;
 
     QCheckBox *saveLogs;
     QCheckBox *musicOn;
