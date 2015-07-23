@@ -3165,7 +3165,7 @@ struct MMToxicSpikes : public MM
         if (b.ability(source) == Ability::MagicGuard && b.gen() <= 4) {
             return;
         }
-        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy && !b.isFlying(s)) {
+        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy) {
             return;
         }
 
