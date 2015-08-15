@@ -126,6 +126,8 @@ public:
     QString getBannedMoves() const;
     QString getBannedItems() const;
     QString getBannedAbilities() const;
+    int getGeneration();
+    int getSubGeneration();
     void importBannedPokes(const QString &);
     void importRestrictedPokes(const QString &);
     void importBannedMoves(const QString &);
