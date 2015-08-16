@@ -527,6 +527,11 @@ struct RBYHaze : public MM
         b.poke(s).removeStatus(Pokemon::Seeded);
         b.poke(t).removeStatus(Pokemon::Seeded);
 
+        removeFunction(poke(b,s), "MovePossible", "Disable");
+        removeFunction(poke(b,s), "MovesPossible", "Disable");
+        removeFunction(poke(b,t), "MovePossible", "Disable");
+        removeFunction(poke(b,t), "MovesPossible", "Disable");
+
         //Haze clears major status that the user has in Stadium
         if (b.isStadium()) {
             b.changeStatus(s, Pokemon::Fine,false);
