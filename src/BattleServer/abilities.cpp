@@ -352,7 +352,7 @@ struct AMDrizzle : public AM {
         int w = poke(b,s)["AbilityArg"].toInt();
         if (w != b.weather) {
             if (b.weather == BS::StrongSun || b.weather == BS::StrongRain || b.weather == BS::StrongWinds) {
-                b.sendAbMessage(126, b.weather-2, s, s, TypeInfo::TypeForWeather(b.weather));
+                b.sendAbMessage(126, b.weather-2, s, s, TypeInfo::TypeForWeather(b.weather), 1);
                 return;
             }
             b.sendAbMessage(14,w-1,s,s,TypeInfo::TypeForWeather(w));

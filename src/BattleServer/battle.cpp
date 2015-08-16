@@ -1801,11 +1801,11 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         turnMem(player).add(TM::FailingMessage);
 
         if (tmove(player).type == Type::Water && tmove(player).power > 0 && isWeatherWorking(StrongSun)) {
-            sendAbMessage(126, 6, player, player, TypeInfo::TypeForWeather(StrongSun));
+            sendAbMessage(126, 6, player, player, TypeInfo::TypeForWeather(StrongSun),1);
             continue;
         }
         if (tmove(player).type == Type::Fire && tmove(player).power > 0 && isWeatherWorking(StrongRain)) {
-            sendAbMessage(126, 7, player, player, TypeInfo::TypeForWeather(StrongRain));
+            sendAbMessage(126, 7, player, player, TypeInfo::TypeForWeather(StrongRain),1);
             continue;
         }
         if (target != player && !testAccuracy(player, target)) {
