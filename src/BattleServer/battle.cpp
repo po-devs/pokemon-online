@@ -1615,6 +1615,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     calleffects(player, player, "AfterTellingPlayers");
 
     if (!specialOccurence) {
+        if (turnMemory(player).value("PowderExploded").toBool()) {
+            goto ppfunction;
+        }
         if (turnMemory(player).value("ImpossibleToMove").toBool()) {
             goto trueend;
         }
@@ -1749,6 +1752,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
     }
 
+ppfunction:
     if (!specialOccurence && !turnMem(player).contains(TM::NoChoice)) {
         //Pressure
         int ppsum = 1;
@@ -1769,6 +1773,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
 
         losePP(player, move, ppsum);
+        if (turnMemory(player).value("PowderExploded").toBool()) {
+            goto trueend;
+        }
     }
 
     /* Choice items act before target selection if no target in gen 5 */

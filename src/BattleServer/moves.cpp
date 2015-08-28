@@ -7398,7 +7398,7 @@ struct MMPowder : public MM
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
-                turn(b,s)["ImpossibleToMove"] = true;
+                turn(b,s)["PowderExploded"] = true;
             }
             poke(b,s).remove("Powdered");
         }
