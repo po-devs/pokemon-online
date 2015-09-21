@@ -4,6 +4,7 @@
 #include <PokemonInfo/pokemoninfo.h>
 #include <PokemonInfo/networkstructs.h>
 #include <PokemonInfo/movesetchecker.h>
+#include <Utilities/exesuffix.h>
 #include <Utilities/otherwidgets.h>
 #include <Utilities/backtrace.h>
 #include "server.h"
@@ -290,6 +291,13 @@ void Server::initBattles()
     connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battles, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
+}
+
+void Server::initRelayStation()
+{
+    auto relayStation = new QProcess(this);
+
+    relayStation->start("./RelayStation" SUFFIX);
 }
 
 void Server::print(const QString &line)

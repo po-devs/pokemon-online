@@ -725,6 +725,7 @@ void DualWielder::readWebSocket(const QString &frame)
         if (command == "connect") {
             qDebug() << "Connecting websocket to server at " << data;
             QString host = data.section(":", 0, -2);
+            host = "localhost";
             int port = data.section(":", -1).toInt();
 
             network = new StandardNetwork(new QTcpSocket());
@@ -738,8 +739,8 @@ void DualWielder::readWebSocket(const QString &frame)
             connect(network, SIGNAL(isFull(QByteArray)), SLOT(readSocket(QByteArray)));
             connect(this, SIGNAL(sendCommand(QByteArray)), network, SLOT(send(QByteArray)));
         } else if (command == "registry" && !registryRead) {
-            web->write(servers);
-            registryRead = true;
+            //web->write(servers);
+            //registryRead = true;
         } else {
             web->write(QString("error|You need to choose a server to connect to."));
         }

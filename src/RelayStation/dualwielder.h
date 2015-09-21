@@ -20,7 +20,7 @@ public:
     DualWielder(QObject *parent = NULL);
     ~DualWielder();
 
-    void init(QWsSocket *web, const QString &host, QHash<QString,QString> aliases, const QString& servers);
+    void init(QWsSocket *web, const QString &host, QHash<QString,QString> aliases, const QString& servers="");
 
     QString ip() const;
 public slots:
