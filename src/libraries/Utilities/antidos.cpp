@@ -92,6 +92,11 @@ bool AntiDos::changeIP(const QString &newIp, const QString &oldIp)
     return connecting(newIp);
 }
 
+void AntiDos::clearIP(const QString &ip)
+{
+    connectionsPerIp.remove(ip);
+}
+
 
 int AntiDos::numberOfDiffIps()
 {

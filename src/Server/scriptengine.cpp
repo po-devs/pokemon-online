@@ -1208,6 +1208,11 @@ void ScriptEngine::reloadDosSettings()
     AntiDos::obj()->init(s);
 }
 
+void ScriptEngine::clearDosIP(const QString &ip)
+{
+    AntiDos::obj()->clearIP(ip);
+}
+
 QScriptValue ScriptEngine::currentMod()
 {
     return PokemonInfoConfig::currentMod();
