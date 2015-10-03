@@ -47,13 +47,13 @@ bool AntiDos::connecting(const QString &ip)
 
         l.erase(l.begin(), l.begin()+i);
 
-        if (l.size() >= max_login_per_ip && on) {
+        if (l.size() >= max_login_per_ip && on && !trusted_ips.contains(ip)) {
             //qDebug() << "Too many attempts for IP " << ip;
             return false;
         }
     }
 
-    if (connectionsPerIp.value(ip) >= max_people_per_ip && on) {
+    if (connectionsPerIp.value(ip) >= max_people_per_ip && on && !trusted_ips.contains(ip)) {
         /* That way it won't appear in the logs if they spam DoS connections */
         if (rand() % 3)
             loginsPerIp[ip].push_back(time(NULL));
