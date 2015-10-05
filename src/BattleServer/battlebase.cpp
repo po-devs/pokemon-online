@@ -2061,6 +2061,10 @@ void BattleBase::testCritical(int player, int target)
     PokeFraction critChance(up, down);
     int randnum = randint(512);
     int baseSpeed = PokemonInfo::BaseStats(fpoke(player).id, gen()).baseSpeed();
+    //Transformed Pokemon use the original form's base speed.
+    if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
+        baseSpeed = PokemonInfo::BaseStats(PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()), gen()).baseSpeed();;
+    }
     bool critical = randnum < std::min(510, baseSpeed * critChance);
 
     if (critical) {
