@@ -212,6 +212,14 @@ struct IMBoostPokeStat : public IM
     }
     static void sm(int s,int, BS &b) {
         int num = b.pokenum(s).pokenum;
+        //Hackmons transforming should retain their boost
+        if (poke(b,s).contains("PreTransformPoke")) {
+            int num2 = PokemonInfo::Number(poke(b,s).value("PreTransformPoke").toString()).pokenum;
+            //But not Ditto!
+            if (num2 != Pokemon::Ditto) {
+                num = num2;
+            }
+        }
         QStringList args = poke(b,s)["ItemArg"].toString().split('_');
         if(!args[0].split('/').contains(QString::number(num))) {
             return;
