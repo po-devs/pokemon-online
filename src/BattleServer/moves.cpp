@@ -235,6 +235,7 @@ struct MMBatonPass : public MM
         turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
         turn(b,s)["BatonPassFlags"] = fpoke(b,s).flags & BS::BasicPokeInfo::Substitute;
         turn(b,s)["BatonPassLife"] = fpoke(b,s).substituteLife;
+        turn(b,s)["BatonPassConfusion"] = poke(b,s).value("ConfusedCount").toInt();
 
         /* choice band etc. would force the same move
             if on both the passed & the passer */
@@ -255,7 +256,7 @@ struct MMBatonPass : public MM
         merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
 
         /* If the poke before is confused, carry on that status */
-        if (poke(b,s)["ConfusedCount"].toInt() > 0) {
+        if (turn(b,s)["BatonPassConfusion"].toInt() > 0) {
             if (!b.poke(s).hasStatus(Pokemon::Confused))
                 b.poke(s).addStatus(Pokemon::Confused);
         }
