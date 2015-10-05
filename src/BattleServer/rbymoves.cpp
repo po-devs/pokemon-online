@@ -809,12 +809,13 @@ struct RBYRage : public MM
 
     static void ts(int s, int, BS &b) {
         fturn(b,s).add(TM::NoChoice);
-        addFunction(turn(b,s), "AttackSomehowFailed", "Rage", &asf);
+        /*Rage Bug is a lie!*/
+        //addFunction(turn(b,s), "AttackSomehowFailed", "Rage", &asf);
 
         initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
-        if (poke(b,s).contains("RageFailed")) {
+        /*if (poke(b,s).contains("RageFailed")) {
             tmove(b,s).accuracy = 1;
-        }
+        }*/
     }
 
     static void uodr(int s, int, BS &b) {
@@ -824,9 +825,9 @@ struct RBYRage : public MM
         }
     }
 
-    static void asf(int s, int, BS &b) {
+    /*static void asf(int s, int, BS &b) {
         poke(b,s)["RageFailed"] = true;
-    }
+    }*/
 };
 
 struct RBYRest : public MM
