@@ -796,7 +796,9 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
         notify(All, CappedStat, player, qint8(stat), false);
     }
 
-    fpoke(player).stats[stat] = getBoostedStat(player, stat);
+    if (stat < Accuracy) {
+        fpoke(player).stats[stat] = getBoostedStat(player, stat);
+    }
 
     if (poke(player).status() == Pokemon::Burnt) {
         fpoke(player).stats[Attack] = std::max(fpoke(player).stats[Attack] / 2, 1);
@@ -818,7 +820,9 @@ bool BattleRBY::gainStatMod(int player, int stat, int bonus, int, bool tell)
         notify(All, CappedStat, player, qint8(stat), true);
     }
 
-    fpoke(player).stats[stat] = getBoostedStat(player, stat);
+    if (stat < Accuracy) {
+        fpoke(player).stats[stat] = getBoostedStat(player, stat);
+    }
 
     // RBY Doubles and Triples are dumb.
     // Actually they don't exist, but this is just in case.
