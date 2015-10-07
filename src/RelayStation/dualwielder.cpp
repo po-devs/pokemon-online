@@ -900,6 +900,12 @@ void DualWielder::readWebSocket(const QString &frame)
             c.mode = ChallengeInfo::Singles;
             c.dsc = ChallengeInfo::Sent;
             notify(Nw::ChallengeStuff, c);
+        } else if (command == "ban") {
+            int target = data.section("|", 0, 0).toInt();
+            notify(Nw::PlayerBan, qint32(target));
+        } else if (command == "kick") {
+            int target = data.section("|", 0, 0).toInt();
+            notify(Nw::PlayerKick, qint32(target));
         }
     }
 }
