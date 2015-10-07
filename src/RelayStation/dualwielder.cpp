@@ -901,10 +901,10 @@ void DualWielder::readWebSocket(const QString &frame)
             c.dsc = ChallengeInfo::Sent;
             notify(Nw::ChallengeStuff, c);
         } else if (command == "ban") {
-            int target = data.section("|", 0, 0).toInt();
+            int target = data.toInt();
             notify(Nw::PlayerBan, qint32(target));
         } else if (command == "kick") {
-            int target = data.section("|", 0, 0).toInt();
+            int target = data.toInt();
             notify(Nw::PlayerKick, qint32(target));
         }
     }
