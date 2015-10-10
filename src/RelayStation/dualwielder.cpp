@@ -148,11 +148,16 @@ void DualWielder::readSocket(const QByteArray &commandline)
                 importantPlayers.remove(importantPlayers.indexOf(p.id),1);
                 fullInfo = true;
             }
+            if (p.id == myid) {
+                this->away = p.away();
+                this->ladder = p.ladder();
+            }
             QVariantMap map;
             map.insert("name", p.name);
             if (fullInfo) {
                 map.insert("info", p.info);
                 map.insert("avatar", p.avatar);
+                map.insert("ladder", p.ladder());
             }
             map.insert("auth", p.auth);
             map.insert("away", p.away());
@@ -906,6 +911,12 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "kick") {
             int target = data.toInt();
             notify(Nw::PlayerKick, qint32(target));
+        } else if (command == "idle") {
+            bool away = data.toInt();
+            notify(Nw::OptionsChange, Flags(ladder + ((away) << 1)));
+        } else if (command == "ladder") {
+            bool ladder = data.toInt();
+            notify(Nw::OptionsChange, Flags(ladder + ((away) << 1)));
         }
     }
 }
