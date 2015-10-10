@@ -203,7 +203,8 @@ void DualWielder::readSocket(const QByteArray &commandline)
         }
         map.insert("auth", p.auth);
         //map.insert("battling", p.battling());
-        //map.insert("away", p.away());
+        map.insert("away", p.away());
+        map.insert("ladder", p.ladder());
         if (p.color.isValid()) {
             map.insert("color", p.color);
         }
@@ -224,6 +225,9 @@ void DualWielder::readSocket(const QByteArray &commandline)
         _map.insert("tiers", tiers);
 
         web->write("login|"+QString::fromUtf8(jserial.serialize(_map)));
+
+        this->away = p.away();
+        this->ladder = p.ladder();
         break;
     }
     case Nw::Logout: {
@@ -421,14 +425,17 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit banListReceived(s,i,QDateTime::fromTime_t(dt));
 //        break;
 //    }
-//    case OptionsChange: {
-//        qint32 id;
-//        Flags f;
-//        in >> id >> f;
-//        emit awayChanged(id, f[1]);
-//        emit ladderChanged(id, f[0]);
-//        break;
-//    }
+    case Nw::OptionsChange: {
+        qint32 id;
+        Flags f;
+        in >> id >> f;
+        QVariantMap map;
+        map.insert("id", id);
+        map.insert("away", int(f[1]));
+        map.insert("ladder", int(f[0]));
+        web->write("optionschange|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
     case Nw::SpectateBattle: {
         Flags f;
         qint32 battleId;
@@ -697,19 +704,19 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-//    case NetworkCli::Reconnect: {
-//        bool success;
-//        in >> success;
+    case Nw::Reconnect: {
+        bool success;
+        in >> success;
 
-//        if (success) {
-//            emit reconnectSuccess();
-//        } else {
-//            quint8 reason;
-//            in >> reason;
-//            emit reconnectFailure(reason);
-//        }
-//        break;
-//    }
+        if (success) {
+            web->write(QString("reconnect|{\"success\":1}"));
+        } else {
+            quint8 reason;
+            in >> reason;
+            web->write("reconnect|{\"success\":false, \"reason\": " + QString::number(reason) + "}");
+        }
+        break;
+    }
     default: {
         //web->write(QString("msg|" "Protocol error: unknown command received -- maybe an update for the program is available"));
     }

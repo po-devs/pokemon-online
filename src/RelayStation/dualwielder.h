@@ -57,8 +57,8 @@ private:
 
     int myid;
     ProtocolVersion version;
-    bool away  = false;
-    bool ladder = false;
+    bool away;
+    bool ladder;
 
     /* Convenience functions to avoid writing a new one every time */
     template <typename ...Params>
