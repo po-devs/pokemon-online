@@ -1562,6 +1562,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
     }
 
+    //Healing moves called with another move while under heal block are still blocked
+    if (specialOccurence && pokeMemory(player).value("HealBlockCount").toInt() > 0) {
+        callpeffects(player, player, "MovePossible");
+        if (turnMemory(player).value("ImpossibleToMove").toBool()) {
+            goto trueend;
+        }
+    }
+
     //Gen 3 Sleep Talk fails if the move selected has 0 pp
     if (specialOccurence && turnMemory(player).contains("SleepTalkedMove") && gen().num == 3) {
         for (int i = 0; i < 3; i++) {

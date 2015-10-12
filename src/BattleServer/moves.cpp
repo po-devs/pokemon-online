@@ -3813,9 +3813,13 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if((tmove(b,s).flags & Move::HealingFlag || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
+        //Account for Metronome, Sleep Talk, Assist etc.
+        if (turn(b,s).contains("SpecialMoveUsed")) {
+            mv = turn(b,s)["SpecialMoveUsed"].toInt();
+        }
+        if ((MoveInfo::Flags(mv, b.gen()) & Move::HealingFlag || (b.gen() >= 6 && MoveInfo::Recoil(mv, b.gen()) > 0)) && mv != Move::HealPulse) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(mv), false);
             b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
         }
     }
