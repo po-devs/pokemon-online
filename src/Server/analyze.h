@@ -49,8 +49,8 @@ public:
     void sendChannelBattle(int chanid, int battleid, const Battle &battle);
     void sendLogin(const PlayerInfo &p, const QStringList&, const QByteArray &reconnectPass, int minHTML = -1);
     void sendLogout(int num);
-    void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, const QString& tier);
-    void spectateBattle(int battleid, const BattleConfiguration &conf);
+    void engageBattle(int battleid, int myid, int id, const TeamBattle &team, const BattleConfiguration &conf, const QString& tier, const QString &name1, const QString &name2);
+    void spectateBattle(int battleid, const BattleConfiguration &conf, const QString &name1, const QString &name2);
     void sendBattleResult(qint32 battleid, quint8 res, quint8 mode, int win, int los);
     void sendBattleCommand(qint32 battleid, const QByteArray &command);
     void sendWatchingCommand(qint32 id, const QByteArray &command);

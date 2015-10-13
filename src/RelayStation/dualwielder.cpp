@@ -301,7 +301,13 @@ void DualWielder::readSocket(const QByteArray &commandline)
             if (network[1]) {
                 in >> team.items;
             }
-            params.insert("conf", toJson(conf));
+
+            QString names[2];
+            in >> names[0] >> names[1];
+
+            auto jsonConf = toJson(conf);
+            jsonConf.insert("names", QVariantList() << names[0] << names[1]);
+            params.insert("conf", jsonConf);
             params.insert("team", toJson(team));
         }
         web->write("battlestarted|"+QString::number(battleid)+"|"+QString::fromUtf8(jserial.serialize(params)));
@@ -451,7 +457,12 @@ void DualWielder::readSocket(const QByteArray &commandline)
                 in >> conf;
             }
 
-            web->write("watchbattle|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(toJson(conf))));
+            QString name1, name2;
+            in >> name1 >> name2;
+            auto confJson = toJson(conf);
+            confJson.insert("names", QVariantList() << name1 << name2);
+
+            web->write("watchbattle|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(confJson)));
         } else {
             web->write("stopwatching|"+QString::number(battleId));
         }

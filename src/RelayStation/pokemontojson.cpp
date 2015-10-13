@@ -20,7 +20,7 @@ QVariantMap toJson(const BattleConfiguration &c)
     ret.insert("clauses", c.clauses);
     ret.insert("avatars", QVariantList() << c.avatar[0] << c.avatar[1]);
     ret.insert("rated", bool(c.flags[0]));
-    ret.insert("names", QVariantList() << c.teams[0]->name << c.teams[1]->name);
+    //ret.insert("names", QVariantList() << c.teams[0]->name << c.teams[1]->name);
 
     return ret;
 }
