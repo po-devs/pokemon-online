@@ -2726,7 +2726,10 @@ struct MMPerishSong : public MM
             poke(b,s)["PerishSongCount"] = count - 1;
         } else {
             b.koPoke(s,s,false);
-            b.selfKoer() = poke(b,s)["PerishSonger"].toInt();
+            // Until Gen 4 the Persih Song user loses the battle in a tie
+            // Since Gen 5 it depends on the speed of the pokemon
+            if (b.gen().num <= 4)
+                b.selfKoer() = poke(b,s)["PerishSonger"].toInt();
         }
     }
 };
