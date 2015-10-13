@@ -257,6 +257,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         map.insert("id", c.opponent());
         static QStringList descs = QStringList() << "sent" << "accepted" << "cancelled" << "busy"
             << "refused" << "invalidteam" << "invalidgen" << "invalidtier";
+
         if (c.desc() >= descs.length() || c.desc() < 0) {
             return;
         }
@@ -265,6 +266,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         map.insert("tier", c.desttier);
         map.insert("clauses", c.clauses);
         map.insert("mode", c.mode);
+        map.insert("gen", toJson(c.gen));
 
         web->write("battlechallenge|"+QString::fromUtf8(jserial.serialize(map)));
         break;
@@ -902,6 +904,9 @@ void DualWielder::readWebSocket(const QString &frame)
             int battle = data.toInt();
             notify(Nw::ShowRankings2, qint8(0), qint32(battle));
         } else if (command == "challenge") {
+            static QStringList descs = QStringList() << "sent" << "accepted" << "cancelled" << "busy"
+                << "refused" << "invalidteam" << "invalidgen" << "invalidtier";
+
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
             ChallengeInfo c;
             c.clauses = params.value("clauses").toInt();
@@ -909,8 +914,10 @@ void DualWielder::readWebSocket(const QString &frame)
             c.rated = false;
             c.team = params.value("team").toInt();
             c.desttier = params.value("tier", "").toString();
-            c.mode = ChallengeInfo::Singles;
-            c.dsc = ChallengeInfo::Sent;
+            c.mode = params.value("mode", ChallengeInfo::Singles).toInt();
+            c.gen.num = params.value("gen").toMap().value("num").toInt();
+            c.gen.subnum = params.value("gen").toMap().value("subnum").toInt();
+            c.dsc = std::max(0, descs.indexOf(params.value("desc", "sent").toString()));
             notify(Nw::ChallengeStuff, c);
         } else if (command == "ban") {
             int target = data.toInt();
