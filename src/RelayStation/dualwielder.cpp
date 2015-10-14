@@ -792,7 +792,7 @@ void DualWielder::readWebSocket(const QString &frame)
             }
 
             if (params.contains("info")) {
-                network.setFlag(Nw::LoginCommand::HasTrainerInfo);
+                network.setFlag(Nw::LoginCommand::HasTrainerInfo, true);
             }
             //    HasClientType,
             //    HasVersionNumber,
@@ -835,7 +835,8 @@ void DualWielder::readWebSocket(const QString &frame)
             }
 
             if(params.contains("info")) {
-                out << params.value("info").toString();
+                TrainerInfo info = fromJson<TrainerInfo>(params.value("info").toMap());
+                out << info;
             }
 
             emit sendCommand(tosend);
@@ -873,7 +874,8 @@ void DualWielder::readWebSocket(const QString &frame)
                 out << params.value("color").value<QColor>();
             }
             if (params.contains("info")) {
-                out << params.value("info").toString();
+                TrainerInfo info = fromJson<TrainerInfo>(params.value("info").toMap());
+                out << info;
             }
 
             qDebug() << "network: " << network.data;
@@ -916,7 +918,7 @@ void DualWielder::readWebSocket(const QString &frame)
             int battle = data.section("|", 0, 0).toInt();
             QVariantMap params = jparser.parse(data.section("|", 1).toUtf8()).toMap();
 
-            BattleChoice choice = fromJson(params);
+            BattleChoice choice = fromJson<BattleChoice>(params);
             notify(Nw::BattleMessage, qint32(battle), choice);
         } else if (command == "battlechat") {
             int battle = data.section("|", 0, 0).toInt();

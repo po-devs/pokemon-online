@@ -1,5 +1,6 @@
 #include <utility>
 #include <PokemonInfo/battlestructs.h>
+#include <PokemonInfo/networkstructs.h>
 #include "pokemontojson.h"
 
 QVariantMap toJson(const Pokemon::gen &gen)
@@ -162,9 +163,10 @@ QVariantMap toJson(const BattleMove &move)
     return ret;
 }
 
-static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie" << "item";
+template <>
+BattleChoice fromJson<BattleChoice>(const QVariantMap &v){
+    static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie" << "item";
 
-BattleChoice&& fromJson(const QVariantMap &v) {
     BattleChoice info;
 
     info.type = std::max(bchoices.indexOf(v.value("type").toString()), 0);
@@ -193,5 +195,15 @@ BattleChoice&& fromJson(const QVariantMap &v) {
         info.choice.item.attack = v.value("attack").toInt();
     }
 
-    return std::move(info);
+    return info;
+}
+
+template <>
+TrainerInfo fromJson<TrainerInfo>(const QVariantMap &map){
+    TrainerInfo info;
+
+    info.avatar = map.value("avatar").toInt();
+    info.info = map.value("info").toString();
+
+    return info;
 }
