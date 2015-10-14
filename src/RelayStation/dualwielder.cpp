@@ -389,20 +389,20 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("playerban|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-//    case SendTeam: {
-//        Flags network;
-//        in >> network;
-//        if (network[0]) {
-//            QString name;
-//            in >> name;
-//        }
-//        if (network[1]) {
-//            QStringList tiers;
-//            in >> tiers;
-//            emit teamApproved(tiers);
-//        }
-//        break;
-//    }
+    case Nw::SendTeam: {
+        Flags network;
+        in >> network;
+        if (network[0]) {
+            QString name;
+            in >> name;
+        }
+        if (network[1]) {
+            QStringList tiers;
+            in >> tiers;
+            web->write("teamtiers|" + QString::fromUtf8(jserial.serialize(tiers)));
+        }
+        break;
+    }
     case Nw::SendPM: {
         qint32 idsrc;
         QString mess;

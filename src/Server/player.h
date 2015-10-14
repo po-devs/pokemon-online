@@ -329,6 +329,7 @@ private:
     /* called when all ratings are found */
     void ratingsFound();
     void syncTiers(QString oldTier);
+    void removeUnusedRatings();
     /* Are we currently executing code directly in response to a network command received from this player ? */
     bool isInCommand() const;
     void gatherRankings(Player *p);

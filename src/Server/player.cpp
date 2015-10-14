@@ -1372,6 +1372,9 @@ void Player::sendRankings(Player *other)
 
 void Player::ratingsFound()
 {
+    if (tiers.size() < ratings().size()) {
+        removeUnusedRatings();
+    }
     if (ontologin) {
         ontologin = false;
         if (waiting_name.length() > 0 && (waiting_name != name() || !isLoggedIn()))
@@ -1645,6 +1648,15 @@ void Player::syncTiers(QString oldTier)
 
     if (!tiers.contains(oldTier)) {
         ratings().remove(oldTier);
+    }
+}
+
+void Player::removeUnusedRatings()
+{
+    for (QString tier : ratings().keys()) {
+        if (!tiers.contains(tier)) {
+            ratings().remove(tier);
+        }
     }
 }
 
