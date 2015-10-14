@@ -790,6 +790,10 @@ void DualWielder::readWebSocket(const QString &frame)
             if (params.value("color").value<QColor>().isValid()) {
                 network.setFlag(Nw::LoginCommand::HasColor, true);
             }
+
+            if (params.contains("info")) {
+                network.setFlag(Nw::LoginCommand::HasTrainerInfo);
+            }
             //    HasClientType,
             //    HasVersionNumber,
             //    HasReconnect,
@@ -830,6 +834,10 @@ void DualWielder::readWebSocket(const QString &frame)
                 out << params.value("color").value<QColor>();
             }
 
+            if(params.contains("info")) {
+                out << params.value("info").toString();
+            }
+
             emit sendCommand(tosend);
         } else if (command == "chat") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
@@ -848,10 +856,10 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "pm") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
             notify(Nw::SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
-        } else if (command == "teamChange") {
+        } else if (command == "teamchange") {
             qDebug() << "teamChange event";
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
-            Flags network(params.contains("name") | (params.contains("color") << 1));
+            Flags network(params.contains("name") | (params.contains("color") << 1) | (params.contains("info") << 2));
 
             QByteArray tosend;
             DataStream out(&tosend, QIODevice::WriteOnly);
@@ -863,6 +871,9 @@ void DualWielder::readWebSocket(const QString &frame)
             }
             if (params.contains("color")) {
                 out << params.value("color").value<QColor>();
+            }
+            if (params.contains("info")) {
+                out << params.value("info").toString();
             }
 
             qDebug() << "network: " << network.data;
