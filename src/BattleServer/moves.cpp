@@ -4949,10 +4949,13 @@ struct MMSleepingUser : public MM
 
     static void ewcm(int s, int, BS &b) {
         turn(b,s)["SleepingMove"] = true;
+        /* Increase variable if sleeping move is selected.*/
+        b.poke(s).advSleepCount() += 1;
     }
 
     static void daf(int s, int, BS &b) {
         if (b.poke(s).status() != Pokemon::Asleep) {
+            b.poke(s).advSleepCount() = 0;
             fturn(b,s).add(TM::Failed);
         }
     }

@@ -98,6 +98,8 @@ class PokeBattle : public ShallowBattlePoke
     PROPERTY(quint16, itemUsedTurn)
     PROPERTY(qint8, statusCount)
     PROPERTY(qint8, oriStatusCount)
+    /* ADV Sleep has some weird mechanics */
+    PROPERTY(qint8, advSleepCount)
 public:
     PokeBattle();
 

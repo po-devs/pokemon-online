@@ -1156,6 +1156,14 @@ void BattleSituation::sendBack(int player, bool silent)
         turnMemory(player).remove("PrimalForme");
     }
 
+    /*ADV: Sleep Turns spent SleepTalking/Snoring do not deduct from sleep counter
+     * if you switch out while still asleep and the last move used was Sleep Talk or Snore. */
+    if (gen().num == 3 && poke(player).status() == Pokemon::Asleep) {
+        poke(player).statusCount() += poke(player).advSleepCount();
+        //Variable cleared once used.
+        poke(player).advSleepCount() = 0;
+    }
+
     BattleBase::sendBack(player, silent);
 
     if (!koed(player)) {
@@ -3006,14 +3014,17 @@ void BattleSituation::changeStatus(int player, int status, bool tell, int turns)
 
     if (turns != 0) {
         poke(player).statusCount() = turns;
-        if (status == Pokemon::Asleep)
-            poke(player).oriStatusCount() = poke(player).statusCount();
+        if (status == Pokemon::Asleep) {
+            poke(player).oriStatusCount() = poke(player).statusCount() + poke(player).advSleepCount();
+        }
     }
     else if (status == Pokemon::Asleep) {
         if (gen() <= 2) {
             poke(player).statusCount() = 1 + (randint(6));
         } else if (gen() <= 4) {
             poke(player).statusCount() = 1 + (randint(4));
+            //Variable cleared when put to sleep again
+            poke(player).advSleepCount() = 0;
         } else {
             poke(player).statusCount() = 1 + (randint(3));
             poke(player).oriStatusCount() = poke(player).statusCount();
