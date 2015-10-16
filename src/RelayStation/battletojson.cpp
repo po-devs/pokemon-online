@@ -295,7 +295,13 @@ void BattleToJson::onSpriteChange(int spot, int newSprite)
     map.insert("sprite", newSprite);
 }
 
-//    void onDefiniteFormeChange(int spot, int poke, int newPoke);
+void BattleToJson::onDefiniteFormeChange(int spot, int poke, int newPoke)
+{
+    map.insert("command", "formechange");
+    map.insert("player", spot);
+    map.insert("slot", poke);
+    map.insert("newforme", newPoke);
+}
 
 void BattleToJson::onCosmeticFormeChange(int spot, int subforme)
 {
@@ -350,7 +356,7 @@ void BattleToJson::onMoveChange(int spot, int slot, int move, bool definite)
 {
     makeCommand("movechange");
     map.insert("slot", slot);
-    map.insert("move", "move");
+    map.insert("move", move);
     map.insert("temporary", !definite);
 }
 

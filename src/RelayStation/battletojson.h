@@ -59,7 +59,7 @@ public:
     void onPokemonVanish(int spot);
     void onPokemonReappear(int spot);
     void onSpriteChange(int spot, int newSprite);
-//    void onDefiniteFormeChange(int spot, int poke, int newPoke);
+    void onDefiniteFormeChange(int spot, int poke, int newPoke);
     void onCosmeticFormeChange(int spot, int subforme);
     void onClockStart(int player, int time);
     void onClockStop(int player, int time);
