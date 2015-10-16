@@ -3931,6 +3931,10 @@ bool ScriptEngine::isAesthetic(int pokeid) {
     return PokemonInfo::IsAesthetic(pokeid);
 }
 
+int ScriptEngine::stoneForForme(int pokeid) {
+    return ItemInfo::StoneForForme(pokeid);
+}
+
 int ScriptEngine::generationOfTier(const QString &tier) {
     if (TierMachine::obj()->exists(tier)) {
         Tier & t = TierMachine::obj()->tier(tier);
