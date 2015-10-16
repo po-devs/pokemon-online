@@ -17,7 +17,6 @@
 
 #include "basebattlewindow.h"
 #include "logmanager.h"
-#include "damagecalc.h"
 
 using namespace BattleCommands;
 
@@ -157,14 +156,12 @@ void BaseBattleWindow::init()
     buttons->addWidget(mysend = new QPushButton(tr("C&hat")));
     buttons->addWidget(myclose = new QPushButton(tr("&Close")));
     buttons->addWidget(myignore = new QPushButton(tr("&Ignore spectators")));
-    buttons->addWidget(mycalc = new QPushButton(tr("&Damage Calc")));
 
     connect(musicOn, SIGNAL(toggled(bool)), SLOT(musicPlayStop()));
     connect(myignore, SIGNAL(clicked()), SLOT(ignoreSpectators()));
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
     connect(mysend, SIGNAL(clicked()), SLOT(sendMessage()));
-    connect(mycalc, SIGNAL(clicked()), SLOT(openCalc()));
     connect(alwaysOnTop, SIGNAL(toggled(bool)), SLOT(alwaysOnTopChanged(bool)));
     loadSettings(this);
 
@@ -429,13 +426,6 @@ void BaseBattleWindow::clickClose()
     emit closedBW(battleId());
     close();
     return;
-}
-
-void BaseBattleWindow::openCalc()
-{
-    DamageCalc *calc = new DamageCalc(myInfo->gen.num);
-    calc->setAttribute(Qt::WA_DeleteOnClose, true);
-    calc->show();
 }
 
 void BaseBattleWindow::sendMessage()

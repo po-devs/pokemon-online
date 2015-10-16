@@ -1101,16 +1101,6 @@ QString Tier::getRestrictedPokes() const
     return restrictedPokesS.join(", ");
 }
 
-int Tier::getGeneration()
-{
-    return m_gen.num;
-}
-
-int Tier::getSubGeneration()
-{
-    return m_gen.subnum;
-}
-
 void Tier::importBannedPokes(const QString &s)
 {
     bannedPokes.clear();

@@ -3,10 +3,9 @@
 #include "analyze.h"
 #include "server.h"
 
-RegistryCommunicator::RegistryCommunicator(QString registry_ip, QObject *parent) :
+RegistryCommunicator::RegistryCommunicator(QObject *parent) :
     QObject(parent), registry_connection(nullptr), serverPrivate(true)
 {
-    this->registry_ip = registry_ip;
     Server *server= Server::serverIns;
 
     connect(this, SIGNAL(info(QString)), server, SLOT(printLine(QString)));
@@ -37,7 +36,7 @@ void RegistryCommunicator::connectToRegistry()
     QTcpSocket * s = new QTcpSocket(nullptr);
     /* Here before connecting, since windows requires it that way */
     s->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
-    s->connectToHost(registry_ip, 8081);
+    s->connectToHost("registry.pokemon-online.eu", 8081);
     //s->connectToHost("127.0.0.1", 8081);
 
     connect(s, SIGNAL(connected()), this, SLOT(regConnected()));

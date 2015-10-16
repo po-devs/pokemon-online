@@ -31,7 +31,6 @@ public slots:
     void importAndroidTeam(const QString &team);
     void openImportAndroidDialog();
     void openAvatarDialog();
-    void openDamageCalc();
     void openTeam();
 
 signals:

@@ -456,7 +456,7 @@ void Player::ipChangeRequested(const QString& ip)
 void Player::spectateBattle(int battleId, const BattleConfiguration &battle)
 {
     battlesSpectated.insert(battleId);
-    relay().spectateBattle(battleId, battle, Server::serverIns->name(battle.ids[0]), Server::serverIns->name(battle.ids[1]));
+    relay().spectateBattle(battleId, battle);
 }
 
 void Player::cancelChallenges()
@@ -878,7 +878,7 @@ void Player::sendChallengeStuff(const ChallengeInfo &c)
 
 void Player::startBattle(int battleid, int id, const TeamBattle &team, const BattleConfiguration &conf, const QString &tier)
 {
-    relay().engageBattle(battleid, this->id(), id, team, conf, tier, Server::serverIns->name(conf.ids[0]), Server::serverIns->name(conf.ids[1]));
+    relay().engageBattle(battleid, this->id(), id, team, conf, tier);
 
     cancelChallenges();
     cancelBattleSearch();
@@ -1372,9 +1372,6 @@ void Player::sendRankings(Player *other)
 
 void Player::ratingsFound()
 {
-    if (tiers.size() < ratings().size()) {
-        removeUnusedRatings();
-    }
     if (ontologin) {
         ontologin = false;
         if (waiting_name.length() > 0 && (waiting_name != name() || !isLoggedIn()))
@@ -1648,15 +1645,6 @@ void Player::syncTiers(QString oldTier)
 
     if (!tiers.contains(oldTier)) {
         ratings().remove(oldTier);
-    }
-}
-
-void Player::removeUnusedRatings()
-{
-    for (QString tier : ratings().keys()) {
-        if (!tiers.contains(tier)) {
-            ratings().remove(tier);
-        }
     }
 }
 

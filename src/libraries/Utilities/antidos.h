@@ -34,8 +34,6 @@ public:
     /* Changes the shows IP of the proxy using player */
     bool changeIP(const QString &newIp, const QString &oldIp);
 
-    void clearIP(const QString &ip);
-
     int connections(const QString &ip);
 
     int numberOfDiffIps();

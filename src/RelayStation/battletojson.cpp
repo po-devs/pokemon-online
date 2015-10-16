@@ -249,11 +249,7 @@ void BattleToJson::onBlankMessage()
     map.insert("command", "blank");
 }
 
-void BattleToJson::onClauseActivated(int clause)
-{
-    map.insert("command", "clauseactivated");
-    map.insert("clause", clause);
-}
+//    void onClauseActivated(int clause);
 
 void BattleToJson::onRatedNotification(bool rated)
 {
@@ -267,41 +263,12 @@ void BattleToJson::onTierNotification(const QString &tier)
     map.insert("tier", tier);
 }
 
-void BattleToJson::onDynamicInfo(int spot, const BattleDynamicInfo &info)
-{
-    makeCommand("dynamicinfo");
-    map.insert("fieldflags", int(info.flags));
-
-    QVariantList vstats;
-    for (int i = 0; i < 8; i++) {
-        vstats.push_back(int(info.boosts[i]));
-    }
-    map.insert("boosts", vstats);
-}
-
-void BattleToJson::onPokemonVanish(int spot)
-{
-    makeCommand("vanish");
-}
-
-void BattleToJson::onPokemonReappear(int spot)
-{
-    makeCommand("reappear");
-}
-
-void BattleToJson::onSpriteChange(int spot, int newSprite)
-{
-    makeCommand("spritechange");
-    map.insert("sprite", newSprite);
-}
-
+//    void onDynamicInfo(int spot, const BattleDynamicInfo &info);
+//    void onPokemonVanish(int spot);
+//    void onPokemonReappear(int spot);
+//    void onSpriteChange(int spot, int newSprite);
 //    void onDefiniteFormeChange(int spot, int poke, int newPoke);
-
-void BattleToJson::onCosmeticFormeChange(int spot, int subforme)
-{
-    makeCommand("subformechange");
-    map.insert("subforme", subforme);
-}
+//    void onCosmeticFormeChange(int spot, int subforme);
 
 void BattleToJson::onClockStart(int player, int time) {
     map.insert("command", "clock");
@@ -340,20 +307,9 @@ void BattleToJson::onPPChange(int spot, int move, int PP)
     map.insert("pp", PP);
 }
 
-void BattleToJson::onTempPPChange(int spot, int move, int PP)
-{
-    onPPChange(spot, move, PP);
-    map.insert("temporary",true);
-}
-
-void BattleToJson::onMoveChange(int spot, int slot, int move, bool definite)
-{
-    makeCommand("movechange");
-    map.insert("slot", slot);
-    map.insert("move", "move");
-    map.insert("temporary", !definite);
-}
-
+//    void onOfferChoice(int player, const BattleChoices &choice);
+//    void onTempPPChange(int spot, int move, int PP);
+//    void onMoveChange(int spot, int slot, int move, bool definite);
 void BattleToJson::onRearrangeTeam(int player, const ShallowShownTeam& team)
 {
     map.insert("command", "teampreview");
@@ -380,21 +336,8 @@ void BattleToJson::onVariation(int player, int bonus, int malus)
     map.insert("malus", malus);
 }
 
-void BattleToJson::onDynamicStats(int spot, const BattleStats& stats)
-{
-    makeCommand("stats");
-    QVariantList vstats;
-    for (int i = 0; i < 6; i++) {
-        vstats.push_back(int(stats.stats[i]));
-    }
-    map.insert("stats", vstats);
-}
-
-void BattleToJson::onPrintHtml(const QString &html)
-{
-    map.insert("command", "notice");
-    map.insert("content", html);
-}
+//    void onDynamicStats(int spot, const BattleStats& stats);
+//    void onPrintHtml(const QString &html);
 
 void BattleToJson::onReconnect(int player)
 {

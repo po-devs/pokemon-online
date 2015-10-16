@@ -1208,11 +1208,6 @@ void ScriptEngine::reloadDosSettings()
     AntiDos::obj()->init(s);
 }
 
-void ScriptEngine::clearDosIP(const QString &ip)
-{
-    AntiDos::obj()->clearIP(ip);
-}
-
 QScriptValue ScriptEngine::currentMod()
 {
     return PokemonInfoConfig::currentMod();
@@ -3920,33 +3915,11 @@ bool ScriptEngine::isItemBannedFromTier(int itemid, const QString &tier) {
 bool ScriptEngine::isMoveBannedFromTier(int moveid, const QString &tier) {
     if (TierMachine::obj()->exists(tier)) {
         Tier & t = TierMachine::obj()->tier(tier);
-        QStringList banned = t.getBannedMoves().split(", ");
+        QStringList banned = t.getBannedPokes().split(", ");
         return banned.contains(MoveInfo::Name(moveid));
     }
     warn("isMoveBannedFromTier(moveid, tier)", "not a valid tier", true);
     return false;
-}
-
-bool ScriptEngine::isAesthetic(int pokeid) {
-    return PokemonInfo::IsAesthetic(pokeid);
-}
-
-int ScriptEngine::generationOfTier(const QString &tier) {
-    if (TierMachine::obj()->exists(tier)) {
-        Tier & t = TierMachine::obj()->tier(tier);
-        return t.getGeneration();
-    }
-    warn("generationOfTier(tier)", "not a valid tier", true);
-    return -1;
-}
-
-int ScriptEngine::subGenerationOfTier(const QString &tier) {
-    if (TierMachine::obj()->exists(tier)) {
-        Tier & t = TierMachine::obj()->tier(tier);
-        return t.getSubGeneration();
-    }
-    warn("subGenerationOfTier(tier)", "not a valid tier", true);
-    return -1;
 }
 
 QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)

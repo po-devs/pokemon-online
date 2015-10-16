@@ -1029,21 +1029,6 @@ QString PokemonInfo::Name(const Pokemon::uniqueId &pokeid)
     }
 }
 
-QStringList PokemonInfo::Names(Pokemon::gen gen, bool returnFormes)
-{
-    QStringList ret;
-
-    QList<Pokemon::uniqueId> ids = AllIds();
-
-    foreach (Pokemon::uniqueId id, ids) {
-        if (Exists(id, gen) && !(id.isForme() && !returnFormes)) {
-            ret << Name(id);
-        }
-    }
-
-    return ret;
-}
-
 bool PokemonInfo::Exists(const Pokemon::uniqueId &pokeid, Pokemon::gen gen)
 {
     if (pokeid == 0) {
@@ -1895,27 +1880,7 @@ QString MoveInfo::Name(int movenum)
 
 QStringList MoveInfo::Names()
 {
-    QStringList ret;
-
-    for (int i = 0; i < NumberOfMoves(); i++) {
-        ret << Name(i);
-    }
-
-    return ret;
-}
-
-QStringList MoveInfo::Names(Pokemon::gen gen)
-{
-    QStringList ret;
-    QSet<int> genMoves = Moves(gen);
-
-    for (int i = 0; i < NumberOfMoves(); i++) {
-        if (genMoves.contains(i)) {
-            ret << Name(i);
-        }
-    }
-
-    return ret;
+    return m_Names.values();
 }
 
 #define move_find(var, mv, g) do {\
@@ -2871,26 +2836,6 @@ QString TypeInfo::Name(int typenum)
     return m_Names.value(typenum);
 }
 
-QStringList TypeInfo::Names(Pokemon::gen gen)
-{
-    QStringList ret;
-
-    for (int i = 0; i < NumberOfTypes(); i++) {
-        ret << Name(i);
-    }
-
-    if (gen.num < 6) {
-        ret.removeOne("Fairy");
-    }
-
-    if (gen.num < 2) {
-        ret.removeOne("Steel");
-        ret.removeOne("Dark");
-    }
-
-    return ret;
-}
-
 int TypeInfo::NumberOfTypes()
 {
     return m_Names.size();
@@ -2931,21 +2876,6 @@ QString NatureInfo::path(const QString &filename)
 QString NatureInfo::Name(int naturenum)
 {
     return m_Names.value(naturenum);
-}
-
-QStringList NatureInfo::Names(Pokemon::gen gen)
-{
-    if (gen.num > 2) {
-        QStringList ret;
-
-        for (int i = 0; i < NumberOfNatures(); i++) {
-            ret << Name(i);
-        }
-
-        return ret;
-    } else {
-        return QStringList("Hardy");
-    }
 }
 
 int NatureInfo::NumberOfNatures()
@@ -3032,17 +2962,6 @@ QString CategoryInfo::path(const QString& file)
 QString CategoryInfo::Name(int catnum)
 {
     return m_Names.value(catnum);
-}
-
-QStringList CategoryInfo::Names()
-{
-    QStringList ret;
-
-    for (int i = 0; i < NumberOfCategories(); i++) {
-        ret << Name(i);
-    }
-
-    return ret;
 }
 
 int CategoryInfo::NumberOfCategories()
@@ -3167,18 +3086,6 @@ QString AbilityInfo::Name(int abnum)
     return m_Names[abnum];
 }
 
-QStringList AbilityInfo::Names(Pokemon::gen gen)
-{
-    int n = NumberOfAbilities(gen);
-    QStringList ret;
-
-    for (int i = 0; i < n; i++) {
-        ret << Name(i);
-    }
-
-    return ret;
-}
-
 bool AbilityInfo::moldBreakable(int abnum)
 {
     return m_moldBreaker[abnum];
@@ -3261,11 +3168,6 @@ bool GenderInfo::Possible(int gender, int genderAvail) {
 int GenderInfo::NumberOfGenders()
 {
     return m_Names.size();
-}
-
-int GenderInfo::Number(const QString &name)
-{
-    return m_Names.key(name, Pokemon::Neutral);
 }
 
 void HiddenPowerInfo::init(const QString &dir)
@@ -3369,37 +3271,6 @@ QString StatInfo::ShortStatus(int stat)
     default:
         return "";
     }
-}
-
-QStringList StatInfo::StatusNames()
-{
-    QStringList ret;
-
-    for (int i = 0; i < NumberOfStatuses(); i++) {
-        ret << Status(i);
-    }
-
-    return ret;
-}
-
-int StatInfo::StatusNumber(const QString &name)
-{
-    QList<int> ids = m_status.keys();
-
-    foreach (int id, ids)
-    {
-        if (m_status[id].toLower() == name.toLower())
-        {
-            return id;
-        }
-    }
-
-    return -1;
-}
-
-int StatInfo::NumberOfStatuses()
-{
-    return m_status.size();
 }
 
 QString StatInfo::path(const QString &filename)

@@ -1,6 +1,5 @@
 #include <utility>
 #include <PokemonInfo/battlestructs.h>
-#include <PokemonInfo/networkstructs.h>
 #include "pokemontojson.h"
 
 QVariantMap toJson(const Pokemon::gen &gen)
@@ -19,9 +18,8 @@ QVariantMap toJson(const BattleConfiguration &c)
     ret.insert("mode", c.mode);
     ret.insert("players", QVariantList() << c.ids[0] << c.ids[1]);
     ret.insert("clauses", c.clauses);
-    ret.insert("avatars", QVariantList() << c.avatar[0] << c.avatar[1]);
+    //ret.insert("avatars", QVariantList() << c.avatar[0] << c.avatar[1]);
     ret.insert("rated", bool(c.flags[0]));
-    //ret.insert("names", QVariantList() << c.teams[0]->name << c.teams[1]->name);
 
     return ret;
 }
@@ -163,10 +161,9 @@ QVariantMap toJson(const BattleMove &move)
     return ret;
 }
 
-template <>
-BattleChoice fromJson<BattleChoice>(const QVariantMap &v){
-    static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie" << "item";
+static QStringList bchoices =  QStringList() << "cancel" << "attack" << "switch" << "rearrange" << "shiftcenter" << "tie" << "item";
 
+BattleChoice&& fromJson(const QVariantMap &v) {
     BattleChoice info;
 
     info.type = std::max(bchoices.indexOf(v.value("type").toString()), 0);
@@ -195,15 +192,5 @@ BattleChoice fromJson<BattleChoice>(const QVariantMap &v){
         info.choice.item.attack = v.value("attack").toInt();
     }
 
-    return info;
-}
-
-template <>
-TrainerInfo fromJson<TrainerInfo>(const QVariantMap &map){
-    TrainerInfo info;
-
-    info.avatar = map.value("avatar").toInt();
-    info.info = map.value("info").toString();
-
-    return info;
+    return std::move(info);
 }

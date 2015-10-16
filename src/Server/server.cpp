@@ -4,7 +4,6 @@
 #include <PokemonInfo/pokemoninfo.h>
 #include <PokemonInfo/networkstructs.h>
 #include <PokemonInfo/movesetchecker.h>
-#include <Utilities/exesuffix.h>
 #include <Utilities/otherwidgets.h>
 #include <Utilities/backtrace.h>
 #include "server.h"
@@ -93,6 +92,8 @@ void Server::start(){
 #endif
     srand(time(NULL));
 
+    registry = new RegistryCommunicator(this);
+
     if (!testWritable("config")) {
         //printLine(tr("Configuration file is not writable!! Make sure PO is installed in a non-protected folder!"), false, true);
 #ifdef Q_OS_WIN
@@ -142,7 +143,6 @@ void Server::start(){
     setDefaultValue("Players/ClearInactivesOnStartup", true);
     setDefaultValue("GUI/ShowLogMessages", false);
     setDefaultValue("Mods/CurrentMod", "");
-    setDefaultValue("Registry/IP", "registry.pokemon-online.eu");
 
     setDefaultValue("SQL/Driver", SQLCreator::SQLite);
     setDefaultValue("SQL/Database", "pokemon");
@@ -152,8 +152,6 @@ void Server::start(){
     setDefaultValue("SQL/Host", "localhost");
     setDefaultValue("SQL/DatabaseSchema", "");
     setDefaultValue("SQL/VacuumOnStartup", true);
-
-    registry = new RegistryCommunicator(s.value("Registry/IP").toString(), this);
 
     if (isSql()) {
         try {
@@ -291,13 +289,6 @@ void Server::initBattles()
     connect(battles, SIGNAL(battleFinished(int,int,int,int)), SLOT(battleResult(int,int,int,int)));
     connect(battles, SIGNAL(battleInfo(int,int,QByteArray)), SLOT(sendBattleCommand(int,int,QByteArray)));
     connect(battles, SIGNAL(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)), SLOT(sendBattleInfos(int,int,int,TeamBattle,BattleConfiguration,QString)));
-}
-
-void Server::initRelayStation()
-{
-    auto relayStation = new QProcess(this);
-
-    relayStation->start("./RelayStation" SUFFIX);
 }
 
 void Server::print(const QString &line)

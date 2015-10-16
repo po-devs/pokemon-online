@@ -493,22 +493,13 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
         g.load();
 
         if (gen >= GEN_MIN_ABILITIES) {
-            p.ability() = 0;
             if (illegal) {
-                //Wonderguard made to only have 1/4096 chance of being selected. Ruins the fun if its as common as other abilities.
-                int guard = true_rand()%4096;
-                if (guard > 0) {
-                    while (p.ability() == Ability::WonderGuard || p.ability() == Ability::NoAbility) {
-                        p.ability() = true_rand()%(AbilityInfo::NumberOfAbilities(gen) - 1) + 1;
-                    }
-                } else {
-                    p.ability() = Ability::WonderGuard;
-                }
+                p.ability() = true_rand()%(AbilityInfo::NumberOfAbilities(gen) - 1) + 1;
             } else {
-                /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. So we need to account for this!*/ 
-                while (p.ability() == 0) {
-                    p.ability() = g.abilities().ab(true_rand()%3);
-                }
+                p.ability() = g.abilities().ab(true_rand()%3);
+                /* In case the pokemon has less than 3 abilities, ability 1 has 2/3 of being chosen. Fix it. */
+                if (p.ability() == 0)
+                    p.ability() = g.abilities().ab(0);
             }
         }
 

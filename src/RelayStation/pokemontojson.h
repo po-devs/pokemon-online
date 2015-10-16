@@ -3,8 +3,6 @@
 
 #include <QVariantMap>
 
-#include <PokemonInfo/battlestructs.h>
-
 namespace Pokemon {class gen;}
 class BattleConfiguration;
 class ShallowBattlePoke;
@@ -15,7 +13,6 @@ class BattleChoice;
 class BattleChoices;
 class ShallowShownTeam;
 class ShallowShownPoke;
-class TrainerInfo;
 
 QVariantMap toJson(const Pokemon::gen &gen);
 QVariantMap toJson(const BattleConfiguration & conf);
@@ -26,14 +23,5 @@ QVariantMap toJson(const ShallowShownPoke &poke);
 QVariant toJson(const TeamBattle &team);
 QVariantMap toJson(const PokeBattle &poke);
 QVariantMap toJson(const BattleMove &move);
-
-template <class T>
-T fromJson(const QVariantMap &map);
-
-template <>
-BattleChoice fromJson<BattleChoice>(const QVariantMap &v);
-
-template <>
-TrainerInfo fromJson<TrainerInfo>(const QVariantMap &map);
-
+BattleChoice&& fromJson(const QVariantMap &map);
 #endif // POKEMONTOJSON_H

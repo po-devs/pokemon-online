@@ -68,7 +68,7 @@ bool PasswordWallet::retrieveUserPassword(const QString& ip,
     for (QVector<UserPassRecord>::iterator i = userPass.begin(); i != userPass.end(); ++i) {
         UserPassRecord& r = *i;
     //foreach(UserPassRecord& r, userPass) {
-        if (r.name.toLower() == trainerName.toLower() && (r.salt == salt)) {
+        if (r.name == trainerName && (r.salt == salt)) {
             if (r.ip != ip)
                 warnings.append(tr("Warning: the Server IP Address has changed since password was saved."));
             if (r.server != serverName)

@@ -352,7 +352,7 @@ struct AMDrizzle : public AM {
         int w = poke(b,s)["AbilityArg"].toInt();
         if (w != b.weather) {
             if (b.weather == BS::StrongSun || b.weather == BS::StrongRain || b.weather == BS::StrongWinds) {
-                b.sendAbMessage(126, b.weather-2, s, s, TypeInfo::TypeForWeather(b.weather), 1);
+                b.sendAbMessage(126, b.weather-2, s, s, TypeInfo::TypeForWeather(b.weather));
                 return;
             }
             b.sendAbMessage(14,w-1,s,s,TypeInfo::TypeForWeather(w));
@@ -647,12 +647,11 @@ struct AMGuts : public AM {
     static void sm (int s, int, BS &b) {
         /* Guts doesn't activate on a sleeping poke that used Rest (but other ways of sleeping
             make it activated) */
-        /* Update Oct 2015: Apparently it does activate in Gen 3 */
         if (b.poke(s).status() != Pokemon::Fine) {
-            //if (b.gen() > 3 || b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
+            if (b.gen() > 3 || b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
                 int arg = poke(b,s)["AbilityArg"].toInt();
                 turn(b,s)[QString("Stat%1AbilityModifier").arg(arg)] = 10;
-            //}
+            }
         }
     }
 };

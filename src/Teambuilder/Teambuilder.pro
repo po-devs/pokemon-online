@@ -53,8 +53,7 @@ SOURCES += main.cpp \
     Teambuilder/teambuilderwidget.cpp \
     Teambuilder/pokedex.cpp \
     Teambuilder/pokedexpokeselection.cpp \
-    Teambuilder/avatardialog.cpp \
-    damagecalc.cpp
+    Teambuilder/avatardialog.cpp
 
 HEADERS += mainwindow.h \
     client.h \
@@ -109,8 +108,7 @@ HEADERS += mainwindow.h \
     Teambuilder/pokedex.h \
     Teambuilder/pokedexpokeselection.h \
     ../Shared/config.h \
-    Teambuilder/avatardialog.h \
-    damagecalc.h
+    Teambuilder/avatardialog.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5
@@ -141,8 +139,7 @@ FORMS += Teambuilder/trainermenu.ui \
     loadline.ui \
     Teambuilder/pokedex.ui \
     Teambuilder/pokedexpokeselection.ui \
-    Teambuilder/avatardialog.ui \
-    damagecalc.ui
+    Teambuilder/avatardialog.ui
 
 RC_FILE = myapp.rc
 

@@ -15,7 +15,7 @@
 19 %s's Flash Fire raised the power of its Fire-type moves!|%s's Flash Fire made %m ineffective!
 21 %s changed its type to %t!
 22 %s's Forewarn makes it wary of %m!
-23 %s frisked %f and found its %i!
+23 %s knows its foe holds %i because of Frisk!
 24 %s's Shield Dust blocked the secondary effects!
 29 %s's Hydration heals its status!
 30 %s's %a prevents its stat from being lowered!

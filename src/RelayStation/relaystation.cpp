@@ -8,8 +8,8 @@ RelayStation::RelayStation(int port, QString host, QHash<QString, QString> alias
     QObject(parent), port(port), host(host), _aliases(aliases)
 {
     webserver = new QWsServer(this);
-//    registry = new RegistryStation();
-//    registry->setParent(this);
+    registry = new RegistryStation();
+    registry->setParent(this);
 }
 
 void RelayStation::start()
@@ -33,6 +33,5 @@ void RelayStation::onNewConnection()
     }
 
     DualWielder *d = new DualWielder(this);
-    //d->init(socket, host, _aliases, registry->getServers());
-    d->init(socket, host, _aliases);
+    d->init(socket, host, _aliases, registry->getServers());
 }

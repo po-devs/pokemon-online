@@ -9,7 +9,7 @@ class RegistryCommunicator : public QObject
 {
     Q_OBJECT
 public:
-    explicit RegistryCommunicator(QString registry, QObject *parent = 0);
+    explicit RegistryCommunicator(QObject *parent = 0);
     
 signals:
     void info(const QString &message);
@@ -35,8 +35,6 @@ private:
     bool serverPrivate;
 
     bool testConnection();
-
-    QString registry_ip;
 };
 
 #endif // REGISTRYCOMMUNICATOR_H

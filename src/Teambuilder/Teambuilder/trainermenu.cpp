@@ -12,7 +12,6 @@
 #include "ui_trainermenu.h"
 #include "Teambuilder/teamimporter.h"
 #include "Teambuilder/avatardialog.h"
-#include "./damagecalc.h"
 
 TrainerMenu::TrainerMenu(TeamHolder *team) :
     ui(new Ui::TrainerMenu), m_team(team)
@@ -45,7 +44,6 @@ TrainerMenu::TrainerMenu(TeamHolder *team) :
     connect(ui->pokemonButtons, SIGNAL(clicked(int)), SIGNAL(editPoke(int))); //I prefer double click, but for newbies...
     connect(ui->teambuilderLabel, SIGNAL(clicked()), SLOT(openTeam()));
     connect(ui->avatarSelect, SIGNAL(clicked()), SLOT(openAvatarDialog()));
-    connect(ui->damageCalc, SIGNAL(clicked()), SLOT(openDamageCalc()));
 
     loadProfileList();
     setupData();
@@ -77,16 +75,6 @@ void TrainerMenu::openAvatarDialog()
     a->setWindowFlags(Qt::Popup);
 
     a->show();
-}
-
-#define deb(msg) QMessageBox::information(0,"debug",msg)
-
-void TrainerMenu::openDamageCalc()
-{
-    DamageCalc *c = new DamageCalc(m_team->team().gen().num);
-
-    c->setAttribute(Qt::WA_DeleteOnClose, true);
-    c->show();
 }
 
 void TrainerMenu::on_teamName_textEdited()
