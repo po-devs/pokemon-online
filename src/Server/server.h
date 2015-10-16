@@ -54,6 +54,7 @@ public:
 
     void start();
     void initBattles();
+    void initRelayStation();
 
     static void print(const QString &line);
 

@@ -235,6 +235,7 @@ struct MMBatonPass : public MM
         turn(b,s)["BatonPassBoosts"] = QVariant::fromValue(boosts);
         turn(b,s)["BatonPassFlags"] = fpoke(b,s).flags & BS::BasicPokeInfo::Substitute;
         turn(b,s)["BatonPassLife"] = fpoke(b,s).substituteLife;
+        turn(b,s)["BatonPassConfusion"] = poke(b,s).value("ConfusedCount").toInt();
 
         /* choice band etc. would force the same move
             if on both the passed & the passer */
@@ -255,7 +256,7 @@ struct MMBatonPass : public MM
         merge(poke(b,s), turn(b,s)["BatonPassData"].value<BS::context>());
 
         /* If the poke before is confused, carry on that status */
-        if (poke(b,s)["ConfusedCount"].toInt() > 0) {
+        if (turn(b,s)["BatonPassConfusion"].toInt() > 0) {
             if (!b.poke(s).hasStatus(Pokemon::Confused))
                 b.poke(s).addStatus(Pokemon::Confused);
         }
@@ -2725,7 +2726,10 @@ struct MMPerishSong : public MM
             poke(b,s)["PerishSongCount"] = count - 1;
         } else {
             b.koPoke(s,s,false);
-            b.selfKoer() = poke(b,s)["PerishSonger"].toInt();
+            // Until Gen 4 the Persih Song user loses the battle in a tie
+            // Since Gen 5 it depends on the speed of the pokemon
+            if (b.gen().num <= 4)
+                b.selfKoer() = poke(b,s)["PerishSonger"].toInt();
         }
     }
 };
@@ -3163,6 +3167,9 @@ struct MMToxicSpikes : public MM
             return;
         }
         if (b.ability(source) == Ability::MagicGuard && b.gen() <= 4) {
+            return;
+        }
+        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy) {
             return;
         }
 
@@ -3809,9 +3816,13 @@ struct MMHealBlock: public MM
 
     static void mp(int s, int, BS &b) {
         int mv = move(b,s);
-        if((tmove(b,s).flags & Move::HealingFlag || (b.gen() >= 6 && tmove(b,s).recoil > 0)) && mv != Move::HealPulse) {
+        //Account for Metronome, Sleep Talk, Assist etc.
+        if (turn(b,s).contains("SpecialMoveUsed")) {
+            mv = turn(b,s)["SpecialMoveUsed"].toInt();
+        }
+        if ((MoveInfo::Flags(mv, b.gen()) & Move::HealingFlag || (b.gen() >= 6 && MoveInfo::Recoil(mv, b.gen()) > 0)) && mv != Move::HealPulse) {
             turn(b,s)["ImpossibleToMove"] = true;
-            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(mv), false);
             b.sendMoveMessage(59,BS::HealByMove,s,Type::Psychic,s,mv);
         }
     }
@@ -4941,10 +4952,13 @@ struct MMSleepingUser : public MM
 
     static void ewcm(int s, int, BS &b) {
         turn(b,s)["SleepingMove"] = true;
+        /* Increase variable if sleeping move is selected.*/
+        b.poke(s).advSleepCount() += 1;
     }
 
     static void daf(int s, int, BS &b) {
         if (b.poke(s).status() != Pokemon::Asleep) {
+            b.poke(s).advSleepCount() = 0;
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -7398,7 +7412,7 @@ struct MMPowder : public MM
                 b.sendMoveMessage(215, 1, s, Pokemon::Fire);
                 removeFunction(poke(b,s), "MovePossible", "Powder");
                 b.inflictDamage(s, b.poke(s).totalLifePoints()/4, s);
-                turn(b,s)["ImpossibleToMove"] = true;
+                turn(b,s)["PowderExploded"] = true;
             }
             poke(b,s).remove("Powdered");
         }

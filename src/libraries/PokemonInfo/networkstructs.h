@@ -93,6 +93,10 @@ public:
         return flags[Away];
     }
 
+    bool ladder() const {
+        return flags[LadderEnabled];
+    }
+
     void changeState(int state, bool on) {
         flags.setFlag(state, on);
     }

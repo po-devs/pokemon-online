@@ -148,11 +148,16 @@ void DualWielder::readSocket(const QByteArray &commandline)
                 importantPlayers.remove(importantPlayers.indexOf(p.id),1);
                 fullInfo = true;
             }
+            if (p.id == myid) {
+                this->away = p.away();
+                this->ladder = p.ladder();
+            }
             QVariantMap map;
             map.insert("name", p.name);
             if (fullInfo) {
                 map.insert("info", p.info);
                 map.insert("avatar", p.avatar);
+                map.insert("ladder", p.ladder());
             }
             map.insert("auth", p.auth);
             map.insert("away", p.away());
@@ -198,7 +203,8 @@ void DualWielder::readSocket(const QByteArray &commandline)
         }
         map.insert("auth", p.auth);
         //map.insert("battling", p.battling());
-        //map.insert("away", p.away());
+        map.insert("away", p.away());
+        map.insert("ladder", p.ladder());
         if (p.color.isValid()) {
             map.insert("color", p.color);
         }
@@ -219,6 +225,9 @@ void DualWielder::readSocket(const QByteArray &commandline)
         _map.insert("tiers", tiers);
 
         web->write("login|"+QString::fromUtf8(jserial.serialize(_map)));
+
+        this->away = p.away();
+        this->ladder = p.ladder();
         break;
     }
     case Nw::Logout: {
@@ -248,6 +257,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         map.insert("id", c.opponent());
         static QStringList descs = QStringList() << "sent" << "accepted" << "cancelled" << "busy"
             << "refused" << "invalidteam" << "invalidgen" << "invalidtier";
+
         if (c.desc() >= descs.length() || c.desc() < 0) {
             return;
         }
@@ -256,6 +266,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
         map.insert("tier", c.desttier);
         map.insert("clauses", c.clauses);
         map.insert("mode", c.mode);
+        map.insert("gen", toJson(c.gen));
 
         web->write("battlechallenge|"+QString::fromUtf8(jserial.serialize(map)));
         break;
@@ -290,7 +301,13 @@ void DualWielder::readSocket(const QByteArray &commandline)
             if (network[1]) {
                 in >> team.items;
             }
-            params.insert("conf", toJson(conf));
+
+            QString names[2];
+            in >> names[0] >> names[1];
+
+            auto jsonConf = toJson(conf);
+            jsonConf.insert("names", QVariantList() << names[0] << names[1]);
+            params.insert("conf", jsonConf);
             params.insert("team", toJson(team));
         }
         web->write("battlestarted|"+QString::number(battleid)+"|"+QString::fromUtf8(jserial.serialize(params)));
@@ -372,20 +389,20 @@ void DualWielder::readSocket(const QByteArray &commandline)
         web->write("playerban|"+QString::fromUtf8(jserial.serialize(map)));
         break;
     }
-//    case SendTeam: {
-//        Flags network;
-//        in >> network;
-//        if (network[0]) {
-//            QString name;
-//            in >> name;
-//        }
-//        if (network[1]) {
-//            QStringList tiers;
-//            in >> tiers;
-//            emit teamApproved(tiers);
-//        }
-//        break;
-//    }
+    case Nw::SendTeam: {
+        Flags network;
+        in >> network;
+        if (network[0]) {
+            QString name;
+            in >> name;
+        }
+        if (network[1]) {
+            QStringList tiers;
+            in >> tiers;
+            web->write("teamtiers|" + QString::fromUtf8(jserial.serialize(tiers)));
+        }
+        break;
+    }
     case Nw::SendPM: {
         qint32 idsrc;
         QString mess;
@@ -416,14 +433,17 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        emit banListReceived(s,i,QDateTime::fromTime_t(dt));
 //        break;
 //    }
-//    case OptionsChange: {
-//        qint32 id;
-//        Flags f;
-//        in >> id >> f;
-//        emit awayChanged(id, f[1]);
-//        emit ladderChanged(id, f[0]);
-//        break;
-//    }
+    case Nw::OptionsChange: {
+        qint32 id;
+        Flags f;
+        in >> id >> f;
+        QVariantMap map;
+        map.insert("id", id);
+        map.insert("away", int(f[1]));
+        map.insert("ladder", int(f[0]));
+        web->write("optionschange|"+QString::fromUtf8(jserial.serialize(map)));
+        break;
+    }
     case Nw::SpectateBattle: {
         Flags f;
         qint32 battleId;
@@ -437,7 +457,12 @@ void DualWielder::readSocket(const QByteArray &commandline)
                 in >> conf;
             }
 
-            web->write("watchbattle|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(toJson(conf))));
+            QString name1, name2;
+            in >> name1 >> name2;
+            auto confJson = toJson(conf);
+            confJson.insert("names", QVariantList() << name1 << name2);
+
+            web->write("watchbattle|"+QString::number(battleId)+"|"+QString::fromUtf8(jserial.serialize(confJson)));
         } else {
             web->write("stopwatching|"+QString::number(battleId));
         }
@@ -692,19 +717,19 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 //        break;
 //    }
-//    case NetworkCli::Reconnect: {
-//        bool success;
-//        in >> success;
+    case Nw::Reconnect: {
+        bool success;
+        in >> success;
 
-//        if (success) {
-//            emit reconnectSuccess();
-//        } else {
-//            quint8 reason;
-//            in >> reason;
-//            emit reconnectFailure(reason);
-//        }
-//        break;
-//    }
+        if (success) {
+            web->write(QString("reconnect|{\"success\":1}"));
+        } else {
+            quint8 reason;
+            in >> reason;
+            web->write("reconnect|{\"success\":false, \"reason\": " + QString::number(reason) + "}");
+        }
+        break;
+    }
     default: {
         //web->write(QString("msg|" "Protocol error: unknown command received -- maybe an update for the program is available"));
     }
@@ -725,6 +750,7 @@ void DualWielder::readWebSocket(const QString &frame)
         if (command == "connect") {
             qDebug() << "Connecting websocket to server at " << data;
             QString host = data.section(":", 0, -2);
+            host = "localhost";
             int port = data.section(":", -1).toInt();
 
             network = new StandardNetwork(new QTcpSocket());
@@ -738,8 +764,8 @@ void DualWielder::readWebSocket(const QString &frame)
             connect(network, SIGNAL(isFull(QByteArray)), SLOT(readSocket(QByteArray)));
             connect(this, SIGNAL(sendCommand(QByteArray)), network, SLOT(send(QByteArray)));
         } else if (command == "registry" && !registryRead) {
-            web->write(servers);
-            registryRead = true;
+            //web->write(servers);
+            //registryRead = true;
         } else {
             web->write(QString("error|You need to choose a server to connect to."));
         }
@@ -763,6 +789,10 @@ void DualWielder::readWebSocket(const QString &frame)
 
             if (params.value("color").value<QColor>().isValid()) {
                 network.setFlag(Nw::LoginCommand::HasColor, true);
+            }
+
+            if (params.contains("info")) {
+                network.setFlag(Nw::LoginCommand::HasTrainerInfo, true);
             }
             //    HasClientType,
             //    HasVersionNumber,
@@ -804,6 +834,11 @@ void DualWielder::readWebSocket(const QString &frame)
                 out << params.value("color").value<QColor>();
             }
 
+            if(params.contains("info")) {
+                TrainerInfo info = fromJson<TrainerInfo>(params.value("info").toMap());
+                out << info;
+            }
+
             emit sendCommand(tosend);
         } else if (command == "chat") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
@@ -822,10 +857,10 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "pm") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
             notify(Nw::SendPM, qint32(params.value("to").toInt()), params.value("message").toString());
-        } else if (command == "teamChange") {
+        } else if (command == "teamchange") {
             qDebug() << "teamChange event";
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
-            Flags network(params.contains("name") | (params.contains("color") << 1));
+            Flags network(params.contains("name") | (params.contains("color") << 1) | (params.contains("info") << 2));
 
             QByteArray tosend;
             DataStream out(&tosend, QIODevice::WriteOnly);
@@ -837,6 +872,10 @@ void DualWielder::readWebSocket(const QString &frame)
             }
             if (params.contains("color")) {
                 out << params.value("color").value<QColor>();
+            }
+            if (params.contains("info")) {
+                TrainerInfo info = fromJson<TrainerInfo>(params.value("info").toMap());
+                out << info;
             }
 
             qDebug() << "network: " << network.data;
@@ -879,7 +918,7 @@ void DualWielder::readWebSocket(const QString &frame)
             int battle = data.section("|", 0, 0).toInt();
             QVariantMap params = jparser.parse(data.section("|", 1).toUtf8()).toMap();
 
-            BattleChoice choice = fromJson(params);
+            BattleChoice choice = fromJson<BattleChoice>(params);
             notify(Nw::BattleMessage, qint32(battle), choice);
         } else if (command == "battlechat") {
             int battle = data.section("|", 0, 0).toInt();
@@ -889,6 +928,9 @@ void DualWielder::readWebSocket(const QString &frame)
             int battle = data.toInt();
             notify(Nw::ShowRankings2, qint8(0), qint32(battle));
         } else if (command == "challenge") {
+            static QStringList descs = QStringList() << "sent" << "accepted" << "cancelled" << "busy"
+                << "refused" << "invalidteam" << "invalidgen" << "invalidtier";
+
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
             ChallengeInfo c;
             c.clauses = params.value("clauses").toInt();
@@ -896,9 +938,23 @@ void DualWielder::readWebSocket(const QString &frame)
             c.rated = false;
             c.team = params.value("team").toInt();
             c.desttier = params.value("tier", "").toString();
-            c.mode = ChallengeInfo::Singles;
-            c.dsc = ChallengeInfo::Sent;
+            c.mode = params.value("mode", ChallengeInfo::Singles).toInt();
+            c.gen.num = params.value("gen").toMap().value("num").toInt();
+            c.gen.subnum = params.value("gen").toMap().value("subnum").toInt();
+            c.dsc = std::max(0, descs.indexOf(params.value("desc", "sent").toString()));
             notify(Nw::ChallengeStuff, c);
+        } else if (command == "ban") {
+            int target = data.toInt();
+            notify(Nw::PlayerBan, qint32(target));
+        } else if (command == "kick") {
+            int target = data.toInt();
+            notify(Nw::PlayerKick, qint32(target));
+        } else if (command == "idle") {
+            bool away = data.toInt();
+            notify(Nw::OptionsChange, Flags(ladder + ((away) << 1)));
+        } else if (command == "ladder") {
+            bool ladder = data.toInt();
+            notify(Nw::OptionsChange, Flags(ladder + ((away) << 1)));
         }
     }
 }

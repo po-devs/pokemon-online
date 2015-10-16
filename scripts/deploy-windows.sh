@@ -17,6 +17,7 @@ function ensure_good_run(){
     fi
 }
 
+export PATH=$PATH;C:/Qt/Qt5.0.2/5.0.2/mingw47_32/bin;C:/Qt/Qt5.0.2/Tools/MinGW/bin;
 DEST=pokemon-online
 MAKE=mingw32-make
 

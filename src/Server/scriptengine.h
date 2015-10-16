@@ -308,6 +308,11 @@ public:
     /* Removes the history of kicks and logins for all the IPs */
     Q_INVOKABLE void clearDosData();
     Q_INVOKABLE void reloadDosSettings();
+    /* In case the antidos bugs and the number of ips for one ip in particular doesn't decrease even after disconnection, do
+     * something dirty and manually change the connection data.
+     *
+     * Should only be used on 127.0.0.1 in case of webclient */
+    Q_INVOKABLE void clearDosIP(const QString &ip);
     Q_INVOKABLE QScriptValue currentMod();
     Q_INVOKABLE QScriptValue currentModPath();
     Q_INVOKABLE QScriptValue dataRepo();
@@ -519,6 +524,9 @@ public:
     Q_INVOKABLE bool isAbilityBannedFromTier(int abid, const QString &tier);
     Q_INVOKABLE bool isItemBannedFromTier(int itemid, const QString &tier);
     Q_INVOKABLE bool isMoveBannedFromTier(int moveid, const QString &tier);
+    Q_INVOKABLE bool isAesthetic(int pokeid);
+    Q_INVOKABLE int generationOfTier(const QString &tier);
+    Q_INVOKABLE int subGenerationOfTier(const QString &tier);
     inline quint64 getProcessID(const QProcess* proc)
     {
         #ifdef Q_OS_WIN

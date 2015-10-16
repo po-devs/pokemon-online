@@ -71,6 +71,7 @@ public:
     static int TrueCount(); // pokes without counting forms
     static int NumberOfPokemons(); // base + all forms.
     static QString Name(const Pokemon::uniqueId &pokeid);
+    static QStringList Names(Pokemon::gen gen, bool returnFormes = true);
     static Pokemon::uniqueId Number(const QString &pokename);
     static int LevelBalance(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
     static QString WeightS(const Pokemon::uniqueId &pokeid);
@@ -236,6 +237,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int movenum);
     static QStringList Names();
+    static QStringList Names(Pokemon::gen gen);
     static int Type(int movenum, Pokemon::gen gen);
     static int Category(int movenum, Pokemon::gen gen);
     static int Classification(int movenum, Pokemon::gen gen);
@@ -425,6 +427,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int typenum);
+    static QStringList Names(Pokemon::gen gen);
     static int Number(const QString &type);
     static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GenInfo::GenMax()); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
@@ -464,6 +467,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int naturenum);
+    static QStringList Names(Pokemon::gen gen);
     static int NumberOfNatures();
     static int Number(const QString &pokename);
     /* Finds nature of two stats, first parameter is the stat raised, second it the stat lowered*/
@@ -490,6 +494,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int catnum);
+    static QStringList Names();
     static int NumberOfCategories();
 private:
     static QHash<int, QString> m_Names;
@@ -514,6 +519,7 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int abnum);
+    static QStringList Names(Pokemon::gen gen);
     static Effect Effects(int abnum, Pokemon::gen gen);
     static int Number(const QString &ab);
     static QString Message(int ab, int part);
@@ -549,6 +555,7 @@ public:
     /* Self-explainable functions */
     static QString Name(int gender);
     static int NumberOfGenders();
+    static int Number(const QString &name);
     static int Default(int genderAvail);
     static bool Possible(int gender, int genderAvail);
 private:
@@ -590,6 +597,9 @@ public:
     static QString Stat(int stat, const Pokemon::gen &gen);
     static QString Status(int status);
     static QString ShortStatus(int status);
+    static QStringList StatusNames();
+    static int StatusNumber(const QString &name);
+    static int NumberOfStatuses();
 private:
     static QString m_Directory;
     static QHash<int, QString> m_stats;
