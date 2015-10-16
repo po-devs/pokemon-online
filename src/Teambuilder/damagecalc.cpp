@@ -551,7 +551,7 @@ void DamageCalc::calculate()
         amod = chainmod(amod, 0x1800);
     }
     // -2R. CHOICE ITEMS //
-    if ((myitem == Item::ChoiceBand && category == Move::Physical) && (myitem == Item::ChoiceSpecs && category == Move::Special)) {
+    if ((myitem == Item::ChoiceBand && category == Move::Physical) || (myitem == Item::ChoiceSpecs && category == Move::Special)) {
         amod = chainmod(amod, 0x1800);
     }
 
@@ -614,7 +614,7 @@ void DamageCalc::calculate()
     int bmod = 0x1000;
 
     // 0A. TECHNICIAN //
-    if (myability == Ability::Technician && bp < 60) {
+    if (myability == Ability::Technician && bp <= 60) {
         bmod = chainmod(bmod, 0x1800);
     }
     // 0B. FLARE BOOST //
