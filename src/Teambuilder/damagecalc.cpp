@@ -859,8 +859,8 @@ void DamageCalc::showResult(int min, int max)
     int pmin = min * 100 / omaxhp;
     int pmax = max * 100 / omaxhp;
 
-    ui->result1->setValue(100 - pmin);
-    ui->result2->setValue(100 - pmax);
+    ui->result1->setValue(100 - std::min(pmin, 100));
+    ui->result2->setValue(100 - std::min(pmax, 100));
 
     ui->resultText->setText("<b><u>Result:</u></b><br />"
                             + QString::number(min) + " - " + QString::number(max) + "<br />(" + QString::number(pmin) + "% - " + QString::number(pmax) + "%)");
