@@ -49,9 +49,9 @@ namespace Pokemon
 {
     enum Gender
     {
-        Neutral,
-        Male,
-        Female
+        Neutral = 0,
+        Male = 1,
+        Female = 2
     };
 
     enum Status {
