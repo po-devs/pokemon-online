@@ -524,6 +524,7 @@ public:
     Q_INVOKABLE bool isAbilityBannedFromTier(int abid, const QString &tier);
     Q_INVOKABLE bool isItemBannedFromTier(int itemid, const QString &tier);
     Q_INVOKABLE bool isMoveBannedFromTier(int moveid, const QString &tier);
+    Q_INVOKABLE bool isAesthetic(int pokeid);
     Q_INVOKABLE int generationOfTier(const QString &tier);
     Q_INVOKABLE int subGenerationOfTier(const QString &tier);
     inline quint64 getProcessID(const QProcess* proc)

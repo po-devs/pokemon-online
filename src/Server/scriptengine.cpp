@@ -3927,6 +3927,10 @@ bool ScriptEngine::isMoveBannedFromTier(int moveid, const QString &tier) {
     return false;
 }
 
+bool ScriptEngine::isAesthetic(int pokeid) {
+    return PokemonInfo::IsAesthetic(pokeid);
+}
+
 int ScriptEngine::generationOfTier(const QString &tier) {
     if (TierMachine::obj()->exists(tier)) {
         Tier & t = TierMachine::obj()->tier(tier);
