@@ -92,6 +92,8 @@ QVariantMap toJson(const ShallowShownPoke &poke)
     if (poke.gender) {
         ret.insert("gender", poke.gender);
     }
+    ret.insert("heldItem", poke.item);
+
     return ret;
 }
 
@@ -206,4 +208,68 @@ TrainerInfo fromJson<TrainerInfo>(const QVariantMap &map){
     info.info = map.value("info").toString();
 
     return info;
+}
+
+template<>
+PersonalTeam fromJson<PersonalTeam>(const QVariantMap &map) {
+    PersonalTeam ret;
+
+    ret.defaultTier() = map.value("tier").toString();
+    ret.gen() = fromJson<Pokemon::gen>(map.value("gen").toMap());
+
+    const auto & list = map.value("pokes").toList();
+
+    for (int i = 0; i < std::min(6, list.length()); i++) {
+        ret.poke(i) = fromJson<PokePersonal>(list[i].toMap());
+        ret.poke(i).gen() = ret.gen();
+    }
+
+    return ret;
+}
+
+template<>
+PokePersonal fromJson<PokePersonal>(const QVariantMap &map) {
+    PokePersonal ret;
+    ret.num().pokenum = map.value("num").toInt();
+    ret.num().subnum = map.value("forme").toInt();
+    ret.nickname() = map.value("nick", "").toString();
+    ret.ability() = map.value("ability").toInt();
+    ret.item() = map.value("item").toInt();
+    ret.nature() = map.value("nature").toInt();
+    ret.level() = map.value("level").toInt();
+    ret.happiness() = map.value("happiness").toInt();
+    ret.gender() = map.value("gender").toInt();
+
+    const auto &moves = map.value("moves").toList();
+    for (int i = 0; i < std::min(4, moves.length()); i++) {
+        ret.setMove(moves[i].toInt(), i);
+    }
+
+    const auto &evs = map.value("evs").toList();
+    for (int i = 0; i < std::min(6, evs.length()); i++) {
+        ret.setEV(i, evs[i].toInt());
+    }
+
+    const auto &ivs = map.value("ivs").toList();
+    for (int i = 0; i < std::min(6, ivs.length()); i++) {
+        ret.setDV(i, ivs[i].toInt());
+    }
+
+    return ret;
+}
+
+template <>
+Pokemon::gen fromJson<Pokemon::gen>(const QVariantMap &map)
+{
+    Pokemon::gen ret;
+
+    if (map.contains("num")) {
+        ret.num = map.value("num").toInt();
+        ret.subnum = GenInfo::NumberOfSubgens(ret.num) - 1;
+    }
+    if (map.contains("subnum")) {
+        ret.subnum = map.value("subnum").toInt();
+    }
+
+    return ret;
 }

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <ctime>
 #include "relaystation.h"
+#include <PokemonInfo/pokemoninfo.h>
 
 #define PRINTOPT(a, b) (fprintf(stdout, "  %-25s\t%s\n", a, b))
 
@@ -49,6 +50,8 @@ int main(int argc, char *argv[])
     }
 
     srand(time(NULL));
+
+    GenInfo::init();
 
     QCoreApplication a(argc, argv);
 

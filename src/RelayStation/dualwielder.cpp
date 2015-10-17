@@ -794,6 +794,10 @@ void DualWielder::readWebSocket(const QString &frame)
             if (params.contains("info")) {
                 network.setFlag(Nw::LoginCommand::HasTrainerInfo, true);
             }
+
+            if (params.contains("teams")) {
+                network.setFlag(Nw::LoginCommand::HasTeams, true);
+            }
             //    HasClientType,
             //    HasVersionNumber,
             //    HasReconnect,
@@ -839,6 +843,15 @@ void DualWielder::readWebSocket(const QString &frame)
                 out << info;
             }
 
+            if (params.contains("teams")) {
+                auto teams = params.value("teams").toList();
+                out << quint8(teams.size());
+
+                for (auto team: teams) {
+                    out << team;
+                }
+            }
+
             emit sendCommand(tosend);
         } else if (command == "chat") {
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
@@ -860,7 +873,7 @@ void DualWielder::readWebSocket(const QString &frame)
         } else if (command == "teamchange") {
             qDebug() << "teamChange event";
             QVariantMap params = jparser.parse(data.toUtf8()).toMap();
-            Flags network(params.contains("name") | (params.contains("color") << 1) | (params.contains("info") << 2));
+            Flags network(params.contains("name") | (params.contains("color") << 1) | (params.contains("info") << 2) | ((params.contains("teams") || params.contains("team")) << 3));
 
             QByteArray tosend;
             DataStream out(&tosend, QIODevice::WriteOnly);
@@ -878,8 +891,19 @@ void DualWielder::readWebSocket(const QString &frame)
                 out << info;
             }
 
-            qDebug() << "network: " << network.data;
-            qDebug() << "color: " << params.value("color").toString() << ", "  << params.value("color").value<QColor>().name();
+            if (params.contains("teams")) {
+                out << false;
+                auto teams = params.value("teams").toList();
+                out << quint8(teams.size());
+
+                for (auto team: teams) {
+                    out << fromJson<PersonalTeam>(team.toMap());
+                }
+            } else if (params.contains("team")) {
+                out << true;
+                out << quint8(params.value("teamNum").toInt());
+                out << fromJson<PersonalTeam>(params.value("team").toMap());
+            }
 
             emit sendCommand(tosend);
         } else if (command == "register") {

@@ -36,4 +36,13 @@ BattleChoice fromJson<BattleChoice>(const QVariantMap &v);
 template <>
 TrainerInfo fromJson<TrainerInfo>(const QVariantMap &map);
 
+template <>
+PersonalTeam fromJson<PersonalTeam>(const QVariantMap &map);
+
+template <>
+PokePersonal fromJson<PokePersonal>(const QVariantMap &map);
+
+template <>
+Pokemon::gen fromJson<Pokemon::gen>(const QVariantMap &map);
+
 #endif // POKEMONTOJSON_H

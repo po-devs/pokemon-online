@@ -207,6 +207,33 @@ DataStream & operator >> (DataStream & in, PersonalTeam & team)
     return in;
 }
 
+DataStream & operator << (DataStream & out, const PersonalTeam & team)
+{
+    VersionControl v(0);
+
+    Flags network;
+    network.setFlag(0, team.defaultTier().length() > 0);
+    network.setFlag(1, false);
+
+    v.stream << network;
+
+    if (network[0]) {
+        v.stream << team.defaultTier();
+    }
+
+    v.stream << team.gen();
+
+    quint8 count = 6;
+
+    for(int i=0;i<count;i++)
+    {
+        v.stream << team.poke(i);
+    }
+
+    out << v;
+    return out;
+}
+
 LoginInfo::LoginInfo() : teams(0), channel(0), additionalChannels(0), trainerInfo(0), plugins(0), cookie(0), uniqueId(0)
 {
 }

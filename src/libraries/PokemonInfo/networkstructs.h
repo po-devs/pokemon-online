@@ -162,6 +162,7 @@ public:
 };
 
 DataStream & operator >> (DataStream & in, PersonalTeam & team);
+DataStream & operator << (DataStream & out, const PersonalTeam & team);
 
 /* Only the infos needed by the server */
 struct LoginInfo

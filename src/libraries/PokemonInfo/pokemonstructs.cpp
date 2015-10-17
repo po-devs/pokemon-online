@@ -474,6 +474,7 @@ void PokePersonal::reset()
     nickname() = "";
     nature() = 0;
     item() = 0;
+    illegal() = false;
 
     for (int i = 0; i < 6; i ++) {
         if (gen() >= 3) {
@@ -1510,8 +1511,9 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
 
     Flags data;
     data.setFlag(pp::isShiny, p.shiny());
-    //make sure the poke is 100% illegal
-    if (!p.isLegal() && p.num() != 0) {
+
+    /* Do NOT introduce a legality check here! */
+    if (p.illegal() && p.num() != 0) {
         data.setFlag(pp::isIllegal, true);
     }
     v.stream << data;
