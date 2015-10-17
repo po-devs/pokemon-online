@@ -848,7 +848,7 @@ void DualWielder::readWebSocket(const QString &frame)
                 out << quint8(teams.size());
 
                 for (auto team: teams) {
-                    out << team;
+                    out << fromJson<PersonalTeam>(team.toMap());
                 }
             }
 

@@ -104,6 +104,24 @@ DataStream &operator << (DataStream &out, const ProtocolVersion &p)
 TrainerInfo::TrainerInfo() : avatar(0) {
 }
 
+DataStream & operator << (DataStream &out, const TrainerInfo &i)
+{
+    VersionControl v(i.version);
+    Flags network;
+
+    bool messages = !i.winning.isEmpty() || !i.losing.isEmpty() || !i.tie.isEmpty();
+
+    network.setFlag(TrainerInfo::HasWinningMessages, messages);
+
+    v.stream << network << i.avatar << i.info;
+    if (messages) {
+        v.stream << i.winning << i.losing << i.tie;
+    }
+
+    out << v;
+    return out;
+}
+
 DataStream & operator >> (DataStream &in, TrainerInfo &i)
 {
     VersionControl v;
@@ -144,24 +162,6 @@ void TrainerInfo::sanitize()
     if (tie.length() > 200) {
         tie.resize(200);
     }
-}
-
-DataStream & operator << (DataStream &out, const TrainerInfo &i)
-{
-    VersionControl v(i.version);
-    Flags network;
-
-    bool messages = !i.winning.isEmpty() || !i.losing.isEmpty() || !i.tie.isEmpty();
-
-    network.setFlag(TrainerInfo::HasWinningMessages, messages);
-
-    v.stream << network << i.avatar << i.info;
-    if (messages) {
-        v.stream << i.winning << i.losing << i.tie;
-    }
-
-    out << v;
-    return out;
 }
 
 DataStream & operator >> (DataStream & in, PersonalTeam & team)
@@ -277,13 +277,10 @@ DataStream & operator >> (DataStream &in, LoginInfo &l)
         l.teams = new QList<PersonalTeam>();
         qint8 count;
         in >> count;
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < std::min(count, qint8(6)); i++) {
             PersonalTeam t;
             in >> t;
-            /* 6 teams tops */
-            if (i < 6) {
-                l.teams->push_back(t);
-            }
+            l.teams->push_back(t);
         }
     }
 
