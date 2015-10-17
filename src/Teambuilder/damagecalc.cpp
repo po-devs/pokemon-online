@@ -158,8 +158,8 @@ void DamageCalc::setupCalc(int gen)
     ui->myability->addItems(abilityNames);
     ui->oability->addItems(abilityNames);
 
-    ui->myitem->addItems(ItemInfo::SortedNames(pgen));
-    ui->oitem->addItems(ItemInfo::SortedNames(pgen));
+    ui->myitem->addItems(ItemInfo::SortedUsefulNames(pgen));
+    ui->oitem->addItems(ItemInfo::SortedUsefulNames(pgen));
 
     ui->mynature->addItems(NatureInfo::Names(pgen));
     ui->onature->addItems(NatureInfo::Names(pgen));
