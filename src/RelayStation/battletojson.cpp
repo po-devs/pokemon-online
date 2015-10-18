@@ -130,10 +130,11 @@ void BattleToJson::onAttackFailing(int spot, bool silent)
     map.insert("silent", silent);
 }
 
-void BattleToJson::onPlayerMessage(int spot, const QString &message)
+void BattleToJson::onPlayerMessage(int spot, const QString &message, bool end)
 {
     makeCommand("playerchat");
     map.insert("message", message);
+    map.insert("end", end);
 }
 
 void BattleToJson::onSpectatorJoin(int id, const QString &name)

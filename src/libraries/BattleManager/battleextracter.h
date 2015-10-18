@@ -107,7 +107,7 @@ protected:
     start(StatusHurt, int spot; int status) end(spot, status)
     start(StatusFree, int spot; int status) end(spot, status)
     start(Fail, int spot; bool silent) end(spot, silent)
-    start(PlayerMessage, int spot; string_ptr message) end(spot, message)
+    start(PlayerMessage, int spot; string_ptr message; bool endMessage) end(spot, message, endMessage)
     start(SpectatorLeave, int id) end(id)
     start(SpectatorMessage, int id; string_ptr message) end(id, message)
     start(MoveMessage, int spot; int move; int part; int type; int foe; int other; string_ptr data)

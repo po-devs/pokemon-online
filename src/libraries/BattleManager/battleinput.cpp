@@ -249,11 +249,17 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         break;
     }
     case BC::BattleChat:
+    {
+        auto message = mk<QString>();
+        in >> *message;
+        output<BattleEnum::PlayerMessage>(spot, &message, false);
+        break;
+    }
     case BC::EndMessage:
     {
         auto message = mk<QString>();
         in >> *message;
-        output<BattleEnum::PlayerMessage>(spot, &message);
+        output<BattleEnum::PlayerMessage>(spot, &message, true);
         break;
     }
     case BC::Spectating:

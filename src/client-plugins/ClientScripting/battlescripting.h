@@ -84,8 +84,8 @@ public:
     void onAttackFailing(int spot, bool fail) {
         makeEvent("onAttackFailing", spot, fail);
     }
-    void onPlayerMessage(int spot, const QString& message) {
-        makeEvent("onPlayerMessage", spot, message);
+    void onPlayerMessage(int spot, const QString& message, bool end) {
+        makeEvent("onPlayerMessage", spot, message, end);
     }
     void onSpectatorJoin(int id, const QString& name) {
         makeEvent("onSpectatorJoin", id, name);

@@ -34,7 +34,7 @@ public:
     void onStatusDamage(int spot, int status);
     void onStatusOver(int spot, int status);
     void onAttackFailing(int spot, bool silent);
-    void onPlayerMessage(int spot, const QString &message);
+    void onPlayerMessage(int spot, const QString &message, bool end);
     void onSpectatorJoin(int id, const QString &name);
     void onSpectatorLeave(int id);
     void onSpectatorChat(int id, const QString &message);

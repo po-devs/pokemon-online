@@ -296,7 +296,7 @@ void BattleClientLog::onAttackFailing(int, bool silent)
     printLine("Failed", tr("But it failed!"), silent);
 }
 
-void BattleClientLog::onPlayerMessage(int spot, const QString &message)
+void BattleClientLog::onPlayerMessage(int spot, const QString &message, bool)
 {
     //can be 0 for winning/losing message
     if (message.length() == 0)

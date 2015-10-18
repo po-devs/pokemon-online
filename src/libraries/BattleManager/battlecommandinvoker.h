@@ -88,7 +88,7 @@ protected:
     start(StatusHurt, onStatusDamage, int spot, int status) end(onStatusDamage, spot, status)
     start(StatusFree, onStatusOver, int spot, int status) end(onStatusOver, spot, status)
     start(Fail, onAttackFailing, int spot, bool silent) end(onAttackFailing, spot, silent)
-    start(PlayerMessage, onPlayerMessage, int spot, string_ptr message) end(onPlayerMessage, spot, *message->get())
+    start(PlayerMessage, onPlayerMessage, int spot, string_ptr message, bool endMessage) end(onPlayerMessage, spot, *message->get(), endMessage)
     start(SpectatorEnter, onSpectatorJoin, int id, string_ptr name) end(onSpectatorJoin, id, *name->get())
     start(SpectatorLeave, onSpectatorLeave, int id) end(onSpectatorLeave, id)
     start(SpectatorMessage, onSpectatorChat, int id, string_ptr message) end(onSpectatorChat, id, *message->get())
