@@ -384,7 +384,7 @@ QStringList SecurityManager::authList()
     return authed.toList();
 }
 
-QStringList&& SecurityManager::userList()
+QStringList SecurityManager::userList()
 {
     QStringList ret;
 
@@ -403,7 +403,7 @@ QStringList&& SecurityManager::userList()
         }
     }
 
-    return std::move(ret);
+    return ret;
 }
 
 void SecurityManager::deleteUser(const QString &name)

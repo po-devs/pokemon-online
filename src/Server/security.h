@@ -130,7 +130,7 @@ public:
     static QStringList membersForIp(const QString &ip);
     static QHash<QString, std::pair<QString, int> > banList();
     static QStringList authList();
-    static QStringList &&userList();
+    static QStringList userList();
     static void deleteUser(const QString &name);
 
     static void processDailyRun(int maxdays, bool async=true);
