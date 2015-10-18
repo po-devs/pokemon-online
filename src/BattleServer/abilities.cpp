@@ -1194,8 +1194,14 @@ struct AMTruant : public AM {
 
     static void dap(int s, int, BS &b) {
         if (!poke(b, s).contains("TruantActiveTurn")) {
-            poke(b,s)["TruantActiveTurn"] = b.turn()%2;
+            if (poke(b,s).value("MegaEvolveTurn") == b.turn() || poke(b,s).value("MegaEvolveTurn") == b.turn()-1) {
+                //If you Mega Evolve and get Truant on the same turn, you immediately loaf around on your next move
+                poke(b,s)["TruantActiveTurn"] = (b.turn()+1)%2;
+            } else {
+                poke(b,s)["TruantActiveTurn"] = b.turn()%2;
+            }
         }
+
         if (b.turn()%2 != poke(b,s)["TruantActiveTurn"].toInt()) {
             turn(b,s)["ImpossibleToMove"] = true;
             b.sendAbMessage(67,0,s);

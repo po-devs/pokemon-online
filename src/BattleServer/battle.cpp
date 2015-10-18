@@ -912,6 +912,7 @@ void BattleSituation::megaEvolve(int slot)
                 sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
                 changeForme(player(slot), slotNum(slot), forme, false, false, true);
                 megas[player(slot)] = true;
+                pokeMemory(player(slot))["MegaEvolveTurn"] = turn();
             }
         }
     }
