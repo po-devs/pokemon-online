@@ -3928,11 +3928,19 @@ bool ScriptEngine::isMoveBannedFromTier(int moveid, const QString &tier) {
 }
 
 bool ScriptEngine::isAesthetic(int pokeid) {
-    return PokemonInfo::IsAesthetic(pokeid);
+    if (PokemonInfo::Exists(pokeid)) {
+        return PokemonInfo::IsAesthetic(pokeid);
+    }
+    warn("isAesthetic(pokeid)", "not a valid pokemon", true);
+    return false;
 }
 
 int ScriptEngine::stoneForForme(int pokeid) {
-    return ItemInfo::StoneForForme(pokeid);
+    if (PokemonInfo::Exists(pokeid)) {
+        return ItemInfo::StoneForForme(pokeid);
+    }
+    warn("stoneForForme(pokeid)", "not a valid pokemon", true);
+    return false;
 }
 
 int ScriptEngine::generationOfTier(const QString &tier) {
