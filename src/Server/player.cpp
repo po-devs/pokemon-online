@@ -1602,9 +1602,9 @@ void Player::recvTeam(const ChangeTeamInfo &cinfo)
             m_teams.init(*cinfo.teams);
             findTierAndRating(true);
         } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
+            QString oldTier = team(cinfo.teamNum).tier;
             m_teams.team(cinfo.teamNum) = *cinfo.team;
 
-            QString oldTier = team(cinfo.teamNum).tier;
             findTier(cinfo.teamNum);
 
             if (oldTier != team(cinfo.teamNum).tier) {
