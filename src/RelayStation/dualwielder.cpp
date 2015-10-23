@@ -916,6 +916,8 @@ void DualWielder::readWebSocket(const QString &frame)
             for (auto key : params.keys()) {
                 out << quint8(key.toInt()) << params[key].toString();
             }
+
+            emit sendCommand(tosend);
         } else if (command == "register") {
             notify(Nw::Register);
         } else if (command == "watch") {
