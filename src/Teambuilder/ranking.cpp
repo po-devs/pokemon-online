@@ -47,6 +47,7 @@ void RankingDialog::startRanking(int page, int startRank, int total)
     totalPages->setText(QString("/ %1").arg(total));
     curRank = startRank;
     curPage = page;
+    totalPage = total;
     players->setRowCount(0);
 }
 
@@ -89,12 +90,14 @@ void RankingDialog::prevPage()
 {
     if (curPage == 1)
         return;
-    emit lookForPage(tierSelection->currentText(),curPage-1);
+    emit lookForPage(tierSelection->currentText(), curPage-1);
 }
 
 void RankingDialog::nextPage()
 {
-    emit lookForPage(tierSelection->currentText(),curPage+1);
+    if (curPage + 1 > totalPage)
+        return;
+    emit lookForPage(tierSelection->currentText(), curPage+1);
 }
 
 void RankingDialog::searchByName()
@@ -104,5 +107,9 @@ void RankingDialog::searchByName()
 
 void RankingDialog::changePage()
 {
-    emit lookForPage(tierSelection->currentText(),page->text().toInt());
+    if (page->text().toInt() > totalPage) {
+        emit lookForPage(tierSelection->currentText(), totalPage);
+    } else {
+    emit lookForPage(tierSelection->currentText(), page->text().toInt());
+    }
 }
