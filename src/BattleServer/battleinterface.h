@@ -272,6 +272,7 @@ public:
 //    virtual void battleChat(int id, const QString &str) = 0;
 
 //    virtual void spectatingChat(int id, const QString &str) = 0;
+    virtual void sendMessage(int id, const QString &type, const QString &content) = 0;
 
 //    /* Calls the effects of source reacting to name */
 //    virtual void calleffects(int source, int target, const QString &name) = 0;

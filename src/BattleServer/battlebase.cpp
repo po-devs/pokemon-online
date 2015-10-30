@@ -680,9 +680,9 @@ void BattleBase::endBattle(int result, int winner, int loser)
         if (!tieMessage[Player2].isEmpty()) {
             notify(All, EndMessage, Player2, tieMessage[Player2]);
         }
+        callp(BP::battleEnded);
         exit();
-    }
-    if (result == Win || result == Forfeit) {
+    } else if (result == Win || result == Forfeit) {
         notify(All, BattleEnd, winner, qint8(result));
         if (!winMessage[winner].isEmpty()) {
             notify(All, EndMessage, winner, winMessage[winner]);
@@ -692,6 +692,7 @@ void BattleBase::endBattle(int result, int winner, int loser)
         }
 
         emit battleFinished(publicId(), result, id(winner), id(loser));
+        callp(BP::battleEnded);
         exit();
     }
 }
@@ -854,8 +855,11 @@ void BattleBase::playerForfeit(int forfeiterId)
     if (finished()) {
         return;
     }
+
     forfeiter() = spot(forfeiterId);
-    notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));
+    //Already done by the server itself
+    /*notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));*/
+    callp(BP::battleEnded);
 }
 
 
@@ -1213,6 +1217,12 @@ void BattleBase::battleChat(int id, const QString &str)
 void BattleBase::spectatingChat(int id, const QString &str)
 {
     notify(All, SpectatorChat, id, qint32(id), str);
+}
+
+void BattleBase::sendMessage(int id, const QString &type, const QString &content)
+{
+    //In the future, add own non-priority command instead
+    notify(id, EndMessage, id, QString("%1 - %2").arg(type, content));
 }
 
 void BattleBase::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)

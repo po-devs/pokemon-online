@@ -990,9 +990,12 @@ void Server::sendBattleCommand(int publicId, int id, const QByteArray &comm)
     if (!playerExist(id))
         return;
 
-    if (player(id)->hasBattle(publicId))
+    if (player(id)->hasBattle(publicId) || player(id)->lastBattle() == publicId) {
+//        if (player(id)->lastBattle() == publicId) {
+//            qDebug() << "Sending post battle command";
+//        }
         player(id)->relay().sendBattleCommand(publicId, comm);
-    else {
+    } else {
         if (player(id)->battlesSpectated.contains(publicId))
             player(id)->relay().sendWatchingCommand(publicId, comm);
     }

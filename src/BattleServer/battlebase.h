@@ -151,6 +151,7 @@ public:
     void battleChoiceReceived(int id, const BattleChoice &b);
     void battleChat(int id, const QString &str);
     void spectatingChat(int id, const QString &str);
+    void sendMessage(int id, const QString &type, const QString &content);
 
     virtual int getStat(int poke, int stat) = 0;
     virtual void sendPoke(int player, int poke, bool silent = false) = 0;

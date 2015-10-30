@@ -24,6 +24,9 @@ BattleLogs::BattleLogs()
     saveTextFiles = s.value("save_text_files", false).toBool();
 
     tiers = s.value("tiers", QStringList()).toStringList().toSet();
+
+    QSettings server("config", QSettings::IniFormat);
+    webUrl = server.value("Server/Web", "http://web.pkmn.co").toString();
 }
 
 QString BattleLogs::pluginName() const
@@ -43,7 +46,7 @@ BattlePlugin* BattleLogs::getBattlePlugin(BattleInterface* b)
             return NULL;
     }
 
-    return new BattleLogsPlugin(b, saveRawFiles, saveTextFiles);
+    return new BattleLogsPlugin(b, saveRawFiles, saveTextFiles, webUrl);
 }
 
 bool BattleLogs::hasConfigurationWidget () const
@@ -108,8 +111,9 @@ void BattleLogsWidget::done()
 /************************/
 /************************/
 
-BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : commands(&toSend, QIODevice::WriteOnly), raw(raw), text(plain)
+BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain, const QString &url) : commands(&toSend, QIODevice::WriteOnly), raw(raw), text(plain), url(url), m(QMutex::Recursive)
 {
+    //qDebug() << "plugin start";
     input = NULL;
 
     conf = b->configuration();
@@ -123,47 +127,13 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain) : c
     }
 
     started = false;
+    logging = true;
     t.start();
 }
 
 BattleLogsPlugin::~BattleLogsPlugin()
 {
-    //if (started) {
-        QString date = QDate::currentDate().toString("yyyy-MM-dd");
-        QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
-        QString id0 = QString::number(id1);
-        QString id1 = QString::number(id2);
-
-        QDir d("");
-        if(!d.exists("logs/battles/" + date)) {
-            d.mkpath("logs/battles/" + date);
-        }
-
-        if (raw) {
-            QFile out;
-            out.setFileName(QString("logs/battles/%1/%2-%3-%4.poreplay").arg(date, time, id0, id1));
-            out.open(QIODevice::WriteOnly);
-            out.write("battle_logs_v3\n");
-
-            /* Writing configuration */
-            DataStream outd(&out);
-            conf.teams[0] = &team1;
-            conf.teams[1] = &team2;
-            outd << conf;
-
-            out.write(toSend);
-            out.close();
-        }
-
-        if (text) {
-            QFile out;
-            out.setFileName(QString("logs/battles/%1/%2-%3-%4.html").arg(date, time, id0, id1));
-            out.open(QIODevice::WriteOnly);
-            out.write(log->getLog().join("").toUtf8());
-            out.close();
-        }
-    //}
-
+    //qDebug() << "plugin deleted";
     if (input) {
         input->deleteTree();
     }
@@ -176,6 +146,7 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
     QHash<QString, Hook> ret;
 
     ret.insert("battleStarting(BattleInterface&)", (Hook)(&BattleLogsPlugin::battleStarting));
+    ret.insert("battleEnded(BattleInterface&)", (Hook)(&BattleLogsPlugin::battleEnded));
     ret.insert("emitCommand(BattleInterface&,int,int,QByteArray)", (Hook)(&BattleLogsPlugin::emitCommand));
 
     return ret;
@@ -183,6 +154,7 @@ QHash<QString, BattlePlugin::Hook> BattleLogsPlugin::getHooks()
 
 int BattleLogsPlugin::battleStarting(BattleInterface &b)
 {
+    //qDebug() << "battle started";
     QMutexLocker l(&m);
     if (raw) {
         team1 = b.team(0);
@@ -202,9 +174,63 @@ int BattleLogsPlugin::battleStarting(BattleInterface &b)
     return 0;
 }
 
+int BattleLogsPlugin::battleEnded(BattleInterface &b)
+{
+    //qDebug() << "battle ended";
+    QMutexLocker l(&m);
+
+    (void) b;
+    logging = false;
+
+    //if (started) {
+        QString date = QDate::currentDate().toString("yyMMdd");
+        QString time = QTime::currentTime().toString("hh'h'mm'm'ss's'");
+        QString id0 = QString::number(id1);
+        QString id1 = QString::number(id2);
+
+        QString hash = QString::number(qHash(QString("%2-%3-%4").arg(time,id0,id1)));
+
+        QDir d("");
+        if(!d.exists("logs/battles/" + date)) {
+            d.mkpath("logs/battles/" + date);
+        }
+
+        if (raw) {
+            QFile out;
+            out.setFileName(QString("logs/battles/%1/%2.poreplay").arg(date, hash));
+            out.open(QIODevice::WriteOnly);
+            out.write("battle_logs_v3\n");
+
+            /* Writing configuration */
+            DataStream outd(&out);
+            conf.teams[0] = &team1;
+            conf.teams[1] = &team2;
+            outd << conf;
+
+            out.write(toSend);
+            out.close();
+
+            b.sendMessage(0, "Replay", url + "/replays/" + date + "-" + hash);
+            b.sendMessage(1, "Replay", url + "/replays/" + date + "-" + hash);
+        }
+
+        if (text) {
+            QFile out;
+            out.setFileName(QString("logs/battles/%1/%2-%3-%4.html").arg(date, hash));
+            out.open(QIODevice::WriteOnly);
+            out.write(log->getLog().join("").toUtf8());
+            out.close();
+        }
+    //}
+    return 0;
+}
+
 int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArray b)
 {
     QMutexLocker l(&m);
+    if (!logging) {
+        return 0;
+    }
     /* Those, are not logged */
     if (char(b[0]) == BattleCommands::CancelMove || char(b[0]) == BattleCommands::OfferChoice || char(b[0]) == BattleCommands::RearrangeTeam)
         return 0;

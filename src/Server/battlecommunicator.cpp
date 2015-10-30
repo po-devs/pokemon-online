@@ -286,17 +286,18 @@ void BattleCommunicator::filterBattleInfos(int b, int p1, int p2, const TeamBatt
 
 void BattleCommunicator::filterBattleInfo(int battleid, int player, const QByteArray &info)
 {
-    if (!contains(battleid)) {
-        return;
-    }
+//    if (info[0] == BattleCommands::EndMessage) {
+//        qDebug() << "end message command";
+//    }
+    if (contains(battleid)) {
+        FullBattleConfiguration *battle = mybattles[battleid];
 
-    FullBattleConfiguration *battle = mybattles[battleid];
+        /* Show variation here */
+        if (battle->rated() && info.length() > 0 && (battle->id(0) == player || battle->id(1) == player) && info[0] == BattleCommands::Rated) {
+            QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(battle->name[battle->spot(player)], battle->name[battle->opponent(battle->spot(player))], battle->tier());
 
-    /* Show variation here */
-    if (battle->rated() && info.length() > 0 && (battle->id(0) == player || battle->id(1) == player) && info[0] == BattleCommands::Rated) {
-        QPair<int,int> firstChange = TierMachine::obj()->pointChangeEstimate(battle->name[battle->spot(player)], battle->name[battle->opponent(battle->spot(player))], battle->tier());
-
-        emit battleInfo(battleid, player, pack(BattleCommands::PointEstimate, battle->spot(player), qint8(firstChange.first), qint8(firstChange.second)));
+            emit battleInfo(battleid, player, pack(BattleCommands::PointEstimate, battle->spot(player), qint8(firstChange.first), qint8(firstChange.second)));
+        }
     }
 
     emit battleInfo(battleid, player, info);
@@ -304,6 +305,7 @@ void BattleCommunicator::filterBattleInfo(int battleid, int player, const QByteA
 
 void BattleCommunicator::filterBattleResult(int b, int r, int w, int l)
 {
+    //qDebug() << "battle result " << b;
     if (!contains(b)) {
         return;
     }

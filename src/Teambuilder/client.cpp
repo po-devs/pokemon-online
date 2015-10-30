@@ -2187,8 +2187,11 @@ void Client::battleFinished(int battleid, int res, int winner, int loser)
 
 void Client::battleCommand(int battleid, const QByteArray &command)
 {
-    if (!mybattles.contains(battleid))
+    //qDebug() << "Received command " << int(command[0]) << " for " << battleid;
+    if (!mybattles.contains(battleid)) {
+        //qDebug() << "Received data non existing battle " << battleid;
         return;
+    }
 
     mybattles[battleid]->receiveData(command);
 }
@@ -2198,12 +2201,13 @@ void Client::disableBattleWindow(int battleid)
     if (!mybattles.contains(battleid) && !mySpectatingBattles.contains(battleid))
         return;
 
-    BaseBattleWindowInterface *w = mybattles.contains(battleid) ? mybattles.take(battleid) : mySpectatingBattles.take(battleid);
+    BaseBattleWindowInterface *w = mybattles.contains(battleid) ? mybattles.value(battleid) : mySpectatingBattles.take(battleid);
     w->disable();
 }
 
 void Client::removeBattleWindow(int battleid)
 {
+    //qDebug() << "removing battle window for " << battleid;
     if (!mybattles.contains(battleid))
         return;
 

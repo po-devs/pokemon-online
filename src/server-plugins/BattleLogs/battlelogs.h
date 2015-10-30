@@ -70,6 +70,7 @@ public:
     bool saveMixedTiers;
     bool saveRawFiles;
     bool saveTextFiles;
+    QString webUrl;
 };
 
 class BATTLELOGSSHARED_EXPORT BattleLogsWidget : public QWidget
@@ -90,14 +91,16 @@ class BATTLELOGSSHARED_EXPORT BattleLogsPlugin
     : public BattlePlugin
 {
 public:
-    BattleLogsPlugin(BattleInterface *b= NULL, bool raw=true, bool text=false);
+    BattleLogsPlugin(BattleInterface *b= NULL, bool raw=true, bool text=false, const QString &url="");
     ~BattleLogsPlugin();
 
     QHash<QString, Hook> getHooks();
     int emitCommand(BattleInterface &, int slot, int players, QByteArray b);
     int battleStarting(BattleInterface &);
+    int battleEnded(BattleInterface &);
 public:
     bool started;
+    bool logging;
     int id1, id2;
 
     QByteArray toSend;
@@ -113,6 +116,8 @@ public:
     TeamBattle team1, team2;
 
     bool raw, text;
+
+    QString url;
 private:
     QMutex m;
 };
