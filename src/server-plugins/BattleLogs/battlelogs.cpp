@@ -210,8 +210,8 @@ int BattleLogsPlugin::battleEnded(BattleInterface &b)
             out.write(toSend);
             out.close();
 
-            b.sendMessage(0, "Replay", url + "/replays/" + date + "-" + hash);
-            b.sendMessage(1, "Replay", url + "/replays/" + date + "-" + hash);
+            b.sendMessage(0, "Replay", url + "/replay/" + date + "-" + hash);
+            b.sendMessage(1, "Replay", url + "/replay/" + date + "-" + hash);
         }
 
         if (text) {
