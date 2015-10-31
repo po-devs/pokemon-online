@@ -79,7 +79,7 @@ void ConfigForm::applyVals()
     }
 }
 
-AbstractConfigHelper::AbstractConfigHelper(const QString &desc) : description(desc) {
+AbstractConfigHelper::AbstractConfigHelper(const QString &desc) : description(desc), internalWidget(NULL) {
 
 }
 
@@ -98,6 +98,25 @@ QWidget *AbstractConfigHelper::generateConfigWidget() {
         w->layout()->setMargin(5);
         return w;
     }
+}
+
+TwoColsConfigHelper::TwoColsConfigHelper(AbstractConfigHelper *first, AbstractConfigHelper *second) :first(first), second(second)
+{
+
+}
+
+TwoColsConfigHelper::~TwoColsConfigHelper()
+{
+    delete first, first = NULL;
+    delete second, second = NULL;
+}
+
+QWidget* TwoColsConfigHelper::getInternalWidget()
+{
+    QWidget *w = new QWidget();
+    w->setLayout(new QSideBySide(first->generateConfigWidget(), second->generateConfigWidget()));
+    w->layout()->setMargin(0);
+    return w;
 }
 
 ConfigSpin::ConfigSpin(const QString &desc, int &var, int min, int max)
