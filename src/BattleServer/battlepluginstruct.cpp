@@ -16,6 +16,12 @@ BattlePStorage::BattlePStorage(BattlePlugin *p)
         functions.remove("battleStarting(BattleInterface&)");
     }
 
+    if (functions.contains("battleEnded(BattleInterface&)")) {
+        calls[battleEnded] = functions.value("battleEnded(BattleInterface&)");
+
+        functions.remove("battleEnded(BattleInterface&)");
+    }
+
     if (functions.contains("emitCommand(BattleInterface&,int,int,QByteArray)")) {
         calls[emitCommand] = functions.value("emitCommand(BattleInterface&,int,int,QByteArray)");
 

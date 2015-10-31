@@ -39,6 +39,7 @@ class Player : public QObject, public PlayerInterface
     PROPERTY(quint8, reconnectBits)
     PROPERTY(QString, os)
     PROPERTY(LoginInfo*, loginInfo)
+    PROPERTY(int, lastBattle)
 public:
     enum State
     {

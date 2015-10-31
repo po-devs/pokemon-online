@@ -30,6 +30,7 @@ private slots:
 private:
     int curRank;
     int curPage;
+    int totalPage;
 
     QLineEdit *name, *page;
     QLabel *totalPages;

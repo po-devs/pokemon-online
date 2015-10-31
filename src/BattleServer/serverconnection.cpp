@@ -40,7 +40,7 @@ void ServerConnection::onNewBattle(int battleid, const BattlePlayer &pb1, const 
 void ServerConnection::spectate(int battleid, bool spectate, int player, const QString &name)
 {
     if (!battles.contains(battleid)) {
-        qWarning() << "Error, spectating in non existing batte " << battleid;
+        qWarning() << "Error, spectating in non existing battle " << battleid;
         return;
     }
 
@@ -54,7 +54,7 @@ void ServerConnection::spectate(int battleid, bool spectate, int player, const Q
 void ServerConnection::choice(int battleid, int player, const BattleChoice &choice)
 {
     if (!battles.contains(battleid)) {
-        qWarning() << "Error, choice in non existing batte " << battleid;
+        qWarning() << "Error, choice in non existing battle " << battleid;
         return;
     }
 
@@ -64,7 +64,7 @@ void ServerConnection::choice(int battleid, int player, const BattleChoice &choi
 void ServerConnection::message(int battleid, int player, const QString &chat)
 {
     if (!battles.contains(battleid)) {
-        qWarning() << "Error, chat in non existing batte " << battleid;
+        qWarning() << "Error, chat in non existing battle " << battleid;
         return;
     }
 
@@ -74,7 +74,7 @@ void ServerConnection::message(int battleid, int player, const QString &chat)
 void ServerConnection::spectatorMessage(int battleid, int player, const QString &chat)
 {
     if (!battles.contains(battleid)) {
-        qWarning() << "Error, spectator chat in non existing batte " << battleid;
+        qWarning() << "Error, spectator chat in non existing battle " << battleid;
         return;
     }
 

@@ -50,6 +50,16 @@ private:
     virtual QWidget *getInternalWidget() {return NULL;}
 };
 
+class TwoColsConfigHelper : public AbstractConfigHelper
+{
+public:
+    TwoColsConfigHelper(AbstractConfigHelper *first, AbstractConfigHelper *second);
+    ~TwoColsConfigHelper();
+private:
+    AbstractConfigHelper *first, *second;
+    virtual QWidget *getInternalWidget();
+};
+
 template <class T>
 class ConfigHelper : public AbstractConfigHelper {
 public:

@@ -274,7 +274,7 @@ void BattleToJson::onDynamicInfo(int spot, const BattleDynamicInfo &info)
     map.insert("fieldflags", int(info.flags));
 
     QVariantList vstats;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 1; i < 8; i++) {
         vstats.push_back(int(info.boosts[i]));
     }
     map.insert("boosts", vstats);

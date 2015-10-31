@@ -906,6 +906,18 @@ void DualWielder::readWebSocket(const QString &frame)
             }
 
             emit sendCommand(tosend);
+        } else if (command == "changetier") {
+            QByteArray tosend;
+            DataStream out(&tosend, QIODevice::WriteOnly);
+
+            out << uchar(Nw::TierSelection);
+
+            QVariantMap params = jparser.parse(data.toUtf8()).toMap();
+            for (auto key : params.keys()) {
+                out << quint8(key.toInt()) << params[key].toString();
+            }
+
+            emit sendCommand(tosend);
         } else if (command == "register") {
             notify(Nw::Register);
         } else if (command == "watch") {

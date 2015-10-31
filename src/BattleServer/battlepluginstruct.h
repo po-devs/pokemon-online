@@ -11,6 +11,7 @@ struct BattlePStorage
     enum Functions {
         battleStarting = 0,
         emitCommand = 1,
+        battleEnded = 2,
         lastEnum
     };
 

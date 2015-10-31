@@ -23,6 +23,8 @@ Player::Player(const GenericSocket &sock, int id)
     loginInfo() = NULL;
     m_bundle.id = id;
 
+    lastBattle() = -1;
+
     myrelay = new Analyzer(sock, id);
     lockCount = 0;
     battleSearch() = false;
@@ -244,6 +246,7 @@ void Player::changeTier(quint8 teamNum, const QString &newtier)
 
 void Player::executeTierChange(int num, const QString &newtier)
 {
+    //qDebug() << "Executing tier change to " << newtier;
     bool oldT(false), newT(false);
     QString oldTier = team(num).tier;
 
@@ -622,6 +625,7 @@ void Player::addBattle(int battleid)
 
 void Player::removeBattle(int battleid)
 {
+    lastBattle() = battleid;
     battles.remove(battleid);
 }
 
@@ -1602,9 +1606,9 @@ void Player::recvTeam(const ChangeTeamInfo &cinfo)
             m_teams.init(*cinfo.teams);
             findTierAndRating(true);
         } else if (cinfo.team && cinfo.teamNum < m_teams.count()) {
+            QString oldTier = team(cinfo.teamNum).tier;
             m_teams.team(cinfo.teamNum) = *cinfo.team;
 
-            QString oldTier = team(cinfo.teamNum).tier;
             findTier(cinfo.teamNum);
 
             if (oldTier != team(cinfo.teamNum).tier) {

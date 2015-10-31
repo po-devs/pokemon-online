@@ -177,10 +177,20 @@ void TierWindow::openTierEdit(Tier *t)
                                                  << ChallengeInfo::Rotation));
 
     int clauses = t->clauses;
+    AbstractConfigHelper *cache = nullptr;
     for (int i = 0; i < ChallengeInfo::numberOfClauses; i++) {
         this->clauses[i] = (clauses >> i) % 2;
 
-        helper->addConfigHelper(new ConfigCheck(ChallengeInfo::clause(i), this->clauses[i]));
+        if (cache) {
+            helper->addConfigHelper(new TwoColsConfigHelper(cache, new ConfigCheck(ChallengeInfo::clause(i), this->clauses[i])));
+            cache = nullptr;
+        } else {
+            cache = new ConfigCheck(ChallengeInfo::clause(i), this->clauses[i]);
+        }
+    }
+    if (cache) {
+        helper->addConfigHelper(cache);
+        cache = nullptr;
     }
 
     helper->addConfigHelper(new ConfigSpin("Tier display order", t->displayOrder, -100, 100));

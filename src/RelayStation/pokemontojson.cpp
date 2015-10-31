@@ -214,6 +214,8 @@ template<>
 PersonalTeam fromJson<PersonalTeam>(const QVariantMap &map) {
     PersonalTeam ret;
 
+    bool isIllegal = map.value("illegal").toBool();
+
     ret.defaultTier() = map.value("tier").toString();
     ret.gen() = fromJson<Pokemon::gen>(map.value("gen").toMap());
 
@@ -222,6 +224,7 @@ PersonalTeam fromJson<PersonalTeam>(const QVariantMap &map) {
     for (int i = 0; i < std::min(6, list.length()); i++) {
         ret.poke(i) = fromJson<PokePersonal>(list[i].toMap());
         ret.poke(i).gen() = ret.gen();
+        ret.poke(i).illegal() = isIllegal;
     }
 
     return ret;
@@ -230,6 +233,7 @@ PersonalTeam fromJson<PersonalTeam>(const QVariantMap &map) {
 template<>
 PokePersonal fromJson<PokePersonal>(const QVariantMap &map) {
     PokePersonal ret;
+    ret.reset();
     ret.num().pokenum = map.value("num").toInt();
     ret.num().subnum = map.value("forme").toInt();
     ret.nickname() = map.value("nick", "").toString();
@@ -247,7 +251,7 @@ PokePersonal fromJson<PokePersonal>(const QVariantMap &map) {
 
     const auto &evs = map.value("evs").toList();
     for (int i = 0; i < std::min(6, evs.length()); i++) {
-        ret.setEV(i, evs[i].toInt());
+        ret.setEV(i, evs[i].toInt(), true);
     }
 
     const auto &ivs = map.value("ivs").toList();

@@ -656,6 +656,9 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
 {
     if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return;
+    if (event != "step") {
+        //qDebug() << "Event for " << event << " starting" << endl;
+    }
 
     QScriptValueList l;
     auto startTime = startProfiling();
@@ -668,6 +671,9 @@ void ScriptEngine::makeEvent(const QString &event, Params &&... params)
         profiles.clear();
         performanceTimer.restart();
     }
+    if (event != "step") {
+        //qDebug() << "Event for " << event << " ending" << endl;
+    }
 }
 
 template<typename ...Params>
@@ -676,6 +682,7 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
     if (!myscript.property(event, QScriptValue::ResolveLocal).isValid())
         return true;
 
+    //qDebug() << "Event for " << event << " starting" << endl;
     startStopEvent();
 
     QScriptValueList l;
@@ -689,6 +696,8 @@ bool ScriptEngine::makeSEvent(const QString &event, Params &&... params)
         profiles.clear();
         performanceTimer.restart();
     }
+
+    //qDebug() << "Event for " << event << " ending" << endl;
 
     return !endStopEvent();
 }

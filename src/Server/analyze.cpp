@@ -467,8 +467,9 @@ void Analyzer::dealWithCommand(const QByteArray &commandline)
             QString tier;
             while (!in.atEnd()) {
                 in >> team >> tier;
+                emit tierChanged(team, tier);
             }
-            emit tierChanged(team, tier);
+
             break;
         }
     case FindBattle:
