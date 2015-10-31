@@ -763,9 +763,13 @@ void DualWielder::readWebSocket(const QString &frame)
             connect(network, SIGNAL(_error()), network, SLOT(deleteLater()));
             connect(network, SIGNAL(isFull(QByteArray)), SLOT(readSocket(QByteArray)));
             connect(this, SIGNAL(sendCommand(QByteArray)), network, SLOT(send(QByteArray)));
-        } else if (command == "registry" && !registryRead) {
+        } /*else if (command == "registry" && !registryRead) {
             //web->write(servers);
             //registryRead = true;
+        } */
+        else if (command == "replay") {
+            // slug is used to remove special characters and / and any hacks
+            readReplay(data);
         } else {
             web->write(QString("error|You need to choose a server to connect to."));
         }
@@ -993,6 +997,66 @@ void DualWielder::readWebSocket(const QString &frame)
             notify(Nw::OptionsChange, Flags(ladder + ((away) << 1)));
         }
     }
+}
+
+void DualWielder::readReplay(const QString &data)
+{
+    QString date = slug(data.section("-", 0, 0));
+    QString file = slug(data.section("-", 1));
+
+    if (date.length() != 6 || file.length() == 0) {
+        web->write(QString("error|Replay file invalid."));
+        return;
+    }
+
+    QFile f("logs/battles/" + date + "/" + file + ".poreplay");
+    if (!f.exists()) {
+        web->write(QString("error|Replay file not found."));
+        return;
+    }
+
+    QByteArray versionS = f.readLine().trimmed();
+
+//    if (version != "battle_logs_v2" && version != "battle_logs_v3") {
+//        QMessageBox::critical(nullptr, tr("Log format not supported"), tr("The replay version of the file isn't supported by this client."));
+//        deleteLater();
+//        return;
+//    }
+
+    int version = versionS.right(1).toInt();
+
+    DataStream stream(&f, version);
+
+    FullBattleConfiguration conf;
+    stream >> conf;
+
+    auto confJson = toJson(conf);
+    confJson.insert("names", QVariantList() << conf.name[0] << conf.name[1]);
+
+    web->write("watchbattle|0|"+QString::fromUtf8(jserial.serialize(confJson)));
+
+    quint32 time;
+    QByteArray command;
+
+    while (!stream.atEnd()) {
+        stream >> time;
+        stream >> command;
+
+        if (command.size() == 0) {
+            break;
+        }
+
+        input.receiveData(command);
+
+        QVariantMap jcommand = battleConverter.getCommand();
+        if (jcommand.size() == 0) {
+            continue;
+        }
+
+        web->write("replaycommand|"+QString::number(time)+"|"+QString::fromUtf8(jserial.serialize(jcommand)));
+    }
+
+    web->write(QString("stopwatching|0"));
 }
 
 void DualWielder::socketConnected()

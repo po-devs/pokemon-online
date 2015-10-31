@@ -23,6 +23,7 @@ public:
     void init(QWsSocket *web, const QString &host, QHash<QString,QString> aliases, const QString& servers="");
 
     QString ip() const;
+    void readReplay(const QString &data);
 public slots:
     void readSocket(const QByteArray&);
     void readWebSocket(const QString&);
