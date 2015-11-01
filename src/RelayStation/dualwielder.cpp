@@ -1030,7 +1030,7 @@ void DualWielder::readReplay(const QString &data)
     FullBattleConfiguration conf;
     stream >> conf;
 
-    auto confJson = toJson(conf);
+    auto confJson = toJson((BattleConfiguration&)conf);
     confJson.insert("names", QVariantList() << conf.name[0] << conf.name[1]);
 
     web->write("watchbattle|0|"+QString::fromUtf8(jserial.serialize(confJson)));
