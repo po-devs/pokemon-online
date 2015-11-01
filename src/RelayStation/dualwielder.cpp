@@ -1010,7 +1010,7 @@ void DualWielder::readReplay(const QString &data)
     }
 
     QFile f("logs/battles/" + date + "/" + file + ".poreplay");
-    if (!f.exists()) {
+    if (!f.exists() || !f.open(QIODevice::ReadOnly)) {
         web->write(QString("error|Replay file not found."));
         return;
     }
