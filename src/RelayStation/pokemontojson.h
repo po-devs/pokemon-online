@@ -19,6 +19,7 @@ class TrainerInfo;
 
 QVariantMap toJson(const Pokemon::gen &gen);
 QVariantMap toJson(const BattleConfiguration & conf);
+QVariantMap toJson(const FullBattleConfiguration & conf);
 QVariantMap toJson(const BattleChoices &choices);
 QVariantMap toJson(const ShallowBattlePoke &poke);
 QVariant toJson(const ShallowShownTeam &team);

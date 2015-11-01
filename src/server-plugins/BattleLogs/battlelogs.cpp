@@ -235,7 +235,10 @@ int BattleLogsPlugin::emitCommand(BattleInterface &, int, int players, QByteArra
     if (char(b[0]) == BattleCommands::CancelMove || char(b[0]) == BattleCommands::OfferChoice || char(b[0]) == BattleCommands::RearrangeTeam)
         return 0;
 
-    if (players != BattleInterface::AllButPlayer) {
+    /* Check if it's not a command given to a player/spectator in particular */
+    //if (players != BattleInterface::AllButPlayer && players < 10000) {
+    /* Only spectator side */
+    if (players == BattleInterface::AllButPlayer || players == BattleInterface::All) {
         if (raw) {
             commands << qint32(t.elapsed()) << b;
         }

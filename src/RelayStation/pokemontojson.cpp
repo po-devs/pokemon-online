@@ -26,6 +26,29 @@ QVariantMap toJson(const BattleConfiguration &c)
     return ret;
 }
 
+QVariantMap toJson(const FullBattleConfiguration &conf)
+{
+    QVariantMap ret = toJson((BattleConfiguration&)conf);
+
+    if (conf.isPlayer(0) || conf.isPlayer(1)) {
+        QVariantList teams;
+        if (conf.teams[0]) {
+            teams << toJson(*conf.teams[0]);
+        } else {
+            teams << toJson(TeamBattle());
+        }
+        if (conf.teams[1]) {
+            teams << toJson(*conf.teams[1]);
+        } else {
+            teams << toJson(TeamBattle());
+        }
+
+        ret.insert("teams", teams);
+    }
+
+    return ret;
+}
+
 QVariantMap toJson(const BattleChoices &choices)
 {
     QVariantMap ret;
