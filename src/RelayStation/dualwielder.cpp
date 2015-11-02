@@ -1001,19 +1001,32 @@ void DualWielder::readWebSocket(const QString &frame)
 
 void DualWielder::readReplay(const QString &data)
 {
-    QString date = slug(data.section("-", 0, 0));
-    QString file = slug(data.section("-", 1));
+    QString file = QFileInfo(data).baseName();
 
-    if (date.length() != 6 || file.length() == 0) {
-        web->write(QString("error|Replay file invalid."));
-        return;
+    QFile f;
+    bool json = false;
+
+    if (QFileInfo("logs/replays/"+file+".json").exists()) {
+        f.setFileName("logs/replays/"+file+".json");
+        json = true;
+    } else {
+        f.setFileName("logs/battles/" + file.left(6) + "/" + file.mid(7) + ".poreplay");
     }
 
-    QFile f("logs/battles/" + date + "/" + file + ".poreplay");
     if (!f.exists() || !f.open(QIODevice::ReadOnly)) {
         web->write(QString("error|Replay file not found."));
         return;
     }
+
+    if (json) {
+        while (!f.error() && !f.atEnd()) {
+            web->write(QString::fromUtf8(f.readLine()).trimmed());
+        }
+        return;
+    }
+
+    QFile out("logs/replays/"+file+".json");
+    out.open(QIODevice::WriteOnly);
 
     QByteArray versionS = f.readLine().trimmed();
 
@@ -1033,7 +1046,12 @@ void DualWielder::readReplay(const QString &data)
     auto confJson = toJson((BattleConfiguration&)conf);
     confJson.insert("names", QVariantList() << conf.name[0] << conf.name[1]);
 
-    web->write("watchbattle|0|"+QString::fromUtf8(jserial.serialize(confJson)));
+    auto writeCommand = [&](const QByteArray &s) {
+        out.write(s);
+        web->write(QString::fromUtf8(s));
+    };
+
+    writeCommand("watchbattle|0|"+jserial.serialize(confJson));
 
     quint32 time;
     QByteArray command;
@@ -1053,10 +1071,10 @@ void DualWielder::readReplay(const QString &data)
             continue;
         }
 
-        web->write("replaycommand|"+QString::number(time)+"|"+QString::fromUtf8(jserial.serialize(jcommand)));
+        writeCommand("replaycommand|"+QByteArray::number(time)+"|"+jserial.serialize(jcommand));
     }
 
-    web->write(QString("stopwatching|0"));
+    writeCommand("stopwatching|0");
 }
 
 void DualWielder::socketConnected()

@@ -14,6 +14,11 @@ int main(int argc, char *argv[])
     int port = 10508;
     QHash<QString, QString> aliases;
 
+    QDir d("");
+    if(!d.exists("logs/replays/")) {
+        d.mkpath("logs/replays/");
+    }
+
     for(int i = 0; i < argc; i++) {
         if(strcmp( argv[i], "-h") == 0 || strcmp( argv[i], "--help") == 0){
             fprintf(stdout, "Relay Station for Pokemon Online Help\n");
@@ -23,7 +28,7 @@ int main(int argc, char *argv[])
             fprintf(stdout, "Usage: ./RelayStation [[options]]\n");
             fprintf(stdout, "Options:\n");
             PRINTOPT("-d, --default IP:port", "Sets the default target server. Default is localhost:5080.");
-            PRINTOPT("-a, --alias IP1=IP2", "Sets an IP alias. People connecting to IP1 will instead connect to IP2. It's a good idea to do -a <publicIP>=localhost");
+            //PRINTOPT("-a, --alias IP1=IP2", "Sets an IP alias. People connecting to IP1 will instead connect to IP2. It's a good idea to do -a <publicIP>=localhost");
             PRINTOPT("-h, --help", "Displays this help.");
             PRINTOPT("-p, --port [PORT]", "Sets the relay station port.");
             fprintf(stdout, "\n");
