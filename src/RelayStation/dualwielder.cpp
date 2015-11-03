@@ -1047,7 +1047,7 @@ void DualWielder::readReplay(const QString &data)
     confJson.insert("names", QVariantList() << conf.name[0] << conf.name[1]);
 
     auto writeCommand = [&](const QByteArray &s) {
-        out.write(s);
+        out.write(s+"\n");
         web->write(QString::fromUtf8(s));
     };
 
