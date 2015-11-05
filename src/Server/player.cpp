@@ -192,6 +192,32 @@ void Player::sendUpdatedIfNeeded()
     }
 }
 
+void Player::sendInvalidTier(quint8 teamNum, const QString &newtier)
+{
+    Tier *tier = &TierMachine::obj()->tier(newtier);
+
+    if (!tier->allowGen(team(teamNum).gen)) {
+        sendMessage(tr("The generation of your team (%1) is invalid for the tier %2 which is in generation %3.").arg(GenInfo::Version(team(teamNum).gen), tier->name(), GenInfo::Version(tier->gen())));
+        return;
+    }
+
+    QList<int> indexList;
+    for(int i = 0; i < 6; i++) {
+        if (tier->isBanned(team(teamNum).poke(i))) {
+            indexList.append(i);
+        }
+    }
+
+    if (indexList.size() > 0) {
+        foreach(int i, indexList) {
+            sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team(teamNum).poke(i).num()), newtier,
+                                                                                                        tier->bannedReason(team(teamNum).poke(i))));
+        }
+    } else {
+        sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
+    }
+}
+
 void Player::changeTier(quint8 teamNum, const QString &newtier)
 {
     if (!isLoggedIn()) {
@@ -212,30 +238,8 @@ void Player::changeTier(quint8 teamNum, const QString &newtier)
         return;
     }
     if (!TierMachine::obj()->isValid(team(teamNum), newtier)) {
-        Tier *tier = &TierMachine::obj()->tier(newtier);
-
-        if (!tier->allowGen(team(teamNum).gen)) {
-            sendMessage(tr("The generation of your team (%1) is invalid for the tier %2 which is in generation %3.").arg(GenInfo::Version(team(teamNum).gen), tier->name(), GenInfo::Version(tier->gen())));
-            return;
-        }
-
-        QList<int> indexList;
-        for(int i = 0; i < 6; i++) {
-            if (tier->isBanned(team(teamNum).poke(i))) {
-                indexList.append(i);
-            }
-        }
-
-        if (indexList.size() > 0) {
-            foreach(int i, indexList) {
-                sendMessage(tr("The Pokemon '%1' is banned on tier '%2' for the following reasons: %3").arg(PokemonInfo::Name(team(teamNum).poke(i).num()), newtier,
-                                                                                                            tier->bannedReason(team(teamNum).poke(i))));
-            }
-            return;
-        } else {
-            sendMessage(tr("You have too many restricted pokemons, or simply too many pokemons for the tier %1.").arg(newtier));
-            return;
-        }
+        sendInvalidTier(teamNum, newtier);
+        return;
     }
     if (Server::serverIns->beforeChangeTier(id(), teamNum, team(teamNum).tier, newtier)) {
         QString oldtier = team(teamNum).tier;
@@ -1240,7 +1244,13 @@ void Player::findTierAndRating(bool force)
 
 void Player::findTier(int slot)
 {
-    team(slot).tier = TierMachine::obj()->findTier(team(slot));
+    auto tier = TierMachine::obj()->findTier(team(slot));
+
+    if (tier != team(slot).tier && TierMachine::obj()->exists(team(slot).tier)) {
+        sendInvalidTier(slot, team(slot).tier);
+        sendMessage(tr("Your team %1 was placed in tier %2.").arg(slot+1).arg(tier));
+    }
+    team(slot).tier = tier;
 }
 
 bool Player::isInSameChannel(const Player *other) const {
