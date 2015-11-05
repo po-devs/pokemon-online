@@ -1557,6 +1557,24 @@ void ScriptEngine::changeColor(int id, const QString &color)
     myserver->sendPlayer(id);
 }
 
+void ScriptEngine::changeColorStrict(int id, const QString &color)
+{
+    if (!testPlayer("changeColorStrict(id, color)", id)) {
+        return;
+    }
+
+    QColor playerColor(color);
+    if (!playerColor.isValid()) {
+        return;
+    }
+
+    int luma = (playerColor.green()*3 + playerColor.blue() + playerColor.red() * 2)/6;
+    if (!((luma > 140 && playerColor.lightness() > 140) || playerColor.green() > 200)) {
+        myserver->player(id)->color() = playerColor;
+        myserver->sendPlayer(id);
+    }
+}
+
 QScriptValue ScriptEngine::getColor(int id)
 {
     if (!exists(id)) {
@@ -2818,11 +2836,6 @@ void ScriptEngine::changeAnnouncement(const QString &html)
     myserver->announcementChanged(html);
 }
 
-void ScriptEngine::makeServerPublic(bool isPublic)
-{
-    myserver->regPrivacyChanged(!isPublic);
-}
-
 QScriptValue ScriptEngine::getAnnouncement()
 {
     return QString::fromUtf8(myserver->serverAnnouncement);
@@ -2838,6 +2851,83 @@ void ScriptEngine::changeDescription(const QString &html)
 QString ScriptEngine::getDescription()
 {
     return myserver->description();
+}
+
+void ScriptEngine::changeServerName(const QString &name)
+{
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("Server/Name", name);
+    myserver->regNameChanged(name);
+}
+
+QString ScriptEngine::getServerName()
+{
+    return myserver->servName();
+}
+
+QScriptValue ScriptEngine::serverPorts()
+{
+    QList<quint16> serverPorts = myserver->serverPorts;
+
+    QScriptValue ret = myengine.newArray(serverPorts.size());
+
+    for (int i = 0; i < serverPorts.size(); i++) {
+        ret.setProperty(i, serverPorts.at(i));
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::proxyServers()
+{
+    QStringList proxyServers = myserver->proxyServers;
+
+    QScriptValue ret = myengine.newArray(proxyServers.size());
+
+    for (int i = 0; i < proxyServers.size(); i++) {
+        ret.setProperty(i, proxyServers.at(i));
+    }
+
+    return ret;
+}
+
+QScriptValue ScriptEngine::trustedIps()
+{
+    QStringList trustedIps = myserver->trustedIps;
+
+    QScriptValue ret = myengine.newArray(trustedIps.size());
+
+    for (int i = 0; i < trustedIps.size(); i++) {
+        ret.setProperty(i, trustedIps.at(i));
+    }
+
+    return ret;
+}
+
+void ScriptEngine::addTrustedIp(const QString &ip)
+{
+    QStringList trustedIps = myserver->trustedIps;
+    trustedIps.append(ip);
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("AntiDOS/TrustedIps", trustedIps.join(","));
+    myserver->trustedIpsChanged(trustedIps.join(","));
+}
+
+void ScriptEngine::removeTrustedIp(const QString &ip)
+{
+    QStringList trustedIps = myserver->trustedIps;
+    trustedIps.removeAt(trustedIps.indexOf(ip));
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("AntiDOS/TrustedIps", trustedIps.join(","));
+    myserver->trustedIpsChanged(trustedIps.join(","));
+}
+
+void ScriptEngine::makeServerPublic(bool isPublic)
+{
+    int privacy = (isPublic ? 0 : 1);
+    QSettings settings("config", QSettings::IniFormat);
+    settings.setValue("Server/Private", privacy);
+    myserver->regPrivacyChanged(!isPublic);
 }
 
 int ScriptEngine::teamPokeAbility(int id, quint32 teamLo, int slot, quint32 teamHi)

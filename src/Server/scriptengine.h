@@ -170,14 +170,22 @@ public:
     Q_INVOKABLE QScriptValue createChannel(const QString &channame);
     Q_INVOKABLE QScriptValue getAnnouncement();
     Q_INVOKABLE void changeColor(int id, const QString &color);
+    Q_INVOKABLE void changeColorStrict(int id, const QString &color);
     Q_INVOKABLE QScriptValue getColor(int id);
 
     Q_INVOKABLE void setAnnouncement(const QString &html, int id);
     Q_INVOKABLE void setAnnouncement(const QString &html);
     Q_INVOKABLE void changeAnnouncement(const QString &html);
-
     Q_INVOKABLE QString getDescription();
     Q_INVOKABLE void changeDescription(const QString &html);
+    Q_INVOKABLE QString getServerName();
+    Q_INVOKABLE void changeServerName(const QString &name);
+
+    Q_INVOKABLE QScriptValue serverPorts();
+    Q_INVOKABLE QScriptValue proxyServers();
+    Q_INVOKABLE QScriptValue trustedIps();
+    Q_INVOKABLE void addTrustedIp(const QString &ip);
+    Q_INVOKABLE void removeTrustedIp(const QString &ip);
 
     Q_INVOKABLE void makeServerPublic(bool isPublic);
 

@@ -248,6 +248,7 @@ void Server::start(){
     safeScripts = s.value("Scripts/SafeMode").toBool();
     overactiveShow = s.value("AntiDOS/ShowOveractiveMessages").toBool();
     proxyServers = s.value("Network/ProxyServers").toString().split(",");
+    trustedIps = s.value("AntiDOS/TrustedIps").toString().split(",");
     passwordProtected = s.value("Server/RequirePassword").toBool();
     serverPassword = s.value("Server/Password").toByteArray();
     zippedTiers = makeZipPacket(NetworkServ::TierSelection, TierMachine::obj()->tierList());
@@ -1417,6 +1418,15 @@ void Server::proxyServersChanged(const QString &ips)
         return;
     proxyServers = ips.split(",");
     forcePrint("Proxy Servers setting changed");
+}
+
+void Server::trustedIpsChanged(const QString &ips)
+{
+    QStringList newlist = ips.split(",");
+    if (trustedIps == newlist)
+        return;
+    trustedIps = ips.split(",");
+    forcePrint("Trusted IPs setting changed");
 }
 
 void Server::serverPasswordChanged(const QString &pass)
