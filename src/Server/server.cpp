@@ -1544,7 +1544,7 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     TeamBattle battleTeam1 = *(new TeamBattle(p1->team(team1)));
     TeamBattle battleTeam2 = *(new TeamBattle(p2->team(team2)));
 
-    myengine->beforeBattleStarted(id1,id2,c,id,battleTeam1,battleTeam2);
+    myengine->beforeBattleStarted(id1,id2,c,id,team1,team2);
 
     QString fulltier = QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
     QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : fulltier;

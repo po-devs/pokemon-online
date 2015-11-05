@@ -125,7 +125,7 @@ public:
     bool beforeBattleMatchup(int src, int dest, const ChallengeInfo &desc, int team1, int team2);
     void afterBattleMatchup(int src, int dest, const ChallengeInfo &desc, int team1, int team2);
 
-    void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc, int battleid, TeamBattle &team1, TeamBattle &team2);
+    void beforeBattleStarted(int src, int dest, const ChallengeInfo &desc, int battleid, int team1, int team2);
     void afterBattleStarted(int winner, int loser, const ChallengeInfo &desc, int battleid, int team1, int team2);
 
     void beforeBattleEnded(int winner, int loser, int desc, int battleid);
@@ -205,12 +205,12 @@ public:
     Q_INVOKABLE void changeAway(int id, bool away);
 
     Q_INVOKABLE void changeRating(const QString& name, const QString& tier, int newRating);
-    Q_INVOKABLE void changePokeLevel(int id, quint32 teamLo, int slot, int level, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeNum(int id, quint32 teamLo, int slot, int num, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeItem(int id, quint32 teamLo, int slot, int item, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeMove(int id, quint32 teamLo, int pokeslot, int moveslot, int move, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeGender(int id, quint32 teamLo, int pokeslot, int gender, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeName(int id, quint32 teamLo, int pokeslot, const QString &name, quint32 teamHi = 0);
+    Q_INVOKABLE void changePokeLevel(int id, int team, int slot, int level);
+    Q_INVOKABLE void changePokeNum(int id, int team, int slot, int num);
+    Q_INVOKABLE void changePokeItem(int id, int team, int slot, int item);
+    Q_INVOKABLE void changePokeMove(int id, int team, int pokeslot, int moveslot, int move);
+    Q_INVOKABLE void changePokeGender(int id, int team, int pokeslot, int gender);
+    Q_INVOKABLE void changePokeName(int id, int team, int pokeslot, const QString &name);
     Q_INVOKABLE void changePokeHp(int id, int team, int slot, int hp);
     Q_INVOKABLE void changePokeStatus(int id, int team, int slot, int status);
     Q_INVOKABLE void changePokePP(int id, int team, int slot, int moveslot, int PP);
@@ -291,7 +291,7 @@ public:
     Q_INVOKABLE QScriptValue dbTempBanTime(const QString &name);
     Q_INVOKABLE int dbExpiration();
     Q_INVOKABLE bool dbRegistered(const QString &name);
-    Q_INVOKABLE QScriptValue tier(int id, quint32 teamLo, quint32 teamHi = 0);
+    Q_INVOKABLE QScriptValue tier(int id, int  team);
     Q_INVOKABLE bool hasTier(int id, const QString &tier);
     Q_INVOKABLE QScriptValue ranking(int id, int team);
     Q_INVOKABLE QScriptValue ratedBattles(int id, int team);
@@ -358,12 +358,12 @@ public:
     Q_INVOKABLE QScriptValue genderNum(QString genderName);
     Q_INVOKABLE QString gender(int genderNum);
 
-    Q_INVOKABLE QScriptValue teamPokeLevel(int id, quint32 teamLo, int slot, quint32 teamHi = 0);
+    Q_INVOKABLE QScriptValue teamPokeLevel(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeStat(int id, int team, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeHp(int id, int team, int slot); //Stat would return total hp
     Q_INVOKABLE QScriptValue teamPokeStatus(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokePP(int id, int team, int slot, int moveslot);
-    Q_INVOKABLE QScriptValue teamPoke(int id, quint32 teamLo, int index, quint32 teamHi = 0);
+    Q_INVOKABLE QScriptValue teamPoke(int id, int team, int index);
     Q_INVOKABLE QScriptValue teamPokeName(int id, int team, int pokemonnum);
     Q_INVOKABLE bool teamPokeIllegal(int id, int team, int slot);
     Q_INVOKABLE bool hasTeamPoke(int id, int team, int pokemonnum);
@@ -372,20 +372,20 @@ public:
     Q_INVOKABLE bool compatibleAsDreamWorldEvent(int id, int team, int slot);
     Q_INVOKABLE int genForMove(int poke, int move, int gen = GenInfo::GenMax());
 
-    Q_INVOKABLE QScriptValue teamPokeMove(int id, quint32 teamLo, int pokeindex, int moveindex, quint32 teamHi = 0);
-    Q_INVOKABLE bool hasTeamPokeMove(int id, quint32 teamLo, int pokeindex, int movenum, quint32 teamHi = 0);
+    Q_INVOKABLE QScriptValue teamPokeMove(int id, int team, int pokeindex, int moveindex);
+    Q_INVOKABLE bool hasTeamPokeMove(int id, int team, int pokeindex, int movenum);
     Q_INVOKABLE QScriptValue indexOfTeamPokeMove(int id, int team, int pokeindex, int movenum);
     Q_INVOKABLE bool hasTeamMove(int id, int team, int movenum);
 
-    Q_INVOKABLE QScriptValue teamPokeItem(int id, quint32 teamLo, int pokeindex, quint32 teamHi = 0);
+    Q_INVOKABLE QScriptValue teamPokeItem(int id, int team, int pokeindex);
     Q_INVOKABLE bool hasTeamItem(int id, int team, int itemNum);
 
     Q_INVOKABLE QScriptValue teamPokeHappiness(int id, int team, int slot);
-    Q_INVOKABLE QScriptValue teamPokeNature(int id, quint32 teamLo, int slot, quint32 teamHi = 0);
-    Q_INVOKABLE QScriptValue teamPokeEV(int id, quint32 teamLo, int slot, int stat, quint32 teamHi = 0);
-    Q_INVOKABLE QScriptValue teamPokeDV(int id, quint32 teamLo, int slot, int stat, quint32 teamHi = 0);
-    Q_INVOKABLE void changeTeamPokeDV(int id, quint32 teamLo, int slot, int stat, int newValue, quint32 teamHi = 0);
-    Q_INVOKABLE void changeTeamPokeEV(int id, quint32 teamLo, int slot, int stat, int newValue, quint32 teamHi = 0);
+    Q_INVOKABLE QScriptValue teamPokeNature(int id, int team, int slot);
+    Q_INVOKABLE QScriptValue teamPokeEV(int id, int team, int slot, int stat);
+    Q_INVOKABLE QScriptValue teamPokeDV(int id, int team, int slot, int stat);
+    Q_INVOKABLE void changeTeamPokeDV(int id, int team, int slot, int stat, int newValue);
+    Q_INVOKABLE void changeTeamPokeEV(int id, int team, int slot, int stat, int newValue);
 
     Q_INVOKABLE int numPlayers();
     Q_INVOKABLE int playersInMemory();
@@ -430,13 +430,13 @@ public:
 
     Q_INVOKABLE void swapPokemons(int pid, int teamSlot, int slot1, int slot2);
 
-    Q_INVOKABLE int teamPokeAbility(int id, quint32 teamLo, int slot, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeAbility(int id, quint32 teamLo, int slot, int ability, quint32 teamHi = 0);
+    Q_INVOKABLE int teamPokeAbility(int id, int team, int slot);
+    Q_INVOKABLE void changePokeAbility(int id, int team, int slot, int ability);
     Q_INVOKABLE QScriptValue pokeAbility(int poke, int slot, int gen = GenInfo::GenMax());
-    Q_INVOKABLE void changePokeHappiness(int id, quint32 teamLo, int slot, int value, quint32 teamHi = 0);
-    Q_INVOKABLE void changePokeShine(int id, quint32 teamLo, int slot, bool value, quint32 teamHi = 0);
+    Q_INVOKABLE void changePokeHappiness(int id, int team, int slot, int value);
+    Q_INVOKABLE void changePokeShine(int id, int team, int slot, bool value);
     Q_INVOKABLE QScriptValue teamPokeShine(int id, int team, int slot);
-    Q_INVOKABLE void changePokeNature(int id, quint32 teamLo, int pokeslot, int nature, quint32 teamHi = 0);
+    Q_INVOKABLE void changePokeNature(int id, int team, int pokeslot, int nature);
     Q_INVOKABLE QScriptValue teamPokeGender(int id, int team, int slot);
 
     Q_INVOKABLE QScriptValue teamPokeNick(int id, int team, int pokeslot);
