@@ -146,6 +146,7 @@ public slots:
     void safeScriptsChanged(bool safeScripts);
     void overactiveToggleChanged(bool overactiveToggle);
     void proxyServersChanged(const QString &ips);
+    void trustedIpsChanged(const QString &ips);
     void serverPasswordChanged(const QString &pass);
     void usePasswordChanged(bool usePass);
     void changeDbMod(const QString &mod);
@@ -222,6 +223,7 @@ private:
     quint16 serverPrivate, serverPlayerMax;
     QList<quint16>  serverPorts;
     QStringList proxyServers;
+    QStringList trustedIps;
     bool showLogMessages;
     bool useChannelFileLog;
     int amountOfInactiveDays;
