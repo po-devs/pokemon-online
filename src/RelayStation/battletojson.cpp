@@ -397,6 +397,13 @@ void BattleToJson::onDynamicStats(int spot, const BattleStats& stats)
     map.insert("stats", vstats);
 }
 
+void BattleToJson::onPrintRule(const QString &rule, const QString &value)
+{
+    map.insert("command", "rule");
+    map.insert("rule", rule);
+    map.insert("content", value);
+}
+
 void BattleToJson::onPrintHtml(const QString &html)
 {
     map.insert("command", "notice");

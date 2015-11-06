@@ -67,6 +67,7 @@ public:
     void onBattleEnd(int res, int winner);
     void onVariation(int player, int bonus, int malus);
     void onRearrangeTeam(int player, const ShallowShownTeam& team);
+    void onPrintRule(const QString &rule, const QString &value);
     void onPrintHtml(const QString &data);
     void onReconnect(int player);
     /* Disconnection of us */

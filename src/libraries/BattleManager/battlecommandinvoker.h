@@ -132,6 +132,7 @@ protected:
     start(ChoiceCancelled, onChoiceCancellation, int player) end (onChoiceCancellation, player)
     start(Variation, onVariation, int player, int bonus, int malus) end (onVariation, player, bonus, malus)
     start(DynamicStats, onDynamicStats, int spot, std::shared_ptr<BattleStats>* stats) end (onDynamicStats, spot, *stats->get())
+    start(PrintRule, onPrintRule, string_ptr data, string_ptr data2) end (onPrintRule, *data->get(), *data2->get())
     start(PrintHtml, onPrintHtml, string_ptr data) end (onPrintHtml, *data->get())
     start(Reconnect, onReconnect, int player) end (onReconnect, player)
     start(Disconnect, onDisconnect, int player) end (onDisconnect, player)

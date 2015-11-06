@@ -74,6 +74,7 @@ public:
     void onChoiceCancellation(int player);
     void onVariation(int player, int bonus, int malus);
     void onDynamicStats(int spot, const BattleStats& stats);
+    void onPrintRule(const QString &rule, const QString &value);
     void onPrintHtml(const QString &html);
     void onReconnect(int player);
     void onDisconnect(int player);

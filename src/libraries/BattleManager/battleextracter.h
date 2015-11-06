@@ -149,6 +149,7 @@ protected:
     start(ChoiceCancelled, int player) end (player)
     start(Variation, int player; int bonus; int malus) end (player, bonus, malus)
     start(DynamicStats, int spot; std::shared_ptr<BattleStats>* stats) end (spot, stats)
+    start(PrintRule, string_ptr data; string_ptr data2) end(data, data2)
     start(PrintHtml, string_ptr data) end(data)
     start(Reconnect, int player) end (player)
     start(Disconnect, int player) end (player)

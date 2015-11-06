@@ -589,6 +589,21 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         output<BattleEnum::ItemCountChange>(spot, item, count);
         break;
     }
+    case BC::Notice:
+    {
+        auto rule = mk<QString>();
+        auto content = mk<QString>();
+        in >> *rule >> *content;
+        output<BattleEnum::PrintRule>(&rule, &content);
+        break;
+    }
+    case BC::HtmlMessage:
+    {
+        auto msg = mk<QString>();
+        in >> *msg;
+        output<BattleEnum::PrintHtml>(&msg);
+        break;
+    }
     default:
         /* TODO: UNKNOWN COMMAND */
         break;

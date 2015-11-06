@@ -57,7 +57,9 @@ namespace BattleCommands {
         UseItem,
         ItemCountChange,
         CappedStat,
-        UsePP
+        UsePP,
+        Notice, /* Two strings: type & content */
+        HtmlMessage /* Full html message */
     };
 
     enum ChangeTempPoke {

@@ -583,6 +583,11 @@ void BattleClientLog::onRearrangeTeam(int, const ShallowShownTeam &team)
     onBlankMessage();
 }
 
+void BattleClientLog::onPrintRule(const QString &rule, const QString &value)
+{
+    printHtml("CustomRule", toBoldColor(rule + ": ", Qt::blue) + value);
+}
+
 void BattleClientLog::onPrintHtml(const QString &data)
 {
     printHtml("ServerMessage", data);
