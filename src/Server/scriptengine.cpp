@@ -2687,7 +2687,6 @@ QString ScriptEngine::getDescription()
     return myserver->description();
 }
 
-<<<<<<< HEAD
 void ScriptEngine::changeServerName(const QString &name)
 {
     QSettings settings("config", QSettings::IniFormat);
