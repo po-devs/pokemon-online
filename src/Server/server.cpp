@@ -128,10 +128,10 @@ void Server::start(){
     setDefaultValue("Battles/ForceUnratedForSameIP", true);
     setDefaultValue("Battles/ConsecutiveFindBattlesWithDifferentIPs", 5);
     setDefaultValue("Battles/RatedThroughChallenge", false);
-    setDefaultValue("Network/ProxyServers", QString("127.0.0.1"));
+    setDefaultValue("Network/ProxyServers",QString("127.0.0.1,::1%0,localhost"));
     setDefaultValue("Network/LowTCPDelay", false);
     setDefaultValue("AntiDOS/ShowOveractiveMessages", true);
-    setDefaultValue("AntiDOS/TrustedIps", "127.0.0.1");
+    setDefaultValue("AntiDOS/TrustedIps", "127.0.0.1,::1%0,localhost");
     setDefaultValue("AntiDOS/MaxPeoplePerIp", 2);
     setDefaultValue("AntiDOS/MaxCommandsPerUser", 50);
     setDefaultValue("AntiDOS/MaxKBPerUser", 25);
