@@ -104,8 +104,11 @@ void DamageCalc::setupCalc(int gen)
     QString ostatus = ui->ostatus->currentText();
     QString ogender = ui->ogender->currentText();
 
+    QStringList moveNames = MoveInfo::Names(pgen);
+    moveNames.sort();
+
     ui->move->clear();
-    ui->move->addItems(MoveInfo::Names(pgen));
+    ui->move->addItems(moveNames);
 
     ui->movetype->clear();
     ui->movetype->addItems(TypeInfo::Names(pgen));
@@ -154,6 +157,7 @@ void DamageCalc::setupCalc(int gen)
     ui->opoke->addItems(pokeNames);
 
     QStringList abilityNames = AbilityInfo::Names(pgen);
+    abilityNames.sort();
 
     ui->myability->addItems(abilityNames);
     ui->oability->addItems(abilityNames);
@@ -235,6 +239,18 @@ void DamageCalc::setupCalc(int gen)
     ui->onature->setVisible(gen > 2);
     ui->ogenderlabel->setVisible(gen > 2);
     ui->ogender->setVisible(gen > 2);
+
+    ui->watersport->setVisible(gen > 3);
+    ui->mudsport->setVisible(gen > 3);
+    ui->fusionused->setVisible(gen > 4);
+    ui->mefirst->setVisible(gen > 3);
+    ui->charged->setVisible(gen > 2);
+    ui->helpinghand->setVisible(gen > 2);
+    ui->myflowergift->setVisible(gen > 3);
+    ui->oflowergift->setVisible(gen > 3);
+    ui->friendguard->setVisible(gen > 4);
+    ui ->wonderroom->setVisible(gen > 4);
+    ui->allyfainted->setVisible(gen > 4);
 
     updateMyPoke();
     updateOPoke();
@@ -466,6 +482,7 @@ void DamageCalc::calculate()
     // 1    0x1000
     // 1.2  0x1333
     // 1.3  0x14CD
+    // 1.33 0x1555
     // 1.5  0x1800
     // 2    0x2000
 
@@ -735,6 +752,18 @@ void DamageCalc::calculate()
     if ((ui->watersport->isChecked() && type == Type::Fire) || (ui->mudsport->isChecked() && type == Type::Electric)) {
         bmod = chainmod(bmod, 0x548);
     }
+    // 0Z. MEGA LAUNCHER //
+    if (myability == Ability::MegaLauncher && MoveInfo::Flags(move, m_currentGen) & Move::LaunchFlag) {
+        bmod = chainmod(bmod, 0x1800);
+    }
+    // 0AA. STRONG JAW //
+    if (myability == Ability::StrongJaw && MoveInfo::Flags(move, m_currentGen) & Move::BiteFlag) {
+        bmod = chainmod(bmod, 0x1800);
+    }
+    // 0AB. TOUGH CLAWS //
+    if (myability == Ability::ToughClaws && MoveInfo::Flags(move, m_currentGen) & Move::ContactFlag) {
+        bmod = chainmod(bmod, 0x1555);
+    }
 
     bp = applymod(bp, bmod);
     int base = ((((2 * mylevel) / 5 + 2) * bp * attack) / defense) / 50 + 2;
@@ -832,6 +861,10 @@ void DamageCalc::calculate()
     // 8N. STEAMROLLER ON MINIMIZE // 0x2000
     if (ui->surfondive->isChecked()) {
         fmod = chainmod(fmod, 0x2000);
+    }
+    // 8O. FUR COAT //
+    if (oability == Ability::FurCoat && category == Move::Physical) {
+        fmod = chainmod(fmod, 0x0800);
     }
 
     dmin = applymod(dmin, fmod);
