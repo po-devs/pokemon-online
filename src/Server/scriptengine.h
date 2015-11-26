@@ -295,8 +295,10 @@ public:
     Q_INVOKABLE bool hasTier(int id, const QString &tier);
     Q_INVOKABLE QScriptValue ranking(int id, int team);
     Q_INVOKABLE QScriptValue ratedBattles(int id, int team);
+    Q_INVOKABLE QScriptValue ratedWins(int id, int team);
     Q_INVOKABLE QScriptValue ranking(const QString &name, const QString &tier);
     Q_INVOKABLE QScriptValue ratedBattles(const QString &name, const QString &tier);
+    Q_INVOKABLE QScriptValue ratedWins(const QString &name, const QString &tier);
     Q_INVOKABLE int maxAuth(const QString &ip);
     Q_INVOKABLE QScriptValue aliases(const QString &ip);
 

@@ -33,13 +33,14 @@ struct MemberRating
     int displayed_rating;
     int last_check_time;
     int bonus_time;
+    int winCount;
 
     int filePos;
     RankingTree<QString>::iterator node;
 
     MemberRating(const QString &name="", int matches=0, int rating=1000, int displayed_rating = 1000,
-                 int last_check_time = -1, int bonus_time = 0) : name(name), matches(matches), rating(rating),
-                   displayed_rating(displayed_rating), bonus_time(bonus_time) {
+                 int last_check_time = -1, int bonus_time = 0, int winCount = 0) : name(name), matches(matches), rating(rating),
+                   displayed_rating(displayed_rating), bonus_time(bonus_time), winCount(winCount) {
         if (last_check_time == -1) {
             this->last_check_time = time(nullptr);
         } else {
@@ -92,6 +93,7 @@ public:
     int rating(const QString &name);
     int inner_rating(const QString &name);
     int ratedBattles(const QString &name);
+    int ratedWins(const QString &name);
 
     void changeRating(const QString &winner, const QString &loser);
     void changeRating(const QString &player, int newRating);

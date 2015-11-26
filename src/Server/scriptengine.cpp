@@ -1555,6 +1555,15 @@ QScriptValue ScriptEngine::ratedBattles(int id, int team)
     return ratedBattles(p->name(), p->team(team).tier);
 }
 
+QScriptValue ScriptEngine::ratedWins(int id, int team)
+{
+    if (!testPlayer("ratedWins(id, team)", id) || !testTeamCount("ratedWins(id, team)", id, team)) {
+        return myengine.undefinedValue();
+    }
+    Player *p = myserver->player(id);
+    return ratedWins(p->name(), p->team(team).tier);
+}
+
 QScriptValue ScriptEngine::ranking(const QString &name, const QString &tier)
 {
     if (!TierMachine::obj()->existsPlayer(tier, name)) {
@@ -1569,6 +1578,14 @@ QScriptValue ScriptEngine::ratedBattles(const QString &name, const QString &tier
         return 0;
     }
     return TierMachine::obj()->tier(tier).ratedBattles(name);
+}
+
+QScriptValue ScriptEngine::ratedWins(const QString &name, const QString &tier)
+{
+    if (!TierMachine::obj()->existsPlayer(tier, name)) {
+        return 0;
+    }
+    return TierMachine::obj()->tier(tier).ratedWins(name);
 }
 
 QScriptValue ScriptEngine::totalPlayersByTier(const QString &tier)
