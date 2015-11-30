@@ -174,8 +174,7 @@ void PokeBattle::init(PokePersonal &poke)
         }
 
         if (num() == Pokemon::Keldeo_R && !poke.hasMove(Move::SecretSword)) {
-            if (p.gen() < 6)
-                num() = Pokemon::Keldeo;
+            num() = Pokemon::Keldeo;
         }
 
         Pokemon::uniqueId ori = PokemonInfo::OriginalForme(num());
