@@ -417,8 +417,7 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
                     poke().setMove(Move::SecretSword, 0, false);
                 }
             } else if (PokemonInfo::Released(Pokemon::Keldeo_R, poke().gen())) {
-                if (poke().gen() < 6)
-                    poke().removeMove(Move::SecretSword);
+                poke().removeMove(Move::SecretSword);
             }
         } else if (num.pokenum == Pokemon::Giratina) {
             if (num == Pokemon::Giratina_O && poke().item() != Item::GriseousOrb) {
