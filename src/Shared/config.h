@@ -7,7 +7,7 @@
 
 static const quint16 PROTOCOL_VERSION = 3;
 static const quint16 PROTOCOL_SUBVERSION = 2;
-static const quint16 CLIENT_VERSION_NUMBER = 2602;
+static const quint16 CLIENT_VERSION_NUMBER = 2620;
 static const int UPDATE_ID = 4;
 
 #ifdef Q_OS_LINUX
