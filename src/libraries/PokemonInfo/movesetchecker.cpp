@@ -214,7 +214,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     for (Pokemon::gen g = gen; g >= limit; g = Pokemon::gen(g.num-1, -1)) {
         if (!PokemonInfo::Exists(pokeid, g)) {
-            if(PokemonInfo::IsMegaEvo(pokeid) /*|| PokemonInfo::OriginalForme(pokeid) == Pokemon::Arceus*/) {
+            if(PokemonInfo::IsMegaEvo(pokeid) || (PokemonInfo::OriginalForme(pokeid) == Pokemon::Arceus && PokemonInfo::IsForme(pokeid))) {
                 return MoveSetChecker::isValid(PokemonInfo::OriginalForme(pokeid), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
             } else if (PokemonInfo::HasPreEvo(pokeid.pokenum) &&
