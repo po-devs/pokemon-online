@@ -29,16 +29,16 @@
          <widget class="QComboBox" name="type2"/>
         </item>
         <item row="0" column="0">
-         <widget class="QCheckBox" name="useType1">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>Type 1</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Type 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QCheckBox" name="useType2">
+         <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Type 2</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Type 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -309,14 +309,14 @@
         <item row="0" column="0">
          <widget class="QLineEdit" name="move1"/>
         </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="move2"/>
-        </item>
         <item row="1" column="0">
          <widget class="QLineEdit" name="move3"/>
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="move4"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="move2"/>
         </item>
        </layout>
       </widget>
