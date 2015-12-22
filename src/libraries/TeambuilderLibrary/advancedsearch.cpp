@@ -35,12 +35,14 @@ void AdvancedSearch::setGen(const Pokemon::gen &gen)
 
     //loads the data
     QStringList types;
+    types.push_back("");
 
     for (int i = 0; i < TypeInfo::NumberOfTypes(); i++) {
         types.push_back(TypeInfo::Name(i));
     }
 
     QStringListModel *tmodel = new QStringListModel(types, this);
+
     ui->type1->setModel(tmodel);
     ui->type2->setModel(tmodel);
 
@@ -90,16 +92,24 @@ void AdvancedSearch::search() {
     QVector<int> types;
     QSet<int> moves;
     int ability;
+    boolean emptyTypeRemoved = false;
     QVector<QPair<int,int> > equalStats;
     QVector<QPair<int,int> >  minStats;
     QVector<QPair<int,int> >  maxStats;
 
-    if (ui->useType1->isChecked()) {
-        types.push_back(ui->type1->currentIndex());
+    if (ui->type1->currentText().isEmpty() == false) {
+        types.remove(0);
+        emptyTypeRemoved = true;
+        types.push_back(ui->type1->currentIndex() - 1);
     }
-    if (ui->useType2->isChecked()) {
-        types.push_back(ui->type2->currentIndex());
+
+    if (ui->type2->currentText().isEmpty() == false) {
+        if (!emptyTypeRemoved) {
+            types.remove(0);
+        }
+        types.push_back(ui->type2->currentIndex() - 1);
     }
+
     ability = AbilityInfo::Number(ui->ability->currentText());
     if (!AbilityInfo::Exists(ability, gen) || ui->ability->currentText().length() == 0) {
         ability = Ability::NoAbility;
