@@ -153,7 +153,11 @@ void PokeLevelSettings::setAbilities()
             if(poke().abilities().ab(i) != 0 && poke().gen() >= 3 && (i == 0 || poke().abilities().ab(i) != poke().abilities().ab(0))) {
                 m_abilities[i]->setVisible(true);
                 m_abilities[i]->setText(AbilityInfo::Name(poke().abilities().ab(i)));
-                m_abilities[i]->setToolTip(AbilityInfo::Desc(poke().abilities().ab(i)));
+                // Hack to make the tooltip wrap
+                QString tooltip = QString("<FONT>");
+                tooltip += (AbilityInfo::EffectDesc(poke().abilities().ab(i)));
+                tooltip += QString("</FONT>");
+                m_abilities[i]->setToolTip(tooltip);
 
                 if (poke().abilities().ab(i) == poke().ability()) {
                     m_abilities[i]->setChecked(true);
