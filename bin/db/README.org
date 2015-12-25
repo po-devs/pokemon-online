@@ -11,8 +11,9 @@ Follows is a directory by directory description of each database file.
    - %i :: The name of an item held by owner's pokemon.
    - %m :: The name of a move.
    - %tf :: Foe's team name.
-   - %p :: Another pokemon's name other then the name of the acting pokemon
+   - %p :: Another pokemon's name other than the name of the acting pokemon
            or the target pokemon.
    - %a :: The name of an ability.
    - %d :: Some digit or digits.
+   - %e :: Replaced by the foe's pokemon name.
    - %q :: ???

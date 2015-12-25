@@ -375,7 +375,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -410,7 +413,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -471,7 +477,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -487,7 +496,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -503,7 +515,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -570,7 +585,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -1063,7 +1081,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -1098,7 +1119,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -1159,7 +1183,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -1175,7 +1202,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -1191,7 +1221,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -1258,7 +1291,10 @@
                   <string> EV</string>
                  </property>
                  <property name="maximum">
-                  <number>255</number>
+                  <number>252</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>

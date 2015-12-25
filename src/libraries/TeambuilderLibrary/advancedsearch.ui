@@ -29,16 +29,16 @@
          <widget class="QComboBox" name="type2"/>
         </item>
         <item row="0" column="0">
-         <widget class="QCheckBox" name="useType1">
+         <widget class="QLabel" name="type1Label">
           <property name="text">
-           <string>Type 1</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Type 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QCheckBox" name="useType2">
+         <widget class="QLabel" name="typeLabel2">
           <property name="text">
-           <string>Type 2</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Type 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -54,12 +54,9 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QCheckBox" name="abilityCheck">
+           <widget class="QLabel" name="abilityLabel">
             <property name="text">
-             <string/>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Ability&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
