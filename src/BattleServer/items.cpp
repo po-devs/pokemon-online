@@ -1075,6 +1075,10 @@ struct IMPrimalOrb : public IM {
     }
     static void us(int s, int, BS &b) {
         if (ItemInfo::MegaStoneForme(b.poke(s).item()).original() == b.poke(s).num()) {
+            //The game is hardcoded to not activate Groudon or Kyogre's natural ability before a mega evolution. It does, however, activate other abilities.
+            if(!(b.poke(s).num() == Pokemon::Groudon && b.poke(s).ability() == Ability::Drought) && !(b.poke(s).num() == Pokemon::Kyogre && b.poke(s).ability() == Ability::Drizzle)) {
+                b.acquireAbility(s, b.poke(s).ability(), true);
+            }
             b.sendItemMessage(67, s);
             b.changeForme(b.player(s), b.slotNum(s), ItemInfo::MegaStoneForme(b.poke(s).item()), false, false, true);
             turn(b,s)["PrimalForme"] = true;
