@@ -3081,7 +3081,7 @@ void AbilityInfo::loadNames()
 {
     fill_int_str(m_Names, path("abilities.txt"), true);
     fill_int_str(m_Desc, path("ability_desc.txt"), true);
-    fill_int_str(m_BattleDesc, path("ability_battledesc.txt"), true);
+    fill_int_str(m_BattleDesc, path("ability_battledesc_%1G.txt").arg(Pokemon::gen().num), true);
 }
 
 QString AbilityInfo::Message(int ab, int part) {
