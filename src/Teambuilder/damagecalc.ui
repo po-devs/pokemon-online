@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>716</width>
-    <height>599</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -281,6 +281,9 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -313,6 +316,9 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -324,6 +330,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -987,6 +996,9 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="editable">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -1019,6 +1031,9 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -1030,6 +1045,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -1435,7 +1453,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="move"/>
+      <widget class="QComboBox" name="move">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_15">
