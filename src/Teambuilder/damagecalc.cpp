@@ -74,6 +74,8 @@ DamageCalc::DamageCalc(int gen, QWidget *parent) :
     connect(ui->mygender, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMyPokePic()));
     connect(ui->ogender, SIGNAL(currentIndexChanged(int)), this, SLOT(updateOPokePic()));
 
+    connect(ui->happiness, SIGNAL(valueChanged(int)), this, SLOT(updateMoveInfo()));
+
     connect(ui->calculate, SIGNAL(clicked()), this, SLOT(calculate()));
 }
 
@@ -319,6 +321,23 @@ void DamageCalc::updateMoveInfo()
 {
     int move = MoveInfo::Number(ui->move->currentText());
     int bp = MoveInfo::Power(move, m_currentGen);
+    int happiness = ui->happiness->value();
+    if (move == Move::Frustration) {
+        bp = std::max((255 - happiness) * 2 / 5, 1);
+    } else if (move == Move::Return) {
+        bp = std::max(happiness * 2 / 5, 1);
+    }
+    // TODO: The code below doesn't work correctly
+    /**else if (move == Move::GyroBall) {
+        bp = 25 * ((ui->ospdstat->text()).toInt() / (ui->myspdstat->text()).toInt());
+        if (bp > 150) {
+            bp = 150;
+        }
+    } else if (move == Move::WringOut || move == Move::CrushGrip) {
+        bp = 1 + 120 * ((ui->ohpstat->text()).toInt() / (ui->myhpstat->text()).toInt());
+    }
+    */
+
     int type = MoveInfo::Type(move, m_currentGen);
     int category = MoveInfo::Category(move, m_currentGen);
 
