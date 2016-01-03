@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>716</width>
-    <height>599</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,14 +193,14 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
-              <widget class="QLabel" name="label_8">
+              <widget class="QLabel" name="mypokemonLabel">
                <property name="text">
                 <string>Pokemon:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="mylevelLabel">
                <property name="text">
                 <string>Level:</string>
                </property>
@@ -221,49 +221,49 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_12">
+              <widget class="QLabel" name="mystatusLabel">
                <property name="text">
                 <string>Status:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="myHpLabel">
                <property name="text">
                 <string>HP:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="myattackLabel">
                <property name="text">
                 <string>Attack:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_4">
+              <widget class="QLabel" name="mydefenseLabel">
                <property name="text">
                 <string>Defense:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_5">
+              <widget class="QLabel" name="myspattackLabel">
                <property name="text">
                 <string>Special Attack:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="myspdefenselabel">
                <property name="text">
                 <string>Special Defense:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="myspeedLabel">
                <property name="text">
                 <string>Speed:</string>
                </property>
@@ -280,6 +280,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -313,6 +316,9 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -324,6 +330,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -899,14 +908,14 @@
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_10">
              <item>
-              <widget class="QLabel" name="label_37">
+              <widget class="QLabel" name="opokemonLabel">
                <property name="text">
                 <string>Pokemon:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_38">
+              <widget class="QLabel" name="olevelLabel">
                <property name="text">
                 <string>Level:</string>
                </property>
@@ -927,49 +936,49 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_41">
+              <widget class="QLabel" name="ostatusLabel">
                <property name="text">
                 <string>Status:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_42">
+              <widget class="QLabel" name="oHpLabel">
                <property name="text">
                 <string>HP:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_43">
+              <widget class="QLabel" name="oattackLabel">
                <property name="text">
                 <string>Attack:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_44">
+              <widget class="QLabel" name="odefenseLabel">
                <property name="text">
                 <string>Defense:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_45">
+              <widget class="QLabel" name="ospattackLabel">
                <property name="text">
                 <string>Special Attack:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_46">
+              <widget class="QLabel" name="ospdefenseLabel">
                <property name="text">
                 <string>Special Defense:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_47">
+              <widget class="QLabel" name="ospeedLabel">
                <property name="text">
                 <string>Speed:</string>
                </property>
@@ -986,6 +995,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -1019,6 +1031,9 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -1030,6 +1045,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -1428,17 +1446,21 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_14">
+      <widget class="QLabel" name="moveLabel">
        <property name="text">
         <string>Move:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="move"/>
+      <widget class="QComboBox" name="move">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_15">
+      <widget class="QLabel" name="movepowerLabel">
        <property name="text">
         <string>Base Power:</string>
        </property>
@@ -1452,7 +1474,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_16">
+      <widget class="QLabel" name="movetypeLabel">
        <property name="text">
         <string>Type:</string>
        </property>
@@ -1462,7 +1484,7 @@
       <widget class="QComboBox" name="movetype"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_17">
+      <widget class="QLabel" name="movecategoryLabel">
        <property name="text">
         <string>Category:</string>
        </property>
@@ -1495,7 +1517,7 @@
       <widget class="QComboBox" name="weather"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_13">
+      <widget class="QLabel" name="genLabel">
        <property name="text">
         <string>Gen:</string>
        </property>

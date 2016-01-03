@@ -281,12 +281,12 @@ void DamageCalc::updateMyPokeStats()
     spdef = PokemonInfo::BoostedStat(spdef, ui->myspdefboost->value());
     spd = PokemonInfo::BoostedStat(spd, ui->myspdboost->value());
 
-    ui->myhpstat->setText(QString::number(hp));
-    ui->myatkstat->setText(QString::number(atk));
-    ui->mydefstat->setText(QString::number(def));
-    ui->myspatkstat->setText(QString::number(spatk));
-    ui->myspdefstat->setText(QString::number(spdef));
-    ui->myspdstat->setText(QString::number(spd));
+    ui->myhpstat->setNum(hp);
+    ui->myatkstat->setNum(atk);
+    ui->mydefstat->setNum(def);
+    ui->myspatkstat->setNum(spatk);
+    ui->myspdefstat->setNum(spdef);
+    ui->myspdstat->setNum(spd);
 }
 
 void DamageCalc::updateOPokeStats()
@@ -307,18 +307,33 @@ void DamageCalc::updateOPokeStats()
     spdef = PokemonInfo::BoostedStat(spdef, ui->ospdefboost->value());
     spd = PokemonInfo::BoostedStat(spd, ui->ospdboost->value());
 
-    ui->ohpstat->setText(QString::number(hp));
-    ui->oatkstat->setText(QString::number(atk));
-    ui->odefstat->setText(QString::number(def));
-    ui->ospatkstat->setText(QString::number(spatk));
-    ui->ospdefstat->setText(QString::number(spdef));
-    ui->ospdstat->setText(QString::number(spd));
+    ui->ohpstat->setNum(hp);
+    ui->oatkstat->setNum(atk);
+    ui->odefstat->setNum(def);
+    ui->ospatkstat->setNum(spatk);
+    ui->ospdefstat->setNum(spdef);
+    ui->ospdstat->setNum(spd);
 }
 
 void DamageCalc::updateMoveInfo()
 {
     int move = MoveInfo::Number(ui->move->currentText());
     int bp = MoveInfo::Power(move, m_currentGen);
+    if (move == Move::Frustration || move == Move::Return) {
+        bp = 102; // Automatically set max possible BP
+    }
+
+    // TODO: The code below doesn't work correctly
+    /**else if (move == Move::GyroBall) {
+        bp = 25 * ((ui->ospdstat->text()).toInt() / (ui->myspdstat->text()).toInt());
+        if (bp > 150) {
+            bp = 150;
+        }
+    } else if (move == Move::WringOut || move == Move::CrushGrip) {
+        bp = 1 + 120 * ((ui->ohpstat->text()).toInt() / (ui->myhpstat->text()).toInt());
+    }
+    */
+
     int type = MoveInfo::Type(move, m_currentGen);
     int category = MoveInfo::Category(move, m_currentGen);
 
