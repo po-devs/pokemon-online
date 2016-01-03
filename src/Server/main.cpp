@@ -96,9 +96,9 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &m
     }
 
     /* Rotating log files */
-    if (msgcount > 10000) {
+    if (msgcount > 20000) {
         msgcount = 0;
-        logcount = (logcount + 1) % 50;
+        logcount = (logcount + 1) % 25;
 
         freopen(QString("logs%1.txt").arg(logcount).toUtf8().constData(), "w", stderr);
         system(QString("echo " + QString("logs%1.txt").arg(logcount) + " > last_log_file.txt").toUtf8().constData());
@@ -128,9 +128,9 @@ void myMessageOutput(QtMsgType type, const char *msg)
         abort();
     }
 
-    if (msgcount > 10000) {
+    if (msgcount > 20000) {
         msgcount = 0;
-        logcount = (logcount + 1) % 50;
+        logcount = (logcount + 1) % 25;
 
         freopen(QString("logs%1.txt").arg(logcount).toUtf8().constData(), "w", stderr);
         system(QString("echo " + QString("logs%1.txt").arg(logcount) + " > last_log_file.txt").toUtf8().constData());
