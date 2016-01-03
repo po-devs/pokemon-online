@@ -3188,7 +3188,7 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
 {
     int total = m_Names.size();
 
-    if (g.num == GenInfo::GenMax()) {
+    if (g == GenInfo::GenMax()) {
         return total;
     } else {
         int hc;
