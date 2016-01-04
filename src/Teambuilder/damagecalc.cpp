@@ -48,6 +48,7 @@ DamageCalc::DamageCalc(int gen, QWidget *parent) :
 
     foreach (QSpinBox *w, mine) {
         connect(w, SIGNAL(valueChanged(int)), this, SLOT(updateMyPokeStats()));
+        connect(w, SIGNAL(valueChanged(int)), this, SLOT(updateMoveInfo()));
     }
 
     QList<QSpinBox *> opps;
@@ -60,6 +61,7 @@ DamageCalc::DamageCalc(int gen, QWidget *parent) :
 
     foreach (QSpinBox *w, opps) {
         connect(w, SIGNAL(valueChanged(int)), this, SLOT(updateOPokeStats()));
+        connect(w, SIGNAL(valueChanged(int)), this, SLOT(updateMoveInfo()));
     }
 
     connect(ui->mypoke, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMyPoke()));
@@ -73,6 +75,15 @@ DamageCalc::DamageCalc(int gen, QWidget *parent) :
 
     connect(ui->mygender, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMyPokePic()));
     connect(ui->ogender, SIGNAL(currentIndexChanged(int)), this, SLOT(updateOPokePic()));
+
+    // Update move info after every change to automatically calculate BP
+    // for moves that have varying BP
+    connect(ui->mypoke, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMoveInfo()));
+    connect(ui->opoke, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMoveInfo()));
+    connect(ui->mynature, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMoveInfo()));
+    connect(ui->onature, SIGNAL(currentIndexChanged(int)), this, SLOT(updateMoveInfo()));
+    connect(ui->mylevel, SIGNAL(valueChanged(int)), this, SLOT(updateMoveInfo()));
+    connect(ui->olevel, SIGNAL(valueChanged(int)), this, SLOT(updateMoveInfo()));
 
     connect(ui->calculate, SIGNAL(clicked()), this, SLOT(calculate()));
 }
@@ -319,6 +330,8 @@ void DamageCalc::updateMoveInfo()
 {
     int move = MoveInfo::Number(ui->move->currentText());
     int bp = MoveInfo::Power(move, m_currentGen);
+    Pokemon::uniqueId mypokenumber = PokemonInfo::Number(ui->mypoke->currentText());
+    Pokemon::uniqueId opokenumber = PokemonInfo::Number(ui->opoke->currentText());
     if (move == Move::Frustration || move == Move::Return) {
         bp = 102; // Automatically set max possible BP
     }
@@ -333,6 +346,45 @@ void DamageCalc::updateMoveInfo()
         bp = 1 + 120 * ((ui->ohpstat->text()).toInt() / (ui->myhpstat->text()).toInt());
     }
     */
+
+    if (move == Move::GrassKnot) {
+        int weight = PokemonInfo::Weight(opokenumber);
+        if (weight <= 100) {
+            bp = 20;
+        } else if (weight <= 250) {
+            bp = 40;
+        } else if (weight <= 500) {
+            bp = 60;
+        } else if (weight <= 1000) {
+            bp = 80;
+        } else if (weight <= 2000) {
+            bp = 100;
+        } else {
+            bp = 120;
+        }
+    }
+
+    if (move == Move::HeavySlam || move == Move::HeatCrash) {
+        int myweight = PokemonInfo::Weight(mypokenumber);
+        int oweight = PokemonInfo::Weight(opokenumber);
+        int ratio = 0;
+        // Missingno's weight is 0 and dividing by 0 is bad!
+        if (opokenumber != 0){
+            ratio = myweight / oweight;
+        }
+
+        if (ratio >= 5) {
+            bp = 120;
+        } else if (ratio == 4) {
+            bp = 100;
+        } else if (ratio == 3) {
+            bp = 80;
+        } else if (ratio == 2) {
+            bp = 60;
+        } else {
+            bp = 40;
+        }
+    }
 
     int type = MoveInfo::Type(move, m_currentGen);
     int category = MoveInfo::Category(move, m_currentGen);
