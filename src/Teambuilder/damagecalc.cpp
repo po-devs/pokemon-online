@@ -336,16 +336,19 @@ void DamageCalc::updateMoveInfo()
         bp = 102; // Automatically set max possible BP
     }
 
-    // TODO: The code below doesn't work correctly
-    /**else if (move == Move::GyroBall) {
+    else if (move == Move::GyroBall) {
         bp = 25 * ((ui->ospdstat->text()).toInt() / (ui->myspdstat->text()).toInt());
         if (bp > 150) {
             bp = 150;
+        } else if (bp = 0) {
+            bp = 1;
         }
     } else if (move == Move::WringOut || move == Move::CrushGrip) {
         bp = 1 + 120 * ((ui->ohpstat->text()).toInt() / (ui->myhpstat->text()).toInt());
+        if (bp > 121) {
+            bp = 121;
+        }
     }
-    */
 
     if (move == Move::GrassKnot || (move == Move::LowKick && m_currentGen.num != 1)) {
         int weight = PokemonInfo::Weight(opokenumber);
