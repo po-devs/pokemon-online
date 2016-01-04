@@ -347,17 +347,17 @@ void DamageCalc::updateMoveInfo()
     }
     */
 
-    if (move == Move::GrassKnot) {
+    if (move == Move::GrassKnot || (move == Move::LowKick && m_currentGen.num != 1)) {
         int weight = PokemonInfo::Weight(opokenumber);
-        if (weight <= 100) {
+        if (weight < 100) {
             bp = 20;
-        } else if (weight <= 250) {
+        } else if (weight < 250) {
             bp = 40;
-        } else if (weight <= 500) {
+        } else if (weight < 500) {
             bp = 60;
-        } else if (weight <= 1000) {
+        } else if (weight < 1000) {
             bp = 80;
-        } else if (weight <= 2000) {
+        } else if (weight < 2000) {
             bp = 100;
         } else {
             bp = 120;
