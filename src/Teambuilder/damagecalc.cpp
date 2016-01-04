@@ -340,7 +340,7 @@ void DamageCalc::updateMoveInfo()
         bp = 25 * ((ui->ospdstat->text()).toInt() / (ui->myspdstat->text()).toInt());
         if (bp > 150) {
             bp = 150;
-        } else if (bp = 0) {
+        } else if (bp == 0) {
             bp = 1;
         }
     } else if (move == Move::WringOut || move == Move::CrushGrip) {
