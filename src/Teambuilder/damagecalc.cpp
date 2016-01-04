@@ -344,7 +344,8 @@ void DamageCalc::updateMoveInfo()
             bp = 1;
         }
     } else if (move == Move::WringOut || move == Move::CrushGrip) {
-        bp = 1 + 120 * ((ui->ohpstat->text()).toInt() / (ui->myhpstat->text()).toInt());
+        int omaxhp = PokemonInfo::FullStat(PokemonInfo::Number(ui->opoke->currentText()), m_currentGen, NatureInfo::Number(ui->onature->currentText()), 0, ui->olevel->value(), ui->ohpiv->value(), ui->ohpev->value());
+        bp = 1 + 120 * ui->ohpstat->text().toInt() / omaxhp;
         if (bp > 121) {
             bp = 121;
         }
