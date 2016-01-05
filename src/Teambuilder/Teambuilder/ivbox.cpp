@@ -115,7 +115,7 @@ void IvBox::updateStat(int stat)
         }
         m_statslabel[stat]->setText(toColor(QString::number(poke().stat(stat)), themeColor));
     } else {
-        m_statslabel[stat]->setText(QString::number(poke().stat(stat)));
+        m_statslabel[stat]->setNum(poke().stat(stat));
     }
 
     emit statsUpdated();

@@ -137,7 +137,7 @@ void EvBox::updateEV(int stat)
 void EvBox::updateMain()
 {
     ui->totalslider->setValue(poke().EVSum());
-    ui->totallabel->setText(QString::number(poke().EVSum()));
+    ui->totallabel->setNum(poke().EVSum());
 }
 
 void EvBox::changeEV(int newValue, int sentStat)
