@@ -20,7 +20,7 @@ void TierRatingButton::setRating(int rating)
     if (rating == -32769) {
         ui->rating->setText(tr("???"));
     } else {
-        ui->rating->setText(QString::number(rating));
+        ui->rating->setNum(rating);
     }
 }
 
