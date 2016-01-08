@@ -1463,15 +1463,6 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     level = p.level();
     substituteLife = 0;
     lastMoveUsed = 0;
-
-    if (gen <= 1) {
-        if (p.status() == Pokemon::Paralysed) {
-            stats[Speed] /= 4;
-        } else if (p.status() == Pokemon::Burnt) {
-            /* Burn reduction is at attack time */
-            //stats[Attack] /= 2;
-        }
-    }
 }
 
 void BattleBase::BasicMoveInfo::reset()
