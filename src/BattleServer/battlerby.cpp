@@ -93,11 +93,11 @@ void BattleRBY::sendPoke(int slot, int pok, bool silent)
     int player = this->player(slot);
     int snum = slotNum(slot);
 
-    /* reset temporary variables */
+    // reset temporary variables
     pokeMemory(slot).clear();
 
-//    /* Reset counters */
-//    counters(slot).clear();
+    // Reset counters
+    // counters(slot).clear();
 
     notify(All, SendOut, slot, silent, quint8(pok), opoke(slot, player, pok));
 
@@ -105,19 +105,26 @@ void BattleRBY::sendPoke(int slot, int pok, bool silent)
 
     PokeBattle &p = poke(slot);
 
-    //Clears secondary statuses
+    // Clears secondary statuses
     int st = p.status();
     p.fullStatus() = 0;
     p.changeStatus(st);
 
-    /* Give new values to what needed */
+    // Give new values to what needed
     fpoke(slot).init(p, gen());
 
-    if (p.status() != Pokemon::Asleep)
+    if (p.status() == Pokemon::Paralysed) {
+        fpoke(slot).stats[Speed] = std::max(fpoke(slot).stats[Speed] / 4, 0);
+    }
+    if (p.status() == Pokemon::Burnt) {
+        fpoke(slot).stats[Attack] = std::max(fpoke(slot).stats[Attack] / 2, 0);
+    }
+    if (p.status() != Pokemon::Asleep) {
         p.statusCount() = 0;
+    }
 
-    /* Increase the "switch count". Switch count is used to see if the pokemon has switched
-       (like for an attack like attract), it is imo more effective that other means */
+    // Increase the "switch count". Switch count is used to see if the pokemon has switched
+    // (like for an attack like attract), it is imo more effective that other means
     slotMemory(slot).switchCount += 1;
 
     turnMem(slot).flags &= TurnMemory::Incapacitated;
