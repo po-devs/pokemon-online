@@ -262,6 +262,7 @@ void DamageCalc::setupCalc(int gen)
     ui->friendguard->setVisible(gen > 4);
     ui ->wonderroom->setVisible(gen > 4);
     ui->allyfainted->setVisible(gen > 4);
+    ui->multitarget->setVisible(gen > 2);
 
     updateMyPoke();
     updateOPoke();
