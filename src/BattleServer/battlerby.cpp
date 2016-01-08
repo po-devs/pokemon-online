@@ -114,10 +114,10 @@ void BattleRBY::sendPoke(int slot, int pok, bool silent)
     fpoke(slot).init(p, gen());
 
     if (p.status() == Pokemon::Paralysed) {
-        fpoke(slot).stats[Speed] = std::max(fpoke(slot).stats[Speed] / 4, 0);
+        fpoke(slot).stats[Speed] = std::max(fpoke(slot).stats[Speed] / 4, 1);
     }
     if (p.status() == Pokemon::Burnt) {
-        fpoke(slot).stats[Attack] = std::max(fpoke(slot).stats[Attack] / 2, 0);
+        fpoke(slot).stats[Attack] = std::max(fpoke(slot).stats[Attack] / 2, 1);
     }
     if (p.status() != Pokemon::Asleep) {
         p.statusCount() = 0;
