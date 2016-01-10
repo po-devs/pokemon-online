@@ -309,6 +309,7 @@ public:
     void removeEndTurnEffect(EffectType type, int slot, const QString &effect);
 
     void chainBp(int p, int pow);
+    void clearBp();
 
     context &battleMemory() {
         return battlelong;

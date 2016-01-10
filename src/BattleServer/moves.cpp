@@ -1719,7 +1719,7 @@ struct MMDoomDesire : public MM
                     tmove(b,s).power = MoveInfo::Power(move, b.gen());
 
                     int t = b.opponent(b.player(s));
-                    int doomuser = s;
+                    int doomuser = b.slot(t,0);
 
                     for (int i = 0; i < b.numberPerSide(); i++) {
                         if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
@@ -1728,6 +1728,7 @@ struct MMDoomDesire : public MM
                         }
                     }
                     tmove(b, doomuser).recoil = 0;
+                    b.clearBp();
 
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));

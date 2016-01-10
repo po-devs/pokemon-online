@@ -353,6 +353,11 @@ void BattleSituation::chainBp(int , int pow)
     bpmodifiers.append(pow);
 }
 
+void BattleSituation::clearBp()
+{
+    bpmodifiers.clear();
+}
+
 void BattleSituation::endTurn()
 {
     testWin();
