@@ -103,13 +103,13 @@ Client::Client(ClientPluginManager *p, TeamHolder *t, const QString &url , const
     layout->addLayout(buttonsLayout);
     buttonsLayout->addWidget(findMatch = new QPushButton(tr("&Find Battle")));
     buttonsLayout->addWidget(myregister = new QPushButton(tr("&Register")));
+    buttonsLayout->addWidget(openteambuilder = new QPushButton(tr("&Open Teambuilder")));
     buttonsLayout->addWidget(myexit = new QPushButton(tr("&Exit")));
-    buttonsLayout->addWidget(mysender = new QPushButton(tr("&Send")));
 
     findMatch->setObjectName("FindBattle");
     myregister->setObjectName("Register");
     myexit->setObjectName("Exit");
-    mysender->setObjectName("Send");
+    openteambuilder->setObjectName("OpenTeamBuilder");
 
     QPalette pal = palette();
     pal.setColor(QPalette::AlternateBase, Qt::blue);
@@ -124,7 +124,7 @@ Client::Client(ClientPluginManager *p, TeamHolder *t, const QString &url , const
     connect(mainChat, SIGNAL(currentChanged(int)), SLOT(firstChannelChanged(int)));
     connect(myexit, SIGNAL(clicked()), SLOT(showExitWarning()));
     connect(myline, SIGNAL(returnPressed()), SLOT(sendText()));
-    connect(mysender, SIGNAL(clicked()), SLOT(sendText()));
+    connect(openteambuilder, SIGNAL(clicked()), SLOT(openTeamBuilder()));
     connect(myregister, SIGNAL(clicked()), SLOT(sendRegister()));
     connect(findMatch, SIGNAL(clicked()), SLOT(openBattleFinder()));
 
