@@ -380,7 +380,7 @@ private:
     /* Button to exit */
     QPushButton *myexit;
     /* Button to send text */
-    QPushButton *mysender;
+    QPushButton *openteambuilder;
     /* Button to register a password */
     QPushButton *myregister;
     /* Button to find a battle */
