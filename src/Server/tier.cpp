@@ -257,7 +257,7 @@ void Tier::loadFromFile()
 
     foreach(QString member, members) {
         QStringList mmr = member.split('%');
-        if (mmr.size() != 3 && mmr.size() < 6)
+        if (mmr.size() != 3 && mmr.size() < 7)
             continue;
         if (!SecurityManager::exist(mmr[0]))
             continue;
