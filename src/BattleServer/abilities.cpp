@@ -2129,6 +2129,7 @@ struct AMAerilate : public AM {
     AMAerilate() {
         functions["BeforeTargetList"] = &baf;
         functions["BasePowerModifier"] = &bpm;
+        functions["MoveSettings"] = &baf;
     }
 
     static void baf(int s, int, BS &b) {
