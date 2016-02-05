@@ -98,6 +98,7 @@ public:
     void onBattleEnd(int res, int winner);
 
     bool musicPlayed() const;
+    bool criesPlayed() const;
     bool flashWhenMoved() const;
     virtual void disable();
 
@@ -117,6 +118,7 @@ public slots:
     void ignoreSpectators();
 
     void musicPlayStop();
+    void criesPlayStop();
     void enqueueMusic();
 #ifdef QT5
     void criesProblem(QAudio::State newState);
@@ -139,7 +141,8 @@ protected:
     QPushButton *myclose, *mysend, *myignore, *mycalc;
 
     QCheckBox *saveLogs;
-    QCheckBox *musicOn;
+    QCheckBox *battleMusicOn;
+    QCheckBox *pokemonCriesOn;
     QCheckBox *flashWhenMoveDone;
     QCheckBox *alwaysOnTop;
 
