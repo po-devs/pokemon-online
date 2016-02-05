@@ -1445,6 +1445,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(oldShortcuts, SIGNAL(triggered(bool)), SLOT(useOldShortcuts(bool)));
     oldShortcuts->setChecked(globals.value("Client/UsingOldShortcuts").toBool());
 
+    QAction * hide_announcement = menuActions->addAction(tr("Hide announcement banner"));
+    hide_announcement->setCheckable(true);
+    connect(hide_announcement, SIGNAL(triggered(bool)), SLOT(toggleAnnouncementOption(bool)));
+    hide_announcement->setChecked(globals.value("Client/HideAnnouncement").toBool());
+
     mytiermenu = menuBar->addMenu(tr("&Tiers"));
     rebuildTierMenu();
 
@@ -1874,12 +1879,23 @@ void Client::serverNameReceived(const QString &sName)
 
 void Client::announcementReceived(const QString &ann)
 {
+    if (globals.value("Client/HideAnnouncement").toBool())
+        return;
+
     if (ann.length() == 0)
         return;
 
     server_announcement->setText(ann);
     server_announcement->setAlignment(Qt::AlignCenter);
     server_announcement->show();
+}
+
+void Client::toggleAnnouncementOption(bool hide)
+{
+    if (hide == true)
+        server_announcement->hide();
+    else
+        server_announcement->show();
 }
 
 void Client::tierListReceived(const QByteArray &tl)
