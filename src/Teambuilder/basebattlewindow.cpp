@@ -132,18 +132,20 @@ void BaseBattleWindow::init()
     QHBoxLayout *columns = new QHBoxLayout(this);
     columns->addLayout(mylayout = new QGridLayout());
 
-    mylayout->addWidget(getSceneWidget(), 0, 0, 1, 4);
+    mylayout->addWidget(getSceneWidget(), 0, 0, 1, 5);
     QSettings settings;
     bool saveLog = settings.value("Battle/SaveLogs").toBool();
     mylayout->addWidget(saveLogs = new QCheckBox(tr("Save log")), 1, 0, 1, 1);
     saveLogs->setChecked(saveLog);
-    mylayout->addWidget(musicOn = new QCheckBox(tr("Music")), 1, 1, 1, 1);
-    mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 2, 1, 1);
-    mylayout->addWidget(alwaysOnTop = new QCheckBox(tr("Always on top")), 1, 3, 1, 1);
+    mylayout->addWidget(battleMusicOn = new QCheckBox(tr("Battle Music")), 1, 1, 1, 1);
+    mylayout->addWidget(pokemonCriesOn = new QCheckBox(tr("Pokemon Cries")), 1, 2, 1, 1);
+    mylayout->addWidget(flashWhenMoveDone = new QCheckBox(tr("Flash when a move is done")), 1, 3, 1, 1);
+    mylayout->addWidget(alwaysOnTop = new QCheckBox(tr("Always on top")), 1, 4, 1, 1);
     alwaysOnTop->setChecked(settings.value("Battle/AlwaysOnTop").toBool());
 
     QSettings s;
-    musicOn->setChecked(s.value("BattleAudio/PlayMusic").toBool() || s.value("play_battle_cries").toBool());
+    battleMusicOn->setChecked(s.value("BattleAudio/PlayMusic").toBool());
+    pokemonCriesOn->setChecked(s.value("BattleAudio/PlaySounds").toBool());
     flashWhenMoveDone->setChecked(s.value("Battle/FlashOnMove").toBool());
 
     QVBoxLayout *chat = new QVBoxLayout();
@@ -159,7 +161,8 @@ void BaseBattleWindow::init()
     buttons->addWidget(myignore = new QPushButton(tr("&Ignore spectators")));
     buttons->addWidget(mycalc = new QPushButton(tr("&Damage Calc")));
 
-    connect(musicOn, SIGNAL(toggled(bool)), SLOT(musicPlayStop()));
+    connect(battleMusicOn, SIGNAL(toggled(bool)), SLOT(musicPlayStop()));
+    connect(pokemonCriesOn, SIGNAL(toggled(bool)), SLOT(criesPlayStop()));
     connect(myignore, SIGNAL(clicked()), SLOT(ignoreSpectators()));
     connect(myclose, SIGNAL(clicked()), SLOT(clickClose()));
     connect(myline, SIGNAL(returnPressed()), this, SLOT(sendMessage()));
@@ -193,12 +196,18 @@ void BaseBattleWindow::init()
     undelayOnSounds = true;
 
     musicPlayStop();
+    criesPlayStop();
     alwaysOnTopChanged(alwaysOnTop->isChecked());
 }
 
 bool BaseBattleWindow::musicPlayed() const
 {
-    return musicOn->isChecked();
+    return battleMusicOn->isChecked();
+}
+
+bool BaseBattleWindow::criesPlayed() const
+{
+    return pokemonCriesOn->isChecked();
 }
 
 bool BaseBattleWindow::flashWhenMoved() const
@@ -227,7 +236,6 @@ void BaseBattleWindow::changeMusicVolume(int v)
 void BaseBattleWindow::musicPlayStop()
 {
     if (!musicPlayed()) {
-        playBattleCries() = false;
         playBattleMusic() = false;
 #ifdef QT5
         audio->pause();
@@ -240,15 +248,12 @@ void BaseBattleWindow::musicPlayStop()
     QSettings s;
 #ifdef QT5
     audio->setVolume(s.value("BattleAudio/MusicVolume").toInt());
-    cry->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
 #else
     audioOutput->setVolume(float(s.value("BattleAudio/MusicVolume").toInt())/100);
-    cryOutput->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
 #endif
 
     if (musicPlayed()) {
-        playBattleCries() = s.value("BattleAudio/PlaySounds").toBool();
-        playBattleMusic() = s.value("BattleAudio/PlayMusic").toBool() || !s.value("play_battle_cries").toBool();
+        playBattleMusic() = s.value("BattleAudio/PlayMusic").toBool();
     }
 
     if (!playBattleMusic()) {
@@ -291,6 +296,24 @@ void BaseBattleWindow::musicPlayStop()
 #endif
 
 }
+
+void BaseBattleWindow::criesPlayStop()
+{
+    if (!criesPlayed())
+        playBattleCries() = false;
+
+    QSettings s;
+#ifdef QT5
+    cry->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
+#else
+    cryOutput->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
+#endif
+
+    if (criesPlayed()) {
+        playBattleCries() = s.value("BattleAudio/PlaySounds").toBool();
+    }
+}
+
 
 void BaseBattleWindow::enqueueMusic()
 {
