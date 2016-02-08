@@ -137,7 +137,11 @@
     </layout>
    </item>
    <item>
-    <widget class="QComboBox" name="ability"/>
+    <widget class="QComboBox" name="ability">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QRadioButton" name="ability1">
