@@ -4503,7 +4503,8 @@ bool BattleSituation::preTransPoke(int s, Pokemon::uniqueId check)
     return false;
 }
 
-bool BattleSituation::canMegaEvolve (int slot) {
+bool BattleSituation::canMegaEvolve (int slot)
+{
     if (megas[player(slot)]) {
         return false;
     }
@@ -4524,4 +4525,17 @@ bool BattleSituation::canMegaEvolve (int slot) {
         return true;
     }
     return false;
+}
+
+int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
+{
+    if (move(s, slot) == mv) {
+        return slot;
+    }
+    for(int i = 0; i < 4; i++) {
+        if (move(s,i) == mv) {
+            return i;
+        }
+    }
+    return slot;
 }

@@ -4450,15 +4450,7 @@ struct MMMimic : public MM
                 move = b.move(t, b.randint(4));
             }
         }
-        int slot = fpoke(b,s).lastMoveSlot;
-        //Following check is needed to make sure "Mimic" is replaced, and not other moves, like Sleep Talk.
-        for(int i = 0; i < 4; i++) {
-            if (b.move(s,i) == Move::Mimic) {
-                slot = i;
-                break;
-            }
-        }
-
+        int slot = b.intendedMoveSlot(s, fpoke(b,s).lastMoveSlot, Move::Mimic);
         //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
         int pp = b.gen() > 4 ? (MoveInfo::PP(move, b.gen()) * 8/5) : 5;
         b.changeTempMove(s, slot, move, pp);
@@ -4940,7 +4932,7 @@ struct MMSketch : public MM
     static void uas(int s, int t, BS &b) {
         int mv = poke(b,t)["LastMoveUsed"].toInt();
         b.sendMoveMessage(111,0,s,type(b,s),t,mv);
-        int slot = fpoke(b,s).lastMoveSlot;
+        int slot = b.intendedMoveSlot(s, fpoke(b,s).lastMoveSlot, Move::Sketch);
         b.changeDefMove(s, slot, mv);
 
     }

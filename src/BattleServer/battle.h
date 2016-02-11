@@ -83,6 +83,7 @@ public:
     bool canPassMStone(int target, int item);
     bool preTransPoke(int s, Pokemon::uniqueId check);
     bool canMegaEvolve(int slot);
+    int intendedMoveSlot(int s, int slot, int mv);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);
     void inflictRecoil(int source, int target);
