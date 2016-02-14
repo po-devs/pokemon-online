@@ -572,9 +572,9 @@ void BattleSituation::endTurnPoison(int player)
     } else if (!hasWorkingAbility(player, Ability::MagicGuard)) {
         notify(All, StatusMessage, player, qint8(HurtPoison));
 
-        if (poke(player).statusCount() == 0)
+        if (poke(player).statusCount() == 0) {
             inflictDamage(player, poke(player).totalLifePoints() / 8, player);
-        else {
+        } else {
             inflictDamage(player, poke(player).totalLifePoints() * (16 - poke(player).statusCount()) / 16, player);
             //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
         }
