@@ -799,18 +799,18 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
     if (boost > -6) {
         notify(All, StatChange, player, qint8(stat), qint8(-malus), !tell);
         changeStatMod(player, stat, std::max(boost-malus, -6));
+
+        if (stat < Accuracy) {
+            fpoke(player).stats[stat] = getBoostedStat(player, stat);
+        }
+
+        if (poke(player).status() == Pokemon::Burnt) {
+            fpoke(player).stats[Attack] = std::max(fpoke(player).stats[Attack] / 2, 1);
+        } else if (poke(player).status() == Pokemon::Paralysed) {
+            fpoke(player).stats[Speed] = std::max(fpoke(player).stats[Speed] / 4, 1);
+        }
     } else {
         notify(All, CappedStat, player, qint8(stat), false);
-    }
-
-    if (stat < Accuracy) {
-        fpoke(player).stats[stat] = getBoostedStat(player, stat);
-    }
-
-    if (poke(player).status() == Pokemon::Burnt) {
-        fpoke(player).stats[Attack] = std::max(fpoke(player).stats[Attack] / 2, 1);
-    } else if (poke(player).status() == Pokemon::Paralysed) {
-        fpoke(player).stats[Speed] = std::max(fpoke(player).stats[Speed] / 4, 1);
     }
 
     return true;
@@ -823,24 +823,24 @@ bool BattleRBY::gainStatMod(int player, int stat, int bonus, int, bool tell)
     if (boost < 6 && (getStat(player, stat) < 999 || stat == Evasion)) {
         notify(All, StatChange, player, qint8(stat), qint8(bonus), !tell);
         changeStatMod(player, stat, std::min(boost+bonus, 6));
-    } else {
-        notify(All, CappedStat, player, qint8(stat), true);
-    }
 
-    if (stat < Accuracy) {
-        fpoke(player).stats[stat] = getBoostedStat(player, stat);
-    }
+        if (stat < Accuracy) {
+            fpoke(player).stats[stat] = getBoostedStat(player, stat);
+        }
 
-    // RBY Doubles and Triples are dumb.
-    // Actually they don't exist, but this is just in case.
-    for (int i = 0; i < numberOfSlots(); i++) {
-        if (i != player) {
-            if (poke(i).status() == Pokemon::Burnt) {
-                fpoke(i).stats[Attack] = std::max(fpoke(i).stats[Attack] / 2, 1);
-            } else if (poke(i).status() == Pokemon::Paralysed) {
-                fpoke(i).stats[Speed] = std::max(fpoke(i).stats[Speed] / 4, 1);
+        // RBY Doubles and Triples are dumb.
+        // Actually they don't exist, but this is just in case.
+        for (int i = 0; i < numberOfSlots(); i++) {
+            if (i != player) {
+                if (poke(i).status() == Pokemon::Burnt) {
+                    fpoke(i).stats[Attack] = std::max(fpoke(i).stats[Attack] / 2, 1);
+                } else if (poke(i).status() == Pokemon::Paralysed) {
+                    fpoke(i).stats[Speed] = std::max(fpoke(i).stats[Speed] / 4, 1);
+                }
             }
         }
+    } else {
+        notify(All, CappedStat, player, qint8(stat), true);
     }
 
     return true;
