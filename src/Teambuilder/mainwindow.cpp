@@ -41,11 +41,11 @@ static void setDefaultValues()
     QSettings s;
     /* initializing the default init values if not there */
     setDefaultValue(s, "Themes/Current", "Themes/Classic/");
-    setDefaultValue(s, "BattleAudio/CryVolume", 100);
-    setDefaultValue(s, "BattleAudio/MusicVolume", 100);
+    setDefaultValue(s, "BattleAudio/CryVolume", 80);
+    setDefaultValue(s, "BattleAudio/MusicVolume", 80);
     setDefaultValue(s, "BattleAudio/MusicDirectory", "Music/Battle/");
     setDefaultValue(s, "BattleAudio/PlayMusic", false);
-    setDefaultValue(s, "BattleAudio/PlaySounds", false);
+    setDefaultValue(s, "BattleAudio/PlaySounds", true);
     setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
@@ -77,6 +77,7 @@ static void setDefaultValues()
     setDefaultValue(s, "Client/ShowTimestamps", true);
     setDefaultValue(s, "Client/DisplayTIs", true);
     setDefaultValue(s, "Client/ShowExitWarning", true);
+    setDefaultValue(s, "Client/Client/HideAnnouncement", false);
     setDefaultValue(s, "PlayerEvents/ShowIdle", false);
     setDefaultValue(s, "PlayerEvents/ShowBattle", false);
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);

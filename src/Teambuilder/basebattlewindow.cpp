@@ -253,7 +253,7 @@ void BaseBattleWindow::musicPlayStop()
 #endif
 
     if (musicPlayed()) {
-        playBattleMusic() = s.value("BattleAudio/PlayMusic").toBool();
+        playBattleMusic() = true;
     }
 
     if (!playBattleMusic()) {
@@ -310,7 +310,7 @@ void BaseBattleWindow::criesPlayStop()
 #endif
 
     if (criesPlayed()) {
-        playBattleCries() = s.value("BattleAudio/PlaySounds").toBool();
+        playBattleCries() = true;
     }
 }
 
