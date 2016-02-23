@@ -1879,19 +1879,20 @@ void Client::serverNameReceived(const QString &sName)
 
 void Client::announcementReceived(const QString &ann)
 {
-    if (globals.value("Client/HideAnnouncement").toBool())
-        return;
-
     if (ann.length() == 0)
         return;
 
     server_announcement->setText(ann);
     server_announcement->setAlignment(Qt::AlignCenter);
-    server_announcement->show();
+
+    if (globals.value("Client/HideAnnouncement").toBool() == false)
+        server_announcement->show();
 }
 
 void Client::toggleAnnouncementOption(bool hide)
 {
+    globals.setValue("Client/HideAnnouncement", hide);
+
     if (hide == true)
         server_announcement->hide();
     else
