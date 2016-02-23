@@ -77,7 +77,7 @@ static void setDefaultValues()
     setDefaultValue(s, "Client/ShowTimestamps", true);
     setDefaultValue(s, "Client/DisplayTIs", true);
     setDefaultValue(s, "Client/ShowExitWarning", true);
-    setDefaultValue(s, "Client/Client/HideAnnouncement", false);
+    setDefaultValue(s, "Client/HideAnnouncement", false);
     setDefaultValue(s, "PlayerEvents/ShowIdle", false);
     setDefaultValue(s, "PlayerEvents/ShowBattle", false);
     setDefaultValue(s, "PlayerEvents/ShowChannel", false);
