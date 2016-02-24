@@ -522,7 +522,7 @@ void DamageCalc::calculate()
             myboosts.append(myboost->value());
         } else if (i == 0) {
             mystat = mystat * ui->myhppercent->value() / 100;
-            oboosts.append(0);
+            myboosts.append(0);
         }
 
         mystats.append(mystat);
