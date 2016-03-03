@@ -857,6 +857,7 @@ void BattleBase::playerForfeit(int forfeiterId)
     }
 
     forfeiter() = spot(forfeiterId);
+    stopClock(opponent(forfeiter()));
     //Already done by the server itself
     /*notify(All, BattleEnd, opponent(forfeiter()), qint8(Forfeit));*/
     callp(BP::battleEnded);
