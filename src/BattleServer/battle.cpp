@@ -1227,13 +1227,6 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         return ret;
     }
 
-    //Might not be best way, but it works!
-    int micle = 0;
-    if (pokeMemory(player).value("Stat6BerryModifier").toBool()) {
-        pokeMemory(player).remove("Stat6BerryModifier");
-        micle = 4;
-    }
-
     turnMemory(player).remove("Stat6ItemModifier");
     turnMemory(player).remove("Stat6AbilityModifier");
     turnMemory(target).remove("Stat7ItemModifier");
@@ -1256,8 +1249,9 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             * (20+turnMemory(player).value("Stat6AbilityModifier").toInt())/20
             * (20+turnMemory(player).value("Stat6PartnerAbilityModifier").toInt())/20
             * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20
-            * (20+micle)/20; //Micle Berry
+            * (20+pokeMemory(player).value("Stat6BerryModifier").toInt());
 
+    pokeMemory.remove("Stat6BerryModifier");
     if (coinflip(unsigned(acc), 100)) {
         return true;
     } else {
