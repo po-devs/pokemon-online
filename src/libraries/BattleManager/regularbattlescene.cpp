@@ -147,8 +147,8 @@ void RegularBattleScene::setupGui()
     mybox->setObjectName("MyTrainerBox");
     mybox->setFixedSize(82,82);
     mybox->setPixmap(gui.theme->trainerSprite(data()->avatar(myself())));
+    midme->addLayout(team[myself()]);    
     midme->addWidget(gui.timers[myself()]);
-    midme->addLayout(team[myself()]);
     midme->addWidget(mybox);
     midme->addLayout(name[myself()]);
 
@@ -162,9 +162,9 @@ void RegularBattleScene::setupGui()
     oppbox->setObjectName("OppTrainerBox");
     oppbox->setFixedSize(82,82);
     midopp->addLayout(name[opponent()]);
-    midopp->addWidget(oppbox);
-    midopp->addLayout(team[opponent()]);
+    midopp->addWidget(oppbox);    
     midopp->addWidget(gui.timers[opponent()]);
+    midopp->addLayout(team[opponent()]);
 
     /* Field must be at least 215 pixels tall otherwise the side elements will collide, causing display issues */
     gui.zone->setMinimumSize(400,240);
