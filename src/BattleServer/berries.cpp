@@ -222,22 +222,34 @@ struct BMAntiNormal : public BM
     }
 };
 
-struct BMSuperHP : public BM
+struct BMSuperHP : public BMPinch
 {
     BMSuperHP() {
-        functions["TestPinch"] = &uodr;
+        functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
     }
 
-    static void uodr(int s, int, BS &b) {
-        if (!b.attacking()) {
+    static void ahpc(int p, int s, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
-        }
-        if (b.attacker() == s)
+        tp(p, s, b);
+    }
+
+    static void tp(int p, int s, BS &b) {
+        if (b.koed(s) || b.poke(s).isFull() || fturn(b,b.attacker()).typeMod <= 0)
             return;
-        if (fturn(b,b.attacker()).typeMod <= 0)
+
+        if (!(b.turn() == slot(b,s).value("DoomDesireTurn")) || b.rawTypeEff(MoveInfo::Type(slot(b,s).value("DoomDesireMove").toInt(), b.gen()), s) <= 0)
             return;
+
+        if (!testpinch(p, s, b, 1, true))
+            return;
+
         if (b.canHeal(s,BS::HealByItem,b.poke(s).item())) {
-            b.eatBerry(s);
             b.sendBerryMessage(6,s,0);
             b.healLife(s, b.poke(s).totalLifePoints()/5);
         }
