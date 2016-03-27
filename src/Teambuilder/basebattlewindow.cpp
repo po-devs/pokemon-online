@@ -236,7 +236,7 @@ void BaseBattleWindow::changeMusicVolume(int v)
 void BaseBattleWindow::musicPlayStop()
 {
     if (!musicPlayed()) {
-        playBattleMusic() = false;
+        
 #ifdef QT5
         audio->pause();
 #else
@@ -251,14 +251,6 @@ void BaseBattleWindow::musicPlayStop()
 #else
     audioOutput->setVolume(float(s.value("BattleAudio/MusicVolume").toInt())/100);
 #endif
-
-    if (musicPlayed()) {
-        playBattleMusic() = true;
-    }
-
-    if (!playBattleMusic()) {
-        return;
-    }
 
     /* If more than 5 songs, start with a new music, otherwise carry on where it left. */
     QDir directory = QDir(s.value("BattleAudio/MusicDirectory").toString());
@@ -299,19 +291,12 @@ void BaseBattleWindow::musicPlayStop()
 
 void BaseBattleWindow::criesPlayStop()
 {
-    if (!criesPlayed())
-        playBattleCries() = false;
-
     QSettings s;
 #ifdef QT5
     cry->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
 #else
     cryOutput->setVolume(float(s.value("BattleAudio/CryVolume").toInt())/100);
 #endif
-
-    if (criesPlayed()) {
-        playBattleCries() = true;
-    }
 }
 
 
@@ -352,7 +337,7 @@ void BaseBattleWindow::criesProblem(Phonon::State newState)
 
 void BaseBattleWindow::playCry(int pokemon)
 {
-    if (!playBattleCries())
+    if (!criesPlayed())
         return;
 
     delay();

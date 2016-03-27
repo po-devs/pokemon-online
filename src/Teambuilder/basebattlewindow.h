@@ -53,8 +53,6 @@ class BaseBattleWindow : public BaseBattleWindowInterface
 
     PROPERTY(int, ownid)
     PROPERTY(bool, started)
-    PROPERTY(bool, playBattleCries)
-    PROPERTY(bool, playBattleMusic)
     PROPERTY(FullBattleConfiguration, conf)
 public:
     BaseBattleInfo *myInfo;
