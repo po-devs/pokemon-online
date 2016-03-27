@@ -8,7 +8,7 @@
 12 %s won't flinch because of its Inner Focus!
 13 %s's Download activates!
 14 %s's Snow Warning whipped up a hailstorm!|%s's Drizzle made it rain!|%s's Sand Stream whipped up a sandstorm!|%s's Drought intensified the sun's rays!
-15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!
+15 %s restored HP using its Dry Skin!|%s's Dry Skin hurts it!|%s's Dry Skin absorbed the attack!
 16 %s's Effect Spore activates!
 17 %s's Overcoat protects it!
 18 %s's %a activates!

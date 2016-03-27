@@ -392,6 +392,8 @@ struct AMDrySkin : public AM {
             if (b.canHeal(s, BS::HealByAbility,b.ability(s))) {
                 b.sendAbMessage(15,0,s,s,Pokemon::Water);
                 b.healLife(s, b.poke(s).totalLifePoints()/4);
+            } else {
+                b.sendAbMessage(15,2,s,s,Pokemon::Water); //if at full HP
             }
         }
     }
