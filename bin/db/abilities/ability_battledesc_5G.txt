@@ -1,5 +1,5 @@
 ﻿0
-1 Adds a 10% chance to flinch the opponent Pokémon to all of the moves used by a Pokémon with this ability that cannot already cause flinching. If a Pokémon with this ability is the first in your belt, decreases the chance of a wild encounter.
+1 Gen 5 10% chance to flinch the opponent Pokémon to all of the moves used by a Pokémon with this ability that cannot already cause flinching. If a Pokémon with this ability is the first in your belt, decreases the chance of a wild encounter.
 2 Summons Rain Dance for 5 turns when a Pokémon with this ability enters the field.
 3 Raises the Speed of a Pokémon with this ability by one stage every turn.
 4 Prevents moves from being a critical hit when targetting a Pokémon with this ability.
