@@ -2088,7 +2088,7 @@ void BattleBase::testCritical(int player, int target)
             else ch = ch >> 1; // only Focus Energy
         }
 
-        int randnum = randint(255) + 1; // randint [1; 256]
+        int randnum = randint(256) + 1; // randint [1; 256]
         critical = randnum < std::min(255, ch); // highest possible crit chance is 255/256
     }
 
