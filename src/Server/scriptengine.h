@@ -216,6 +216,7 @@ public:
     Q_INVOKABLE void changePokePP(int id, int team, int slot, int moveslot, int PP);
 
     Q_INVOKABLE void changeTier(int id, int team, const QString &tier);
+    Q_INVOKABLE void changeGen(int id, int team, int gen, int subgen);
     Q_INVOKABLE void reloadTiers();
     /* Export the SQL databases to old style txt files */
     Q_INVOKABLE void exportMemberDatabase();

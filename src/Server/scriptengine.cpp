@@ -921,6 +921,21 @@ void ScriptEngine::changeTier(int id, int team, const QString &tier)
     }
 }
 
+void ScriptEngine::changeGen(int id, int team, int gen, int subgen)
+{
+    if (testPlayer("changeGen", id) && testTeamCount("changeGen", id, team)) {
+        Pokemon::gen newGen(gen, subgen);
+        if (!newGen.isValid()) {
+            warn("changeGen(id, team, gen, subgen)", "invalid gen", true);
+        } else {
+            myserver->player(id)->team(team).gen = newGen;
+            for (int i = 0; i < 6; i++) {
+                myserver->player(id)->team(team).poke(i) = PokeBattle();
+            }
+        }
+    }
+}
+
 void ScriptEngine::reloadTiers()
 {
     TierMachine::obj()->load();
@@ -946,6 +961,14 @@ void ScriptEngine::changePokeNum(int id, int team, int slot, int num)
 
     p->team(team).poke(slot).num() = num;
     p->team(team).poke(slot).updateStats(p->gen(team));
+    p->team(team).poke(slot).illegal() = true;
+    if (p->team(team).poke(slot).num() != 0) {
+        for (int m = 0; m < 4; m++) {
+            if (p->team(team).poke(slot).move(m) != Move::NoMove) {
+                p->team(team).poke(slot).illegal() = false;
+            }
+        }
+    }
 }
 
 void ScriptEngine::changePokeLevel(int id, int team, int slot, int level)
@@ -966,6 +989,14 @@ void ScriptEngine::changePokeMove(int id, int team, int pslot, int mslot, int mo
     Player *p = myserver->player(id);
     p->team(team).poke(pslot).move(mslot).num() = move;
     p->team(team).poke(pslot).move(mslot).load(p->gen(team));
+    p->team(team).poke(pslot).illegal() = true;
+    if (p->team(team).poke(pslot).num() != 0) {
+        for (int m = 0; m < 4; m++) {
+            if (p->team(team).poke(pslot).move(m) != Move::NoMove) {
+                p->team(team).poke(pslot).illegal() = false;
+            }
+        }
+    }
 }
 
 void ScriptEngine::changePokeGender(int id, int team, int pokeslot, int gender)
