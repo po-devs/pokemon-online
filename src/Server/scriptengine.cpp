@@ -3897,6 +3897,30 @@ int ScriptEngine::subGenerationOfTier(const QString &tier) {
     return -1;
 }
 
+int ScriptEngine::maxLevelOfTier(const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        return TierMachine::obj()->tier(tier).getMaxLevel();
+    }
+    warn("maxLevelOfTier(tier)", "not a valid tier", true);
+    return -1;
+}
+
+int ScriptEngine::modeOfTier(const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        return TierMachine::obj()->tier(tier).getMode();
+    }
+    warn("modeOfTier(tier)", "not a valid tier", true);
+    return -1;
+}
+
+bool ScriptEngine::allowsIllegal(const QString &tier) {
+    if (TierMachine::obj()->exists(tier)) {
+        return TierMachine::obj()->tier(tier).allowIllegal == "true";
+    }
+    warn("allowsIllegal(tier)", "not a valid tier", true);
+    return false;
+}
+
 QScriptValue ScriptEngine::enableStrict(QScriptContext *, QScriptEngine *e)
 {
     ScriptEngine* po = dynamic_cast<ScriptEngine*>(e->parent());

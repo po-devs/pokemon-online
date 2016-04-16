@@ -539,6 +539,9 @@ public:
     Q_INVOKABLE int stoneForForme(int pokeid);
     Q_INVOKABLE int generationOfTier(const QString &tier);
     Q_INVOKABLE int subGenerationOfTier(const QString &tier);
+    Q_INVOKABLE int maxLevelOfTier(const QString &tier);
+    Q_INVOKABLE int modeOfTier(const QString &tier);
+    Q_INVOKABLE bool allowsIllegal(const QString &tier);
     inline quint64 getProcessID(const QProcess* proc)
     {
         #ifdef Q_OS_WIN
