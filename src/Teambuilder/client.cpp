@@ -1629,7 +1629,6 @@ void Client::askForPass(const QByteArray &salt, bool registerRequest, bool repea
     if (!ret) {
         if (loggedIn)
             myregister->setEnabled(true);
-        else emit done();
         return;
     }
     pass = passEdit->text();
