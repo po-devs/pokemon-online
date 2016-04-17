@@ -45,11 +45,6 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
         hi->setWidget(ui->ivbox);
         hi->setFeatures(QDockWidget::DockWidgetMovable);
         ui->horizontalMove->addWidget(hi);
-
-//        QDockWidget *hi2 = new QDockWidget(tr("Level"), this);
-//        hi2->setWidget(ui->levelSettings);
-//        hi2->setFeatures(QDockWidget::DockWidgetClosable);
-//        ui->horizontalPoke->addWidget(hi2);
     }
 
     QSortFilterProxyModel *pokeFilter = new QSortFilterProxyModel(this);
