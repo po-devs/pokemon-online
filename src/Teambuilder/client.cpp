@@ -1515,8 +1515,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
 
     w->addLanguageMenu(menuBar);
 
-    QMenu *helpMenu = menuBar->addMenu(tr("&About"));
-    helpMenu->addAction(tr("&Credits"), w, SLOT(launchCredits()));
+    QMenu *helpMenu = menuBar->addMenu(tr("&Help"));
+    helpMenu->addAction(tr("Visit Pokemon Online Webpage"), w, SLOT(openWebsite()));
+    helpMenu->addAction(tr("Visit Pokemon Online Forum"), w, SLOT(openForum()));
+    helpMenu->addSeparator();
+    helpMenu->addAction(tr("About Pokemon Online"), w, SLOT(launchAbout()));
 
     mymenubar = menuBar;
 
@@ -1626,6 +1629,7 @@ void Client::askForPass(const QByteArray &salt, bool registerRequest, bool repea
     if (!ret) {
         if (loggedIn)
             myregister->setEnabled(true);
+        else emit done();
         return;
     }
     pass = passEdit->text();

@@ -19,7 +19,6 @@
 #include "teambuilderwidget.h"
 #include "teambuilder.h"
 
-bool PokeEdit::advancedWindowClosed = false;
 bool PokeEdit::hackMons = false;
 PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel *pokeModel, QAbstractItemModel *itemsModel, QAbstractItemModel *natureModel) :
     ui(new Ui::PokeEdit),
@@ -41,20 +40,15 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
         master->getDock(LevelDock)->setWidget(ui->levelSettings);
         master->getDock(MoveDock)->setWidget(ui->moveContainer);
     } else {
-        QCloseDockWidget *hi = new QCloseDockWidget(tr("Advanced"), this);
-        hi->setObjectName("AdvancedTab");
+        QCloseDockWidget *hi = new QCloseDockWidget();
+        hi->setObjectName("IvBox");
         hi->setWidget(ui->ivbox);
-        hi->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
+        hi->setFeatures(QDockWidget::DockWidgetMovable);
         ui->horizontalMove->addWidget(hi);
 
-        if (advancedWindowClosed) {
-            hi->close();
-        }
-
-        connect(hi, SIGNAL(closed()), SIGNAL(closeAdvanced()));
 //        QDockWidget *hi2 = new QDockWidget(tr("Level"), this);
 //        hi2->setWidget(ui->levelSettings);
-//        hi2->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable);
+//        hi2->setFeatures(QDockWidget::DockWidgetClosable);
 //        ui->horizontalPoke->addWidget(hi2);
     }
 
@@ -139,16 +133,6 @@ void PokeEdit::fillMoves()
         connect(m_moves[i], SIGNAL(returnPressed()), SLOT(changeMove()));
         connect(m_moves[i], SIGNAL(editingFinished()), SLOT(changeMove()));
     }
-}
-
-void PokeEdit::closeAdvancedTab()
-{
-    findChild<QWidget*>("AdvancedTab")->close();
-}
-
-void PokeEdit::showAdvancedTab()
-{
-    findChild<QWidget*>("AdvancedTab")->show();
 }
 
 void PokeEdit::toggleHackmons()

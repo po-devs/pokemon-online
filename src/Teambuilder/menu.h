@@ -29,6 +29,7 @@ signals:
     void goToOnline();
     void goToCredits();
     void goToExit();
+    void goToAbout();
 
     void downloadUpdateRequested();
 public slots:

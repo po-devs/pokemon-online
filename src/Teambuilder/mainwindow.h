@@ -32,7 +32,9 @@ public:
     void changeTheme(const QString &theme);
 public slots:
     void launchMenu();
-    void launchCredits();
+    void launchAbout();
+    void openWebsite();
+    void openForum();
     void launchTeamBuilder();
     void reloadPokemonDatabase();
     void goOnline(const QString &url, const quint16 port, const QString &name);

@@ -29,9 +29,6 @@ signals:
 public slots:
     void switchToTab(int index);
     void choosePokemon();
-    /* Close the advanced tab */
-    void toggleAdvanced();
-    void closeAdvanced();
     void toggleHackmons();
     /* Called from boxes, when team is changed */
     void updatePokemons();
