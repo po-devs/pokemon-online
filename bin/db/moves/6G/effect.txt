@@ -420,7 +420,7 @@
 445 If the target is the opposite gender of the user, lowers the target's Special Attack by 2 stages.
 446 Damages the opponent's Pokémon as they switch in for X/8 of their max HP, where X is the effectiveness of Rock moves against that Pokémon.
 447 This attack's power is 20 if the target's weight is 10 kilograms (kg) or less, 40 if 25 kg or less, 60 if 50 kg or less, 80 if 100 kg or less, 100 if 200 kg or less, and 120 if more than 200 kg.
-448 Confuses the target if used by Chatot.
+448 Confuses the target.
 449 This attack's type changes to match the Plate held by the user.
 450 If the target is holding a Berry, the user consumes that Berry.
 451 Has a 70% chance to raise the user's Special Attack by 1 stage.
