@@ -2,7 +2,9 @@ QT += network \
     xml \
     declarative \
     opengl \
-    script
+    script \
+    webkit \
+    webkitwidgets
 
 TARGET = Pokemon-Online
 TEMPLATE = app

@@ -9,6 +9,9 @@
 #include <QStyleFactory>
 #endif
 #include <QtCore/QVariant>
+#include <QWebView>
+#include <QWebFrame>
+#include <QEventLoop>
 
 #include <Utilities/functions.h>
 #include <Utilities/pluginmanagerdialog.h>
@@ -377,7 +380,9 @@ void MainEngine::launchMenu()
     connect(menu, SIGNAL(goToTeambuilder()), SLOT(launchTeamBuilder()));
     connect(menu, SIGNAL(goToExit()), SLOT(closeTab()));
     connect(menu, SIGNAL(goToOnline()), SLOT(launchServerChoice()));
-    connect(menu, SIGNAL(goToCredits()), SLOT(launchCredits()));
+    connect(menu, SIGNAL(goToAbout()), SLOT(launchAbout()));
+    connect(menu, SIGNAL(goToWebsite()), SLOT(openWebsite()));
+    connect(menu, SIGNAL(goToForum()), SLOT(openForum()));
 }
 
 void MainEngine::updateRunningTime()
@@ -386,35 +391,63 @@ void MainEngine::updateRunningTime()
     settings.setValue("Updates/RunningTime", QString::number(::time(NULL)));
 }
 
-void MainEngine::launchCredits()
+void MainEngine::launchAbout()
 {
-    QFile fichier("db/credits.html");
-    if(!fichier.open(QIODevice::ReadOnly)) {
-        return;
-    }
+    QDialog about_dialog;
+    about_dialog.setWindowTitle(tr("About Pokemon Online"));
+    about_dialog.setMaximumSize(800,700);
 
-    QDialog d_credit;
-    d_credit.setMaximumSize(800,700);
-    QVBoxLayout * l = new QVBoxLayout();
+    // Load credits tab
     QScrollArea *scroll = new QScrollArea();
-    QLabel * credit = new QLabel();
-    credit->setOpenExternalLinks(true);
-    credit->setMargin(5);
-    QTextStream out(&fichier);
-    credit->setText(out.readAll());
-    scroll->setWidget(credit);
-    //credit->setMaximumSize(800,600);
-    l->addWidget(scroll);
-    scroll->show();
-    credit->setAttribute(Qt::WA_DeleteOnClose,true);
 
+    QWebView *view = new QWebView();
+    QUrl creditsUrl("https://raw.githubusercontent.com/po-devs/pokemon-online/master/bin/db/credits.html");
+    view->load(creditsUrl);
+    QLabel *lol = new QLabel();
+    QEventLoop loop;
+    connect(view, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    loop.exec();
+    lol->setText(view->page()->mainFrame()->toPlainText());
+
+    lol->setOpenExternalLinks(true);
+    lol->setMargin(5);
+
+    scroll->setWidget(lol);
+    scroll->show();
     scroll->adjustSize();
-    //routine(d_credit);
-    d_credit.setLayout(l);
-    d_credit.setStyleSheet(
-                "QLabel {background:transparent}"
-                           );
-    d_credit.exec();
+
+    // Credits tab done
+
+    QVBoxLayout *aboutTabLayout = new QVBoxLayout();
+    QTabWidget *aboutTabs = new QTabWidget();
+
+    // TODO: Load About tab
+    // aboutTabs->addTab(layout, tr("About"));
+    aboutTabs->addTab(scroll, tr("Credits"));
+
+    aboutTabLayout->addWidget(aboutTabs);
+
+    about_dialog.setLayout(aboutTabLayout);
+
+    QHBoxLayout *bottomLineLayout = new QHBoxLayout();
+    QLabel *bottomLabel = new QLabel();
+    bottomLabel->setText("© 2016 <a href=\"http://pokemon-online.eu/\">Pokémon Online!</a>");
+    bottomLineLayout->addWidget(bottomLabel);
+
+    aboutTabLayout->addLayout(bottomLineLayout);
+    about_dialog.exec();
+}
+
+void MainEngine::openWebsite()
+{
+    QString link = "http://pokemon-online.eu/";
+    QDesktopServices::openUrl(QUrl(link));
+}
+
+void MainEngine::openForum()
+{
+    QString forumLink = "http://pokemon-online.eu/forums/";
+    QDesktopServices::openUrl(QUrl(forumLink));
 }
 
 void MainEngine::launchTeamBuilder()

@@ -48,13 +48,9 @@ TeamMenu::TeamMenu(TeamBuilder *tb, QAbstractItemModel *pokeModel, TeamHolder *t
 void TeamMenu::addMenus(QMenuBar *b)
 {
     QMenu *options = b->addMenu(tr("&Options"));
-    QAction *adv = options->addAction(tr("&Advanced menu"), this, SLOT(toggleAdvanced()));
-    adv->setCheckable(true);
-    adv->setChecked(!PokeEdit::advancedWindowClosed);
     QAction *hackmons = options->addAction(tr("&Show Illegal"), this, SLOT(toggleHackmons()));
     hackmons->setCheckable(true);
     hackmons->setChecked(PokeEdit::hackMons);
-    advancedMenu = adv;
     hackMons = hackmons;
 }
 
@@ -120,7 +116,6 @@ void TeamMenu::createIndexIfNeeded(int index)
             connect(ui->pokemons[index], SIGNAL(numChanged()), SLOT(tabIconChanged()));
             connect(ui->pokemons[index], SIGNAL(nameChanged()), SIGNAL(teamChanged()));
             connect(ui->pokemons[index], SIGNAL(itemChanged()), SIGNAL(teamChanged()));
-            connect(ui->pokemons[index], SIGNAL(closeAdvanced()), SLOT(closeAdvanced()));
         }
     } else if (index == 6) {
         if (!ui->boxes) {
@@ -136,18 +131,6 @@ QWidget *TeamMenu::widget(int index)
     return index < 6 ? (QWidget*)ui->pokemons[index] : (QWidget*)ui->boxes;
 }
 
-void TeamMenu::closeAdvanced()
-{
-    PokeEdit::advancedWindowClosed = true;
-    foreach(PokeEdit *p, ui->pokemons) {
-        p->closeAdvancedTab();
-    }
-
-    if (advancedMenu) {
-        advancedMenu->setChecked(!PokeEdit::advancedWindowClosed);
-    }
-}
-
 void TeamMenu::updatePokemons()
 {
     foreach(PokeEdit *p, ui->pokemons) {
@@ -155,18 +138,6 @@ void TeamMenu::updatePokemons()
     }
     for (int i = 0; i < 6; i++) {
         ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num(),team().team().poke(i).gender()));
-    }
-}
-
-void TeamMenu::toggleAdvanced()
-{
-    if (!PokeEdit::advancedWindowClosed) {
-        closeAdvanced();
-    } else {
-        PokeEdit::advancedWindowClosed = false;
-        foreach(PokeEdit *p, ui->pokemons) {
-            p->showAdvancedTab();
-        }
     }
 }
 

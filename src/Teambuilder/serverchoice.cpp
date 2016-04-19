@@ -150,8 +150,11 @@ QMenuBar * ServerChoice::createMenuBar(MainEngine *w)
     w->addStyleMenu(menuBar);
     w->addLanguageMenu(menuBar);
 
-    QMenu *helpMenu = menuBar->addMenu(tr("&About"));
-    helpMenu->addAction(tr("&Credits"), w, SLOT(launchCredits()));
+    QMenu *helpMenu = menuBar->addMenu(tr("Help"));
+    helpMenu->addAction(tr("Visit Pokemon Online Webpage"), w, SLOT(openWebsite()));
+    helpMenu->addAction(tr("Visit Pokemon Online Forum"), w, SLOT(openForum()));
+    helpMenu->addSeparator();
+    helpMenu->addAction(tr("About Pokemon Online"), w, SLOT(launchAbout()));
 
     return menuBar;
 }
