@@ -2076,19 +2076,16 @@ void BattleBase::testCritical(int player, int target)
 
     else if (gen() == Gen::Stadium) {
         int ch = (baseSpeed + 76) >> 2;
-
-        if (tmove(player).critRaise & 1) // Move with high crit ratio
-            ch = ch << 1 << 2;
-
-        if (tmove(player).critRaise & 2) { // Focus Energy
+ 
+        if (tmove(player).critRaise & 2) // Focus Energy
             ch = (ch << 2) + 160;
-
-            if (tmove(player).critRaise & 1) // Focus Energy + high crit ratio
-                ch = ch << 2;
-            else ch = ch >> 1; // only Focus Energy
-        }
-
-        int randnum = randint(256) + 1; // randint [1; 256]
+        else ch = ch << 1;
+ 
+        if (tmove(player).critRaise & 1) // Move with high crit ratio
+            ch = ch << 2;
+        else ch = ch >> 1;
+ 
+        int randnum = randint(256); // randint [0; 255]
         critical = randnum < std::min(255, ch); // highest possible crit chance is 255/256
     }
 
