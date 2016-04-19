@@ -106,6 +106,7 @@ private:
     //***************//
     QString updateData;
     QString changeLog;
+
 public:
     TeamHolder *trainerTeam();
     ThemeAccessor *theme();
