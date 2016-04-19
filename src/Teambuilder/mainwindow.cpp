@@ -9,8 +9,8 @@
 #include <QStyleFactory>
 #endif
 #include <QtCore/QVariant>
-#include <QtWebKitWidgets/QWebView>
-#include <QtWebKitWidgets/QWebFrame>
+#include <QWebView>
+#include <QWebFrame>
 #include <QEventLoop>
 
 #include <Utilities/functions.h>
