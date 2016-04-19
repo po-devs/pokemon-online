@@ -13,7 +13,6 @@
 #endif
 #include <QtCore/QVariant>
 
-
 #include <Utilities/functions.h>
 #include <Utilities/pluginmanagerdialog.h>
 #include <PokemonInfo/teamholder.h>
@@ -187,10 +186,7 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     trayIcon->show();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), displayer, SLOT(raise()));
-    connect(trayIcon, SIGNAL(messageClicked()), SLOT(raiseLastNotificationSender()));    
-
-    //connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(creditsRecieved(QNetworkReply*)));
-
+    connect(trayIcon, SIGNAL(messageClicked()), SLOT(raiseLastNotificationSender()));
 }
 
 MainEngine::~MainEngine()
