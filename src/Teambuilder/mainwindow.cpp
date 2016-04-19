@@ -403,16 +403,16 @@ void MainEngine::launchAbout()
     QWebView *view = new QWebView();
     QUrl creditsUrl("https://raw.githubusercontent.com/po-devs/pokemon-online/master/bin/db/credits.html");
     view->load(creditsUrl);
-    QLabel *lol = new QLabel();
+    QLabel *creditsText = new QLabel();
     QEventLoop loop;
     connect(view, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
     loop.exec();
-    lol->setText(view->page()->mainFrame()->toPlainText());
+    creditsText->setText(view->page()->mainFrame()->toPlainText());
 
-    lol->setOpenExternalLinks(true);
-    lol->setMargin(5);
+    creditsText->setOpenExternalLinks(true);
+    creditsText->setMargin(5);
 
-    scroll->setWidget(lol);
+    scroll->setWidget(creditsText);
     scroll->show();
     scroll->adjustSize();
 
