@@ -401,7 +401,7 @@ void MainEngine::launchAbout()
     QScrollArea *scroll = new QScrollArea();
 
     QWebView *view = new QWebView();
-    QUrl creditsUrl("https://raw.githubusercontent.com/turbedi/pokemon-online/UiChanges/bin/db/credits.html");
+    QUrl creditsUrl("https://raw.githubusercontent.com/po-devs/pokemon-online/master/bin/db/credits.html");
     view->load(creditsUrl);
     QLabel *lol = new QLabel();
     QEventLoop loop;
