@@ -2,7 +2,7 @@ QT += network \
     xml \
     declarative \
     opengl \
-    script
+    script \
     webkit \
     webkitwidgets
 
