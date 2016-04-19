@@ -7,8 +7,12 @@
 #include <QScrollArea>
 #include <QStandardPaths>
 #include <QStyleFactory>
+#include <QWebView>
+#include <QWebFrame>
+#include <QEventLoop>
 #endif
 #include <QtCore/QVariant>
+
 
 #include <Utilities/functions.h>
 #include <Utilities/pluginmanagerdialog.h>
@@ -183,7 +187,10 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     trayIcon->show();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), displayer, SLOT(raise()));
-    connect(trayIcon, SIGNAL(messageClicked()), SLOT(raiseLastNotificationSender()));
+    connect(trayIcon, SIGNAL(messageClicked()), SLOT(raiseLastNotificationSender()));    
+
+    //connect(&manager, SIGNAL(finished(QNetworkReply*)), SLOT(creditsRecieved(QNetworkReply*)));
+
 }
 
 MainEngine::~MainEngine()
@@ -395,18 +402,21 @@ void MainEngine::launchAbout()
     about_dialog.setMaximumSize(800,700);
 
     // Load credits tab
-    QFile fichier("db/credits.html");
-
-    if (!fichier.open(QIODevice::ReadOnly))
-        return;
-
     QScrollArea *scroll = new QScrollArea();
-    QLabel *credit = new QLabel();
-    credit->setOpenExternalLinks(true);
-    credit->setMargin(5);
-    QTextStream out(&fichier);
-    credit->setText(out.readAll());
-    scroll->setWidget(credit);
+
+    QWebView *view = new QWebView();
+    QUrl creditsUrl("https://raw.githubusercontent.com/turbedi/pokemon-online/UiChanges/bin/db/credits.html");
+    view->load(creditsUrl);
+    QLabel *lol = new QLabel();
+    QEventLoop loop;
+    connect(view, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    loop.exec();
+    lol->setText(view->page()->mainFrame()->toPlainText());
+
+    lol->setOpenExternalLinks(true);
+    lol->setMargin(5);
+
+    scroll->setWidget(lol);
     scroll->show();
     scroll->adjustSize();
 
