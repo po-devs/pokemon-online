@@ -7,11 +7,11 @@
 #include <QScrollArea>
 #include <QStandardPaths>
 #include <QStyleFactory>
+#endif
+#include <QtCore/QVariant>
 #include <QWebView>
 #include <QWebFrame>
 #include <QEventLoop>
-#endif
-#include <QtCore/QVariant>
 
 #include <Utilities/functions.h>
 #include <Utilities/pluginmanagerdialog.h>
