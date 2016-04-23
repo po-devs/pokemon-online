@@ -710,7 +710,7 @@ struct MMDetect : public MM
             int x = 1 << (std::min(protectCount, 3));
 
             return (b.randint() & (x-1)) == 0;
-        } else {
+        } else if (b.gen() <= 5) {
             int x = 1 << (std::min(protectCount, 8));
 
             if (x >= 256) {
@@ -718,6 +718,9 @@ struct MMDetect : public MM
             } else {
                 return (b.randint() & (x-1)) == 0;
             }
+        } else {            
+            double x = 100.0 / (pow(3.0, std::min(protectCount, 6)));
+            return b.coinflip(x, 100.0);
         }
     }
 
