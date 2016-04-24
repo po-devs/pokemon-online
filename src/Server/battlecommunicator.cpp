@@ -332,6 +332,5 @@ void BattleCommunicator::removeBattles()
         showResult(battle, Tie, mybattles[battle]->id(0));
 
         emit battleFinished(battle, Tie, mybattles[battle]->id(0), mybattles[battle]->id(1));
-        emit battleFinished(battle, Close, mybattles[battle]->id(0), mybattles[battle]->id(1));
     }
 }
