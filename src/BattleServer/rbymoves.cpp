@@ -779,7 +779,10 @@ struct RBYPetalDance : public MM
         inc(poke(b,s)["PetalDanceCount"], -1);
         if (poke(b,s).value("PetalDanceCount").toInt() <= 0) {
             poke(b,s).remove("PetalDanceCount");
-            b.inflictConfused(s, s, true);
+            if (b.isStadium()) {
+                b.sendMoveMessage(93,0,s,type(b,s)); //not sure if the message displays too but why not!
+            }
+            b.inflictConfused(s, s, b.isStadium()); //RBY doesn't tell when confused. This can reveal duration if left alone
         }
     }
 
