@@ -395,7 +395,16 @@ struct IMCriticalPoke : public IM
     }
 
     static void btl(int s, int, BS &b) {
-        if (b.pokenum(s).pokenum == poke(b,s)["ItemArg"].toInt()) {
+        int num = b.pokenum(s).pokenum;
+        //Hackmons transforming should retain their boost
+        if (poke(b,s).contains("PreTransformPoke")) {
+            int num2 = PokemonInfo::Number(poke(b,s).value("PreTransformPoke").toString()).pokenum;
+            //But not Ditto!
+            if (num2 != Pokemon::Ditto) {
+                num = num2;
+            }
+        }
+        if (num == poke(b,s)["ItemArg"].toInt()) {
             tmove(b,s).critRaise += 2;
         }
     }
