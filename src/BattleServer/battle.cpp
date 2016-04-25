@@ -798,6 +798,7 @@ void BattleSituation::analyzeChoices()
             switches.push_back(i);
         } else if (choice(i).attackingChoice()){
             if (gen() >= 5) {
+                calleffects(i, i, "PriorityChoice"); //Me First. Needs to go above aeffects
                 callaeffects(i, i, "PriorityChoice");
             }
             priorities[tmove(i).priority].push_back(i);

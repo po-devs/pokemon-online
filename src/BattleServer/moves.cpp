@@ -4364,6 +4364,7 @@ struct MMMeFirst : public MM
         functions["MoveSettings"] = &ms;
         functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+        functions["PriorityChoice"] = &ms;
     }
 
     static void ms(int s, int, BS &b) {
