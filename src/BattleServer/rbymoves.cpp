@@ -563,6 +563,15 @@ struct RBYHyperBeam : public MM
 {
     RBYHyperBeam() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["AttackSomehowFailed"] = &asf;
+    }
+
+    static void asf(int s, int, BS &b) {
+        if (!b.isStadium())
+            return;
+
+        poke(b,s)["Recharging"] = b.turn()+1;
+        addFunction(poke(b,s), "TurnSettings", "HyperBeam", &ts);
     }
 
     static void uas(int s, int t, BS &b) {
