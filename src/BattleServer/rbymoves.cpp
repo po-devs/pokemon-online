@@ -909,7 +909,9 @@ struct RBYSubstitute : public MM
             b.sendMoveMessage(128, 0, s,0,s);
             return;
         }
-        if (b.poke(s).lifePoints() < b.poke(s).totalLifePoints()/4) {
+        int currentHP = b.poke(s).lifePoints();
+        int quarterMax = b.poke(s).totalLifePoints() / 4;
+        if ((currentHP < quarterMax) || (b.isStadium() && currentHP <= quarterMax)) {
             b.failSilently(s);
             b.sendMoveMessage(8,0,s);
             return;
@@ -924,6 +926,7 @@ struct RBYSubstitute : public MM
         b.changeHp(s, newHp);
         if (b.koed(s)) {
             b.koPoke(s, s);
+            b.notifyKO(s); //otherwise they wont know!
         } else {
             fpoke(b,s).add(BS::BasicPokeInfo::Substitute);
             fpoke(b,s).substituteLife = b.poke(s).totalLifePoints()/4+1;
