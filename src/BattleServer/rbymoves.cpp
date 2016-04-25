@@ -960,6 +960,15 @@ struct RBYTransform : public MM
 {
     RBYTransform() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        //Can't transform into a transformed pokemon in Stadium
+        if (b.isStadium() && poke(b,t).contains("PreTransformPoke")) {
+            fturn(b,s).add(TM::Failed);
+            return;
+        }
     }
 
     static void uas(int s, int t, BS &b) {
