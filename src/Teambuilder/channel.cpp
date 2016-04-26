@@ -4,7 +4,6 @@
 
 #include "client.h"
 #include "channel.h"
-//#include <windows.h>
 
 Channel::Channel(const QString &name, int id, Client *parent)
     : QObject(parent), state(Inactive), client(parent), myname(name), myid(id), readyToQuit(false), stillLoading(true)
