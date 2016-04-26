@@ -515,7 +515,22 @@ void BaseBattleWindow::onUseAttack(int, int, bool, bool)
 void BaseBattleWindow::flashIfNeeded()
 {
     if(!this->window()->isActiveWindow() && flashWhenMoved()) {
-        qobject_cast<QApplication*>(qApp)->alert(this, 0);
+        // QAplication::alert is bugged on Qt 5.0.2 (fixed in 5.1)
+        // QApplication::alert(client, 10000);
+        // Workaround until we use a newer Qt version
+        //qobject_cast<QApplication*>(qApp)->alert(this, 0);
+
+#ifdef Q_OS_WIN
+            FLASHWINFO flashInfo;
+                flashInfo.cbSize=sizeof(FLASHWINFO);
+                flashInfo.hwnd=(HWND)this->winId();
+                flashInfo.dwFlags=FLASHW_TRAY|FLASHW_TIMERNOFG;
+                flashInfo.uCount=0;
+                flashInfo.dwTimeout=0;
+                ::FlashWindowEx(&flashInfo);
+
+#endif
+
     }
 }
 

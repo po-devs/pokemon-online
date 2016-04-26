@@ -667,7 +667,20 @@ void Channel::checkFlash(const QString &haystack, const QString &needle)
     /* Only activates if no window has focus */
     if (!QApplication::activeWindow()) {
         if (haystack.contains(QRegExp(needle, Qt::CaseInsensitive))) {
-            QApplication::alert(client, 10000);
+            // QAplication::alert is bugged on Qt 5.0.2 (fixed in 5.1)
+            // QApplication::alert(client, 10000);
+            // Workaround until we use a newer Qt version
+#ifdef Q_OS_WIN
+            FLASHWINFO flashInfo;
+                flashInfo.cbSize=sizeof(FLASHWINFO);
+                flashInfo.hwnd=(HWND)client->winId();
+                flashInfo.dwFlags=FLASHW_TRAY|FLASHW_TIMERNOFG;
+                flashInfo.uCount=0;
+                flashInfo.dwTimeout=10000;
+                ::FlashWindowEx(&flashInfo);
+
+#endif
+
             client->raise();
         }
     }
