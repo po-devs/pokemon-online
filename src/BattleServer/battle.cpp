@@ -2240,11 +2240,14 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
     return !pokeMemory(player).value("AbilityNullified").toBool();
 }
 
-bool BattleSituation::hasWorkingTeamAbility(int play, int ability)
+bool BattleSituation::hasWorkingTeamAbility(int play, int ability, int excludedSlot)
 {
     int p = player(play);
     for (int i = 0; i < numberPerSide(); i++) {
         int s = slot(p, i);
+        if (s == excludedSlot) { //Unnerve. Checks if any team mate has the ability still
+            continue;
+        }
         if (!koed(s) && hasWorkingAbility(s, ability)) {
             return true;
         }

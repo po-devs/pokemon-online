@@ -2120,10 +2120,24 @@ struct AMPickUp : public AM {
 struct AMUnnerve : public AM {
     AMUnnerve() {
         functions["UponSetup"] = &us;
+        functions["OnLoss"] = &ol;
+        functions["UponSwitchOut"] = &ol;
     }
 
     static void us(int s, int, BS &b) {
         b.sendAbMessage(102,0,s);
+    }
+
+    static void ol(int s, int, BS &b) {
+        if (!b.hasWorkingTeamAbility(s, Ability::Unnerve, b.slot(s))) {
+            QList<int> tars = b.revs(s);
+            foreach (int p, tars) {
+                int item = b.poke(p).item();
+                if (ItemInfo::isBerry(item)) {
+                    ItemEffect::activate("UponReactivation", item, p, p, b);
+                }
+            }
+        }
     }
 };
 
