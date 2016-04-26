@@ -50,6 +50,7 @@ void BattleRBY::changeStatus(int player, int status, bool tell, int turns)
     }
     // Sub blocks status in Stadium
     if (hasSubstitute(player) && isStadium()) {
+        sendMoveMessage(128, 2, player,0,0, tmove(player).attack);
         return;
     }
 
@@ -559,6 +560,12 @@ bool BattleRBY::testAccuracy(int player, int target, bool silent)
     //test for dig/fly here
     if (acc == 0 || acc == 101) {
         return true;
+    }
+
+    //Stadium: Draining moves miss against sub
+    if (isStadium() && hasSubstitute(target) && tmove(player).recoil > 0) {
+        notifyMiss(multiTar, player, target);
+        return false;
     }
 
     /* For deliberate misses, like with counter */

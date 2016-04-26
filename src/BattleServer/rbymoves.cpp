@@ -624,6 +624,14 @@ struct RBYLeechSeed : public MM
         if (b.hasType(t, Type::Grass) || b.poke(t).hasStatus(Pokemon::Seeded)) {
             b.failSilently(s);
             b.sendMoveMessage(72, 0, t, Type::Grass);
+            return;
+        }
+
+        //Stadium: Leech Seed misses against subs
+        if (b.isStadium() && b.hasSubstitute(t)) {
+            b.failSilently(s);
+            b.notifyMiss(false, s, t);
+            return;
         }
     }
 
