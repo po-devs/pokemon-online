@@ -1250,7 +1250,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
             * (20+turnMemory(player).value("Stat6AbilityModifier").toInt())/20
             * (20+turnMemory(player).value("Stat6PartnerAbilityModifier").toInt())/20
             * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20
-            * (20+pokeMemory(player).value("Stat6BerryModifier").toInt());
+            * (20+pokeMemory(player).value("Stat6BerryModifier").toInt())/20;
 
     pokeMemory(player).remove("Stat6BerryModifier");
     if (coinflip(unsigned(acc), 100)) {
