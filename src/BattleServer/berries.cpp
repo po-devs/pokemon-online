@@ -225,21 +225,23 @@ struct BMAntiNormal : public BM
 struct BMSuperHP : public BM
 {
     BMSuperHP() {
-        functions["TestPinch"] = &uodr;
+        functions["UponOffensiveDamageReceived"] = &uodr;
     }
 
     static void uodr(int s, int, BS &b) {
-        if (!b.attacking()) {
-            return;
-        }
         if (b.attacker() == s)
             return;
-        if (fturn(b,b.attacker()).typeMod <= 0)
+        if (slot(b,s).value("DoomDesireDamagingNow").toBool()) {
+            if (slot(b,s).value("DoomDesireTypeMod").toInt() <= 0) {
+                return;
+            }
+        } else if (fturn(b,b.attacker()).typeMod <= 0) {
             return;
+        }
         if (b.canHeal(s,BS::HealByItem,b.poke(s).item())) {
             b.eatBerry(s);
             b.sendBerryMessage(6,s,0);
-            b.healLife(s, b.poke(s).totalLifePoints()/5);
+            b.healLife(s, b.poke(s).totalLifePoints()/4);
         }
     }
 };

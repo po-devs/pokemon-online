@@ -1707,6 +1707,7 @@ struct MMDoomDesire : public MM
                     b.calculateTypeModStab(s, s);
 
                     int typemod = fturn(b,s).typeMod;
+                    slot(b,s)["DoomDesireTypeMod"] = typemod;
                     if (typemod < -50) {
                         /* If it's ineffective we just say it */
                         b.notify(BS::All, BattleCommands::Effective, s, quint8(0));
@@ -1733,9 +1734,11 @@ struct MMDoomDesire : public MM
                     tmove(b, doomuser).recoil = 0;
                     b.clearBp();
 
+                    slot(b,s)["DoomDesireDamagingNow"] = true;
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                     b.inflictDamage(s, damage, doomuser, true, true);
+                    slot(b,s)["DoomDesireDamagingNow"] = false;
                 }
             }
         }
