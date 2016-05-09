@@ -28,6 +28,7 @@ public:
 signals:
     void natureChanged(int);
     void natureBoostChanged();
+    void EVsChanged();
 
 private slots:
     void changeEV(const QString &newValue);
