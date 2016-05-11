@@ -5805,7 +5805,7 @@ struct MMTransform : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if ( fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget"))) {
+        if ( fpoke(b,t).flags & BS::BasicPokeInfo::Transformed || fpoke(b,s).flags & BS::BasicPokeInfo::Transformed || (b.hasWorkingAbility(t, Ability::Illusion) && poke(b,t).contains("IllusionTarget"))) {
             fturn(b,s).add(TM::Failed);
             return;
         }
