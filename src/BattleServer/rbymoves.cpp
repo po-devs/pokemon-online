@@ -181,8 +181,9 @@ struct RBYBind : public MM
     }
 
     static void ts(int s, int, BS &b) {
-        /* If the opponent was koed, reset everything */
         int t = b.opponent(s);
+        /* If the opponent was koed, reset everything */
+        if (!poke(b,t).contains("Bound")) {
             poke(b,s).remove("BindCount");
         }
         if (poke(b,s).value("LastBind").toInt() == b.turn()-1 && poke(b,s).value("BindCount").toInt() > 0) {
