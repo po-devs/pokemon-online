@@ -13,6 +13,6 @@ page{{
 }}
 
 tier{{
-	<img src='poke_img/{imagelink}' />
+	<img src='http://pokemon-online.eu/images/pokemon/x-y/{imagelink}' />
 	<p class='tier'><a href='{tier}/index.html'>Tier {tier}</a></p>
 }}
