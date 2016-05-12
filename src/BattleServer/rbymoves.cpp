@@ -132,6 +132,8 @@ struct RBYBide : public MM
             b.sendMoveMessage(9, 1, s);
             if (damage == 0) {
                 b.notifyFail(s);
+            } else if (poke(b,t).value("Invulnerable").toBool() && b.isStadium()) { // Bide fails against invulnerable states from Dig and Fly
+                b.notifyFail(s);
             } else {
                 b.inflictDamage(t, 2*damage, s, true);
             }
@@ -179,8 +181,9 @@ struct RBYBind : public MM
     }
 
     static void ts(int s, int, BS &b) {
+        int t = b.opponent(s);
         /* If the opponent was koed, reset everything */
-        if(!poke(b, b.opponent(s)).contains("Bound")) {
+        if (!poke(b,t).contains("Bound")) {
             poke(b,s).remove("BindCount");
         }
         if (poke(b,s).value("LastBind").toInt() == b.turn()-1 && poke(b,s).value("BindCount").toInt() > 0) {
@@ -190,7 +193,7 @@ struct RBYBind : public MM
             /* Bind does the same damage every turn */
             addFunction(turn(b,s), "CustomAttackingDamage", "Bind", &cad);
             if (!b.isStadium()) {
-                turn(b,b.opponent(s)) ["ForceBind"] = true;
+                turn(b,t) ["ForceBind"] = true;
             }
             initMove(fpoke(b,s).lastMoveUsed, b.gen(), tmove(b,s));
             turn(b,s)["TellPlayers"] = false;
@@ -208,7 +211,12 @@ struct RBYBind : public MM
         int t = b.opponent(s);
 
         if (!poke(b,t).contains("Bound")) {
-            fturn(b,s).add(TM::UsePP); //If the opponent switched out, we use an additional PP
+            if (!b.isStadium()) {
+                fturn(b,s).add(TM::UsePP); //If the opponent switched out, we use an additional PP
+            } else { // In Stadium, Bind stops when target switches out
+                poke(b,s).remove("BindCount");
+                return;
+            }
         } else {
             tmove(b,s).accuracy = 0;
             tmove(b,s).power = 1;
@@ -228,9 +236,15 @@ struct RBYBind : public MM
     static void uas2(int s, int t, BS &b) {
         // If the opponent switched, we start all over again
         if (!poke(b,t).contains("Bound")) {
-            uas(s, t, b);
-            return;
+            if (!b.isStadium()) {
+                uas(s, t, b);
+                return;
+            } else { // In Stadium, Bind stops when target switches out
+                poke(b,s).remove("BindCount");
+                return;
+            }
         }
+
         poke(b,s)["LastBind"] = b.turn();
         inc(poke(b,s)["BindCount"], -1);
 
