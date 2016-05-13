@@ -3065,30 +3065,28 @@ void BattleSituation::makePokemonLast(int t)
 
 int BattleSituation::calculateDamage(int p, int t)
 {
+    PokeBattle &poke = this->poke(p);
+    int level = fpoke(p).level;
+    int attack, def;
+    bool crit = turnMem(p).contains(TM::CriticalHit);
+    int attackused = tmove(p).attack;
+    int cat = tmove(p).category;
+
     if (gen().num == 2) {
         calleffects(p, t, "DamageFormulaStart");
 
-        PokeBattle &poke = this->poke(p);
-
-        int level = fpoke(p).level;
-        int atk, def;
-        bool crit = turnMem(p).contains(TM::CriticalHit);
-
-        int attackused = tmove(p).attack;
-
-        int cat = tmove(p).category;
         QString qA, qD;
         if (cat == Move::Physical) {
-            atk = getStat(p, Attack, 1);
+            attack = getStat(p, Attack, 1);
             qA = "Stat"+QString::number(Attack);
             def = getStat(t, Defense, 1);
             qD = "Stat"+QString::number(Defense);
             if ((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned"))
                 && !(crit && turnMemory(p).value("CritIgnoresAll").toBool())) {
-                atk = std::max(1, atk / 2);
+                attack = std::max(1, attack / 2);
             }
         } else {
-            atk = getStat(p, SpAttack, 1);
+            attack = getStat(p, SpAttack, 1);
             qA = "Stat"+QString::number(SpAttack);
             def = getStat(t, SpDefense, 1);
             qD = "Stat"+QString::number(SpDefense);
@@ -3103,10 +3101,10 @@ int BattleSituation::calculateDamage(int p, int t)
         callieffects(t, t, "StatModifier");
 
         // Thick Club and Light Ball
-        atk = atk * (20 + turnMemory(p).value(qA+"ItemModifier").toInt()) / 20;
+        attack = attack * (20 + turnMemory(p).value(qA+"ItemModifier").toInt()) / 20;
 
-        if (atk > 255 || def > 255) { // Stat Scaling 1
-            atk = (atk / 4) % 256;
+        if (attack > 255 || def > 255) { // Stat Scaling 1
+            attack = (attack / 4) % 256;
             def = (def / 4) % 256;
             if (def == 0) {
                 def = 1;
@@ -3117,7 +3115,7 @@ int BattleSituation::calculateDamage(int p, int t)
         if (turnMemory(t).value(qD+"ItemModifier").toInt() > 0) {
             def = def * (20 + turnMemory(t).value(qD+"ItemModifier").toInt()) / 20;
             if (def > 255) { // Stat Scaling 2
-                atk = (atk / 2) % 256;
+                attack = (attack / 2) % 256;
                 def = (def / 2) % 256;
                 if (def == 0) {
                     def = 1;
@@ -3163,7 +3161,7 @@ int BattleSituation::calculateDamage(int p, int t)
          *  Note: We used 255 as attack and defense were scaled to an 8-bit int if they weren't already.
          *        Power is always less than 255 so that's fine too.
          */
-        int damage = (int)((2 * level / 5 + 2) * (long)power * atk / def / 50);
+        int damage = (int)((2 * level / 5 + 2) * (long)power * attack / def / 50);
 
         if (crit) {
             damage *= 2;
@@ -3225,15 +3223,7 @@ int BattleSituation::calculateDamage(int p, int t)
     calleffects(p,t,"DamageFormulaStart");
 
     context &move = turnMemory(p);
-    PokeBattle &poke = this->poke(p);
 
-    int level = fpoke(p).level;
-    int attack, def;
-    bool crit = turnMem(p).contains(TM::CriticalHit);
-
-    int attackused = tmove(p).attack;
-
-    int cat = tmove(p).category;
     if (cat == Move::Physical) {
         attack = getStat(p, Attack);
         def = getStat(t, Defense);
