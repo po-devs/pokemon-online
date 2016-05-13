@@ -811,10 +811,12 @@ bool BattleRBY::loseStatMod(int player, int stat, int malus, int attacker, bool 
             fpoke(player).stats[stat] = getBoostedStat(player, stat);
         }
 
-        if (poke(player).status() == Pokemon::Burnt) {
-            fpoke(player).stats[Attack] = std::max(fpoke(player).stats[Attack] / 2, 1);
-        } else if (poke(player).status() == Pokemon::Paralysed) {
-            fpoke(player).stats[Speed] = std::max(fpoke(player).stats[Speed] / 4, 1);
+        if (!isStadium()) {
+            if (poke(player).status() == Pokemon::Burnt) {
+                fpoke(player).stats[Attack] = std::max(fpoke(player).stats[Attack] / 2, 1);
+            } else if (poke(player).status() == Pokemon::Paralysed) {
+                fpoke(player).stats[Speed] = std::max(fpoke(player).stats[Speed] / 4, 1);
+            }
         }
     } else {
         notify(All, CappedStat, player, qint8(stat), false);
@@ -837,12 +839,14 @@ bool BattleRBY::gainStatMod(int player, int stat, int bonus, int, bool tell)
 
         // RBY Doubles and Triples are dumb.
         // Actually they don't exist, but this is just in case.
-        for (int i = 0; i < numberOfSlots(); i++) {
-            if (i != player) {
-                if (poke(i).status() == Pokemon::Burnt) {
-                    fpoke(i).stats[Attack] = std::max(fpoke(i).stats[Attack] / 2, 1);
-                } else if (poke(i).status() == Pokemon::Paralysed) {
-                    fpoke(i).stats[Speed] = std::max(fpoke(i).stats[Speed] / 4, 1);
+        if (!isStadium()) {
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (i != player) {
+                    if (poke(i).status() == Pokemon::Burnt) {
+                        fpoke(i).stats[Attack] = std::max(fpoke(i).stats[Attack] / 2, 1);
+                    } else if (poke(i).status() == Pokemon::Paralysed) {
+                        fpoke(i).stats[Speed] = std::max(fpoke(i).stats[Speed] / 4, 1);
+                    }
                 }
             }
         }
