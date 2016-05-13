@@ -3061,18 +3061,16 @@ void BattleSituation::makePokemonLast(int t)
 
 int BattleSituation::calculateDamage(int p, int t)
 {
+    PokeBattle &poke = this->poke(p);
+    int level = fpoke(p).level;
+    int atk, def;
+    bool crit = turnMem(p).contains(TM::CriticalHit);
+    int attackused = tmove(p).attack;
+    int cat = tmove(p).category;
+
     if (gen().num == 2) {
         calleffects(p, t, "DamageFormulaStart");
 
-        PokeBattle &poke = this->poke(p);
-
-        int level = fpoke(p).level;
-        int atk, def;
-        bool crit = turnMem(p).contains(TM::CriticalHit);
-
-        int attackused = tmove(p).attack;
-
-        int cat = tmove(p).category;
         QString qA, qD;
         if (cat == Move::Physical) {
             atk = getStat(p, Attack, 1);
@@ -3221,15 +3219,7 @@ int BattleSituation::calculateDamage(int p, int t)
     calleffects(p,t,"DamageFormulaStart");
 
     context &move = turnMemory(p);
-    PokeBattle &poke = this->poke(p);
 
-    int level = fpoke(p).level;
-    int attack, def;
-    bool crit = turnMem(p).contains(TM::CriticalHit);
-
-    int attackused = tmove(p).attack;
-
-    int cat = tmove(p).category;
     if (cat == Move::Physical) {
         attack = getStat(p, Attack);
         def = getStat(t, Defense);
