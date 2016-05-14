@@ -1805,6 +1805,10 @@ void BattleBase::sendBack(int player, bool silent)
     if (turnMemory(player).contains("PrimalForme")) {
         turnMemory(player).remove("PrimalForme");
     }
+    if (isStadium()) {
+        battleMemory()["LastDamageTakenByAny"] = 0;
+    }
+
     notify(All, SendBack, player, silent);
 }
 
@@ -1858,6 +1862,11 @@ bool BattleBase::testStatus(int player)
     if (poke(player).status() == Pokemon::Paralysed) {
         if (coinflip(1, 4)) {
             pokeMemory(player).remove("PetalDanceCount"); //RBY
+
+            if (isStadium()) {
+                battleMemory()["LastDamageTakenByAny"] = 0;
+            }
+
             notify(All, StatusMessage, player, qint8(PrevParalysed));
             return false;
         }

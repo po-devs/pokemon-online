@@ -444,6 +444,8 @@ public:
     virtual const context &pokeMemory(int slot) const = 0;
     virtual context &turnMemory(int slot) = 0;
     virtual const context &turnMemory(int slot) const = 0;
+    virtual context &battleMemory() = 0;
+    virtual const context &battleMemory() const = 0;
     virtual BasicMoveInfo &tmove(int slot) = 0;
     virtual const BasicMoveInfo &tmove(int slot) const = 0;
 
