@@ -1,5 +1,5 @@
 page{{
-<html>
+<html><!-- Latest compiled and minified CSS --> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> <!-- Optional theme --> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"> <!-- Latest compiled and minified JavaScript --> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	<head>
 		<title>Usage statistics</title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
@@ -7,12 +7,31 @@ page{{
 	</head>
 	<body>
 		<h1> Usage statistics </h1>
-		{tier*}
+<div class="linkBox">
+    <li class="qlink"><a href="https://www.facebook.com/posimulator" class="ql"><i class="fbIcon"></i></a></li>
+    <li class="qlink"><a href="https://twitter.com/POSimulator" class="ql"><i class="twIcon"></i></a></li>
+    <li class="qlink"><a href="https://plus.google.com/115644974458235392947/posts" class="ql"><i class="gpIcon"></i></a></li>
+    <li class="qlink"><a href="https://github.com/po-devs" class="ql">Source</a></li>
+    <li class="qlink"><a href="http://pokemon-online.eu/forums/showthread.php?17884" class="ql">F.A.Q.</a></li>
+    <li class="qlink"><a href="http://pokemon-online.eu/forums/forumdisplay.php?9-Bugs-and-Fixes" class="ql">Bug Reports</a></li>
+    <li class="qlink"><a href="http://pokemon-online.eu/pages/download/" class="ql">Download</a></li>
+</div>
+		<div class="coloredSeperator">
+ 		   <div class="blueSeperator"></div>
+		   <div class="graySeperator"></div>
+		   <div class="lightGraySeperator"></div>
+		   <div class="greenSeperator"></div>
+ 		   <div class="orangeSeperator"></div>
+		</div>
+		<div class="nodeHolder">{tier*}</div>
 	</body>
 </html>
 }}
 
 tier{{
-	<img src='http://pokemon-online.eu/images/pokemon/x-y/{imagelink}' />
-	<p class='tier'><a href='{tier}/index.html'>Tier {tier}</a></p>
-}}
+<div class="outerNode">
+        <div class="topNode"><img src='http://pokemon-online.eu/images/pokemon/x-y/{imagelink}' /><br />
+        {tier}<a href='{tier}/index.html'><span class="link-spanner"></a></div><br />
+        <div class="bottomNode">Ranked<a href='{tier}/ranked_stats.txt'><span class="link-spanner"></a></div>
+</div>
+    }}

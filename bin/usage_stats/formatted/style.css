@@ -156,9 +156,95 @@ h1 {
 }
 
 body {
-	
+	background-image: url("http://pokemon-online.eu/styles/PO/xenforo/bg.png");
 }
 
 div {
 	margin: 0px;
+}
+
+/*Essentially the entire page content*/
+.nodeHolder {
+	text-align:center;
+}
+
+/*Node for each tier listed*/
+.topNode, .bottomNode{
+	margin: 0px;
+	text-align: center;
+	border: 0.5px solid #B2CCC6;
+	padding: 6px; 
+	background:white;
+	width: 205px;
+	display:inline-block;
+	position:relative;
+}
+.topNode:hover, .bottomNode:hover {
+	background:#B2CCC6;
+}
+/*Holder to keep topNode and bottomNode paired up correctly*/
+.outerNode {
+	margin: 7px;
+	display:inline-block;
+}
+/*Rounded corners*/
+.topNode {
+	border-top-left-radius: 25px;	
+	border-top-right-radius: 25px;
+	border-bottom: 1px solid #B2CCC6;
+}
+.bottomNode {
+	border-bottom-left-radius: 25px;	
+	border-bottom-right-radius: 25px;
+}
+
+/*Turns the div-nodes into a clickable target*/
+.link-spanner{
+  position:absolute; 
+  width:100%;
+  height:100%;
+  top:0;
+  left: 0;
+  z-index: 1;
+}
+/*Multicolor seperator line*/
+.coloredSeperator {
+    clear: both;
+    overflow: hidden;
+}
+.coloredSeperator div {
+    width: 20%;
+    float: left;
+    height: 8px;
+}
+.blueSeperator {
+    background-color: #00aab5;
+}
+.graySeperator {
+    background-color: #b43e5a;
+}
+.lightGraySeperator {
+    background-color: #cccccc;
+}
+.greenSeperator {
+    background-color: #c9e000;
+}
+.orangeSeperator {
+    background-color: #ed4200;
+}
+/*Gray box above Seperator line*/
+.qlink {
+	list-style:none;
+	padding: 1px 10px;
+	float:left;
+	white-space:nowrap;
+	word-wrap:normal;
+}
+.linkBox {
+	background: #333333;
+	height:50px;
+}
+.ql, .ql:hover {
+    text-decoration : none;
+    color : #9f9f9f;
 }
