@@ -232,7 +232,11 @@ div {
 .orangeSeperator {
     background-color: #ed4200;
 }
-/*Gray box above Seperator line*/
+/*Grey box above Seperator line*/
+.greyHeader {	
+	background: #333333;
+	height:50px;
+}
 .qlink {
 	list-style:none;
 	padding: 1px 10px;
@@ -242,9 +246,39 @@ div {
 }
 .linkBox {
 	background: #333333;
-	height:50px;
+	padding-top: 12px;
+	padding-right: 10%;
+	float:right;
 }
 .ql, .ql:hover {
     text-decoration : none;
     color : #9f9f9f;
+}
+.title {
+	color: #FFFFFF;
+	margin:12px 0px 20px;
+	padding:5px;
+	letter-spacing: 2px;
+	background-color: rgba(51, 51, 51, 0.75);
+  text-align: center;
+}
+.headerBar {
+	height:80px;
+	position:relative;
+	background-image: linear-gradient(to bottom, rgb(0, 169, 181) 0%, rgb(0, 158, 169) 100%);
+}
+.dratini {
+	width: 92px;
+	height: 80px;
+	background: url(http://pokemon-online.eu/styles/PO/xenforo/dratini.png) no-repeat bottom center;
+	margin-left: 10px;
+	float:left;
+}
+.siteLogo {
+	background: url(http://pokemon-online.eu/styles/PO/xenforo/logo.png) no-repeat bottom right;
+	height:80px;
+	width:200px;
+	background-color: white;
+	float:left;
+	padding-left:500px;
 }
