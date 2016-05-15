@@ -6,7 +6,8 @@ page{{
 		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
 	</head>
 	<body>
-<div class="headerBar"><div class="siteLogo"></div><div class="dratini"></div><div class="topNav">Home</div><div class="topNav">Forums</div><div class="topNav">Play</div><div class="topNav">Download</div></div>
+<div class="headerBar"><div class="logoBuffer"></div><div class="siteLogo"></div><div class="dratini"></div>
+<div class="topNav">Home</div><div class="topNav">Forums</div><div class="topNav">Play</div><div class="topNav">Download</div></div>
 <div class="greyHeader">
     <div class="linkBox">
     <li class="qlink"><a href="https://www.facebook.com/posimulator" class="ql"><i class="fbIcon"></i></a></li>
@@ -27,6 +28,16 @@ page{{
 		</div>
 <div class="title"><h1> Usage statistics </h1></div>
 		<div class="nodeHolder">{tier*}</div>
+        
+        <div class="bottomBuffer"></div>
+        <div class="coloredSeperator">
+ 		   <div class="blueSeperator"></div>
+		   <div class="graySeperator"></div>
+		   <div class="lightGraySeperator"></div>
+		   <div class="greenSeperator"></div>
+ 		   <div class="orangeSeperator"></div>
+		</div>
+        <div class="greyFooter"></div>
 	</body>
 </html>
 }}

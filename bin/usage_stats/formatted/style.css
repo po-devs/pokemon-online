@@ -237,6 +237,10 @@ div {
 	background: #333333;
 	height:50px;
 }
+.greyFooter {
+	background: #333333;
+	height: 80px;
+}
 .qlink {
 	list-style:none;
 	padding: 1px 10px;
@@ -281,4 +285,7 @@ div {
 	background-color: white;
 	float:left;
 	padding-left:500px;
+}
+.bottomBuffer {
+	margin-top: 20px;
 }
