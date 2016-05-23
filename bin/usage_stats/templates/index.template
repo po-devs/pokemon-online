@@ -6,44 +6,59 @@ page{{
 		<meta http-equiv="Content-Type" content="text/html"; charset="utf-8" />
 	</head>
 	<body>
-<div class="headerBar"><div class="logoBuffer"></div><div class="siteLogo"></div><div class="dratini"></div>
-<div class="topNav">Home</div><div class="topNav">Forums</div><div class="topNav">Play</div><div class="topNav">Download</div></div>
-<div class="greyHeader">
-    <div class="linkBox">
-    <li class="qlink"><a href="https://www.facebook.com/posimulator" class="ql"><i class="fbIcon"></i></a></li>
-    <li class="qlink"><a href="https://twitter.com/POSimulator" class="ql"><i class="twIcon"></i></a></li>
-    <li class="qlink"><a href="https://plus.google.com/115644974458235392947/posts" class="ql"><i class="gpIcon"></i></a></li>
-    <li class="qlink"><a href="https://github.com/po-devs" class="ql">Source</a></li>
-    <li class="qlink"><a href="http://pokemon-online.eu/forums/showthread.php?17884" class="ql">F.A.Q.</a></li>
-    <li class="qlink"><a href="http://pokemon-online.eu/forums/forumdisplay.php?9-Bugs-and-Fixes" class="ql">Bug Reports</a></li>
-    <li class="qlink"><a href="http://pokemon-online.eu/pages/download/" class="ql">Download</a></li>
-</div>
-</div>
-		<div class="coloredSeperator">
- 		   <div class="blueSeperator"></div>
-		   <div class="graySeperator"></div>
-		   <div class="lightGraySeperator"></div>
-		   <div class="greenSeperator"></div>
- 		   <div class="orangeSeperator"></div>
-		</div>
-<div class="title"><h1> Usage statistics </h1></div>
-		<div class="nodeHolder">{tier*}</div>
-        
+        <div class="headerBar">
+            <div class="pageWidth">
+                <div class="logoContainer">
+                    <div style="width: 306.5px;" class="logoProxy"></div>			
+                    <div id="logo"><a href="http://pokemon-online.eu/"><span></span><img src="http://pokemon-online.eu/styles/PO/xenforo/logo.png" alt="Pokemon Online"></a></div>
+                    <div class="dratiniLogo"></div>
+                    <span class="helper"></span>
+                </div>
+                <div id="navigation" class="navigationContainer">
+                    <nav>
+                        <div class="navTabs">
+                            <ul class="publicTabs">
+                                <li class="navTab"><a href="http://pokemon-online.eu/" class="navLink">Home</a></li>
+                                <li class="navTab"><a href="http://pokemon-online.eu/forums/" class="navLink">Forums</a></li>
+                                <li class="navTab"><a href="http://web.pokemon-online.eu" class="navLink">Play</a></li>
+                                <li class="navTab"><a href="http://pokemon-online.eu/pages/download/" class="navLink">Download</a></li>
+                            </ul>
+                        </div>                        
+                    <span class="helper"></span>
+                    </nav>
+                    <div id="searchBar">
+                        <span class="searchIcon"><i class="fa fa-search"></i></span>
+                        <input id="search" type="text" placeholder="Search for Tier.." />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="headerBottomBar"></div>
+        <div class="coloredSeperator">
+           <div class="blueSeperator"></div>
+           <div class="graySeperator"></div>
+           <div class="lightGraySeperator"></div>
+           <div class="greenSeperator"></div>
+           <div class="orangeSeperator"></div>
+        </div>
+        <div class="title"><h1> Usage statistics </h1></div>
+        <div class="nodeHolder">{tier*}</div>
+                
         <div class="bottomBuffer"></div>
         <div class="coloredSeperator">
- 		   <div class="blueSeperator"></div>
-		   <div class="graySeperator"></div>
-		   <div class="lightGraySeperator"></div>
-		   <div class="greenSeperator"></div>
- 		   <div class="orangeSeperator"></div>
-		</div>
+           <div class="blueSeperator"></div>
+           <div class="graySeperator"></div>
+           <div class="lightGraySeperator"></div>
+           <div class="greenSeperator"></div>
+           <div class="orangeSeperator"></div>
+        </div>
         <div class="greyFooter"></div>
 	</body>
 </html>
 }}
 
 tier{{
-<div class="outerNode">
+<div id='{tier}' class="outerNode">
         <div class="topNode"><img src='http://pokemon-online.eu/images/pokemon/x-y/{imagelink}' /><br />
         {tier}<a href='{tier}/index.html'><span class="link-spanner"></a></div><br />
         <div class="bottomNode">Ranked<a href='{tier}/ranked_stats.txt'><span class="link-spanner"></a></div>

@@ -1,173 +1,178 @@
-.tier {
-	margin-top: 8px;
-	margin-bottom: 0px;
-}
-
-.hiddenPower {
-	padding-left: 4px;
-	font-weight: bold;
-}
-
-/* Top 5 pokemon in the tier page */
-.topPokemon {
-	font-weight: bold;
-	margin-bottom: 0px;
-}
-
-/* Lower pokemon in the tier page */
-.lowPokemon {
-	margin-bottom: 0px;
-}
-
-/* Top of a tier page */
-.tierBattleNumber {
-}
-
-/* Top of a pokemon page */
-.pokemonBattleNumber {
-	/*text-align: center;*/
-}
-
-/* Ranks within a pokemon page */
-.pokemonRank {
-	font-weight: bold;
-}
-
-/* Styles <ul> */
-.moveList {
-}
-
-/* Styles <li> */
-.move {
-}
-
-/* Level, item, ability */
-.pokemonTitle {
-	margin-bottom: 0px;
-}
-
-/* Evs, ivs, nature */
-.advanced {
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	font-size: 0.9em;
-}
-
-.smallPercent {
-	padding-left: 4px;
-	font-size: 0.7em;
-}
-
-.button {
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin: 0px;
-}
-
-.normal {
-	color: #a8a878;
-}
-.fighting {
-	color: #c03028;
-}
-.flying {
-	color: #a890f0;
-}
-.poison {
-	color: #a040a0;
-}
-.ground {
-	color: #e0c068;
-}
-.rock {
-	color: #b8a038;
-}
-.bug {
-	color: #a8b820;
-}
-.ghost {
-	color: #705898;
-}
-.steel {
-	color: #b8b8d0;
-}
-.fire {
-	color: #f08030;
-}
-.water {
-	color: #6890f0;
-}
-.grass {
-	color: #78c850;
-}
-.electric {
-	color: #f8d030;
-}
-.psychic {
-	color: #f85888;
-}
-.ice {
-	color: #98d8d8;
-}
-.dragon {
-	color: #7038f8;
-}
-.dark {
-	color: #705848;
-}
-.curse {
-	color: #68a090;
-}
-
-.globaltable th, .globaltable td{
-	background: #dddddd;
-	/*margin: 0;
-	padding: 0;
-	border-width: 5px;
-	border-color: #dddddd;*/
-}
-
-
-/* Links */
-a {
-    text-decoration : none;
-    color : #0ca0dd;
-}
-a:hover {
-    color : #0462dd;
-    text-shadow : 0px 0px 3px #0462dd;
-}
-a img {
-    border : 0px;
-}
-
-header {
-    display : block;
-    margin : 0px auto;
-	/*text-align: center;*/
-	font-size: 1.2em;
-	font-weight: bold;
-}
-
+/*********************GLOBAL*********************/
 h1 {
 	text-align: center;
 }
-
 body {
 	background-image: url("http://pokemon-online.eu/styles/PO/xenforo/bg.png");
+    font-family: 'Source Sans Pro', sans-serif;
+    color: rgb(99, 99, 99);
+    word-wrap: break-word;
+    line-height: 1.28;
+	font: 13px/1.231 arial,helvetica,clean,sans-serif;
 }
-
-div {
+div, ul {
 	margin: 0px;
+    padding: 0px;
+}
+li {
+    list-style: none;
+    margin:  0;
+    padding:  0;
+}
+.greyFooter {
+	background: #333333;
+	height: 80px;
+}
+.bottomBuffer {
+	margin-top: 20px;
+}
+/*Multicolor seperator line*/
+.coloredSeperator {
+    clear: both;
+    overflow: hidden;
+}
+.coloredSeperator div {
+    width: 20%;
+    float: left;
+    height: 8px;
+}
+.blueSeperator {
+    background-color: #00aab5;
+}
+.graySeperator {
+    background-color: #b43e5a;
+}
+.lightGraySeperator {
+    background-color: #cccccc;
+}
+.greenSeperator {
+    background-color: #c9e000;
+}
+.orangeSeperator {
+    background-color: #ed4200;
 }
 
+
+/*top Header*/
+.headerBar {
+    background-image: linear-gradient(to bottom, rgb(0, 169, 181) 0%, rgb(0, 158, 169) 100%);
+    height: 80px;
+    position: relative;
+}
+.pageWidth {
+    padding-right: 5px;
+    padding-left: 5px;
+    max-width: 1300px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.logoContainer {
+    height: 80px;
+    background: #FFF;
+    width: 200px;
+    float: left;
+}
+.logoProxy {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3252342;
+    background-color: #FFF;
+    height: 80px;
+}
+#logo {
+    display: block;
+    float: left;
+    line-height: 46px;
+    height: 50px;
+    max-width: 100%;
+    vertical-align: middle;
+}
+.dratiniLogo {
+    width: 92px;
+    height: 80px;
+    background: url(http://pokemon-online.eu/styles/PO/xenforo/dratini.png) no-repeat bottom center;
+    margin-left: 210px;
+}
+.navigationContainer {
+    float: right;
+}
+.navTabs {
+    float:right;
+    margin-right: 250px;
+    margin-top: 26px;
+    background: transparent;
+    border: 0;
+    padding: 0 25px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 25px;
+}
+.publicTabs {
+    float: left;
+}
+.navTab {
+    margin-right: 30px;
+    float: left;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+.navLink {
+    color: #FFFFFF;
+    font-size: 16px;
+    background: transparent;
+    border: 0;
+    text-shadow: 0 0 0;
+    position:  relative;
+    margin-top: -2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    padding: 2px 0 15px;
+    display: block;
+    float: left;
+    vertical-align: text-bottom;
+    text-align: center;
+    outline: 0 none;
+    height: 25px;
+    line-height: 25px;
+    white-space: nowrap;
+    word-wrap: normal;
+    text-decoration: none;
+}
+.navLink:hover {
+    opacity: 0.7;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+/*Dark grey under header */
+.headerBottomBar {
+    height: 50px;
+    background-color: #333333;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
+/*******************MAIN PAGE*******************/
+/* Main page tier node */
+.tier {
+	margin-top: 8px;
+    margin-bottom: 0px;
+}
+/* "Usage Stats" */
+.title {
+	color: #EFEFEF;
+	margin:12px 0px 20px;
+	padding:5px;
+	letter-spacing: 2px;
+	background-color: rgba(51, 51, 51, 0.75);
+    text-align: center;
+}
 /*Essentially the entire page content*/
 .nodeHolder {
 	text-align:center;
 }
-
 /*Node for each tier listed*/
 .topNode, .bottomNode{
 	margin: 0px;
@@ -197,7 +202,6 @@ div {
 	border-bottom-left-radius: 25px;	
 	border-bottom-right-radius: 25px;
 }
-
 /*Turns the div-nodes into a clickable target*/
 .link-spanner{
   position:absolute; 
@@ -207,85 +211,86 @@ div {
   left: 0;
   z-index: 1;
 }
-/*Multicolor seperator line*/
-.coloredSeperator {
-    clear: both;
-    overflow: hidden;
-}
-.coloredSeperator div {
-    width: 20%;
-    float: left;
-    height: 8px;
-}
-.blueSeperator {
-    background-color: #00aab5;
-}
-.graySeperator {
-    background-color: #b43e5a;
-}
-.lightGraySeperator {
-    background-color: #cccccc;
-}
-.greenSeperator {
-    background-color: #c9e000;
-}
-.orangeSeperator {
-    background-color: #ed4200;
-}
-/*Grey box above Seperator line*/
-.greyHeader {	
-	background: #333333;
-	height:50px;
-}
-.greyFooter {
-	background: #333333;
-	height: 80px;
-}
-.qlink {
-	list-style:none;
-	padding: 1px 10px;
-	float:left;
-	white-space:nowrap;
-	word-wrap:normal;
-}
-.linkBox {
-	background: #333333;
-	padding-top: 12px;
-	padding-right: 10%;
-	float:right;
-}
-.ql, .ql:hover {
+/* Links */
+.topNode#a, .bottomNode#a {
     text-decoration : none;
-    color : #9f9f9f;
+    color : #0ca0dd;
 }
-.title {
-	color: #FFFFFF;
-	margin:12px 0px 20px;
-	padding:5px;
-	letter-spacing: 2px;
-	background-color: rgba(51, 51, 51, 0.75);
-  text-align: center;
+.topNode#a:hover, .bottomNode#a:hover {
+    color : #0462dd;
+    text-shadow : 0px 0px 3px #0462dd;
 }
-.headerBar {
-	height:80px;
-	position:relative;
-	background-image: linear-gradient(to bottom, rgb(0, 169, 181) 0%, rgb(0, 158, 169) 100%);
+.topNode#a img, .bottomNode#a img {
+    border : 0px;
 }
-.dratini {
-	width: 92px;
-	height: 80px;
-	background: url(http://pokemon-online.eu/styles/PO/xenforo/dratini.png) no-repeat bottom center;
-	margin-left: 10px;
-	float:left;
+
+
+
+
+/*******************TIER PAGE*******************/
+/* Top 5 pokemon in the tier page */
+.topPokemon {
+	font-weight: bold;
+	margin-bottom: 0px;
 }
-.siteLogo {
-	background: url(http://pokemon-online.eu/styles/PO/xenforo/logo.png) no-repeat bottom right;
-	height:80px;
-	width:200px;
-	background-color: white;
-	float:left;
-	padding-left:500px;
+/* Lower pokemon in the tier page */
+.lowPokemon {
+	margin-bottom: 0px;
 }
-.bottomBuffer {
-	margin-top: 20px;
+
+
+
+
+/*****************POKEMON PAGE*****************/
+/* Ranks within a pokemon page */
+.pokemonRank {
+	font-weight: bold;
+}
+/* Level, item, ability */
+.pokemonTitle {
+	margin-bottom: 0px;
+}
+/* Evs, ivs, nature */
+.advanced {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 0.9em;
+}
+/*Pokemon page spoiler button */
+.smallPercent {
+	padding-left: 4px;
+	font-size: 0.7em;
+}
+.button {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+}
+/* Hidden Power */
+.hiddenPower {
+	padding-left: 4px;
+	font-weight: bold;
+}
+.normal {   color: #a8a878;}
+.fighting { color: #c03028;}
+.flying {	color: #a890f0;}
+.poison {	color: #a040a0;}
+.ground {	color: #e0c068;}
+.rock {	    color: #b8a038;}
+.bug {	    color: #a8b820;}
+.ghost {    color: #705898;}
+.steel {	color: #b8b8d0;}
+.fire {	    color: #f08030;}
+.water {	color: #6890f0;}
+.grass {	color: #78c850;}
+.electric {	color: #f8d030;}
+.psychic {	color: #f85888;}
+.ice {	    color: #98d8d8;}
+.dragon {	color: #7038f8;}
+.dark {	    color: #705848;}
+.curse {    color: #68a090;}
+.globaltable th, .globaltable td{
+	background: #dddddd;
 }
