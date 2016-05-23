@@ -516,25 +516,19 @@ bool Tier::isValid(const TeamBattle &t)  const
         return false;
     }
 
-    int count = 0;
     int restricted = 0;
-
     for (int i = 0; i< 6; i++) {
         if (t.poke(i).num() != 0) {
             if (isBanned(t.poke(i)))
                 return false;
             if (isRestricted(t.poke(i))) {
                 restricted += 1;
-
-                if (restricted > maxRestrictedPokes && count < numberOfPokemons) {
+                if (restricted > maxRestrictedPokes) {
                     return false;
                 }
             }
-
-            count += 1;
         }
     }
-
     return true;
 }
 
