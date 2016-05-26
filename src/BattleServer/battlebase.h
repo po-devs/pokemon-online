@@ -468,6 +468,7 @@ public:
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
     represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
     virtual void useAttack(int player, int attack, bool specialOccurence = false, bool notify = true) = 0;
+    virtual bool testStatus(int player) = 0;
 
     void healStatus(int player, int status);
     bool isConfused(int player);
