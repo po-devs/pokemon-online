@@ -34,6 +34,8 @@ protected:
     bool testAccuracy(int player, int target, bool silent=false);
     void inflictRecoil(int x, int target);
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell);
+    void sendBack(int player, bool silent);
+    virtual bool testStatus(int player);
 
     void personalEndTurn(int player);
     void setupMove(int i, int move);

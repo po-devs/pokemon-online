@@ -1805,74 +1805,8 @@ void BattleBase::sendBack(int player, bool silent)
     if (turnMemory(player).contains("PrimalForme")) {
         turnMemory(player).remove("PrimalForme");
     }
-    if (isStadium()) {
-        battleMemory()["LastDamageTakenByAny"] = 0;
-    }
 
     notify(All, SendBack, player, silent);
-}
-
-bool BattleBase::testStatus(int player)
-{
-    if (turnMem(player).contains(TM::HasPassedStatus)) {
-        return true;
-    }
-
-    if (poke(player).status() == Pokemon::Asleep) {
-        if (poke(player).statusCount() > 1) {
-            poke(player).statusCount() -= 1;
-            notify(All, StatusMessage, player, qint8(FeelAsleep));
-
-            return false;
-        } else {
-            healStatus(player, Pokemon::Asleep);
-            notify(All, StatusMessage, player, qint8(FreeAsleep));
-
-            return false;
-        }
-    }
-    if (poke(player).status() == Pokemon::Frozen)
-    {
-        notify(All, StatusMessage, player, qint8(PrevFrozen));
-        return false;
-    }
-
-    if (turnMem(player).contains(TM::Flinched)) {
-        notify(All, Flinch, player);
-
-        return false;
-    }
-    if (isConfused(player) && tmove(player).attack != 0) {
-        if (pokeMemory(player)["ConfusedCount"].toInt() > 0) {
-            inc(pokeMemory(player)["ConfusedCount"], -1);
-
-            notify(All, StatusMessage, player, qint8(FeelConfusion));
-
-            if (coinflip(1, 2)) {
-                pokeMemory(player).remove("PetalDanceCount"); //RBY
-                inflictConfusedDamage(player);
-                return false;
-            }
-        } else {
-            healConfused(player);
-            notify(All, StatusMessage, player, qint8(FreeConfusion));
-        }
-    }
-
-    if (poke(player).status() == Pokemon::Paralysed) {
-        if (coinflip(1, 4)) {
-            pokeMemory(player).remove("PetalDanceCount"); //RBY
-
-            if (isStadium()) {
-                battleMemory()["LastDamageTakenByAny"] = 0;
-            }
-
-            notify(All, StatusMessage, player, qint8(PrevParalysed));
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void BattleBase::healStatus(int player, int status)
