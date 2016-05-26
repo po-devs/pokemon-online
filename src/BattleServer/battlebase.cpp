@@ -2053,9 +2053,11 @@ void BattleBase::testCritical(int player, int target)
     }
 
     bool critical = false;
+
     (void) target;
 
     if (!isStadium()) {
+
         // In RBY, Focus Energy reduces crit by 75%
         int up (1), down(1);
         if (tmove(player).critRaise & 1) {
@@ -2064,15 +2066,18 @@ void BattleBase::testCritical(int player, int target)
         if (tmove(player).critRaise & 2) {
             if (gen() == Gen::RedBlue || gen() == Gen::Yellow) {
                 down = 4;
-            } else {
-                up *= 4;
             }
+        } else {
+            up *= 4;
         }
 
         PokeFraction critChance(up, down);
         int randnum = randint(512);
+
         critical = randnum < std::min(510, baseSpeed * critChance);
+
     }
+
     else {
         int ch = (baseSpeed + 76) >> 2;
 
