@@ -326,6 +326,11 @@ struct RBYDig : public MM
         poke(b,s)["DigChargeTurn"] = b.turn();
         poke(b,s)["Invulnerable"] = true;
         poke(b,s)["ChargeMove"] = move(b,s);
+
+        if (b.isStadium()) {
+            b.battleMemory()["LastDamageTakenByAny"] = 0;
+        }
+
         b.changeSprite(s, -1);
 
         addFunction(poke(b,s), "TurnSettings", "Dig", &ts);
