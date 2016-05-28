@@ -3101,22 +3101,26 @@ int BattleSituation::calculateDamage(int p, int t)
         // Thick Club and Light Ball
         atk = atk * (20 + turnMemory(p).value(qA+"ItemModifier").toInt()) / 20;
 
-        if (atk > 255 || def > 255) { // Stat Scaling 1
-            atk = (atk / 4) % 256;
-            def = (def / 4) % 256;
-            if (def == 0) {
-                def = 1;
+        if (gen() != Pokemon::gen(Gen::Stadium2)) {
+            if (atk > 255 || def > 255) { // Stat Scaling 1
+                atk = (atk / 4) % 256;
+                def = (def / 4) % 256;
+                if (def == 0) {
+                    def = 1;
+                }
             }
         }
 
         // Metal Powder
         if (turnMemory(t).value(qD+"ItemModifier").toInt() > 0) {
             def = def * (20 + turnMemory(t).value(qD+"ItemModifier").toInt()) / 20;
-            if (def > 255) { // Stat Scaling 2
-                atk = (atk / 2) % 256;
-                def = (def / 2) % 256;
-                if (def == 0) {
-                    def = 1;
+            if (gen() != Pokemon::gen(Gen::Stadium2)) {
+                if (def > 255) { // Stat Scaling 2
+                    atk = (atk / 2) % 256;
+                    def = (def / 2) % 256;
+                    if (def == 0) {
+                        def = 1;
+                    }
                 }
             }
         }
