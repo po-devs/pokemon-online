@@ -1223,7 +1223,7 @@ void BattleBase::spectatingChat(int id, const QString &str)
 void BattleBase::sendMessage(int id, const QString &type, const QString &content)
 {
     //In the future, add own non-priority command instead
-    notify(id, EndMessage, id, QString("%1 - %2").arg(type, content));
+    notify(id, Notice, id, type, content);
 }
 
 void BattleBase::sendMoveMessage(int move, int part, int src, int type, int foe, int other, const QString &q)
