@@ -177,6 +177,9 @@ int Coro_stackSpaceAlmostGone(Coro *self)
 	return Coro_bytesLeftOnStack(self) < CORO_STACK_SIZE_MIN;
 }
 
+/* Functions inlined sometimes and sometimes not by mingw and creating undefined reference problem */
+#define GetCurrentFiber() ((PVOID)__readfsdword(0x10))
+
 void Coro_initializeMainCoro(Coro *self)
 {
 	self->isMain = 1;
@@ -191,6 +194,8 @@ void Coro_initializeMainCoro(Coro *self)
     self->fiber = GetCurrentFiber();
 #endif
 }
+
+#undef GetCurrentFiber
 
 void Coro_startCoro_(Coro *self, Coro *other, void *context, CoroStartCallback *callback)
 {
