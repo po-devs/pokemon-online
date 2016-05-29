@@ -1222,7 +1222,6 @@ void BattleBase::spectatingChat(int id, const QString &str)
 
 void BattleBase::sendMessage(int id, const QString &type, const QString &content)
 {
-    //In the future, add own non-priority command instead
     notify(id, Notice, id, type, content);
 }
 
