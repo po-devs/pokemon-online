@@ -18,6 +18,7 @@ Item {
     }
 
     property bool loaded: false;
+    property int maxTime: battle.scene.rated ? 180 : 300;
     property int playerFront: battle.scene.reversed ? 0: 1;
     property int playerBack: battle.scene.reversed ? 1: 0;
 
@@ -71,7 +72,7 @@ Item {
         Rectangle {
             z: -10
             anchors.fill: parent
-            anchors.rightMargin: (300-battle.data.team(playerBack).time) * parent.width/300
+            anchors.rightMargin: Math.max(maxTime-battle.data.team(playerBack).time, 0) * parent.width/maxTime
             color: Qt.lighter(parent.border.color)
             radius: parent.radius
             opacity: 0.7
@@ -118,7 +119,7 @@ Item {
         Rectangle {
             z: -10
             anchors.fill: parent
-            anchors.rightMargin: (300-battle.data.team(playerFront).time) * parent.width/300
+            anchors.rightMargin: Math.max(maxTime-battle.data.team(playerFront).time,0) * parent.width/maxTime
             color: "#ecb6a3"
             radius: parent.radius
             opacity: 0.7

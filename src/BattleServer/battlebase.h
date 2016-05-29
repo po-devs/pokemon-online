@@ -511,6 +511,7 @@ public:
     void changeStatMod(int player, int stat, int newstat);
 
     bool isStadium() const;
+    int maxTime() const;
 };
 
 #endif // BATTLEBASE_H

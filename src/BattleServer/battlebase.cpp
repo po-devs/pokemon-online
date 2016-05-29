@@ -55,13 +55,13 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
     terrain = 0;
     terrainCount = -1;
 
+    conf.flags.setFlag(BattleConfiguration::Rated, c.rated);
+
     /* timers for battle timeout */
-    timeleft[0] = 5*60;
-    timeleft[1] = 5*60;
+    timeleft[0] = maxTime();
+    timeleft[1] = maxTime();
     timeStopped[0] = true;
     timeStopped[1] = true;
-
-    conf.flags.setFlag(BattleConfiguration::Rated, c.rated);
 
     if (mode() == ChallengeInfo::Doubles) {
         numberOfSlots() = 4;
@@ -546,14 +546,14 @@ void BattleBase::stopClock(int player, bool broadCoast)
 
 #ifdef QT5
         if (broadCoast) {
-            timeleft[player] = std::min(int(timeleft[player].load()+20), 5*60);
+            timeleft[player] = std::min(int(timeleft[player].load()+20), maxTime());
             notify(All,ClockStop,player,quint16(timeleft[player].load()));
         } else {
             notify(player, ClockStop, player, quint16(timeleft[player].load()));
         }
 #else
         if (broadCoast) {
-            timeleft[player] = std::min(int(timeleft[player]+20), 5*60);
+            timeleft[player] = std::min(int(timeleft[player]+20), maxTime());
             notify(All,ClockStop,player,quint16(timeleft[player]));
         } else {
             notify(player, ClockStop, player, quint16(timeleft[player]));
@@ -2467,3 +2467,9 @@ bool BattleBase::isStadium() const
 {
     return gen() == Gen::Stadium || gen() == Gen::StadiumWithTradebacks;
 }
+
+int BattleBase::maxTime() const
+{
+    return rated() ? 180 : 300;
+}
+

@@ -10,6 +10,9 @@
 #include <QToolTip>
 #include <QSpacerItem>
 
+static const int ratedTime = 180;
+static const int unratedTime = 300;
+
 RegularBattleScene::RegularBattleScene(battledata_ptr dat, BattleDefaultTheme *theme, bool logNames) : mData(dat), unpausing(false),
     pauseCount(0), info(dat->numberOfSlots()), mLogNames(logNames)
 {
@@ -142,7 +145,7 @@ void RegularBattleScene::setupGui()
     QVBoxLayout *midme = new QVBoxLayout();
     gui.timers[myself()] = new QProgressBar();
     gui.timers[myself()]->setObjectName("TimeOut"); //for style sheets
-    gui.timers[myself()]->setRange(0,300);
+    gui.timers[myself()]->setRange(0, data()->rated() ? ratedTime : unratedTime);
     QLabel *mybox = new QLabel();
     mybox->setObjectName("MyTrainerBox");
     mybox->setFixedSize(82,82);
@@ -456,12 +459,14 @@ void RegularBattleScene::changeBarMode()
 
 void RegularBattleScene::updateTimers()
 {
+    const int maxTime = data()->rated() ? ratedTime : unratedTime;
+
     for (int i = 0; i <= 1; i++) {
         int ctime = std::max(long(0), info.ticking[i] ? info.time[i] + info.startingTime[i] - time(NULL) : info.time[i]);
-        if (ctime <= 5*60) {
+        if (ctime <= maxTime) {
             gui.timers[i]->setValue(ctime);
         } else {
-            gui.timers[i]->setValue(300);
+            gui.timers[i]->setValue(maxTime);
         }
         gui.timers[i]->setFormat(QString("%1 : %2").arg(ctime/60).arg(QString::number(ctime%60).rightJustified(2,'0')));
         if (ctime > 60) {
