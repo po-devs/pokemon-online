@@ -1176,7 +1176,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     int tarChoice = tmove(player).targets;
     bool multiTar = tarChoice != Move::ChosenTarget && tarChoice != Move::RandomTarget;
 
-    turnMemory(target).remove("EvadeAttack");    
+    turnMemory(target).remove("EvadeAttack");
     callaeffects(player, target, "ActivateProtean");
     callpeffects(target, player, "TestEvasion"); /*dig bounce  ... */
 
@@ -2081,7 +2081,7 @@ trueend:
 
     /* For U-TURN, so that none of the variables of the switchin are afflicted, it's put at the utmost end */
     calleffects(player, player, "AfterAttackFinished");
-    foreach(int target, targetList) {        
+    foreach(int target, targetList) {
         callaeffects(target, target, "AfterAttackFinished"); //Immunity & such
         turnMemory(target)["HadSubstitute"] = false;
     }
@@ -3103,22 +3103,26 @@ int BattleSituation::calculateDamage(int p, int t)
         // Thick Club and Light Ball
         attack = attack * (20 + turnMemory(p).value(qA+"ItemModifier").toInt()) / 20;
 
-        if (attack > 255 || def > 255) { // Stat Scaling 1
-            attack = (attack / 4) % 256;
-            def = (def / 4) % 256;
-            if (def == 0) {
-                def = 1;
+        if (gen() != Pokemon::gen(Gen::Stadium2)) {
+            if (attack > 255 || def > 255) { // Stat Scaling 1
+                attack = (attack / 4) % 256;
+                def = (def / 4) % 256;
+                if (def == 0) {
+                    def = 1;
+                }
             }
         }
 
         // Metal Powder
         if (turnMemory(t).value(qD+"ItemModifier").toInt() > 0) {
             def = def * (20 + turnMemory(t).value(qD+"ItemModifier").toInt()) / 20;
-            if (def > 255) { // Stat Scaling 2
-                attack = (attack / 2) % 256;
-                def = (def / 2) % 256;
-                if (def == 0) {
-                    def = 1;
+            if (gen() != Pokemon::gen(Gen::Stadium2)) {
+                if (def > 255) { // Stat Scaling 2
+                    attack = (attack / 2) % 256;
+                    def = (def / 2) % 256;
+                    if (def == 0) {
+                        def = 1;
+                    }
                 }
             }
         }
