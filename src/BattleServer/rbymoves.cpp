@@ -727,6 +727,9 @@ struct RBYMimic : public MM
         }
         int slot = fpoke(b,s).lastMoveSlot;
         b.changeTempMove(s, slot, move);
+        if (b.isStadium()) {
+            b.changePP(s, slot, 15);
+        }
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
 };
