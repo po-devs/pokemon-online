@@ -125,6 +125,7 @@ struct RBYBide : public MM
 
         inc(poke(b,s)["BideDamage"], poke(b,t).value("DamageInflicted").toInt());
         if (count > 0) {
+            b.battleMemory()["LastDamageTakenByAny"] = 0;
             b.sendMoveMessage(9, 0, s);
         } else {
             int damage = poke(b,s)["BideDamage"].toInt();
@@ -914,6 +915,7 @@ struct RBYRazorWind : public MM
         tmove(b, s).power = 0;
         tmove(b, s).status = Pokemon::Fine;
         tmove(b, s).targets = Move::User;
+        b.battleMemory()["LastDamageTakenByAny"] = 0;
         addFunction(poke(b,s), "TurnSettings", "RazorWind", &ts);
     }
 
