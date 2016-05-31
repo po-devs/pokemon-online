@@ -158,9 +158,9 @@ public:
     }
 
     void onMoveChange(int spot, int slot, int move, bool definite) {
-        tempPoke(spot).move(slot)->setNum(move);
+        tempPoke(spot).move(slot)->setNum(move, this->gen().num == 1 ? true : false);
         if (definite) {
-            poke(spot).move(slot)->setNum(move);
+            poke(spot).move(slot)->setNum(move, this->gen().num == 1 ? true : false);
         }
     }
 

@@ -27,7 +27,7 @@ public:
     int totalPP() const { return d()->totalPP();}
     int num() const { return d()->num();}
 
-    void setNum(int newnum);
+    void setNum(int newnum, bool forceKeepOldPPMax = false);
     void changePP(int newPP);
     Pokemon::gen gen() const;
 

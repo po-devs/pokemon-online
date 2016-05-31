@@ -78,3 +78,4 @@ bin/db/announcement.html
 bin/bfdata/bfteams.json
 *.md
 bin/tourconfig/tourwinverbs.txt
+build
