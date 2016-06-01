@@ -3102,7 +3102,7 @@ int BattleSituation::applyMod(int num, int mod) {
 //For gen 3 and 4
 int BattleSituation::floorMod(int num) {
     for (int i = 0; i < bpmodifiers.size(); i++) {
-        num = std::floor(num*(20+bpmodifiers[i])/20);
+        num = num * (20 + bpmodifiers[i]) / 20;
     }
     clearBp();
     return num;
@@ -3294,7 +3294,7 @@ int BattleSituation::calculateDamage(int p, int t)
         if (gen() < 4) {
             //Thick Fat is attack mod in gen 3, BP in gen 4
             for (int i = 0; i < atkmodifiers.size(); i++) {
-                attack = std::floor(attack * (20+atkmodifiers[i])/20);
+                attack = attack * (20 + atkmodifiers[i]) / 20;
             }
         }
         /* Explosion / Selfdestruct Defense Halving */
@@ -3317,7 +3317,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /* Helping Hand, Gen 4 is Power. Gen 3 is Damage */
         if (gen() > 3 && move.contains("HelpingHanded")) {
-            power = std::floor(power * 3/2);
+            power = power * 3 / 2;
         }
 
         /* Move *///Moves: Facade, Brine
@@ -3331,13 +3331,13 @@ int BattleSituation::calculateDamage(int p, int t)
         //TODO: Make this work
         /* Charge */// Can't be called via ChainBP else it will be out of order
         if (move.contains("Charged")) {
-            power = std::floor(power * 2);
+            power *= 2;
         }
 
         /* Sports */
         QString sport = "Sported" + QString::number(type);
         if (battleMemory().contains(sport) && pokeMemory(battleMemory()[sport].toInt()).value(sport).toBool()) {
-            power = std::floor(power/2);
+            power /= 2;
         }
 
         /* User Ability *///Abilities: Rivalry, Reckless, Iron Fist, Blaze/et al., Technician
@@ -3348,42 +3348,50 @@ int BattleSituation::calculateDamage(int p, int t)
         callaeffects(t,p,"BasePowerFoeModifier");
         power = floorMod(power);
 
-        int damage = std::floor(std::floor(std::floor((level * 2 / 5) + 2) * power * attack / 50) / def);
+        int damage;
+        if (gen().num == 4) {
+            damage = ((level * 2 / 5 + 2) * power * attack / 50 / def);
+        } else {
+            damage = ((level * 2 / 5 + 2) * power * attack / def / 50);
+        }
 
         /*** MOD 1 ***/
         /*Apply burn mods */
-        damage = std::floor(damage / (((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned")) && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts)) ? 2 : 1));
+        if ((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned"))
+            && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts)) {
+            damage /= 2;
+        }
 
         /* Reflect, Light Screen */
         if (!crit && teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
             if (!multiples()) {
-                damage = std::floor(damage/2);
+                damage /= 2;
             } else {
-                damage = std::floor(damage/3);
+                damage /= 3;
             }
         }
         /* Multiples */
         if (multiples() && targetList.size() > 1) {
-            damage = std::floor(damage * 3/4);
+            damage = damage * 3 / 4;
         }
         /* Weather */
         if (isWeatherWorking(Sunny)) {
             if (type == Type::Fire) {
-               damage = std::floor(damage * 3/2);
+               damage = damage * 3 / 2;
             } else if (type == Type::Water) {
-                damage = std::floor(damage / 2);
+                damage /= 2;
             }
         } else if (isWeatherWorking(Rain)) {
             if (type == Type::Water) {
-                damage = std::floor(damage * 3/2);
+                damage = damage * 3 / 2;
             } else if (type == Type::Fire) {
-                damage = std::floor(damage / 2);
+                damage /= 2;
             }
         }
 
         /* Flash Fire */
         if (type == Type::Fire && pokeMemory(p).contains("FlashFired") && hasWorkingAbility(p, Ability::FlashFire)) {
-            damage = std::floor(damage * 3/2);
+            damage = damage * 3 / 2;
         }
         /*** MOD 1 End ***/
 
@@ -3392,12 +3400,12 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /* Apply Crit */
         if (crit) {
-            damage = std::floor(damage*(2 + hasWorkingAbility(p, Ability::Sniper)));
+            damage *= 2 + hasWorkingAbility(p, Ability::Sniper);
         }
 
         /* Helping Hand, Gen 4 is Power. Gen 3 is Damage */
         if (gen() < 4 && move.contains("HelpingHanded")) {
-            damage = std::floor(damage * 3/2);
+            damage = damage * 3 / 2;
         }
 
         /*** MOD 2 ***/ //Aka: Gen 4
@@ -3406,20 +3414,20 @@ int BattleSituation::calculateDamage(int p, int t)
         callieffects(p,t,"Mod2Modifier");
         int itemmod = move["ItemMod2Modifier"].toInt();
         if (itemmod != 0) {
-            damage = std::floor(damage * (20+itemmod)/20);
+            damage = damage * (20 + itemmod) / 20;
         }
         /* Me First */
         if (move.contains("MeFirstAttack")) {
-            damage = std::floor(damage * 3/2);
+            damage = damage * 3 / 2;
         }
         /*** MOD 2 End ***/
 
         /* Apply Random Factor */
-        damage = std::floor(damage * randnum/100);
+        damage = damage * randnum / 100;
 
         /* Apply STAB mod, round down */
         int stab = turnMem(p).stab;
-        damage = std::floor(damage*stab/2);
+        damage = damage * stab / 2;
 
         /* Apply type mods */
         int typemod = turnMem(p).typeMod;
@@ -3428,29 +3436,29 @@ int BattleSituation::calculateDamage(int p, int t)
             typemod--;
         }
         while (typemod < 0) {
-            damage = std::floor(damage/2); //round down if necessary
+            damage /= 2;
             typemod++;
         }
 
         /*** MOD 3 ***/ //Aka: Gen 4
         /* Solid Rock & Filter */
         if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
-            damage = std::floor(damage * 3/4);
+            damage = damage * 3 / 4;
         }
         /* Expert Belt */
         if (turnMem(p).typeMod > 0 && hasWorkingItem(p, Item::ExpertBelt)) {
-            damage = std::floor(damage * 6/5);
+            damage = damage * 6 / 5;
         }
         /* Tinted Lens */
         if (turnMem(p).typeMod < 0 && hasWorkingAbility(p, Ability::TintedLens)) {
-            damage = std::floor(damage * 2);
+            damage *= 2;
         }
         /* Damage reducing Berries */
         move.remove("Mod3Berry");
         callieffects(t, p, "Mod3Items");
         int berrymod = turnMemory(p).value("Mod3Berry").toInt();
         if (berrymod != 0) {
-            damage = std::floor(damage * (20+berrymod)/20);;
+            damage = damage * (20 + berrymod) / 20;
         }
         /*** MOD 3 End ***/
         return std::max(damage, 1); //no 0 damage in gen 3 & 4
@@ -3519,7 +3527,7 @@ int BattleSituation::calculateDamage(int p, int t)
         }
         power = applyMod(power, chainedMods);
         int oppPlayer = this->player(t);
-        int damage = std::floor(std::floor(std::floor(std::min((level * 2 / 5 + 2) * std::min(power, 65535), 65535) * attack) / def) / 50 + 2); //round down
+        int damage = std::min((level * 2 / 5 + 2) * std::min(power, 65535), 65535) * attack / def / 50 + 2;
 
         /* Apply multi-target mod */
         if (multiples() && targetList.size() > 1) {
@@ -3555,15 +3563,15 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /* Apply CH Mod, round down */
         if (crit) {
-            damage = std::floor(damage*3/2);
+            damage = damage * 3 / 2;
         }
 
         /* Apply random factor, round down */
-        damage = std::floor(damage*randnum/100);
+        damage = damage * randnum / 100;
 
         /* Apply STAB mod, round down */
         int stab = turnMem(p).stab;
-        damage = std::floor(damage*stab/2);
+        damage = damage * stab / 2;
 
         /* Apply type mods */
         int typemod = turnMem(p).typeMod;
@@ -3572,7 +3580,7 @@ int BattleSituation::calculateDamage(int p, int t)
             typemod--;
         }
         while (typemod < 0) {
-            damage = std::floor(damage/2); //round down if necessary
+            damage /= 2;
             typemod++;
         }
 
