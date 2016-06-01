@@ -153,12 +153,16 @@ struct AMBadDreams : public AM {
 
 struct AMBlaze : public AM {
     AMBlaze() {
-        functions["BasePowerModifier"] = &bpm;
+        functions["DamageFormulaStart"] = &bpm;
     }
 
     static void bpm(int s, int, BS &b) {
         if (b.poke(s).lifePoints() <= b.poke(s).totalLifePoints()/3 && type(b,s) == poke(b,s)["AbilityArg"].toInt()) {
-            b.chainBp(s, 2048);
+            if (b.gen() < 5) {
+                b.chainBp(s, 10);
+            } else {
+                b.chainAtk(s, 0x1800);
+            }
         }
     }
 };
@@ -178,7 +182,11 @@ struct AMChlorophyll : public AM {
         default: w = b.weather;
         }
         if (b.isWeatherWorking(b.weather) && poke(b,s)["AbilityArg"].toInt() == w) {
-            turn(b,s)["Stat5AbilityModifier"] = 20;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat5AbilityModifier"] = 20;
+            } else {
+                turn(b,s)["Stat5AbilityModifier"] = 0x2000;
+            }
         }
     }
 
@@ -240,7 +248,11 @@ struct AMCompoundEyes : public AM {
     }
 
     static void sm(int s, int , BS &b) {
-        turn(b,s)["Stat6AbilityModifier"] = 6;
+        if (b.gen() < 5) {
+            turn(b,s)["Stat6AbilityModifier"] = 6;
+        } else {
+            turn(b,s)["Stat6AbilityModifier"] = 0x14CD;
+        }
     }
 };
 
@@ -382,7 +394,11 @@ struct AMDrySkin : public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (type(b,t) == Pokemon::Fire) {
-            b.chainBp(t, 1024);
+            if (b.gen() < 5) {
+                b.chainBp(t, 5);
+            } else {
+                b.chainBp(t, 0x1400);
+            }
         }
     }
 
@@ -481,16 +497,26 @@ struct AMFlowerGift : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(BattleSituation::Sunny)) {
-            turn(b,s)["Stat1AbilityModifier"] = 10;
-            turn(b,s)["Stat4AbilityModifier"] = 10;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat1AbilityModifier"] = 10;
+                turn(b,s)["Stat4AbilityModifier"] = 10;
+            } else {
+                turn(b,s)["Stat1AbilityModifier"] = 0x1800;
+                turn(b,s)["Stat4AbilityModifier"] = 0x1800;
+            }
         }
     }
 
     static void sm2(int , int t, BS &b) {
         /* FlowerGift doesn't stack */
         if (b.isWeatherWorking(BattleSituation::Sunny) && !b.hasWorkingAbility(t, Ability::FlowerGift)) {
-            turn(b,t)["Stat1PartnerAbilityModifier"] = 10;
-            turn(b,t)["Stat4PartnerAbilityModifier"] = 10;
+            if (b.gen() < 5) {
+                turn(b,t)["Stat1PartnerAbilityModifier"] = 10;
+                turn(b,t)["Stat4PartnerAbilityModifier"] = 10;
+            } else {
+                turn(b,t)["Stat1PartnerAbilityModifier"] = 0x1800;
+                turn(b,t)["Stat4PartnerAbilityModifier"] = 0x1800;
+            }
         }
     }
 
@@ -653,7 +679,11 @@ struct AMGuts : public AM {
         if (b.poke(s).status() != Pokemon::Fine) {
             //if (b.gen() > 3 || b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
                 int arg = poke(b,s)["AbilityArg"].toInt();
-                turn(b,s)[QString("Stat%1AbilityModifier").arg(arg)] = 10;
+                if (b.gen() < 5) {
+                    turn(b,s)[QString("Stat%1AbilityModifier").arg(arg)] = 10;
+                } else {
+                    turn(b,s)[QString("Stat%1AbilityModifier").arg(arg)] = 0x1800;
+                }
             //}
         }
     }
@@ -666,7 +696,11 @@ struct AMHeatProof : public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (type(b,t) == Pokemon::Fire) {
-            b.chainBp(t, -2048);
+            if (b.gen() < 5) {
+                b.chainBp(t, -10);
+            } else {
+                b.chainBp(t, 0x800);
+            }
         }
     }
 };
@@ -677,7 +711,11 @@ struct AMHugePower : public AM {
     }
 
     static void sm (int s, int, BS &b) {
-        turn(b,s)["Stat1AbilityModifier"] = 20;
+        if (b.gen() < 5) {
+            turn(b,s)["Stat1AbilityModifier"] = 20;
+        } else {
+            turn(b,s)["Stat1AbilityModifier"] = 0x2000;
+        }
     }
 };
 
@@ -687,9 +725,16 @@ struct AMHustle : public AM {
     }
 
     static void sm (int s, int, BS &b) {
-        turn(b,s)["Stat1AbilityModifier"] = 10;
-        if (tmove(b,s).category == Move::Physical) {
-            turn(b,s)["Stat6AbilityModifier"] = -4;
+        if (b.gen() < 5) {
+            turn(b,s)["Stat1AbilityModifier"] = 10;
+            if (tmove(b,s).category == Move::Physical) {
+                turn(b,s)["Stat6AbilityModifier"] = -4;
+            }
+        } else {
+            turn(b,s)["Stat1AbilityModifier"] = 0x1800;
+            if (tmove(b,s).category == Move::Physical) {
+                turn(b,s)["Stat6AbilityModifier"] = 0xCCC;
+            }
         }
     }
 };
@@ -837,7 +882,11 @@ struct AMIronFist : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::PunchFlag) {
-            b.chainBp(s, 819);
+            if (b.gen() < 5) {
+                b.chainBp(s, 4);
+            } else {
+                b.chainBp(s, 0x1333);
+            }
         }
     }
 };
@@ -942,7 +991,11 @@ struct AMReckless : public AM {
         int mv = move(b,s);
         //Jump kicks
         if (tmove(b,s).recoil < 0 || mv == Move::HiJumpKick || mv == Move::JumpKick) {
-            b.chainBp(s, 819);
+            if (b.gen() < 5){
+                b.chainBp(s, 4);
+            } else {
+                b.chainBp(s, 0x1333);
+            }
         }
     }
 };
@@ -955,10 +1008,19 @@ struct AMRivalry : public AM {
     static void bpm (int s, int t, BS &b) {
         if (b.poke(s).gender() == Pokemon::Neutral || b.poke(t).gender() == Pokemon::Neutral)
             return;
-        if (b.poke(s).gender() == b.poke(t).gender())
-            b.chainBp(s, 1024);
-        else
-            b.chainBp(s, -1024);
+        if (b.poke(s).gender() == b.poke(t).gender()) {
+            if (b.gen() < 5) {
+                b.chainBp(s, 5);
+            } else {
+                b.chainBp(s, 0x1400);
+            }
+        } else {
+            if (b.gen() < 5) {
+                b.chainBp(s, -5);
+            } else {
+                b.chainBp(s, 0xC00);
+            }
+        }
     }
 };
 
@@ -988,7 +1050,11 @@ struct AMSandVeil : public AM {
 
     static void sm (int s, int , BS &b) {
         if (b.isWeatherWorking(poke(b,s)["AbilityArg"].toInt())) {
-            turn(b,s)["Stat7AbilityModifier"] = 4;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat7AbilityModifier"] = 4;
+            } else {
+                turn(b,s)["Stat7AbilityModifier"] = 0x1333;
+            }
         }
     }
 
@@ -1047,8 +1113,13 @@ struct AMSlowStart : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.turn() <= poke(b,s)["SlowStartTurns"].toInt()) {
-            turn(b,s)["Stat1AbilityModifier"] = -10;
-            turn(b,s)["Stat5AbilityModifier"] = -10;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat1AbilityModifier"] = -10;
+                turn(b,s)["Stat5AbilityModifier"] = -10;
+            } else {
+                turn(b,s)["Stat1AbilityModifier"] = 0x800;
+                turn(b,s)["Stat5AbilityModifier"] = 0x800;
+            }
         }
     }
 };
@@ -1061,7 +1132,11 @@ struct AMSolarPower : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.isWeatherWorking(BattleSituation::Sunny) || b.isWeatherWorking(BattleSituation::StrongSun)) {
-            turn(b,s)["Stat3AbilityModifier"] = 10;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat3AbilityModifier"] = 10;
+            } else {
+                turn(b,s)["Stat3AbilityModifier"] = 0x1800;
+            }
         }
     }
 
@@ -1117,7 +1192,11 @@ struct AMTangledFeet : public AM {
 
     static void sm(int s, int,  BS &b) {
         if (b.isConfused(s)) {
-            turn(b,s)["Stat7AbilityModifier"] = 10;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat7AbilityModifier"] = 10;
+            } else {
+                turn(b,s)["Stat7AbilityModifier"] = 0x1800;
+            }
         }
     }
 };
@@ -1130,42 +1209,45 @@ struct AMTechnician : public AM {
     static void bpm(int s, int , BS &b) {
         /* Move::NoMove is for confusion damage, Struggle is affected by technician in gen 5 but not gen 4 */
         if (tmove(b,s).power <= 60 && ( (b.gen() >= 5 && move(b,s) != Move::NoMove) || (b.gen() <= 4 && type(b,s) != Type::Curse) ) ) {
-            b.chainBp(s, 2048);
+            if (b.gen() < 5) {
+                b.chainBp(s, 20);
+            } else {
+                b.chainBp(s, 0x2000);
+            }
         }
     }
 };
 
 struct AMThickFat : public AM {
     AMThickFat() {
-        functions["BasePowerFoeModifier"] = &bpfm;
+        functions["FoeDamageFormulaStart"] = &bpfm;
     }
 
     static void bpfm (int , int t, BS &b) {
         int tp = tmove(b,t).type;
-
         if (tp == Type::Ice || tp == Type::Fire) {
-            b.chainBp(t, -2048);
-        }
-    }
-};
-
-struct AMTintedLens : public AM {
-    AMTintedLens() {
-        functions["BasePowerModifier"] = &bpm;
-    }
-
-    static void bpm(int s, int t, BS &b) {
-        if (fturn(b,s).typeMod < 0) {
-            b.chainBp(s, 4096);
-            int finalmod = turn(b,t).value("FinalModifier").toInt();
-            if (finalmod == 0) {
-                turn(b,t)["FinalModifier"] = 200;
+            if (b.gen().num == 3) {
+                b.chainAtk(t, -10);
+            } else if (b.gen().num == 4) {
+                b.chainBp(t, -10);
             } else {
-                turn(b,t)["FinalModifier"] = 2*finalmod;
+                b.chainAtk(t, 0x800);
             }
         }
     }
 };
+//Moved to calculateDamage
+/*struct AMTintedLens : public AM {
+    AMTintedLens() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int , BS &b) {
+        if (b.gen() < 5 && fturn(b,s).typeMod < 0) {
+            b.chainBp(s, 20);
+        }
+    }
+};*/
 
 struct AMTrace : public AM {
     AMTrace() {
@@ -1218,7 +1300,11 @@ struct AMUnburden : public AM {
 
     static void sm(int s, int, BS &b) {
         if (b.poke(s).item() == 0 && poke(b,s).value("Unburdened").toBool()) {
-            turn(b,s)["Stat5AbilityModifier"] = 20;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat5AbilityModifier"] = 20;
+            } else {
+                turn(b,s)["Stat5AbilityModifier"] = 0x2000;
+            }
         }
     }
 };
@@ -1337,7 +1423,11 @@ struct AMPlus : public AM {
                 continue;
             }
             if (b.hasWorkingAbility(i, Ability::Minus) || (b.gen() >= 5 && b.hasWorkingAbility(i, Ability::Plus))) {
-                turn(b,s)["Stat3AbilityModifier"] = 10;
+                if (b.gen() < 5) {
+                    turn(b,s)["Stat3AbilityModifier"] = 10;
+                } else {
+                    turn(b,s)["Stat3AbilityModifier"] = 0x1800;
+                }
                 return;
             }
         }
@@ -1359,7 +1449,11 @@ struct AMMinus : public AM {
                 continue;
             }
             if (b.hasWorkingAbility(i, Ability::Plus) || (b.gen() >= 5 && b.hasWorkingAbility(i, Ability::Minus))) {
-                turn(b,s)["Stat3AbilityModifier"] = 10;
+                if (b.gen() < 5) {
+                    turn(b,s)["Stat3AbilityModifier"] = 10;
+                } else {
+                    turn(b,s)["Stat3AbilityModifier"] = 0x1800;
+                }
                 return;
             }
         }
@@ -1446,7 +1540,7 @@ struct AMSandForce : public AM {
             int t = type(b,s);
 
             if (t == Type::Rock || t == Type::Steel || t == Type::Ground) {
-                b.chainBp(s, 1229);
+                b.chainBp(s, 0x14CD);
             }
         }
     }
@@ -1458,7 +1552,7 @@ struct AMSandForce : public AM {
     }
 };
 
-/**
+/*
 struct AMJackOfAllTrades : public AM {
     AMJackOfAllTrades() {
         functions["DamageFormulaStart"] = &dfs;
@@ -1467,7 +1561,7 @@ struct AMJackOfAllTrades : public AM {
     static void dfs(int s, int, BS &b) {
         turn(b,s)["Stab"] = 3;
     }
-}; */
+};*/
 
 struct AMWeakArmor : public AM {
     AMWeakArmor() {
@@ -1495,13 +1589,13 @@ struct AMVictoryStar : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        turn(b,s)["Stat6AbilityModifier"] = 2;
+        turn(b,s)["Stat6AbilityModifier"] = 0x1199;
     }
 
     static void sm2(int , int t, BS &b) {
-        /* FlowerGift doesn't stack */
+        /* Victory Star doesn't stack */
         if (!b.hasWorkingAbility(t, Ability::VictoryStar)) {
-            turn(b,t)["Stat6PartnerAbilityModifier"] = 2;
+            turn(b,t)["Stat6PartnerAbilityModifier"] = 0x1199;
         }
     }
 };
@@ -1515,8 +1609,8 @@ struct AMDefeatist : public AM {
         if (b.poke(s).lifePoints() * 2 > b.poke(s).totalLifePoints())
             return;
 
-        turn(b,s)["Stat1AbilityModifier"] = -10;
-        turn(b,s)["Stat3AbilityModifier"] = -10;
+        turn(b,s)["Stat1AbilityModifier"] = 0x800;
+        turn(b,s)["Stat3AbilityModifier"] = 0x800;
     }
 };
 
@@ -1591,7 +1685,7 @@ struct AMSheerForce : public AM
 
         tmove(b,s).classification = Move::StandardMove;
         tmove(b,s).flinchRate = 0;
-        b.chainBp(s, 1229);
+        b.chainBp(s, 0x14CD);
 
         /* Ugly, to tell life orb not to activate =/ */
         turn(b,s)["EncourageBug"] = true;
@@ -1701,7 +1795,8 @@ struct AMPrankster : public AM
     }
 };
 
-struct AMMultiScale : public AM
+//Moved to calculateDamage
+/*struct AMMultiScale : public AM
 {
     AMMultiScale() {
         functions["BasePowerFoeModifier"] = &bpfm;
@@ -1718,22 +1813,19 @@ struct AMMultiScale : public AM
             }
         }
     }
-};
+};*/
 
 struct AMFlareBoost : public AM
 {
     AMFlareBoost() {
-        functions["StatModifier"] = &sm;
+        functions["BasePowerModifier"] = &sm;
     }
 
     static void sm (int s, int, BS &b) {
         int st = poke(b,s)["AbilityArg"].toInt();
-
         if (b.poke(s).status() == st) {
-            if (st == Pokemon::Burnt) {
-                turn(b,s)[QString("Stat%1AbilityModifier").arg(SpAttack)] = 10;
-            } else {
-                turn(b,s)[QString("Stat%1AbilityModifier").arg(Attack)] = 10;
+            if ((st == Pokemon::Burnt && tmove(b,s).category == Move::Special) || (st == Pokemon::Poisoned && tmove(b,s).category == Move::Physical)) {
+                b.chainBp(s, 0x1800);
             }
         }
     }
@@ -2012,7 +2104,7 @@ struct AMAnalytic : public AM {
 
     static void bpm(int s,int,BS&b) {
         if (b.speedsVector.back() == s) {
-            b.chainBp(s, 1229);
+            b.chainBp(s, 0x14CD);
         }
     }
 };
@@ -2048,7 +2140,8 @@ struct AMHealer : public AM {
     }
 };
 
-struct AMFriendGuard : public AM
+//Was already in calculateDamage, but now its only there
+/*struct AMFriendGuard : public AM
 {
     AMFriendGuard() {
         functions["BasePowerAbilityModifier"] = &bpm;
@@ -2059,7 +2152,7 @@ struct AMFriendGuard : public AM
             b.chainBp(s, -1024);
         }
     }
-};
+};*/
 
 struct AMNaturalCure : public AM {
     AMNaturalCure () {
@@ -2157,7 +2250,7 @@ struct AMAerilate : public AM {
 
     static void bpm(int s, int, BS &b) {
         if (turn(b,s).value("Aerilated").toBool()) {
-            b.chainBp(s, 1229);
+            b.chainBp(s, 0x14CD);
         }
     }
 };
@@ -2183,7 +2276,7 @@ struct AMAura : public AM {
             if (!b.koed(i) && b.hasWorkingAbility(i, b.poke(i).ability())) {
                 if (poke(b,i)["AbilityArg"].toString().startsWith("Aura_")) {
                     if (type(b,s) == poke(b,i)["AbilityArg"].toString().mid(5).toInt()) {
-                        boost = 1365;
+                        boost = 0x14CD;
                         break;
                     }
                 }
@@ -2194,7 +2287,7 @@ struct AMAura : public AM {
         }
         for (int i = 0; i < b.numberOfSlots(); i++) {
             if (!b.koed(i) && b.hasWorkingAbility(i, Ability::AuraBreak)) {
-                boost = -1024;
+                boost = 0xC00;
             }
         }
 
@@ -2258,7 +2351,7 @@ struct AMMegaLauncher : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::LaunchFlag) {
-            b.chainBp(s, 2048);
+            b.chainBp(s, 0x1800);
         }
     }
 };
@@ -2304,7 +2397,7 @@ struct AMStrongJaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && tmove(b,s).flags & Move::BiteFlag) {
-            b.chainBp(s, 2048);
+            b.chainBp(s, 0x1800);
         }
     }
 };
@@ -2316,7 +2409,7 @@ struct AMToughClaws : public AM {
 
     static void bpm (int s, int t, BS &b) {
         if (s != t && (tmove(b,s).flags & Move::ContactFlag)) {
-            b.chainBp(s, 1365);
+            b.chainBp(s, 0x1555);
         }
     }
 };
@@ -2385,7 +2478,7 @@ struct AMParentalBond : public AM
 
     static void btl(int s, int, BS &b) {
         if (turn(b,s).contains("ParentalBond") && b.repeatCount() == 1) {
-            b.chainBp(s, -2048);
+            b.chainBp(s, 0x800);
         }
     }
 };
@@ -2429,7 +2522,7 @@ struct AMGrassPelt : public AM
 
     static void sm (int s, int, BS &b) {
         if (b.terrain == Type::Grass && b.terrainCount >= 0) {
-            turn(b,s)[QString("Stat%1AbilityModifier").arg(Defense)] = 10;
+            turn(b,s)[QString("Stat%1AbilityModifier").arg(Defense)] = 0x1800;
         }
     }
 };
@@ -2620,7 +2713,7 @@ void AbilityEffect::init()
     REGISTER_AB(62, TangledFeet);
     REGISTER_AB(63, Technician);
     REGISTER_AB(64, ThickFat);
-    REGISTER_AB(65, TintedLens);
+    //REGISTER_AB(65, TintedLens);
     REGISTER_AB(66, Trace);
     REGISTER_AB(67, Truant);
     REGISTER_AB(68, SapSipper);
@@ -2638,7 +2731,7 @@ void AbilityEffect::init()
     REGISTER_AB(80, Defiant); /*Defiant, Competitive*/
     REGISTER_AB(81, Imposter);
     REGISTER_AB(82, Prankster);
-    REGISTER_AB(83, MultiScale);
+    //REGISTER_AB(83, MultiScale);
     REGISTER_AB(84, FlareBoost);
     REGISTER_AB(85, Telepathy);
     REGISTER_AB(86, Regenerator);
@@ -2655,7 +2748,7 @@ void AbilityEffect::init()
     REGISTER_AB(97, Rattled);
     REGISTER_AB(98, Analytic);
     REGISTER_AB(99, Healer);
-    REGISTER_AB(100, FriendGuard);
+    //REGISTER_AB(100, FriendGuard);
     REGISTER_AB(101, PoisonTouch);
     REGISTER_AB(102, Unnerve);
     //gen 6
