@@ -450,10 +450,6 @@ struct MMConversion : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        /* Conversion doesn't fail in Gen 1 */
-        if (b.gen().num == 1) {
-            return;
-        }
         int ctype = Pokemon::Curse;
         /* First check if there's even 1 move available */
         for (int i = 0; i < 4; i++) {
@@ -501,21 +497,13 @@ struct MMConversion : public MM
         }
     }
 
-    static void uas(int s, int t, BS &b) {
-        /* Conversion changes the user's types to the opponent's types in Gen 1*/
-        if (b.gen().num == 1) {
-            b.sendMoveMessage(172,0,s,type(b,s),t);
-            fpoke(b,s).type1 = fpoke(b,t).type1;
-            fpoke(b,s).type2 = fpoke(b,t).type2;
+    static void uas(int s, int, BS &b) {
+        int type = turn(b,s)["ConversionType"].toInt();
+        if (type == Pokemon::Curse) {
+            fturn(b,s).add(TM::Failed);
         }
-        else {
-            int type = turn(b,s)["ConversionType"].toInt();
-            if (type == Pokemon::Curse) {
-                fturn(b,s).add(TM::Failed);
-            }
-            b.setType(s, type);
-            b.sendMoveMessage(19, 0, s, type, s);
-        }
+        b.setType(s, type);
+        b.sendMoveMessage(19, 0, s, type, s);
     }
 };
 
@@ -899,7 +887,7 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if ( (b.gen() > 1 && b.poke(s).level() < b.poke(t).level()) || (b.gen().num == 1 && b.getStat(s, Speed) < b.getStat(t, Speed)) ) {
+        if (b.poke(s).level() < b.poke(t).level()) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -1589,10 +1577,6 @@ struct MMCounter : public MM
         }
         /* In third gen, all hidden power are countered by counter but not by mirror coat */
         if (b.gen() <= 3 && TypeInfo::Category(MoveInfo::Type(move(b, source), b.gen())) != turn(b,s)["Counter_Arg"].toInt()) {
-            return;
-        }
-        /* In gen 1, only Normal and Fighting moves are countered */
-        if (b.gen().num == 1 && type(b,source) != Type::Fighting && type(b,source) != Type::Normal) {
             return;
         }
 
@@ -2825,7 +2809,7 @@ struct MMLeechSeed : public MM
         if (b.koed(s2))
             return;
 
-        int denumerator = b.gen().num == 1 ? 16 : 8;
+        int denumerator = 8;
         int damage = std::min(int(b.poke(s).lifePoints()), std::max(b.poke(s).totalLifePoints() / denumerator, 1));
 
         b.sendMoveMessage(72, 2, s, Pokemon::Grass);
@@ -2999,11 +2983,6 @@ struct MMRoar : public MM
     }
 
     static bool testPhazing(int s, int t, BS &b, bool verbose) {
-        if (b.gen().num == 1) {
-            fturn(b,s).add(TM::Failed);
-            return false;
-        }
-
         if (b.gen().num == 2 && !b.hasMoved(t)) {
             fturn(b,s).add(TM::Failed);
             return false;
@@ -4094,8 +4073,6 @@ struct MMTeamBarrier : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.gen().num == 1) { MMTeamBarrier::daf1(s,s,b); return; }
-
         int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
         int source = b.player(s);
 
@@ -4109,8 +4086,6 @@ struct MMTeamBarrier : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.gen().num == 1) { MMTeamBarrier::uas1(s,s,b); return; }
-
         int source = b.player(s);
 
         int nturn;
@@ -4138,20 +4113,6 @@ struct MMTeamBarrier : public MM
                 }
             }
         }
-    }
-
-    static void daf1(int s, int, BS &b) {
-        int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
-        if (poke(b,s).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-            fturn(b,s).add(TM::Failed);
-        }
-    }
-
-    static void uas1(int s, int, BS &b) {
-        int cat = turn(b,s)["TeamBarrier_Arg"].toInt();
-
-        b.sendMoveMessage(73,(cat-1)+b.multiples()*2,s,type(b,s));
-        poke(b,s)["Barrier" + QString::number(cat) + "Count"] = 1;
     }
 };
 
@@ -4437,10 +4398,6 @@ struct MMMimic : public MM
     static FailedMoves FM;
 
     static void daf(int s, int t, BS &b) {
-        /* Mimic doesn't fail in Gen 1 */
-        if (b.gen().num == 1) {
-            return;
-        }
         if (!poke(b,t).contains("LastMoveUsedTurn")) {
             fturn(b,s).add(TM::Failed);
             return;
@@ -4459,13 +4416,6 @@ struct MMMimic : public MM
 
     static void uas(int s, int t, BS &b) {
         int move = poke(b,t)["LastMoveUsed"].toInt();
-        /* Mimic copies a random move in Gen 1 */
-        if (b.gen().num == 1) {
-            move = 0;
-            while (move == 0) {
-                move = b.move(t, b.randint(4));
-            }
-        }
         int slot = b.intendedMoveSlot(s, fpoke(b,s).lastMoveSlot, Move::Mimic);
         //Gen 5+ Mimic gives a full PP count. We need to apply the 60% from PP ups
         int pp = b.gen() > 4 ? (MoveInfo::PP(move, b.gen()) * 8/5) : 5;
@@ -4819,8 +4769,6 @@ struct MMRage : public MM
         functions["OnSetup"] = &os;
         functions["MoveSettings"] = &ms;
         functions["UponAttackSuccessful"] = &uas;
-        functions["DetermineAttackFailure"] = &daf;
-        functions["AttackSomehowFailed"] = &asf;
     }
 
     static void os(int s, int, BS &b) {
@@ -4847,12 +4795,6 @@ struct MMRage : public MM
         }
         poke(b,s).remove("RageBuilt");
 
-        // In Gen 1 we are locked into Rage
-        if (b.gen().num == 1) {
-            addFunction(poke(b,s), "TurnSettings", "Rage", &ts);
-            poke(b,s)["RageMissed"] = false;
-        }
-
     }
 
     static void uodr(int s, int, BS &b) {
@@ -4876,23 +4818,6 @@ struct MMRage : public MM
         fturn(b,s).add(TM::NoChoice);
         MoveEffect::setup(Move::Rage,s,s,b);
     }
-
-    static void daf(int s, int, BS &b) {
-        if (b.gen().num == 1 && poke(b,s)["RageMissed"].toBool()) {
-            if (b.coinflip(1,256)) {
-                tmove(b, s).accuracy = 0;
-            } else {
-                fturn(b,s).add(TM::Failed);
-            }
-        }
-    }
-
-    static void asf(int s, int, BS &b) {
-        if (b.gen().num == 1) {
-            poke(b,s)["RageMissed"] = true;
-        }
-    }
-
 };
 
 struct MMSafeGuard : public MM
