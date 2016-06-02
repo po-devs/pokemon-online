@@ -1826,8 +1826,6 @@ ppfunction:
             calculateTypeModStab();
 
             calleffects(player, target, "BeforeCalculatingDamage");
-            /* For charge */
-            callpeffects(player, target, "BeforeCalculatingDamage");
             /* For Focus Punch*/
             if (turnMemory(player).contains("LostFocus")) {
                 calleffects(player,target,"AttackSomehowFailed");
@@ -3121,7 +3119,6 @@ int BattleSituation::calculateDamage(int p, int t)
     if (attackused == Move::SpitUp && gen() < 4) {
         randnum = 100;
     }
-
     if (gen().num == 2) {
         calleffects(p, t, "DamageFormulaStart");
 
@@ -3328,8 +3325,8 @@ int BattleSituation::calculateDamage(int p, int t)
         callieffects(p,t,"BasePowerModifier");
         power = floorMod(power);
 
-        //TODO: Make this work
         /* Charge */// Can't be called via ChainBP else it will be out of order
+        callpeffects(p, t, "BasePowerModifier");
         if (move.contains("Charged")) {
             power *= 2;
         }
@@ -3521,6 +3518,7 @@ int BattleSituation::calculateDamage(int p, int t)
          * Item: Adamant Orb, Grseous Orb, Lustrous Orb, Type boosting items
          * Move: Knock Off, Brine, Me First, Charge, Solarbeam, SmellingSalts/Venoshock, Retaliate, Facade
          */
+        callpeffects(p, t, "BasePowerModifier"); //for charge
         chainedMods = 0x1000;
         for (int i = 0; i < bpmodifiers.size(); i++) {
             chainedMods = chainMod(chainedMods, bpmodifiers[i]);
