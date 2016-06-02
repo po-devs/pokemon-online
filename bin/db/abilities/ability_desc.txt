@@ -178,7 +178,7 @@
 177 Changes Aegislash's form based on the move used.
 178 Boosts the power of biting moves by 30%.
 179 Prevents all Pokémon on the user's side of the field from falling asleep.
-180 Boosts the power of contact moves by 30%.
+180 Boosts the power of contact moves by 1/3.
 181 Raises Special Attack two stages upon having any stat lowered.
 182 Raises the priority of all Flying-type moves by 1.
 183 Lowers opponents Speed by 1 stage on contact.

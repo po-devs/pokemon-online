@@ -109,6 +109,9 @@ public:
     void makePokemonNext(int player);
     void makePokemonLast(int player);
 
+    int chainMod(int mod1, int mod2); //gen 5+
+    int applyMod(int num, int mod); //gen 5+
+    int floorMod(int num); //gen 3 + 4
     int calculateDamage(int player, int target);
     void applyMoveStatMods(int player, int target);
     bool testAccuracy(int player, int target, bool silent = false);
@@ -291,6 +294,7 @@ private:
     QHash<priorityBracket, int> bracketType;
     QHash<priorityBracket, QString> bracketToEffect;
     QVector<int> bpmodifiers;
+    QVector<int> atkmodifiers;
 
     void getVectorRef(priorityBracket b);
 
@@ -309,8 +313,10 @@ public:
                             MechanicsFunction f=NULL,IntFunction f2 = NULL);
     void removeEndTurnEffect(EffectType type, int slot, const QString &effect);
 
-    void chainBp(int p, int pow);
+    void chainBp(int p, int mod);
+    void chainAtk(int p, int mod);
     void clearBp();
+    void clearAtk();
 
     context &battleMemory() {
         return battlelong;

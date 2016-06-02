@@ -193,8 +193,11 @@ struct BMAntiSuperEffective : public BM
         if (!b.hasSubstitute(s) && fturn(b,t).typeMod > 0 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
             b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
             b.eatBerry(s,false);
-
-            turn(b,t)["Mod3Berry"] = -5;
+            if (b.gen() < 5) {
+                turn(b,t)["Mod3Berry"] = -10;
+            } else {
+                turn(b,t)["Mod3Berry"] = 0x800;
+            }
         }
     }
 };
@@ -215,8 +218,11 @@ struct BMAntiNormal : public BM
             if (!b.hasSubstitute(s) && tmove(b,t).type == 0) {
                 b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
                 b.eatBerry(s,false);
-
-                turn(b,t)["Mod3Berry"] = -5;
+                if (b.gen() < 5) {
+                    turn(b,t)["Mod3Berry"] = -10;
+                } else {
+                    turn(b,t)["Mod3Berry"] = 0x800;
+                }
             }
         }
     }
@@ -407,7 +413,7 @@ struct BMBerryLock : public BMPinch
         if (b.gen() <= 4) {
             poke(b,s)["BerryLock"] = true;
         } else {
-            poke(b,s)["Stat6BerryModifier"] = true;
+            poke(b,s)["Stat6BerryModifier"] = 0x1333;
         }
         b.sendBerryMessage(10,s,0);
     }

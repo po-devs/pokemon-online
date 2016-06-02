@@ -173,8 +173,8 @@ struct MMAssurance : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        if (turn(b,t).contains("DamageTaken") || (team(b, b.player(t)).contains("LastKoedTurn") && team(b, b.player(t))["LastKoedTurn"].toInt() == b.turn() - 1)) {
-            tmove(b, s).power = tmove(b, s).power * 2;
+        if (poke(b,t).contains("DamageTaken")) { //|| (team(b, b.player(t)).contains("LastKoedTurn") && team(b, b.player(t))["LastKoedTurn"].toInt() == b.turn() - 1)) {
+            tmove(b, s).power *= 2;
         }
     }
 };
@@ -387,12 +387,16 @@ struct MMBlastBurn : public MM
 struct MMBrine : public MM
 {
     MMBrine() {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BasePowerModifier"] = &bcd;
     }
 
     static void bcd(int s, int t, BS &b) {
         if (b.poke(t).lifePercent() <= 50) {
-            tmove(b, s).power = tmove(b, s).power * 2;
+            if (b.gen() < 5) {
+                b.chainBp(s, 20);
+            } else {
+                b.chainBp(s, 0x2000);
+            }
         }
     }
 };
@@ -409,7 +413,7 @@ struct MMCharge : public MM
 
     static void uas(int s, int, BS &b) {
         poke(b, s)["ChargedTurn"] = b.turn();
-        addFunction(poke(b,s), "BeforeCalculatingDamage", "Charge", &bcd);
+        addFunction(poke(b,s), "BasePowerModifier", "Charge", &bcd);
         b.sendMoveMessage(18, 0, s, type(b,s));
         if (b.gen().num == 4) {
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), s, "Charge", &et);
@@ -422,7 +426,11 @@ struct MMCharge : public MM
         }
         if (poke(b,s)["ChargedTurn"].toInt()+1 == b.turn() && tmove(b,s).type == Type::Electric) {
             if (tmove(b, s).power > 0) {
-                tmove(b, s).power = tmove(b, s).power * 2;
+                if (b.gen() < 5) {
+                    turn(b,s)["Charged"] = true;
+                } else {
+                    b.chainBp(s, 0x2000);
+                }
             }
         }
     }
@@ -767,13 +775,17 @@ struct MMEruption : public MM
 struct MMFacade : public MM
 {
     MMFacade() {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BasePowerModifier"] = &bcd;
     }
 
     static void bcd(int s, int, BS &b) {
         int status = b.poke(s).status();
         if (status == Pokemon::Burnt || status == Pokemon::Poisoned || status == Pokemon::Paralysed) {
-            tmove(b, s).power = tmove(b, s).power * 2;
+            if (b.gen() < 5) {
+                b.chainBp(s, 20);
+            } else {
+                b.chainBp(s, 0x2000);
+            }
         }
     }
 };
@@ -1356,16 +1368,10 @@ struct MMStomp : public MM
             }
         }
     }
-
+    //Gen 5+ Moved to calculateDamage
     static void bcd(int s, int t, BS &b) {
-        if (poke(b,t).value("Minimize").toBool()) {
+        if (b.gen() < 5 && poke(b,t).value("Minimize").toBool()) {
             tmove(b, s).power = tmove(b, s).power * 2;
-            int finalmod = turn(b,t).value("FinalModifier").toInt();
-            if (finalmod == 0) {
-               turn(b,t)["FinalModifier"] = 200;
-            } else {
-               turn(b,t)["FinalModifier"] = finalmod * 2;
-            }
         }
     }
 };
@@ -1733,6 +1739,7 @@ struct MMDoomDesire : public MM
                     }
                     tmove(b, doomuser).recoil = 0;
                     b.clearBp();
+                    b.clearAtk();
 
                     slot(b,s)["DoomDesireDamagingNow"] = true;
                     int damage = b.calculateDamage(s, s);
@@ -3331,7 +3338,7 @@ struct MMKnockOff : public MM
     }
     static void bh(int s, int t, BS &b) {
         if ((b.canLoseItem(t,s) || (b.hasWorkingAbility(t, Ability::StickyHold) && b.poke(t).item() != 0))&& b.gen() > 5) {
-            b.chainBp(s, 2048);
+            b.chainBp(s, 0x1800);
         }
     }
 
@@ -4394,7 +4401,9 @@ struct MMMeFirst : public MM
         removeFunction(turn(b,s), "MoveSettings", "MeFirst");
         int move = turn(b,s)["MeFirstAttack"].toInt();
         MoveEffect::setup(move,s,t,b);
-        tmove(b,s).power = tmove(b,s).power * 3 / 2;
+        if (b.gen() >= 5) { // gen 3+4 done inline in calculateDamage
+            b.chainBp(s, 0x1800);
+        }
         turn(b,s)["Target"] = b.randomValidOpponent(s);
         b.useAttack(s,move,true,true);
         MoveEffect::unsetup(move,s,b);
@@ -4751,7 +4760,11 @@ struct MMRazorWind : public MM
 
                 if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.weather != BS::StrongSun && b.isWeatherWorking(b.weather)) {
                     if (b.gen().num > 2) {
-                        tmove(b, s).power = tmove(b, s).power / 2;
+                        if (b.gen() < 5) {
+                            b.chainBp(s, -10);
+                        } else {
+                            b.chainBp(s, 0x800);
+                        }
                     } else {
                         b.turnMemory(s)["SolarbeamDamageReduction"] = true;
                     }
@@ -5050,7 +5063,11 @@ struct MMSmellingSalt : public MM
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
         if ( (st == 0 && b.poke(t).status() != Pokemon::Fine) || (st != 0 && b.poke(t).status() == st)) {
-            tmove(b, s).power = tmove(b, s).power * 2;
+            if (b.gen() < 5) {
+                b.chainBp(s, 20);
+            } else {
+                b.chainBp(s, 0x2000);
+            }
         }
     }
 
@@ -6767,7 +6784,7 @@ struct MMRetaliate : public MM
 
     static void bcd(int s, int, BS &b) {
         if (team(b, b.player(s)).contains("LastKoedTurn") && team(b, b.player(s))["LastKoedTurn"].toInt() == b.turn() - 1) {
-            tmove(b,s).power *= 2;
+            b.chainBp(s, 0x1800);
         }
     }
 };
@@ -6847,7 +6864,7 @@ struct MMFusionBolt : public MM
 
     static void bcd(int s, int, BS &b) {
         if (b.battleMemory().value("FusionFlare", -1) == b.turn())
-            tmove(b,s).power *= 2;
+            b.chainBp(s, 0x2000);
     }
 
     static void uas(int, int, BS &b) {

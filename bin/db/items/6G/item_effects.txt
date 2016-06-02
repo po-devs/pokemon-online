@@ -1,19 +1,19 @@
 ﻿0 #items with 1000+ effects are in-battle items like burn heal
-3 1-7_2#bright powder
-4 2|1-1_10#choice band
-5 2|1-5_10#choice scarf
-6 2|1-3_10#choice specs
+3 1-7_819#bright powder
+4 2|1-1_6144#choice band
+5 2|1-5_6144#choice scarf
+6 2|1-3_6144#choice specs
 9 4#focus band
 10 5#focus sash
 11 6#full incense
 13 6#lagging tail
-14 1-7_1#lax incense
+14 1-7_409#lax incense
 15 12#Leftovers
-18 8-132_10_2_4#Metal Powder
+18 8-132_6144_2_4#Metal Powder
 19 9-1#Muscle Band
 20 10-13#Odd Incense 
 22 #11#Power Herb
-24 8-132_20_5#Quick Powder
+24 8-132_8192_5#Quick Powder
 27 10-5#Rock Incense 
 28 10-11#Rose Incense 
 29 10-10#Sea Incense
@@ -24,7 +24,7 @@
 34 10-4Soft Sand
 36 10-10#Wave Incense 
 37 3#white herb
-38 1-6_2#Wide Lens 
+38 1-6_409#Wide Lens
 39 9-2#Wise Glasses
 41 15#Zoom Lens
 45 18#Berry Juice
@@ -32,12 +32,12 @@
 50 16#black sludge
 51 10-16#dark glasses
 57 10-9#charcoal
-60 8-366_20_4#deepseascale
+60 8-366_8192_4#deepseascale
 62 10-15#Dragon Scale
 71 19-4#Flame Orb
 87 #20#king's rock
 91 21#Life Orb
-92 8-25_20_1_3#Light Ball
+92 8-25_8192_1_3#Light Ball
 95 10-12#Magnet
 101 10-8#Steel
 102 22#Metronome
@@ -46,7 +46,7 @@
 107 10-14#Nevermelt Ice
 125 23#Scope Lens
 126 24#Shell Bell
-131 8-380/381_10_3_4#Soul Dew
+131 8-380/381_6144_3_4#Soul Dew
 132 10-7#Spell Tag
 141 19-5#Toxic Orb 
 142 10-13#Twistedspoon
@@ -57,20 +57,20 @@
 160 #14-2#Damp Rock 
 161 #14-4#Heat Rock 
 162 27-484_15_10#Lustrous Orb
-163 1-5_-10#Macho Brace
+163 1-5_2048#Macho Brace
 164 26-83#Stick
 165 10-15#Dragon Fang
 166 10-3#Poison Barb
-167 1-5_-10#Power Anklet 
-168 1-5_-10#Power Band 
-169 1-5_-10#Power Belt 
-170 1-5_-10#Power Bracer
-171 1-5_-10#Power Lens 
-172 1-5_-10#Power Weight 
+167 1-5_2048#Power Anklet
+168 1-5_2048#Power Band
+169 1-5_2048#Power Belt
+170 1-5_2048#Power Bracer
+171 1-5_2048#Power Lens
+172 1-5_2048#Power Weight
 180 17#Quick Claw
 181 23#Razor Claw 
 183 28#Sticky Barb
-184 8-366_20_3#Deepseatooth
+184 8-366_8192_3#Deepseatooth
 185 29-15|10-15#Draco Plate
 186 29-16|10-16#Dread Plate 
 187 29-4|10-4#Earth Plate 
@@ -86,11 +86,11 @@
 197 29-10|10-10#Splash Plate 
 198 29-7|10-7#Spooky Plate 
 199 29-5|10-5#Stone Plate 
-200 8-104/105_20_1#Thick Club
+200 8-104/105_8192_1#Thick Club
 201 29-3|10-3#Toxic Plate 
 202 29-12|10-12#Zap Plate
 206 10-5#Hard stone
-212 1-5_-10#Iron Ball
+212 1-5_2048#Iron Ball
 213 27-487_15_7#Griseous Orb
 214 31#Air Mail
 215 31#Bloom Mail

@@ -205,6 +205,7 @@ struct IMLagging : public IM
     }
 };
 
+/* Light Ball, Thick Club, DeepSeaTooth/Scale */
 struct IMBoostPokeStat : public IM
 {
     IMBoostPokeStat() {
@@ -231,6 +232,7 @@ struct IMBoostPokeStat : public IM
     }
 };
 
+/* Wise Glasses, Muscle Band */
 struct IMBoostCategory : public IM
 {
     IMBoostCategory() {
@@ -238,7 +240,11 @@ struct IMBoostCategory : public IM
     }
     static void bpm(int s, int, BS &b) {
         if (tmove(b,s).category == poke(b,s)["ItemArg"]) {
-            b.chainBp(s, 409);
+            if (b.gen() < 5) {
+                b.chainBp(s, 2);
+            } else {
+                b.chainBp(s, 0x1199);
+            }
         }
     }
 };
@@ -256,10 +262,11 @@ struct IMBoostType : public IM
             return;
         }
         if (tmove(b,s).type == poke(b,s)["ItemArg"]) {
-            if (b.gen() >= 4)
-                b.chainBp(s, 819);
-            else
-                b.chainBp(s, 409);
+            if (b.gen() < 5) {
+                b.chainBp(s, 4);
+            } else {
+                b.chainBp(s, 0x1333);
+            }
         }
     }
 
@@ -278,7 +285,11 @@ struct IMZoomLens : public IM
 
     static void sm(int s, int t, BS &b) {
         if (fturn(b,t).contains(TM::HasMoved)) {
-            turn(b,s)["Stat6ItemModifier"] = 4;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat6ItemModifier"] = 4;
+            } else {
+                turn(b,s)["Stat6ItemModifier"] = 0x1333;
+            }
         }
     }
 };
@@ -315,7 +326,11 @@ struct IMLifeOrb : public IM
     }
 
     static void m2m(int s, int, BS &b) {
-        turn(b,s)["ItemMod2Modifier"] = 3;
+        if (b.gen() < 5) {
+            turn(b,s)["ItemMod2Modifier"] = 6;
+        } else {
+            turn(b,s)["ItemMod2Modifier"] = 0x14CC;
+        }
     }
 
     static void udi(int s, int t, BS &b) {
@@ -410,6 +425,7 @@ struct IMCriticalPoke : public IM
     }
 };
 
+/* Adamant/Lustrous/Griseous Orb */
 struct IMPokeTypeBoost : public IM
 {
     IMPokeTypeBoost() {
@@ -425,8 +441,13 @@ struct IMPokeTypeBoost : public IM
 
         int type = tmove(b, s).type;
         for (int i = 1; i < args.size(); i++) {
-            if (type == args[i].toInt())
-                b.chainBp(s, 819);
+            if (type == args[i].toInt()) {
+                if (b.gen() < 5) {
+                    b.chainBp(s, 4);
+                } else {
+                    b.chainBp(s, 0x1333);
+                }
+            }
         }
     }
 };
@@ -467,26 +488,25 @@ struct IMMetronome : public IM
             /* multiple turn move */
             return;
         }
-        int count = poke(b,s)["IMMetroCount"].toInt();
         int lslot = poke(b,s)["IMLastMoveSlot"].toInt();
         int slot = fpoke(b,s).lastMoveSlot;
-        bool act = poke(b,s)["IMMetroActivating"].toBool();
         poke(b,s)["IMLastMoveSlot"] = slot;
-        poke(b,s)["IMMetroActivating"] = true;
-        if (slot != lslot) {
-            poke(b,s)["IMMetroCount"] = 0;
+        if (slot != lslot || tmove(b,s).power == 0) {
+            poke(b,s)["IMMetroCount"] = 1;
             return;
         }
-        if (tmove(b,s).power == 0) {
-            return;
-        }
-        if (act) {
-            poke(b,s)["IMMetroCount"] = std::min(10, count+(b.gen() >= 5 ? 2 : 1));
+
+        int count = poke(b,s).value("IMMetroCount").toInt() + 1;
+        poke(b,s)["IMMetroCount"] = count;
+        if (b.gen() < 5) {
+            poke(b,s)["IMMetroMod"] = std::min(20, count * 2);
+        } else {
+            poke(b,s)["IMMetroMod"] = std::min(0x2000, 0x1000 + count * 0x333);
         }
     }
 
     static void m2m(int s, int, BS &b) {
-        turn(b,s)["ItemMod2Modifier"] = poke(b,s)["IMMetroCount"];
+        turn(b,s)["ItemMod2Modifier"] = poke(b,s)["IMMetroMod"];
     }
 };
 
@@ -622,8 +642,13 @@ struct IMEviolite : public IM
             id = PokemonInfo::Number(poke(b,s).value("PreTransformPoke").toString());
         }
         if (PokemonInfo::HasEvolutions(id.pokenum) && id != Pokemon::Floette_EF) {
-            turn(b,s)["Stat2ItemModifier"] = 10;
-            turn(b,s)["Stat4ItemModifier"] = 10;
+            if (b.gen() < 5) {
+                turn(b,s)["Stat2ItemModifier"] = 10;
+                turn(b,s)["Stat4ItemModifier"] = 10;
+            } else {
+                turn(b,s)["Stat2ItemModifier"] = 0x1800;
+                turn(b,s)["Stat4ItemModifier"] = 0x1800;
+            }
         }
     }
 };

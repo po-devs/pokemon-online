@@ -100,7 +100,7 @@
 99 When used, prevents wild encounters for 250 steps.
 100 Revives a fainted Pokemon with all of its HP.
 101 Increases power of Steel-type moves used by the holder by 20%. If held by Onix during a trade, makes it evolve into Steelix. If held by Scyther during a trade, makes it evolve into Scizor.
-102 For each time the holder uses the same move in a row, that move's power is increased by 10%, up to a maximum of 100%.
+102 For each time the holder uses the same move in a row, that move's power is increased by 20%, up to a maximum of 100%. (For Generations 4 and under, the boost is 10% per usage).
 103 Increases power of Grass-type moves used by the holder by 20%.
 104 Restores 100 HP to a Pokemon.
 105 Evolves Nidorina into Nidoqueen, Nidorino into Nidoking, Clefairy into Clefable, Jigglypuff into Wigglytuff, Skitty into Delcatty and Munna into Musharna.
