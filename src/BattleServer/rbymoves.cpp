@@ -726,10 +726,10 @@ struct RBYMimic : public MM
             move = b.move(t, b.randint(4));
         }
         int slot = fpoke(b,s).lastMoveSlot;
-        int pp = b.PP(s, slot);
+        int oldpp = b.PP(s, slot);
         b.changeTempMove(s, slot, move);
         if (b.isStadium()) {
-            b.changePP(s, slot, std::min(pp, 15));
+            b.changePP(s, slot, oldpp);
         }
         b.sendMoveMessage(81,0,s,type(b,s),t,move);
     }
