@@ -904,18 +904,33 @@ struct MMFlail : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        int n = 64 * b.poke(s).lifePoints() / b.poke(s).totalLifePoints();
         int mult = 20;
-        if (n <= 1) {
-            mult = 200;
-        } else if (n <= 5) {
-            mult = 150;
-        } else if (n <= 12) {
-            mult = 100;
-        } else if (n <= 21) {
-            mult = 80;
-        } else if (n <= 42) {
-            mult = 40;
+        if (b.gen() < 5) {
+            int n = 64 * b.poke(s).lifePoints() / b.poke(s).totalLifePoints();
+            if (n <= 1) {
+                mult = 200;
+            } else if (n <= 5) {
+                mult = 150;
+            } else if (n <= 12) {
+                mult = 100;
+            } else if (n <= 21) {
+                mult = 80;
+            } else if (n <= 42) {
+                mult = 40;
+            }
+        } else {
+            int n = 48 * b.poke(s).lifePoints() / b.poke(s).totalLifePoints();
+            if (n <= 1) {
+                mult = 200;
+            } else if (n <= 4) {
+                mult = 150;
+            } else if (n <= 9) {
+                mult = 100;
+            } else if (n <= 16) {
+                mult = 80;
+            } else if (n <= 32) {
+                mult = 40;
+            }
         }
 
         tmove(b, s).power = tmove(b, s).power * mult;
