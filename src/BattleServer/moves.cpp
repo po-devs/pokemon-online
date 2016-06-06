@@ -756,7 +756,7 @@ struct MMEruption : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        tmove(b, s).power = std::max(10, tmove(b, s).power*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
+        tmove(b, s).power = std::max(1, tmove(b, s).power*b.poke(s).lifePoints()/b.poke(s).totalLifePoints());
     }
 };
 
@@ -2033,7 +2033,7 @@ struct MMFuryCutter : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        tmove(b, s).power = tmove(b, s).power * (poke(b,s)["FuryCutterCount"].toInt()+1);
+        tmove(b, s).power = std::min(160, tmove(b, s).power * (poke(b,s)["FuryCutterCount"].toInt()+1));
     }
 };
 
@@ -3617,7 +3617,8 @@ struct MMGyroBall : public MM
         if(tmove(b, s).attack == Move::GyroBall) {
             bool speed = turn(b,s)["GyroBall_Arg"].toInt() == 1;
 
-            int bp = 1 + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
+            //Gen 4 adds 1 to BP. Gen 5+ does not. Lazy and using bool to int conversion
+            int bp = (b.gen() < 5) + 25 * b.getStat(speed ? s : t,Speed) / b.getStat(speed ? t : s,Speed);
             bp = std::max(2,std::min(bp,150));
 
             tmove(b, s).power = tmove(b, s).power * bp;
@@ -4774,7 +4775,8 @@ struct MMPunishment : public MM
             }
         }
 
-        tmove(b, s).power = tmove(b, s).power * std::min(60 + 20 * boostsum, 200);
+        int max = b.gen() < 5 ? 200 : 120;
+        tmove(b, s).power = tmove(b, s).power * std::min(60 + 20 * boostsum, max);
     }
 };
 

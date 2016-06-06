@@ -2339,7 +2339,7 @@ struct AMFurCoat: public AM {
 
     static void bpfm(int , int t, BS &b) {
         if (tmove(b,t).category == Move::Physical) {
-            b.chainBp(t, -2048);
+            b.chainBp(t, 0x800);
         }
     }
 };
