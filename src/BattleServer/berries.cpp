@@ -190,7 +190,7 @@ struct BMAntiSuperEffective : public BM
         if (!b.attacking()) {
             return;
         }
-        if (!b.hasSubstitute(s) && fturn(b,t).typeMod > 0 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
+        if ((!b.hasSubstitute(s) || b.hasWorkingAbility(t, Ability::Infiltrator)) && fturn(b,t).typeMod > 0 && tmove(b,t).type == poke(b,s)["ItemArg"].toInt()) {
             b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
             b.eatBerry(s,false);
 
@@ -212,7 +212,7 @@ struct BMAntiNormal : public BM
         /* We never want to activate this berry if this is consumed by Bug Bite */
         if (b.gen() >= 4 && !turn(b,s).value("BugBiter").toBool()) {
             /* Normal moves */
-            if (!b.hasSubstitute(s) && tmove(b,t).type == 0) {
+            if ((!b.hasSubstitute(s) || b.hasWorkingAbility(t, Ability::Infiltrator)) && tmove(b,t).type == 0) {
                 b.sendBerryMessage(4,s,0,t,b.poke(s).item(),move(b,t));
                 b.eatBerry(s,false);
 
