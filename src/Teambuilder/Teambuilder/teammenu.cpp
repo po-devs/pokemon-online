@@ -136,9 +136,7 @@ void TeamMenu::updatePokemons()
     foreach(PokeEdit *p, ui->pokemons) {
         p->setPoke(&team().team().poke(p->property("slot").toInt()));
     }
-    for (int i = 0; i < 6; i++) {
-        ui->pokemonTabs->setTabIcon(i, PokemonInfo::Icon(team().team().poke(i).num(),team().team().poke(i).gender()));
-    }
+    updateTabs();
 }
 
 void TeamMenu::toggleHackmons()
