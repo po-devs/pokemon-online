@@ -1964,7 +1964,9 @@ ppfunction:
                 }
             }
 
-            if (hit) {
+            // Triple Kick has an accuracy check for every attack, so it is possible that it only hits once.
+            // Make sure that the hit message is still shown.
+            if (hit || turnMemory(player).contains("RepeatCount")) {
                 notifyHits(player, hitcount);
             }
 
