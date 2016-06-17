@@ -183,6 +183,7 @@ class PokeTeam : virtual public PokeGeneral, virtual public PokePersonal, virtua
 {
 public:
     PokeTeam();
+    ~PokeTeam() {} /*Prevents default move assignment, and associated warnings */
 
     Pokemon::uniqueId num() const;
     void setNum(Pokemon::uniqueId num);
