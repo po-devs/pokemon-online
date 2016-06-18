@@ -53,7 +53,12 @@ void MoveProxy::setNum(int newnum, bool forceKeepOldPPMax) {
     }
     d()->num() = newnum;
     if (!forceKeepOldPPMax) {
-        d()->totalPP() = MoveInfo::PP(newnum, gen()) * (newnum == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */;
+        int peeps = MoveInfo::PP(newnum, gen());
+        if (gen() < 3) {
+            d()->totalPP() =  peeps + std::min(7, peeps/5) * 3; /* "x + min(7,x/5)*y". X = base PP, Y = PP ups used */
+        } else {
+            d()->totalPP() = peeps * (newnum == Move::TrumpCard ? 5 :8)/5; /* 3 PP-ups */;
+        }
     }
     emit numChanged();
 }

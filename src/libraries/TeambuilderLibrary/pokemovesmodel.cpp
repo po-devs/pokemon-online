@@ -133,7 +133,12 @@ QVariant PokeMovesModel::data(const QModelIndex &index, int role) const
         } else if (section == Learning) {
             return storage[names[index.row()]].second;
         } else if (section == PP) {
-            return MoveInfo::PP(movenum, gen)*8/5;
+            int peeps = MoveInfo::PP(movenum, gen);
+            if (gen < 3) {
+                return peeps + std::min(7, peeps/5) * 3; /* "x + min(7,x/5)*y". X = base PP, Y = PP ups used */
+            } else {
+                return peeps*8/5;
+            }
         } else if (section == Pow) {
             //int power = MoveInfo::Power(movenum, gen);
             //if (power > 1) return power;
