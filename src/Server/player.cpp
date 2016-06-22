@@ -1679,7 +1679,7 @@ void Player::spectatingRequested(int id)
     if (!isLoggedIn()) {
         return; //INVALID BEHAVIOR
     }
-    if (battlesSpectated.size() >= 2 || (auth() >= 3 && battlesSpectated.size() >= 16)) {
+    if ((auth() < 3 && battlesSpectated.size() >= 2) || (auth() >= 3 && battlesSpectated.size() >= 16)) {
         sendMessage(tr("You're already watching %1 battles!").arg(battlesSpectated.size()));
         return;
     }
