@@ -4705,6 +4705,7 @@ struct MMRazorWind : public MM
 {
     MMRazorWind() {
         functions["MoveSettings"] = &ms;
+        functions["BasePowerModifier"] = &bpm;
     }
 
     static void ms(int s, int, BS &b) {
@@ -4723,18 +4724,6 @@ struct MMRazorWind : public MM
                 //Power Herb
                 b.sendItemMessage(11,s);
                 b.disposeItem(s);
-
-                if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.weather != BS::StrongSun && b.isWeatherWorking(b.weather)) {
-                    if (b.gen().num > 2) {
-                        if (b.gen() < 5) {
-                            b.chainBp(s, -10);
-                        } else {
-                            b.chainBp(s, 0x800);
-                        }
-                    } else {
-                        b.turnMemory(s)["SolarbeamDamageReduction"] = true;
-                    }
-                }
             } else {
                 poke(b,s)["ChargingMove"] = mv;
                 poke(b,s)["ReleaseTurn"] = b.turn() + 1;
@@ -4753,8 +4742,19 @@ struct MMRazorWind : public MM
         fturn(b,s).add(TM::NoChoice);
         int mv = poke(b,s)["ChargingMove"].toInt();
         MoveEffect::setup(mv,s,s,b);
-        if (mv == SolarBeam && b.weather != BS::NormalWeather && b.weather != BS::Sunny && b.isWeatherWorking(b.weather)) {
-            tmove(b, s).power = tmove(b, s).power / 2;
+    }
+
+    static void bpm(int s, int, BS &b) {
+        if (move(b,s) == SolarBeam && !(b.isWeatherWorking(BS::NormalWeather) || b.isWeatherWorking(BS::Sunny) || b.isWeatherWorking(BS::StrongSun))) {
+            if (b.gen() > 2) {
+                if (b.gen() < 5) {
+                    b.chainBp(s, -10);
+                } else {
+                    b.chainBp(s, 0x800);
+                }
+            } else {
+                b.turnMemory(s)["SolarbeamDamageReduction"] = true;
+            }
         }
     }
 };
@@ -4995,7 +4995,7 @@ MMSleepTalk::FM MMSleepTalk::forbidden_moves;
 struct MMSmellingSalt : public MM
 {
     MMSmellingSalt () {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BasePowerModifier"] = &bcd;
         functions["AfterAttackSuccessful"] = &aas;
     }
 
@@ -5017,7 +5017,7 @@ struct MMSmellingSalt : public MM
         if (!b.koed(t)) {
             int status = turn(b,s)["SmellingSalt_Arg"].toInt();
 
-            /* Venom Shock doesn't heal, as well as Evil Eye */
+            /* Venom Shock doesn't heal, as well as Hex */
             if (status != Pokemon::Poisoned && status != 0)
                 b.healStatus(t, status);
         }
@@ -6721,7 +6721,7 @@ struct MMFoulPlay : public MM
 struct MMRetaliate : public MM
 {
     MMRetaliate() {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BasePowerModifier"] = &bcd;
     }
 
     static void bcd(int s, int, BS &b) {
@@ -6800,7 +6800,7 @@ struct MMGrowth : public MM
 struct MMFusionBolt : public MM
 {
     MMFusionBolt() {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BasePowerModifier"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
 
@@ -6817,13 +6817,13 @@ struct MMFusionBolt : public MM
 struct MMFusionFlare : public MM
 {
     MMFusionFlare() {
-        functions["BeforeCalculatingDamage"] = &bcd;
+        functions["BasePowerModifier"] = &bcd;
         functions["UponAttackSuccessful"] = &uas;
     }
 
     static void bcd(int s, int, BS &b) {
         if (b.battleMemory().value("FusionBolt", -1) == b.turn())
-            tmove(b,s).power *= 2;
+            b.chainBp(s, 0x2000);
     }
 
     static void uas(int, int, BS &b) {
