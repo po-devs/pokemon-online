@@ -38,6 +38,14 @@ public slots:
     virtual void send(const QByteArray &message){(void) message;}
     virtual void sendPacket(const QByteArray&){}
     virtual void onSocketConnected(){}
+protected:
+    QString cleanIp(const QString &ip) const {
+        if (ip.startsWith("::ffff:")) {
+            return ip.mid(strlen("::ffff:"));
+        } else {
+            return ip;
+        }
+    }
 };
 
 template <class S>
@@ -108,13 +116,13 @@ Network<S>::Network(S sock, int id) : mysocket(sock), commandStarted(false), myi
 template <class S>
 void Network<S>::attributeIp()
 {
-    _ip = socket()->ip();
+    _ip = cleanIp(socket()->ip());
 }
 
 template <>
 inline void Network<QTcpSocket*>::attributeIp()
 {
-    _ip = socket()->peerAddress().toString();
+    _ip = cleanIp(socket()->peerAddress().toString());
 }
 
 /* For Boost Sockets */
@@ -258,7 +266,7 @@ QString Network<S>::ip() const {
 
 template <class S>
 void Network<S>::changeIP(const QString &ip) {
-    _ip = ip;
+    _ip = cleanIp(ip);
 }
 
 template <class S>

@@ -77,15 +77,16 @@ ServerWindow::ServerWindow(QWidget *parent) : QWidget(parent)
     
     l->addRow("Safe scripts: ", safeScripts = new QCheckBox("Restricts some script functions to improve security."));
     safeScripts->setChecked(settings.value("Scripts/SafeMode").toBool());
-    
-    l->addRow("Minimize to tray: ", minimizeToTray = new QCheckBox("Hide to tray when minimized/switch desktop."));
-    minimizeToTray->setChecked(settings.value("GUI/MinimizeToTray").toBool());
 
-    l->addRow("Show tray popup: ", trayPopup = new QCheckBox("Show tooltip when PO is minimized to tray."));
-    trayPopup->setChecked(settings.value("GUI/ShowTrayPopup").toBool());
+    /* Commented out because gui too big */
+//    l->addRow("Minimize to tray: ", minimizeToTray = new QCheckBox("Hide to tray when minimized/switch desktop."));
+//    minimizeToTray->setChecked(settings.value("GUI/MinimizeToTray").toBool());
 
-    l->addRow("Double Click tray icon", doubleClick = new QCheckBox("Double click to reopen when PO is minimized to tray."));
-    doubleClick->setChecked(settings.value("GUI/DoubleClickIcon").toBool());
+//    l->addRow("Show tray popup: ", trayPopup = new QCheckBox("Show tooltip when PO is minimized to tray."));
+//    trayPopup->setChecked(settings.value("GUI/ShowTrayPopup").toBool());
+
+//    l->addRow("Double Click tray icon", doubleClick = new QCheckBox("Double click to reopen when PO is minimized to tray."));
+//    doubleClick->setChecked(settings.value("GUI/DoubleClickIcon").toBool());
 
     l->addRow("Show Overactive Messages: ", showOveractive = new QCheckBox("Show Overactive Message when someone goes overactive"));
     showOveractive->setChecked(settings.value("AntiDOS/ShowOveractiveMessages").toBool());
