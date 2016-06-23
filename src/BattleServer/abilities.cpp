@@ -1053,7 +1053,7 @@ struct AMSandVeil : public AM {
             if (b.gen() < 5) {
                 turn(b,s)["Stat7AbilityModifier"] = 4;
             } else {
-                turn(b,s)["Stat7AbilityModifier"] = 0x1333;
+                turn(b,s)["Stat7AbilityModifier"] = 4; //0x1333;
             }
         }
     }
@@ -1195,7 +1195,7 @@ struct AMTangledFeet : public AM {
             if (b.gen() < 5) {
                 turn(b,s)["Stat7AbilityModifier"] = 10;
             } else {
-                turn(b,s)["Stat7AbilityModifier"] = 0x1800;
+                turn(b,s)["Stat7AbilityModifier"] = 10; //0x1800;
             }
         }
     }

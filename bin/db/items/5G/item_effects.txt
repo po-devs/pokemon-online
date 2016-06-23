@@ -1,5 +1,5 @@
 ﻿0 #items with 1000+ effects are in-battle items like burn heal
-3 1-7_819#bright powder
+3 1-7_2#bright powder
 4 2|1-1_6144#choice band
 5 2|1-5_6144#choice scarf
 6 2|1-3_6144#choice specs
@@ -7,7 +7,7 @@
 10 5#focus sash
 11 6#full incense
 13 6#lagging tail
-14 1-7_409#lax incense
+14 1-7_2#lax incense
 15 12#Leftovers
 18 8-132_6144_2_4#Metal Powder
 19 9-1#Muscle Band

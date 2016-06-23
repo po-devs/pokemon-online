@@ -1243,7 +1243,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         }
     }
 
-    if (gen() < 5) {
+    if (true || gen() < 5) {
         /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
                 due to the ever rounding down to make an int */
         acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion)
