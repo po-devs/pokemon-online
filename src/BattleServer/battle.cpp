@@ -4384,11 +4384,11 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
     }
     int ret = baseStat;
     if (gen() < 5) {
-        ret *= (20+turnMemory(player).value(q+"AbilityModifier").toInt())/20;
+        ret = ret * (20+turnMemory(player).value(q+"AbilityModifier").toInt())/20;
         if (multiples()) {
-            ret *= (20+turnMemory(player).value(q+"PartnerAbilityModifier").toInt())/20;
+            ret = ret * (20+turnMemory(player).value(q+"PartnerAbilityModifier").toInt())/20;
         }
-        ret *= (20+turnMemory(player).value(q+"ItemModifier").toInt())/20;
+        ret = ret * (20+turnMemory(player).value(q+"ItemModifier").toInt())/20;
     } else {
         int chain = 0x1000;
         if (hasWorkingAbility(player, Ability::Hustle)) {
