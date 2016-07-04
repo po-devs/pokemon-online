@@ -4325,7 +4325,8 @@ int BattleSituation::getBoostedStat(int player, int stat)
         }
         /* Wonder room: defense & sp defense switched*/
         if (battleMemory().contains("WonderRoomCount") && (stat == 2 || stat == 4)) {
-            stat = 6 - stat;
+            //Wonder room doesn't swap boosts
+            //stat = 6 - stat;
             givenStat = 6 - givenStat;
         }
         if (gen() > 2) {
@@ -4413,8 +4414,16 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
             ret /= 4;
     }
 
-    if (gen() >= 4 && stat == SpDefense && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock))
-        ret = ret * 3 / 2;
+    if (gen() >= 4 && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock)) {
+        //Wonder Room changes Sandstorm from SpDef to Def
+        if (battleMemory().value("WonderRoomCount").toInt() > 0) {
+            if (stat == Defense) {
+                ret = ret * 3 / 2;
+            }
+        } else if (stat == SpDefense) {
+            ret = ret * 3 / 2;
+        }
+    }
 
     if (ret == 0) {
         ret = 1;

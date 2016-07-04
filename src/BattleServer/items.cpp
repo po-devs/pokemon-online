@@ -139,7 +139,13 @@ struct IMStatModifier : public IM
 
     static void sm(int s, int, BS &b) {
         QString args = poke(b,s)["ItemArg"].toString();
-        turn(b,s)["Stat" + args.left(1) + "ItemModifier"] = args.mid(2).toInt();
+        //Wonder Room changes Assault Vest from SpDef to Def
+        if (b.poke(s).item() == Item::AssaultVest && b.battleMemory().value("WonderRoomCount").toInt() > 0) {
+            int stat = 6 - args.left(1).toInt();
+            turn(b,s)[QString("Stat%0ItemModifier").arg(stat)] = args.mid(2).toInt();
+        } else {
+            turn(b,s)["Stat" + args.left(1) + "ItemModifier"] = args.mid(2).toInt();
+        }
     }
 };
 
