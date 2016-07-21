@@ -493,7 +493,7 @@ void Server::removeChannel(int channelid) {
         return;
 
     QString chanName = channelNames.take(channelid);
-    printLine(QString("Channel %1 was removed.").arg(chanName));
+    //printLine(QString("Channel %1 was removed.").arg(chanName));
     channelids.remove(chanName.toLower());
     channels.take(channelid)->onRemoval();
 
@@ -614,7 +614,7 @@ void Server::mainChanChanged(const QString &name) {
     }
 
     if (channelExist(name)) {
-        printLine("Another channel with that name already exists, doing nothing.");
+        //printLine("Another channel with that name already exists, doing nothing.");
         return;
     }
 
@@ -837,25 +837,25 @@ void Server::loggedIn(int id, const QString &name)
             if (SecurityManager::exist(name) && SecurityManager::member(name).isProtected()) {
                 /* Replaces the other one */
                 if (!player(ids)->waitingForReconnect()) {
-                    printLine(tr("%1: replaced by new connection.").arg(name));
+                    //printLine(tr("%1: replaced by new connection.").arg(name));
                     sendMessage(ids, QString("You logged in from another client with the same name. Logging off."));
                 }
                 //When the client didn't intend to reconnect, we transfer only if the player was battling and there's a battle to save.
                 if (!player(ids)->battling()) {
-                    printLine(tr("kicking %1 because has the name %2 too").arg(ids).arg(name));
+                    //printLine(tr("kicking %1 because has the name %2 too").arg(ids).arg(name));
                     player(ids)->kick();
                 } else {
-                    printLine(tr("transferring player from id %1 to id %2").arg(id).arg(ids));
+                    //printLine(tr("transferring player from id %1 to id %2").arg(id).arg(ids));
                     transferId(id, ids, true);
                     return;
                 }
             } else {
                 // If the other player is disconnected, we remove him
                 if (player(ids)->waitingForReconnect()) {
-                    printLine(tr("Removing disconnected %1 for the new connection").arg(name));
+                    //printLine(tr("Removing disconnected %1 for the new connection").arg(name));
                     player(ids)->autoKick();
                 } else {
-                    printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
+                    //printLine(tr("Name %1 already in use, disconnecting player %2").arg(name, QString::number(id)));
                     sendMessage(id, QString("Another with the name %1 is already logged in").arg(name));
                     silentKick(id);
                     return;
@@ -1013,7 +1013,7 @@ void Server::sendServerMessage(const QString &message)
 
 bool Server::joinRequest(int player, const QString &channel)
 {
-    printLine(tr("Player %1 requesting to join channel %2").arg(player).arg(channel));
+    //printLine(tr("Player %1 requesting to join channel %2").arg(player).arg(channel));
 
     if (!channelExist(channel)) {
         if (addChannel(channel, player) == -1) {
@@ -1660,9 +1660,9 @@ void Server::battleResult(int battleid, int desc, int winner, int loser)
         battleList.remove(battleid);
 
         if (desc == Forfeit) {
-            printLine(QString("%1 forfeited his battle against %2").arg(name(loser), name(winner)));
+            printLine(QString("%1 forfeited their battle against %2").arg(name(loser), name(winner)));
         } else if (desc == Win) {
-            printLine(QString("%1 won his battle against %2").arg(name(winner), name(loser)));
+            printLine(QString("%1 won their battle against %2").arg(name(winner), name(loser)));
         } else if (desc == Tie) {
             printLine(QString("%1 and %2 tied").arg(name(winner), name(loser)));
         }
@@ -1783,13 +1783,13 @@ void Server::recvTeam(int id, const QString &_name)
 
 void Server::disconnected(int id)
 {
-    printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
+    //printLine(QString("Received disconnection from %1 (%2)").arg(name(id)).arg(id));
     disconnectPlayer(id);
 }
 
 void Server::logout(int id)
 {
-    printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
+    //printLine(QString("Received logout from %1 (%2)").arg(name(id)).arg(id));
     removePlayer(id);
 }
 

@@ -75,7 +75,7 @@ void Channel::leaveRequest(int pid)
         players.remove(pid);
         player->removeChannel(id());
 
-        server->printLine(QString("%1 left channel %2.").arg(player->name(), name()));
+        //server->printLine(QString("%1 left channel %2.").arg(player->name(), name()));
         server->engine()->afterChannelLeave(pid, id());
     } else {
         assert(disconnectedPlayers.contains(pid));
