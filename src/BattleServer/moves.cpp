@@ -1741,6 +1741,7 @@ struct MMDoomDesire : public MM
                     b.clearAtk();
 
                     slot(b,s)["DoomDesireDamagingNow"] = true;
+                    tmove(b, doomuser).flags = 0; //Prevent inheriting the previous move's flag (ie: contact)
                     int damage = b.calculateDamage(s, s);
                     b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                     b.inflictDamage(s, damage, doomuser, true, true);
