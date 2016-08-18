@@ -507,7 +507,7 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="208"/>
         <source>%1&apos;s %2 won&apos;t go any %3!</source>
-        <translation>¡%1 de %2 no puede %3 más!</translation>
+        <translation>¡%2 de %1 no puede %3 más!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="214"/>
