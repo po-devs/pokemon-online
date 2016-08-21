@@ -1,9 +1,9 @@
 ﻿0 
 1 Destructor
 2 Golpe Kárate
-3 Doblebofetón
+3 Doble Bofetón
 4 Puño Cometa
-5 Mega Puño
+5 Megapuño
 6 Día de Pago
 7 Puño Fuego
 8 Puño Hielo
@@ -11,7 +11,7 @@
 10 Arañazo
 11 Agarre
 12 Guillotina
-13 V. Cortante
+13 Viento Cortante
 14 Danza Espada
 15 Corte
 16 Tornado
@@ -19,7 +19,7 @@
 18 Remolino
 19 Vuelo
 20 Atadura
-21 Portazo
+21 Atizar
 22 Látigo Cepa
 23 Pisotón
 24 Doble Patada
@@ -33,13 +33,13 @@
 32 Perforador
 33 Placaje
 34 Golpe Cuerpo
-35 Repetición
+35 Constricción
 36 Derribo
 37 Golpe
 38 Doble Filo
 39 Látigo
 40 Picotazo Ven
-41 Dobleataque
+41 Doble Ataque
 42 Pin Misil
 43 Malicioso
 44 Mordisco
@@ -66,8 +66,8 @@
 65 Pico Taladro
 66 Sumisión
 67 Patada Baja
-68 Contador
-69 Movimiento Sísmico
+68 Contraataque
+69 Mov. Sísmico
 70 Fuerza
 71 Absorber
 72 Megaagotar
@@ -79,7 +79,7 @@
 78 Paralizador
 79 Somnífero
 80 Danza Pétalo
-81 Disp. Demora
+81 Disparo Demora
 82 Furia Dragón
 83 Giro Fuego
 84 Impactrueno
@@ -106,18 +106,18 @@
 105 Recuperación
 106 Fortaleza
 107 Reducción
-108 Pantallahumo
+108 Pantalla de Humo
 109 Rayo Confuso
 110 Refugio
 111 Rizo Defensa
 112 Barrera
-113 Pantalla Luz
+113 Pantalla de Luz
 114 Niebla
 115 Reflejo
 116 Foco Energía
 117 Venganza
 118 Metrónomo
-119 Movimiento Espejo
+119 Mov. Espejo
 120 Autodestrucción
 121 Bomba Huevo
 122 Lengüetazo
@@ -129,12 +129,12 @@
 128 Tenaza
 129 Rapidez
 130 Cabezazo
-131 Clavo Cañon
+131 Clavo Cañón
 132 Restricción
 133 Amnesia
 134 Kinético
 135 Amortiguador
-136 Patada S. Alta
+136 Pat. Salto Alta
 137 Deslumbrar
 138 Come Sueños
 139 Gas Venenoso
@@ -142,7 +142,7 @@
 141 Chupavidas
 142 Beso Amoroso
 143 Ataque Aéreo
-144 Transform
+144 Transformación
 145 Burbuja
 146 Puño Mareo
 147 Espora
@@ -156,7 +156,7 @@
 155 Huesomerang
 156 Descanso
 157 Avalancha
-158 Hiper Colmillo
+158 Hipercolmillo
 159 Afilar
 160 Conversión
 161 Triataque
@@ -165,7 +165,7 @@
 164 Sustituto
 165 Combate
 166 Esquema
-167 Triplepatada
+167 Triple Patada
 168 Ladrón
 169 Telaraña
 170 Telépata
@@ -192,7 +192,7 @@
 191 Púas
 192 Electrocañón
 193 Profecía
-194 Mismodestino
+194 Mismo Destino
 195 Canto Mortal
 196 Viento Hielo
 197 Detección
@@ -208,20 +208,20 @@
 207 Contoneo
 208 Batido
 209 Chispa
-210 Cortefuria
+210 Corte Furia
 211 Ala de Acero
 212 Mal de Ojo
 213 Atracción
 214 Sonámbulo
 215 Campana Cura
-216 Retroceso
+216 Retribución
 217 Presente
 218 Frustración
 219 Velo Sagrado
 220 Divide Dolor
-221 Fuegosagrado
+221 Fuego Sagrado
 222 Magnitud
-223 Puñodinámico
+223 Puño Dinámico
 224 Megacuerno
 225 Dragoaliento
 226 Relevo
@@ -243,7 +243,7 @@
 242 Triturar
 243 Manto Espejo
 244 Más Psique
-245 Velocidad Extrema
+245 Veloc. Extrema
 246 Poder Pasado
 247 Bola Sombra
 248 Premonición
@@ -298,15 +298,15 @@
 297 Danza Pluma
 298 Danza Caos
 299 Patada Ígnea
-300 Chapoteolodo
+300 Chapoteo Lodo
 301 Bola Hielo
 302 Brazo Pincho
 303 Relajo
 304 Vozarrón
-305 Colmillo Ven.
+305 Colmillo Ven
 306 Garra Brutal
 307 Anillo Ígneo
-308 Hidrocañon
+308 Hidrocañón
 309 Puño Meteoro
 310 Impresionar
 311 Meteorobola
@@ -339,10 +339,10 @@
 338 Planta Feroz
 339 Corpulencia
 340 Bote
-341 Disp. Lodo
+341 Disparo Lodo
 342 Cola Veneno
 343 Antojo
-344 Placaje Eléctrico
+344 Placaje Eléc
 345 Hoja Mágica
 346 Hidrochorro
 347 Paz Mental
@@ -366,14 +366,14 @@
 365 Picoteo
 366 Viento Afín
 367 Acupresión
-368 Repr. Metal
+368 Represión Metal
 369 Ida y Vuelta
 370 A Bocajarro
 371 Vendetta
 372 Buena Baza
 373 Embargo
 374 Lanzamiento
-375 Psico-cambio
+375 Psicocambio
 376 As Oculto
 377 Anticura
 378 Estrujón
@@ -382,8 +382,8 @@
 381 Conjuro
 382 Yo Primero
 383 Copión
-384 Cambia Fue.
-385 Cambia Def.
+384 Cambia Fuerza
+385 Cambia Defensa
 386 Castigo
 387 Última Baza
 388 Abatidoras
@@ -412,7 +412,7 @@
 411 Onda Certera
 412 Energibola
 413 Pájaro Osado
-414 Tierra viva
+414 Tierra Viva
 415 Trapicheo
 416 Giga Impacto
 417 Maquinación
@@ -425,10 +425,10 @@
 424 Colmillo Ígneo
 425 Sombra Vil
 426 Bomba Fango
-427 Psico-corte
+427 Psicocorte
 428 Cabezazo Zen
-429 Disp. Espejo
-430 Foco Respl.
+429 Disparo Espejo
+430 Foco Resplandor
 431 Treparrocas
 432 Despejar
 433 Espacio Raro
@@ -440,7 +440,7 @@
 439 Romperrocas
 440 Veneno X
 441 Lanza Mugre
-442 Cabezahierro
+442 Cabeza de Hierro
 443 Bomba Imán
 444 Roca Afilada
 445 Seducción
@@ -464,7 +464,7 @@
 463 Lluvia Ígnea
 464 Brecha Negra
 465 Fogonazo
-466 Vien. Aciago
+466 Viento Aciago
 467 Golpe Umbrío
 468 Afilagarras
 469 Vastaguardia
@@ -472,7 +472,7 @@
 471 Isofuerza
 472 Zona Extraña
 473 Psicocarga
-474 Cargatóxica
+474 Carga Tóxica
 475 Aligerar
 476 Polvo Ira
 477 Telequinesis
@@ -482,7 +482,7 @@
 481 Pirotecnia
 482 Onda Tóxica
 483 Danza Aleteo
-484 Cuerpopesado
+484 Cuerpo Pesado
 485 Sincrorruido
 486 Bola Voltio
 487 Anegar
@@ -497,8 +497,8 @@
 496 Canon
 497 Eco Voz
 498 Guardia Baja
-499 Nieblaclara
-500 Poderreserva
+499 Niebla Clara
+500 Poder Reserva
 501 Anticipo
 502 Cambio Banda
 503 Escaldar
@@ -506,7 +506,7 @@
 505 Pulso Cura
 506 Infortunio
 507 Caída Libre
-508 Cambiomarcha
+508 Cambio de Marcha
 509 Llave Giro
 510 Calcinación
 511 Último Lugar
@@ -530,12 +530,12 @@
 529 Taladradora
 530 Golpe Bis
 531 Arrumaco
-532 Astadrenaje
-533 Espadasanta
+532 Asta Drenaje
+533 Espada Santa
 534 Concha Filo
 535 Golpe Calor
-536 Ciclón Hojas
-537 Rodillo Púas
+536 Ciclón de Hojas
+537 Rodillo de Púas
 538 Rizo Algodón
 539 Pulso Noche
 540 Onda Mental
@@ -546,7 +546,7 @@
 545 Bomba Ígnea
 546 Tecno Shock
 547 Canto Arcaico
-548 Sablemístico
+548 Sable Místico
 549 Mundo Gélido
 550 Ataque Fulgor
 551 Llama Azul
@@ -558,55 +558,55 @@
 557 V de Fuego
 558 Llama Fusión
 559 Rayo Fusión
-560 Ojitos tiernos
+560 Ojitos Tiernos
 561 Estruendo
-562 Truco defensa
-563 Brillo mágico
-564 Beso drenaje
-565 Viento feérico
-566 Plancha voladora
-567 Condena silvana
+562 Truco Defensa
+563 Brillo Mágico
+564 Beso Drenaje
+565 Viento Feérico
+566 Plancha Voladora
+567 Condena Silvana
 568 Liofilización
 569 Geocontrol
-570 Tormenta floral
+570 Tormenta Floral
 571 Acoso
-572 Fuerza lunar
-573 Llama embrujada
-574 Rugido de guerra
-575 Moflete estático
-576 Ala mortífera
-577 Carga parábola
-578 Golpe fantasma
+572 Fuerza Lunar
+573 Llama Embrujada
+574 Rugido de Guerra
+575 Moflete Estático
+576 Ala Mortífera
+577 Carga Parábola
+578 Golpe Fantasma
 579 Carantoña
 580 Camaradería
 581 Halloween
-582 Shuriken de agua
-583 Niebla aromática
+582 Shuriken de Agua
+583 Niebla Aromática
 584 Eructo
 585 Confidencia
-586 Voz cautivadora
-587 Onda anómala
-588 Campo eléctrico
+586 Voz Cautivadora
+587 Onda Anómala
+588 Campo Eléctrico
 589 Electrificación
-590 Cerrojo feérico
-591 Aguijón letal
-592 Defensa floral
-593 Campo de hierba
-594 Cortina plasma
-595 Escudo real
-596 Fuerza telúrica
-597 Aura magnética
-598 Escudo tatami
-599 Campo de niebla
-600 Última palabra
-601 Polvo explosivo
-602 Puño incremento
+590 Cerrojo Feérico
+591 Aguijón Letal
+592 Defensa Floral
+593 Campo de Hierba
+594 Cortina Plasma
+595 Escudo Real
+596 Fuerza Telúrica
+597 Aura Magnética
+598 Escudo Tatami
+599 Campo de Niebla
+600 Última Palabra
+601 Polvo Explosivo
+602 Puño Incremento
 603 Fertilizante
-604 Barrera espinosa
-605 Red viscosa
+604 Barrera Espinosa
+605 Red Viscosa
 606 Reversión
-607 Trampa venenosa
-608 Paga extra
+607 Trampa Venenosa
+608 Paga Extra
 609 Celebración
 610 Clemencia
 611 Acoso
