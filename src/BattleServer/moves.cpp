@@ -4686,7 +4686,11 @@ struct MMPsychoShift : public MM
 
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(98,0,s,type(b,s),t);
-        b.inflictStatus(t, b.poke(s).status(), s);
+        int minTurns(0), maxTurns(0);
+        if (b.gen() >= 6 && b.poke(s).status() == Pokemon::Poisoned) {
+            minTurns = maxTurns = MoveInfo::MinTurns(Move::Toxic, b.gen());
+        }
+        b.inflictStatus(t, b.poke(s).status(), s, minTurns, maxTurns);
         b.healStatus(s, b.poke(s).status());
     }
 };
