@@ -163,12 +163,13 @@
     <message>
         <location filename="../libraries/Utilities/antidoswindow.cpp" line="46"/>
         <source>Trusted IPs (separated by comma)</source>
-        <translation>IPs de confianza (Separado por coma)</translation>
+        <translation>IPs de confianza (separadas por comas)</translation>
     </message>
     <message>
         <location filename="../libraries/Utilities/antidoswindow.cpp" line="49"/>
         <source>Channel in which to display overactive messages: </source>
-        <translation>Canal en donde se mostrarán los mensajes de superactivo:</translation>
+        <translatorcomment>&apos;overactive&apos; has no easy translation.</translatorcomment>
+        <translation type="unfinished">Canal en donde se mostrarán los mensajes de superactivo:</translation>
     </message>
     <message>
         <location filename="../libraries/Utilities/antidoswindow.cpp" line="51"/>
@@ -181,7 +182,7 @@
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="1007"/>
         <source>Mega evolution</source>
-        <translation>Mega evolución</translation>
+        <translation>Megaevolución</translation>
     </message>
 </context>
 <context>
@@ -189,12 +190,12 @@
     <message>
         <location filename="../Teambuilder/Teambuilder/avatardialog.ui" line="14"/>
         <source>Select Trainer Sprite...</source>
-        <translation>Selecciona el sprite del entrenador</translation>
+        <translation>Seleccionar sprite de entrenador...</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/avatardialog.ui" line="52"/>
         <source>OK</source>
-        <translation>De acuerdo</translation>
+        <translation>Seleccionar</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/avatardialog.ui" line="59"/>
@@ -225,7 +226,7 @@
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="142"/>
         <source>Always on top</source>
-        <translation>Siempre activa</translation>
+        <translation>Siempre visible</translation>
     </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="158"/>
@@ -241,7 +242,7 @@
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="160"/>
         <source>&amp;Damage Calc</source>
-        <translation type="unfinished"></translation>
+        <translation>Calculadora de &amp;daño</translation>
     </message>
     <message>
         <location filename="../Teambuilder/basebattlewindow.cpp" line="423"/>
@@ -506,7 +507,7 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="208"/>
         <source>%1&apos;s %2 won&apos;t go any %3!</source>
-        <translation>La %1 de %2 ya no puede %3 más</translation>
+        <translation>¡%2 de %1 no puede %3 más!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="214"/>
@@ -608,12 +609,12 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="392"/>
         <source>%1&apos;s Primordial Sea causes a heavy rain to fall!</source>
-        <translation>¡El Mar de albor de %1 causó que cayera una fuerte lluvia!</translation>
+        <translation>¡El Mar del Albor de %1 causó que cayera una fuerte lluvia!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="393"/>
         <source>%1&apos;s Delta Stream stirs up a mysterious air current to protect Flying-type PokÃ©mon!</source>
-        <translation>¡La Ráfaga delta de %1 sucitó una misteriosa corriente de aire para proteger a los Pokémon tipo volador!</translation>
+        <translation>¡La Ráfaga Delta de %1 provocó una misteriosa corriente de aire para proteger a los Pokémon de tipo Volador!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="397"/>
@@ -652,17 +653,17 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="419"/>
         <source>The intense sunlight continues to shine.</source>
-        <translation>Los intensos rayos de sol continuan brillando...</translation>
+        <translation>Los intensos rayos de sol continúan brillando...</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="420"/>
         <source>The heavy downpour continues.</source>
-        <translation>La fuerte lluvia continua...</translation>
+        <translation>La fuerte lluvia continúa...</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="421"/>
         <source>A mysterious air current is protecting Flying-type PokÃ©mon.</source>
-        <translation>Una misteriosa corriente de aire está protegiendo a los Pokémon tipo volador...</translation>
+        <translation>Una misteriosa corriente de aire está protegiendo a los Pokémon de tipo Volador...</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="430"/>
@@ -687,7 +688,7 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="434"/>
         <source>The heavy rain has lifted!</source>
-        <translation>La fuerte lluvia se ha ido!</translation>
+        <translation>¡La fuerte lluvia se ha ido!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="435"/>
@@ -697,7 +698,7 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="436"/>
         <source>The mysterious air current has dissipated!</source>
-        <translation>La misteriosa corriente de aire se ha desvanecido!</translation>
+        <translation>¡La misteriosa corriente de aire se ha desvanecido!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="544"/>
@@ -946,7 +947,7 @@ Moves:
 --%4
 --%5
 --%6</source>
-        <translation>%1Nv. %2
+        <translation>%1 Nv. %2
 
 Movimientos:
 --%3
@@ -1013,7 +1014,7 @@ Movimientos:
         <location filename="../Teambuilder/battlewindow.cpp" line="119"/>
         <source>&amp;Pokemon</source>
         <oldsource>&amp;PokÃ©mon</oldsource>
-        <translation>&amp;Pokemon</translation>
+        <translation>&amp;Pokémon</translation>
     </message>
     <message>
         <location filename="../Teambuilder/battlewindow.cpp" line="120"/>
@@ -1074,7 +1075,7 @@ Movimientos:
     <message>
         <location filename="../Server/battlingoptions.cpp" line="20"/>
         <source>Allow rated battles through regular challenges. (not recommended)</source>
-        <translation>Permitir batallas valoradas en combates noramles. (No recomendado)</translation>
+        <translation>Permitir batallas valoradas en combates normales. (No recomendado)</translation>
     </message>
     <message>
         <location filename="../Server/battlingoptions.cpp" line="21"/>
@@ -1161,7 +1162,7 @@ Movimientos:
         <location filename="../Teambuilder/challengedialog.cpp" line="223"/>
         <source>Decline</source>
         <comment>Challenge</comment>
-        <translation>Cancelar</translation>
+        <translation>Rechazar</translation>
     </message>
     <message>
         <location filename="../Teambuilder/challengedialog.cpp" line="240"/>
@@ -1234,23 +1235,23 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/channel.cpp" line="103"/>
         <source>Ban &amp;For...</source>
-        <translation>Banear &amp;por...</translation>
+        <translation>&amp;Banear por...</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="109"/>
         <source>Forever</source>
-        <translation>Por Siempre</translation>
+        <translation>Para siempre</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="265"/>
         <source>%1 battle between %2 and %3 started.</source>
-        <translation>Batalla %1 entre %2 y %3 dio inicio</translation>
+        <translation>El combate %1 entre %2 y %3 ha empezado.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="271"/>
         <location filename="../Teambuilder/channel.cpp" line="278"/>
         <source>Battling against %1 in %2</source>
-        <translation>Batallando contra %1 en %2</translation>
+        <translation>Luchando contra %1 en %2</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="101"/>
@@ -1290,13 +1291,12 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/channel.cpp" line="491"/>
         <source>%1 left the channel.</source>
-        <translatorcomment>This &apos;fué&apos; made my eyes bleed.</translatorcomment>
         <translation>%1 se fue del canal.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="498"/>
         <source>&lt;i&gt;You are not in the channel anymore&lt;/i&gt;</source>
-        <translation>&lt;i&gt;Ya no estás en el canal&lt;/i&gt;</translation>
+        <translation>&lt;i&gt;Ya no estás en este canal&lt;/i&gt;</translation>
     </message>
     <message>
         <location filename="../Teambuilder/channel.cpp" line="513"/>
@@ -1330,7 +1330,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/client.cpp" line="104"/>
         <source>&amp;Find Battle</source>
-        <translation>&amp;Buscar Batalla</translation>
+        <translation>&amp;Buscar batalla</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1278"/>
@@ -1341,13 +1341,12 @@ Movimientos:
         <location filename="../Teambuilder/client.cpp" line="1451"/>
         <source>&amp;Battle options</source>
         <comment>Menu</comment>
-        <translatorcomment>menu</translatorcomment>
-        <translation>&amp;Menú de opciones de batalla</translation>
+        <translation>Opciones de &amp;batalla</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1452"/>
         <source>Save &amp;Battle Logs</source>
-        <translatorcomment>The infamous &apos;Guargar&apos;; logs is not uncommon in Spanish</translatorcomment>
+        <translatorcomment>Logs is not uncommon in Spanish</translatorcomment>
         <translation>Guardar los &amp;logs de los combates</translation>
     </message>
     <message>
@@ -1378,7 +1377,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/client.cpp" line="71"/>
         <source>Join: </source>
-        <translation>Unirse: </translation>
+        <translation>Unirse a: </translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="479"/>
@@ -1399,37 +1398,37 @@ Movimientos:
         <location filename="../Teambuilder/client.cpp" line="492"/>
         <location filename="../Teambuilder/client.cpp" line="1313"/>
         <source>Enable all events</source>
-        <translation>Mostrar todos los eventos</translation>
+        <translation>Anunciar todo</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="497"/>
         <location filename="../Teambuilder/client.cpp" line="1316"/>
         <source>Disable all events</source>
-        <translation>Ocultar todos los eventos</translation>
+        <translation>No anunciar nada</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="504"/>
         <location filename="../Teambuilder/client.cpp" line="1321"/>
         <source>Enable idle events</source>
-        <translation>Mostrar eventos de ausencia</translation>
+        <translation>Anunciar ausencia</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="513"/>
         <location filename="../Teambuilder/client.cpp" line="1332"/>
         <source>Enable battle events</source>
-        <translation>Mostrar combates</translation>
+        <translation>Anunciar combates</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="522"/>
         <location filename="../Teambuilder/client.cpp" line="1343"/>
         <source>Enable channel events</source>
-        <translation>Mostrar eventos de canal</translation>
+        <translation>Anunciar eventos de canal</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="531"/>
         <location filename="../Teambuilder/client.cpp" line="1354"/>
         <source>Enable name change events</source>
-        <translation>Mostrar eventos de cambio de nombre</translation>
+        <translation>Anunciar cambios de nombre</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="546"/>
@@ -1538,22 +1537,22 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/client.cpp" line="1403"/>
         <source>Enable change name message in PMs</source>
-        <translation>Mostrar cambio de nombre en MP</translation>
+        <translation>Mostrar cambios de nombre en MP</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1422"/>
         <source>Show exit warning</source>
-        <translation>Avisar al salir</translation>
+        <translation>Preguntar al salir</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1438"/>
         <source>Display TIs</source>
-        <translation>Mostrar Información de entrador</translation>
+        <translation>Mostrar información de entrador</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1443"/>
         <source>Use old shortcuts</source>
-        <translation>Usar atajos anteriores</translation>
+        <translation>Usar atajos antiguos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1459"/>
@@ -1563,7 +1562,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/client.cpp" line="1476"/>
         <source>Use Pokéball Icons</source>
-        <translation>Usar iconos de Pokébolas</translation>
+        <translation>Usar iconos de Poké Balls</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1498"/>
@@ -1573,12 +1572,12 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/client.cpp" line="1513"/>
         <source>&amp;About</source>
-        <translation>Acerca de PO</translation>
+        <translation>Ac&amp;erca de</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1514"/>
         <source>&amp;Credits</source>
-        <translation>C&amp;réditos</translation>
+        <translation>&amp;Créditos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1581"/>
@@ -1593,7 +1592,7 @@ Movimientos:
     <message>
         <location filename="../Teambuilder/client.cpp" line="1587"/>
         <source>&lt;html&gt;Enter the password for your current name.&lt;br/&gt;If you don&apos;t have it, the name you have chosen might be already taken. Choose a different name.&lt;br/&gt;</source>
-        <translation>&lt;html&gt;Ingresa la contraseña para tu nombre de usuario&lt;br/&gt;Si no la tienes, el nombre de usuario que has elegido ya ha sido registrado, intenta con un nombre de usuario diferente.&lt;br/&gt;</translation>
+        <translation>&lt;html&gt;Ingresa la contraseña para tu nombre de usuario&lt;br/&gt;Si no la tienes, el nombre de usuario que has elegido ya ha sido registrado; intenta con un nombre de usuario diferente.&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1599"/>
@@ -1755,7 +1754,7 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1371"/>
         <source>&amp;PM options</source>
-        <translation>Opciones de mensajes &amp;privados</translation>
+        <translation>Mensajes &amp;privados</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1383"/>
@@ -1969,7 +1968,7 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../libraries/Utilities/confighelper.cpp" line="223"/>
         <source>Find Directory</source>
-        <translation>Encontrar directorio</translation>
+        <translation>Buscar directorio</translation>
     </message>
 </context>
 <context>
@@ -2140,7 +2139,7 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/controlpanel.cpp" line="79"/>
         <source> (on %1)</source>
-        <translation> (En %1)</translation>
+        <translation> (en %1)</translation>
     </message>
     <message>
         <location filename="../Teambuilder/controlpanel.cpp" line="82"/>
@@ -2189,7 +2188,7 @@ Este servidor pide una contraseña para acceder.</translation>
         <location filename="../Teambuilder/damagecalc.ui" line="198"/>
         <location filename="../Teambuilder/damagecalc.ui" line="886"/>
         <source>Pokemon:</source>
-        <translation>Pokemon:</translation>
+        <translation>Pokémon:</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="205"/>
@@ -2277,7 +2276,7 @@ Este servidor pide una contraseña para acceder.</translation>
         <location filename="../Teambuilder/damagecalc.ui" line="1191"/>
         <location filename="../Teambuilder/damagecalc.ui" line="1258"/>
         <source> EV</source>
-        <translation> EV</translation>
+        <translation> EVs</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="385"/>
@@ -2291,7 +2290,7 @@ Este servidor pide una contraseña para acceder.</translation>
         <location filename="../Teambuilder/damagecalc.ui" line="1233"/>
         <location filename="../Teambuilder/damagecalc.ui" line="1294"/>
         <source> boost(s)</source>
-        <translation>boost(s)</translation>
+        <translation> boost(s)</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="420"/>
@@ -2369,37 +2368,37 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1500"/>
         <source>Single Battle</source>
-        <translation>Bantalla simple</translation>
+        <translation>Batalla Individual</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1510"/>
         <source>Multi-target</source>
-        <translation>Blanco multiple</translation>
+        <translation>Objetivo múltiple</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1517"/>
         <source>Surf on Dive, etc</source>
-        <translation>Surf en buceo, etc.</translation>
+        <translation>Surf en Buceo, etc.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1524"/>
         <source>Reflect/Light Screen</source>
-        <translation>Reflejo/Pantalla de luz</translation>
+        <translation>Reflejo/Pantalla de Luz</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1531"/>
         <source>Ally Just Fainted</source>
-        <translation>Compañero se desmayó</translation>
+        <translation>Compañero recién debilitado</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1538"/>
         <source>Fusion Move Just Used</source>
-        <translation>Movimiento de fusión ya fue utilizado</translation>
+        <translation>Movimiento de fusión recién utilizado</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1549"/>
         <source>Me First</source>
-        <translation>Yo primero</translation>
+        <translation>Yo Primero</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1556"/>
@@ -2419,17 +2418,17 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1577"/>
         <source>Mud Sport</source>
-        <translation>Chapoteo lodo</translation>
+        <translation>Chapoteolodo</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1584"/>
         <source>Ally Flower Gift</source>
-        <translation>Don floral del aliado</translation>
+        <translation>Don Floral del aliado</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1591"/>
         <source>Foe Flower Gift</source>
-        <translation>Don floral del enemigo</translation>
+        <translation>Don Floral del enemigo</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1598"/>
@@ -2439,7 +2438,7 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1609"/>
         <source>Wonder Room</source>
-        <translation>Zona extraña</translation>
+        <translation>Zona Extraña</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="1687"/>
@@ -2623,7 +2622,7 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/evbox.ui" line="370"/>
         <source>Max EVs</source>
-        <translation>Max Evs</translation>
+        <translation>EVs máximos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/evbox.ui" line="119"/>
@@ -2726,7 +2725,7 @@ Range: %6
 Description: %5</source>
         <translation>%1
 
-Poder: %2
+Potencia: %2
 Presición: %3
 Categoría: %4
 Rango: %6
@@ -2847,7 +2846,7 @@ Descripción: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.cpp" line="141"/>
         <source>Invalid IVs</source>
-        <translation>IVs invalidos</translation>
+        <translation>IVs inválidos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.cpp" line="141"/>
@@ -2867,7 +2866,7 @@ Descripción: %5</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/ivbox.cpp" line="245"/>
         <source>%1 can&apos;t have Hidden Power type %2.</source>
-        <translation>%1 No puede tener poder oculto tipo %2</translation>
+        <translation>%1 no puede tener Poder Oculto tipo %2.</translation>
     </message>
 </context>
 <context>
@@ -2923,16 +2922,16 @@ Descripción: %5</translation>
     <message>
         <location filename="../Teambuilder/loadwindow.cpp" line="99"/>
         <source>Invalid Color</source>
-        <translation>Color invalido</translation>
+        <translation>Color inválido</translation>
     </message>
     <message>
         <location filename="../Teambuilder/loadwindow.cpp" line="99"/>
         <source>Your color must have less than 200 parts green, brightness less than 140, and lightness less than 140.
 
 Your selected color currently has %1 parts green, a brightness of %2, and a lightness of %3.</source>
-        <translation>Tu color debe tener menos de 200 partes en verde, un brillo menor a 140, y una ligereza menor a 140.
+        <translation>Tu color debe tener menos de 200 de verde, un brillo menor que 140, y una luminosidad menor que 140.
 
-Tu color actual seleccionado tiene 1% partes en verde, un brillo de 2%, y una ligereza de 3% </translation>
+Tu color actual tiene %1 de verde, un brillo de %2, y una luminosidad de %3.</translation>
     </message>
 </context>
 <context>
@@ -2986,7 +2985,7 @@ Tu color actual seleccionado tiene 1% partes en verde, un brillo de 2%, y una li
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="691"/>
         <source>Reload &amp;Themes</source>
-        <translation>Recargar Temas</translation>
+        <translation>Recargar &amp;Temas</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="693"/>
@@ -3027,12 +3026,12 @@ Tu color actual seleccionado tiene 1% partes en verde, un brillo de 2%, y una li
     <message>
         <location filename="../MoveMachine/mainwindow.ui" line="14"/>
         <source>Move Machine</source>
-        <translation>Máquina de movimeinto</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../MoveMachine/mainwindow.ui" line="38"/>
         <source>Level Moves</source>
-        <translation>Movimientos de Nivel</translation>
+        <translation>Movimientos por nivel</translation>
     </message>
     <message>
         <location filename="../MoveMachine/mainwindow.ui" line="48"/>
@@ -3042,7 +3041,7 @@ Tu color actual seleccionado tiene 1% partes en verde, un brillo de 2%, y una li
     <message>
         <location filename="../MoveMachine/mainwindow.ui" line="58"/>
         <source>Egg Moves</source>
-        <translation>Movimiento huevo</translation>
+        <translation>Movimientos huevo</translation>
     </message>
     <message>
         <location filename="../MoveMachine/mainwindow.ui" line="68"/>
@@ -3245,7 +3244,18 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(You can see in db/moves/moves.txt that flare blitz is the move number 394)&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Now that you have your mod, the only thing you have to do is export it and upload it to the internet. The players will have to download that zip, and then in their teambuilder select it with &lt;span style=&quot; font-style:italic;&quot;&gt;Teambuilder &amp;gt; Mods &amp;gt; Install Mod...&lt;/span&gt;, and they&apos;ll be able to play with a Flare Blitz Flareon.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Droid Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Si aún no existe, crea en el directorio del servidor una carpeta llamada &lt;span style=&quot; font-style:italic;&quot;&gt;Mods&lt;/span&gt;. En su interior, crea otra carpeta con el nombre que quieras asignarle al mod, y en ella crea un archivo llamado mod.ini que esté vacío.&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Crea en el mismo lugar una carpeta llamada db. Dentro, puedes poner los cambios que quieras que se apliquen en tu mod. Por ejemplo, si quieres que Flareon aprenda Envite Ígneo, abre &lt;span style=&quot; font-style:italic;&quot;&gt;[Carpeta del servidor]/db/pokes/4G/level_moves.txt&lt;/span&gt;, y encuentra la línea que empieza por el número en la Pokédex de Flareon, 136. Cópiala y crea en el mod un archivo llamado &lt;span style=&quot; font-style:italic;&quot;&gt;[Carpeta del servidor]/Mods/[Tu mod]/db/pokes/4G_level_moves.txt&lt;/span&gt;, pega la línea antes mencionada y añade 394, que es el número del movimiento Envite Ígneo, en ella. Quedaría así:&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;136:0 28 33 39 44 52 83 98 123 126 184 270 387 424 436 394&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(Puede verse en trans/es/db/moves/moves.txt que Envite Ígneo es el ataque 394)&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Una vez que tengas listo el mod, solo tienes que ir a la carpeta del mod, seleccionarlo todo, hacer un .zip y subirlo a Internet. Los jugadores tendrán que descargar e instalar el zip usando &lt;span style=&quot; font-style:italic;&quot;&gt;Editor de equipo &amp;gt; Mods &amp;gt; Instalar mod...&lt;/span&gt;, y podrán jugar con un Flareon con Envite Ígneo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Server/modswindow.ui" line="33"/>
@@ -3271,7 +3281,7 @@ Category: %4
 Description: %5</source>
         <translation>%1
 
-Poder: %2
+Potencia: %2
 Presición: %3
 Categoría: %4
 
@@ -3332,8 +3342,7 @@ Descripción %5</translation>
     <message>
         <location filename="../Teambuilder/pmsystem.cpp" line="187"/>
         <source>PokÃ©mon Online PM</source>
-        <translatorcomment>I&apos;m not really sure about what is this</translatorcomment>
-        <translation>Pokémon Online PM</translation>
+        <translation>MP en Pokémon Online</translation>
     </message>
 </context>
 <context>
@@ -3381,7 +3390,7 @@ Descripción %5</translation>
     <message>
         <location filename="../Server/player.cpp" line="1251"/>
         <source>Your team %1 was placed in tier %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tu equipo %1 ha sido puesto en la tier %2.</translation>
     </message>
     <message>
         <location filename="../Server/player.cpp" line="1551"/>
@@ -3451,7 +3460,7 @@ Descripción %5</translation>
     <message>
         <location filename="../Server/playerswindow.cpp" line="101"/>
         <source>&amp;Enable sorting</source>
-        <translation>Activar clasificación</translation>
+        <translation>&amp;Ordenar</translation>
     </message>
 </context>
 <context>
@@ -3913,7 +3922,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="103"/>
         <source>The way the Pokemon learns the attack. There may be several ways a pokemon learns an attack, in which case only the most recent/easy way is displayed.</source>
-        <translation>La forma en que el Pokemon aprende el ataque. Pueden haber varias formas en que un pokemon aprende un ataque, en cuyo caso se muestra sólo la forma más reciente/fácil.</translation>
+        <translation>La forma en que el Pokémon aprende el ataque. Puede haber varias formas en que un pokémon aprende un ataque, en cuyo caso se muestra solo la forma más reciente/fácil.</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="114"/>
@@ -3923,7 +3932,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="116"/>
         <source>The speed bracket of a move.</source>
-        <translation>Soporte de velocidad de un movimiento.</translation>
+        <translation>La franja de prioridad de un movimiento.</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="106"/>
@@ -4029,7 +4038,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="35"/>
         <source>&amp;Sort list</source>
-        <translation>Ordenar Lista</translation>
+        <translation>&amp;Orden</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/pokedexpokeselection.ui" line="47"/>
@@ -4074,7 +4083,7 @@ Movimiento 4</translation>
         <location filename="../client-plugins/DatabaseEditor/pokemoneditordialog.ui" line="89"/>
         <location filename="../client-plugins/DatabaseEditor/pokemoneditordialog.ui" line="135"/>
         <source>Learning Method</source>
-        <translation>Método de Aprendizaje</translation>
+        <translation>Método de aprendizaje</translation>
     </message>
     <message>
         <location filename="../client-plugins/DatabaseEditor/pokemoneditordialog.ui" line="101"/>
@@ -4084,7 +4093,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../client-plugins/DatabaseEditor/pokemoneditordialog.ui" line="169"/>
         <source>Run MoveMachine and do Ctrl+S after having done  all your changes, to propagate them through the various files correctly.</source>
-        <translation>Ejecutar MoveMachine y presionar Ctrl + S despues de haber hecho todos los cambios, para propagarlos a través de los diversos archivos correctamente</translation>
+        <translation>Ejecutando MoveMachine y pulsando Ctrl + S después de haber hecho todos los cambios, estos se aplicarán a los diversos archivos correctamente.</translation>
     </message>
     <message>
         <location filename="../client-plugins/DatabaseEditor/pokemoneditordialog.ui" line="183"/>
@@ -4111,7 +4120,7 @@ Movimiento 4</translation>
         <location filename="../libraries/Utilities/otherwidgets.cpp" line="654"/>
         <source>Are you sure you want to quit?
 </source>
-        <translation>Estás seguro que deseas salir?
+        <translation>¿Estás seguro de que quieres salir?
 </translation>
     </message>
 </context>
@@ -4146,7 +4155,6 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="19"/>
         <source>Team Preview</source>
-        <translatorcomment>Vista Previa Del Equipo</translatorcomment>
         <translation></translation>
     </message>
     <message>
@@ -4157,8 +4165,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="21"/>
         <source>Inverted Battle</source>
-        <translatorcomment>Batalla Invertida</translatorcomment>
-        <translation></translation>
+        <translation>Batalla Invertida</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="26"/>
@@ -4203,13 +4210,13 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="49"/>
         <source>All Type Effectivenesses are inverted (Ex: Water is weak to Fire)</source>
-        <translation>La eficacia de todos los tipos estan invertidas (Ej: Agua es débil al fuego)</translation>
+        <translation>La eficacia de todos los tipos están invertidas (Ej: Agua es débil a Fuego)</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="54"/>
         <source>Singles</source>
         <comment>Mode</comment>
-        <translation>Simples</translation>
+        <translation>Individual</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="55"/>
@@ -4328,7 +4335,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="284"/>
         <source>%1 can&apos;t learn the following moves from older generations at the same time as having the ability %2: %3.</source>
-        <translation>%1, teniendo la habilidad %2, no puede aprender: %3. Estos movimientos proceden de generaciones pasadas, donde no existía el DW.</translation>
+        <translation>%1, teniendo la habilidad %2, no puede aprender: %3. Estos movimientos proceden de generaciones pasadas.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="271"/>
@@ -4338,7 +4345,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="322"/>
         <source>%1 can&apos;t learn both %2 and %3.</source>
-        <translation>%1 no puede aprender tanto %2 y %3</translation>
+        <translation>%1 no puede aprender a la vez %2 y %3.</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/movesetchecker.cpp" line="484"/>
@@ -4383,7 +4390,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2851"/>
         <source>heavy rain</source>
-        <translation>chubasco</translation>
+        <translation>lluvia intensa</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2852"/>
@@ -4602,7 +4609,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/security.cpp" line="222"/>
         <source>Error: cannot open the file that contains the members (%1)</source>
-        <translation> no se puede abrir el archivo que contiene los miembros (%1)</translation>
+        <translation>Error: no se puede abrir el archivo que contiene los miembros (%1)</translation>
     </message>
     <message>
         <location filename="../Server/security.cpp" line="260"/>
@@ -4612,12 +4619,12 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/security.cpp" line="277"/>
         <source>Error: cannot rename the file that contains the members (%1 -&gt; %2)</source>
-        <translation>no se puede renombrar el archivo que contiene los miembros (%1 -&gt; %2</translation>
+        <translation>Error: no se puede renombrar el archivo que contiene los miembros (%1 -&gt; %2)</translation>
     </message>
     <message>
         <location filename="../Server/security.cpp" line="283"/>
         <source>Error: cannot reopen the file that contains the members (%1)</source>
-        <translation> no se puede reabrir el archivo que contiene los miembros (%1)</translation>
+        <translation>Error: no se puede reabrir el archivo que contiene los miembros (%1)</translation>
     </message>
     <message>
         <location filename="../client-plugins/DesignerPlugin/designerplugin.cpp" line="15"/>
@@ -4648,7 +4655,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/battlestructs.cpp" line="31"/>
         <source>The battle ended by timeout.</source>
-        <translation>El combate ha finalizado por timeout.</translation>
+        <translation>El combate ha terminado por timeout.</translation>
     </message>
 </context>
 <context>
@@ -4674,13 +4681,11 @@ Movimiento 4</translation>
     <message>
         <location filename="../Teambuilder/ranking.cpp" line="19"/>
         <source>Player Name</source>
-        <translatorcomment>Nick de jugador</translatorcomment>
         <translation>Nick de jugador</translation>
     </message>
     <message>
         <location filename="../Teambuilder/ranking.cpp" line="19"/>
         <source>Points</source>
-        <translatorcomment>Puntos</translatorcomment>
         <translation>Puntos</translation>
     </message>
 </context>
@@ -4821,7 +4826,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/sqlconfig.cpp" line="55"/>
         <source>Host: </source>
-        <translation>Huésped: </translation>
+        <translation>Host: </translation>
     </message>
     <message>
         <location filename="../Server/sqlconfig.cpp" line="60"/>
@@ -4869,7 +4874,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../client-plugins/ClientScripting/scriptwindow.ui" line="100"/>
         <source>Get Moogle&apos;s Scripts</source>
-        <translation>Conseguir scripts de Moogle</translation>
+        <translation>Obtener los scripts de Moogle</translation>
     </message>
     <message>
         <location filename="../Server/scriptengine.cpp" line="2377"/>
@@ -4906,7 +4911,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../client-plugins/ClientScripting/scriptwindow.cpp" line="78"/>
         <source>You need to be connected to a server to load Moogle&apos;s scripts.</source>
-        <translation>Necesitas estar conectado a un servidor para cargar los scripts de Moogle</translation>
+        <translation>Necesitas estar conectado a un servidor para cargar los scripts de Moogle.</translation>
     </message>
 </context>
 <context>
@@ -4914,12 +4919,12 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/server.cpp" line="166"/>
         <source>Starting loading pokemon database...</source>
-        <translation>Empezando a cargar base de datos pokemon...</translation>
+        <translation>Cargando base de datos de Pokémon...</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="172"/>
         <source>Pokemon database loaded</source>
-        <translation>Base de datos pokemon cargada</translation>
+        <translation>Base de datos de Pokémon cargada</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="193"/>
@@ -4934,11 +4939,12 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/server.cpp" line="213"/>
         <source>Starting to listen to port %1</source>
-        <translation>Comenzando a escuchar al puerto %1</translation>
+        <translation>Comenzando a escuchar el puerto %1</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="769"/>
         <source>Player %1 (IP %2) is being overactive.</source>
+        <translatorcomment>Not sure if &apos;superactivo&apos; is the proper translation of &apos;overactive&apos;.</translatorcomment>
         <translation>El jugador %1 (IP %2) está siendo superactivo.</translation>
     </message>
     <message>
@@ -4954,7 +4960,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/server.cpp" line="840"/>
         <source>%1: replaced by new connection.</source>
-        <translation>%1: reemplazado por nueva conexión</translation>
+        <translation>%1: reemplazado por nueva conexión.</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="845"/>
@@ -4969,7 +4975,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/server.cpp" line="855"/>
         <source>Removing disconnected %1 for the new connection</source>
-        <translation>Removiendo al %1 desconectado para la nueva conexión</translation>
+        <translation>Eliminando al %1 desconectado para la nueva conexión</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="858"/>
@@ -4989,7 +4995,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../Server/server.cpp" line="1209"/>
         <source>Your player session was still active on the server, so the data was kept. If you want to update your team/player info, just open the teambuilder and close it.</source>
-        <translation>Tu sesión aún estaba activa en el servidor, asi que se conservaron los datos. Si quieres actualizar tu informacion de equipo/jugador, solo abre el editor de equipo y cierralo.</translation>
+        <translation>Tu sesión aún estaba activa en el servidor, así que se conservaron los datos. Si quieres actualizar tu información de equipo/jugador, abre el editor de equipo y ciérralo.</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="1228"/>
@@ -5108,7 +5114,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="153"/>
         <source>&amp;About</source>
-        <translation>Acerca de PO</translation>
+        <translation>Acerca &amp;de...</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="154"/>
@@ -5222,7 +5228,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../client-plugins/SmogonPlugin/smogonsinglepokedialog.ui" line="14"/>
         <source>Choose Smogon build</source>
-        <translation>Escoger la estructura de Smogon</translation>
+        <translation>Obtener set de Smogon</translation>
     </message>
 </context>
 <context>
@@ -5405,7 +5411,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="91"/>
         <source>Ctrl+Shift+I</source>
         <comment>Import from Android</comment>
-        <translation>Importar desde Android</translation>
+        <translation>Ctrl+Mayús+I</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="92"/>
@@ -5416,7 +5422,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="92"/>
         <source>Ctrl+Shift+E</source>
         <comment>Export to Android</comment>
-        <translation>Exportar para Android</translation>
+        <translation>Ctrl+Mayús+E</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="97"/>
@@ -5507,8 +5513,8 @@ p, li { white-space: pre-wrap; }
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="12"/>
         <source>Paste your exported team here.
 Your language needs to be set to English to import English teams.</source>
-        <translation>Pega tu equipo exportado aqui.
-Tu idioma debe estar configurado al inglés para importar equipos en inglés.</translation>
+        <translation>Pega tu equipo exportado aquí.
+Tu idioma debe coincidir con el idioma en que se exportó el equipo.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teamimporter.cpp" line="18"/>
@@ -5576,7 +5582,7 @@ Tu idioma debe estar configurado al inglés para importar equipos en inglés.</t
     <message>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="54"/>
         <source>&amp;Show Illegal</source>
-        <translation>Mostrar Ilegal</translation>
+        <translation>Mostrar opciones &amp;ilegales</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teammenu.cpp" line="67"/>
@@ -5599,7 +5605,7 @@ Tu idioma debe estar configurado al inglés para importar equipos en inglés.</t
     <message>
         <location filename="../client-plugins/SmogonPlugin/teambuildersmogonplugin.cpp" line="38"/>
         <source>Choose Smogon build...</source>
-        <translation>Escoger la estructura de Smogon...</translation>
+        <translation>Escoger set de Smogon...</translation>
     </message>
 </context>
 <context>
@@ -5608,16 +5614,16 @@ Tu idioma debe estar configurado al inglés para importar equipos en inglés.</t
         <location filename="../../tests/common/testrunner.cpp" line="73"/>
         <source>%n test(s) passed</source>
         <translation>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n test completado con éxito</numerusform>
+            <numerusform>%n tests completados con éxito</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../../tests/common/testrunner.cpp" line="74"/>
         <source>%n test(s) failed</source>
         <translation>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>%n test fallado</numerusform>
+            <numerusform>%n tests fallados</numerusform>
         </translation>
     </message>
 </context>
@@ -5882,7 +5888,7 @@ Tu idioma debe estar configurado al inglés para importar equipos en inglés.</t
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="317"/>
         <source>%1/500 (Limit Reached)</source>
-        <translation>%1/500 (Limite Alcanzado)</translation>
+        <translation>%1/500 (Límite alcanzado)</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="354"/>
@@ -5907,16 +5913,16 @@ Tu idioma debe estar configurado al inglés para importar equipos en inglés.</t
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="409"/>
         <source>Invalid Color</source>
-        <translation>Color Inválido</translation>
+        <translation>Color inválido</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.cpp" line="409"/>
         <source>Your color must have less than 200 parts green, brightness less than 140, and lightness less than 140.
 
 Your selected color currently has %1 parts green, a brightness of %2, and a lightness of %3.</source>
-        <translation>Tu color debe tener menos de 200 partes en verde, un brillo menor que 140, y una ligereza de 140.
+        <translation>Tu color debe tener menos de 200 de verde, un brillo menor que 140, y una luminosidad menor que 140.
 
-Tu color seleccionado tiene %1 partes en verde, un brillo de %2, y una ligereza de %3.</translation>
+Tu color actual tiene %1 de verde, un brillo de %2, y una luminosidad de %3.</translation>
     </message>
 </context>
 <context>

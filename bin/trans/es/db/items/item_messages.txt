@@ -20,5 +20,9 @@
 39 ¡%s usó su Botón Escape!
 40 ¡%s activó su Gen Loco!|¡El ataque de %s subió mucho!
 41 ¡%s activó su Lazo Destino! ¡%f se ha enamorado de %s!
+42 ¡La Gafa Protectora de %s le inmuniza frente a %m!
+43 ¡%s ha activado su Seguro Debilidad!
+66 ¡%s ha evolucionado a %p!
+67 ¡%s ha experimentado una Regresión Primigenia y ha recobrado su apariencia primitiva!
 1007 ¡%s ya no está debilitado!
 1999 ¡%s ya no está debilitado!

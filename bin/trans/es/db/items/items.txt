@@ -77,7 +77,7 @@
 76 Abono Brote
 77 Parte Verde
 78 Abono Rápido
-79 Protección Esp.
+79 Protec. Especial
 80 Polvo Curación
 81 Escama Corazón
 82 Miel
@@ -96,10 +96,10 @@
 95 Imán
 96 Elixir Máximo
 97 Éter Maximo
-98 Máxima Poción
-99 Máximo Repelente
-100 Máximo Revivir
-101 Rev. Metálico
+98 Poción Máxima
+99 Repelente Máximo
+100 Revivir Máximo
+101 Revest. Metálico
 102 Metrónomo
 103 Semilla Milagro
 104 Leche Mu-mu
@@ -112,11 +112,11 @@
 111 Perla
 112 Poké Muñeco
 113 Poción
-114 Máximo PP
+114 PP Máximos
 115 Más PP
 116 Proteína
-117 Carameloraro
-118 Colmillagudo
+117 Caramelo Raro
+118 Colmillo Agudo
 119 Flauta Roja
 120 Parte Roja
 121 Repelente
@@ -136,11 +136,11 @@
 135 Polvoestelar
 136 Piedra Solar
 137 Superpoción
-138 Superrepel
+138 Superrepelente
 139 Piedratrueno
 140 Mini Seta
 141 Toxisfera
-142 Cuchara Tor.
+142 Cuchara Torcida
 143 Mejora
 144 Piedra Agua
 145 Flauta Blanca
@@ -148,14 +148,14 @@
 147 Ataque X
 148 Defensa X
 149 Especial X
-150 Defensa Esp. X
+150 Def. Especial X
 151 Velocidad X
 152 Flauta Amarilla
 153 Parte Amarilla
 154 Zinc
 155 Roca Helada
 156 Puño Suerte
-157 Discoxtraño
+157 Disco Extraño
 158 Pico Afilado
 159 Diamansfera
 160 Roca Lluvia
@@ -163,7 +163,7 @@
 162 Lustresfera
 163 Brazal Firme
 164 Palo
-165 Colmillodragón
+165 Colmillo Dragón
 166 Flecha Venenosa
 167 Franja Recia
 168 Banda Recia
@@ -179,7 +179,7 @@
 178 Piedra Oval
 179 Protector
 180 Garra Rápida
-181 Garrafilada
+181 Garra Afilada
 182 Piedra Día
 183 Toxiestrella
 184 Diente Marino
@@ -229,7 +229,7 @@
 228 FulgoROM
 229 PiroROM
 230 CrioROM
-231 Cor. Dulce
+231 Corazón Dulce
 232 Escama Bella
 233 Mineral Evol
 234 Piedra Pómez
@@ -302,10 +302,10 @@
 301 Activaobjeto
 302 Quitaestado
 303 Directo 3
-304 Gen loco
+304 Gen Loco
 305 Poké Ball
-306 Superball
-307 Ultraball
+306 Super Ball
+307 Ultra Ball
 308 Master Ball
 309 Safari Ball
 310 Nivel Ball
@@ -328,20 +328,20 @@
 327 Ocaso Ball
 328 Gloria Ball
 329 Parque Ball
-330 Tabla duende
-331 Chaleco asalto
-332 Gafa protectora
-333 Seguro debilidad
-334 Bola de nieve
-335 Musgo brillante
-336 Cápsula habilidad
-337 Fósil mandíbula
-338 Fósil aleta
+330 Tabla Duende
+331 Chaleco Asalto
+332 Gafa Protectora
+333 Seguro Debilidad
+334 Bola de Nieve
+335 Musgo Brillante
+336 Cáps. habilidad
+337 Fósil Mandíbula
+338 Fósil Aleta
 339 Crêpe Luminalia
-340 Saquito fragante
-341 Dulce de nata
-342 Esfera Roja
-343 Esfera Azul
+340 Saquito Fragante
+341 Dulce de Nata
+342 Prisma Rojo
+343 Prisma Azul
 1000 Lazo Rosa
 1001 Cinta Lunares
 2001 Venusaurita
@@ -372,3 +372,22 @@
 2026 Garchompita
 2027 Lucarita
 2028 Abomasnowita
+2029 Sceptilita
+2030 Swampertita
+2031 Beedrillita
+2032 Pidgeotita
+2033 Slowbronita
+2034 Steelixita
+2035 Sableynita
+2036 Sharpedonita
+2037 Cameruptita
+2038 Altarianita
+2039 Glalita
+2040 Salamencita
+2041 Metagrossita
+2042 Lopunnita
+2043 Galladita
+2044 Audinita
+2045 Diancita
+2046 Latiasita
+2047 Latiosita
