@@ -675,7 +675,7 @@ struct AMGuts : public AM {
     static void sm (int s, int, BS &b) {
         /* Guts doesn't activate on a sleeping poke that used Rest (but other ways of sleeping
             make it activated) */
-        /* Update Oct 2015: Apply it does activate in Gen 3 */
+        /* Update Oct 2015: Apparently it does activate in Gen 3 */
         if (b.poke(s).status() != Pokemon::Fine) {
             //if (b.gen() > 3 || b.ability(s) == Ability::MarvelScale || b.poke(s).status() != Pokemon::Asleep || !poke(b,s).value("Rested").toBool()) {
                 int arg = poke(b,s)["AbilityArg"].toInt();
