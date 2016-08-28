@@ -620,3 +620,13 @@
 619 Precipice Blades
 620 Dragon Ascent
 621 Hyperspace Fury
+622 Core Enforcer
+623 Fleur Cannon
+624 Highhorse Power
+625 Leafage
+626 Moongeist Beam
+627 Nature’s Madness
+628 Revelation Dance
+629 Shell Trap
+630 Solar Blade
+631 Sunsteel Strike
