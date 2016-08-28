@@ -1953,6 +1953,7 @@ ppfunction:
                 }
 
                 /* For berries that activate after taking damage */
+                callaeffects(target, target, "TestPinch");
                 callieffects(target, target, "TestPinch");
 
                 if (!sub && !koed(target)) testFlinch(player, target);

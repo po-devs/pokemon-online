@@ -156,10 +156,11 @@
 190 126-6#Primordial Sea
 191 126-7#Delta Stream
 192 31-2#Full Metal Body
-198 133#Electric Surge
-201 136#Battery
-204 139#Fluffy
-205 140#Stamina
-206 141#Triage
-212 147#Surge Surfer
-213 148#Water Composition
+198 128#Electric Surge
+199 129#Dazzling
+201 131#Battery
+204 132#Fluffy
+205 133#Stamina
+206 134#Triage
+212 136#Surge Surfer
+213 137#Water Composition

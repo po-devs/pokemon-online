@@ -1614,8 +1614,8 @@ struct AMDefeatist : public AM {
     }
 };
 
-struct AMZenMode : public AM {
-    AMZenMode() {
+struct AMTwoWayChange : public AM { /*Zen Mode*/
+    AMTwoWayChange() {
         functions["EndTurn29.0"] = &et;
         functions["OnLoss"] = &ol;
         functions["UponSetup"] = &et;
@@ -2653,6 +2653,7 @@ struct AMStamina : public AM {
 
     static void uodr(int s, int t, BS &b) {
         if (!b.koed(s) && s != t) { // copied from ability Anger Point
+            b.sendAbMessage(133,0,s);
             b.inflictStatMod(s, Defense, 1, s);
         }
     }
@@ -2669,7 +2670,7 @@ struct AMWaterComposition : public AM {
         }
 
         if (type(b, t) == Type::Water && !b.hasMaximalStatMod(s, Defense)) {
-            b.sendAbMessage(97,0,s);
+            b.sendAbMessage(40,0,s);
             b.inflictStatMod(s, Defense, 2, s, false);
         }
     }
@@ -2681,8 +2682,8 @@ struct AMBattery : public AM {
     }
 
     static void sm2(int, int t, BS &b) {
-            turn(b,t)["Stat3PartnerAbilityModifier"] = 0x1800;
-        }
+        turn(b,t)["Stat3PartnerAbilityModifier"] = 0x1800;
+    }
 };
 
 struct AMElectricSurge : public AM
@@ -2695,7 +2696,7 @@ struct AMElectricSurge : public AM
     }
 
     static void us (int s, int , BS &b) {
-        // b.sendAbMessage(blablalba);
+        b.sendAbMessage(128, 0, s, 0, Type::Electric);
         b.terrain = Type::Electric;
 
     }
@@ -2726,6 +2727,136 @@ struct AMTriage : public AM
     }
 };
 
+struct AMDazzling : public AM
+{
+    AMDazzling() {
+        functions["OpponentBlock"] = &ob;
+    }
+
+    static void ob(int s, int t, BS &b) {
+        if (tmove(b,s).priority > 0) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+            b.sendAbMessage(129, 0, s, t, Type::Curse, turn(b,s)["MoveChosen"].toInt());
+        }
+    }
+};
+
+struct AMPinch : public AM
+{
+    static bool testpinch(int s, BS &b, int ratio) {
+        if (turn(b,s).value("SendingBack").toBool()) {
+            return false;
+        }
+        if (!b.koed(s)) {
+            int lp = b.poke(s).lifePoints();
+            int tp = b.poke(s).totalLifePoints();
+
+            if (lp*ratio <= tp) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
+{
+    AMBerserk() {
+        functions["UponSetup"] = &tp;
+        functions["AfterHPChange"] = &ahpc;
+        functions["TestPinch"] = &tp;
+    }
+
+    static void ahpc(int s, int, BS &b) {
+        /* Those berries don't activate immediately when attacked by offensive moves,
+           but only after side effects applied. At that time, the battle thread will call
+           the effect "TestPinch"
+        */
+        if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
+            return;
+        tp(s, 0, b); //does this work?
+    }
+
+    static void tp(int s, int, BS &b) {
+        int arg = poke(b,s)["AbilityArg"].toInt();
+
+        if (!testpinch(s, b, 2))
+            return;
+
+        if (b.isOut(s)) {
+            b.sendAbMessage(130,0, s);
+            b.inflictStatMod(s, arg, 1, s, false);
+        }
+    }
+};
+
+struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
+{
+    AMWimpOut() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        //Prevent ability from activating when dead, behind a sub, or during a switch where pursuit is used
+        if (b.koed(s) || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool())
+            return;
+
+        if (!testpinch(s, b, 2))
+            return;
+
+        turn(b,s)["WimpedOut"] = true;
+        turn(b,s)["WimpOutCount"] = slot(b,s)["SwitchCount"];
+
+        addFunction(turn(b,t), "AfterAttackFinished", "WimpOut", &aaf);
+    }
+
+    static void aaf(int, int, BS &b) {
+        std::vector<int> speeds = b.sortedBySpeed();
+
+        for (unsigned i = 0; i < speeds.size(); i++) {
+            int p = speeds[i];
+            if (!turn(b,p).contains("WimpedOut"))
+                continue;
+            if (turn(b,p)["WimpOutCount"] != slot(b,p)["SwitchCount"])
+                continue;
+
+            b.sendAbMessage(135, 0, p);
+            turn(b,p)["SendingBack"] = true;
+            b.requestSwitch(p);
+        }
+    }
+};
+
+struct AMOneWayChange : AM /*Change a pokemon on a criteria but dont change back if criteria is no longer met*/
+{
+    //Copy most of Zen Mode and tweak. Lazy right now
+};
+
+struct AMDisguise : AM
+{
+    //Messages done
+    //138 Its disguise served it as a decoy! | %s's diguise was busted!
+};
+
+struct AMInnardsOut : AM
+{
+    AMInnardsOut() {
+        functions["BeforeBeingKoed"] = &bbk;
+        functions["BeforeTakingDamage"] = &btd;
+    }
+
+    static void btd(int s, int, BS &b) {
+        turn(b,s)["HPBeforeDamage"] = b.poke(s).lifePoints();
+    }
+
+    static void bbk(int s, int t, BS &b) {
+        if (!turn(b,s).contains("HPBeforeDamage"))
+            return; //This means something broke...
+
+        b.sendAbMessage(139, 0, s, t); //Message tweaked for clarity vs. actual game message
+        b.inflictDamage(t, turn(b,s).value("HPBeforeDamage").toInt(), s);
+    }
+};
 
 /* Events:
     PriorityChoice
@@ -2754,6 +2885,11 @@ struct AMTriage : public AM
     UponSwitchOut
     OnLoss
     AllyItemUse
+    AfterHPChange
+    TestPinch
+    UponBeingHit
+    AfterAttackFinished
+    BeforeBeingKoed
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -2834,7 +2970,7 @@ void AbilityEffect::init()
     REGISTER_AB(74, WeakArmor);
     REGISTER_AB(75, VictoryStar);
     REGISTER_AB(76, Defeatist);
-    REGISTER_AB(77, ZenMode);
+    REGISTER_AB(77, TwoWayChange); /*Zen Mode*/
     REGISTER_AB(78, PickPocket);
     REGISTER_AB(79, SheerForce);
     REGISTER_AB(80, Defiant); /*Defiant, Competitive*/
@@ -2885,27 +3021,31 @@ void AbilityEffect::init()
     REGISTER_AB(124, Symbiosis);
     //125 Cheek pouch message
     REGISTER_AB(126, StrongWeather);
+
     // gen 7
-    //127 FullMetalBody - done
-    //128 ShadowShield - done
-    //129 Comatose - done
-    //REGISTER_AB(130, PowerConstruct);
-    //131 SoulHeart - done in battle.cpp
-    //REGISTER_AB(132, Stakeout);
-    REGISTER_AB(133, ElectricSurge); // ability message missing
-    //REGISTER_AB(134, Dazzling);
-    //REGISTER_AB(135, Berserk);
-    REGISTER_AB(136, Battery); // needs confirmation of how much it increases special damage of allies
-    //137 Corrosion
-    //REGISTER_AB(138, Disguise);
-    REGISTER_AB(139, Fluffy); // done
-    REGISTER_AB(140, Stamina); // done
-    REGISTER_AB(141, Triage);
-    //REGISTER_AB(142, WimpOut);
-    //REGISTER_AB(143, Dancer);
-    //REGISTER_AB(144, ShieldsDown);
-    //REGISTER_AB(145, InnardsOut);
-    //REGISTER_AB(146, Schooling);
-    REGISTER_AB(147, SurgeSurfer); // done
-    REGISTER_AB(148, WaterComposition); // not sure whether water type moves still deal damage or not
+    REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/
+    REGISTER_AB(128, ElectricSurge);
+    REGISTER_AB(129, Dazzling);
+    REGISTER_AB(130, Berserk);
+    REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
+    REGISTER_AB(132, Fluffy);
+    REGISTER_AB(133, Stamina);
+    REGISTER_AB(134, Triage);
+    REGISTER_AB(135, WimpOut);
+    REGISTER_AB(136, SurgeSurfer);
+    REGISTER_AB(137, WaterComposition); // not sure whether water type moves still deal damage or not
+    REGISTER_AB(138, Disguise); //only done message so far
+    REGISTER_AB(139, InnardsOut);
+
+    //TO-DO. Assign number as completed.
+    //REGISTER_AB(xxx, Stakeout);
+    //REGISTER_AB(xxx, Dancer);
+    //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics???
+    //Corrosion - No message needed
+
+    //***Done Elsewhere but might need messages ***
+    //FullMetalBody - done (use 31 if message needed)
+    //ShadowShield - done. Similar to Multiscale so I doubt it gets a message
+    //Comatose - done
+    //SoulHeart - done
 }
