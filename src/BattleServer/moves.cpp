@@ -7457,6 +7457,47 @@ struct MMHyperspaceFury : public MM {
     }
 };
 
+struct MMShellTrap : public MM {
+    MMShellTrap() {
+        functions["DetermineAttackFailure"] = &daf;
+        functions["UponAttackSuccessful"] = &uas;
+        functions["CustomAttackingDamage"] = &cad;
+    }
+
+    static void daf(int s, int, BS &b) {
+        // (probably) fails if all others already moved
+        bool fail = true;
+        for (int t = 0;  t < b.numberOfSlots() ; t++) {
+            if (!b.hasMoved(t) && !b.koed(t) && s!=t) {
+                fail = false;
+                break;
+            }
+        }
+
+        if (fail) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int, BS &b) {
+        poke(b,s)["ShellTrapTurn"] = b.turn();
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        if (tmove(b,s).flags & Move::ContactFlag && poke(b,s)["ShellTrapTurn"] == b.turn()) {
+            poke(b,s)["ShellTrapDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 2; // needs confirmation
+        }
+    }
+
+    static void cad(int s, int, BS &b) {
+        if (poke(b,s)["ShellTrapDamage"].toInt() > 0) {
+            turn(b,s)["CustomDamage"] = poke(b,s)["ShellTrapDamage"];
+        }
+    }
+
+
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7621,7 +7662,7 @@ void MoveEffect::init()
     //REGISTER_MOVE(127, Struggle); - removed, but message here
     REGISTER_MOVE(128, Substitute);
     REGISTER_MOVE(129, SuckerPunch);
-    REGISTER_MOVE(130, SuperFang);
+    REGISTER_MOVE(130, SuperFang); /* Nature's Madness */
     REGISTER_MOVE(131, Swallow);
     REGISTER_MOVE(132, Switcheroo);
     REGISTER_MOVE(133, TailWind);
@@ -7710,5 +7751,6 @@ void MoveEffect::init()
     REGISTER_MOVE(216, MagneticFlux);
     REGISTER_MOVE(217, IonDeluge);
     REGISTER_MOVE(218, Celebrate);
-    REGISTER_MOVE(219, HyperspaceFury)
+    REGISTER_MOVE(219, HyperspaceFury);
+    REGISTER_MOVE(220, ShellTrap)
 }
