@@ -3587,6 +3587,10 @@ int BattleSituation::calculateDamage(int p, int t)
         /*Apply burn mods */
         damage /= (((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned")) && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts)
                      && !(gen() >= 6 && attackused == Move::Facade)) ? 2 : 1);
+                     
+        // in Gen 5 the rounding is done before finalmods are applied, so it is possible to deal 0 damage
+        if (gen() == 5 && damage < 1)
+            damage = 1;
 
         /* Final Mods section*/
         /* Correct Order:
@@ -3666,7 +3670,13 @@ int BattleSituation::calculateDamage(int p, int t)
         }
         turnMemory(t)["FinalModifier"] = finalmod;
         damage = applyMod(damage, finalmod);
-        return std::round(damage);
+            
+        if (gen() == 5) {
+            return std::round(damage); // it is possible to deal 0 damage in Gen 5, but not in Gen 6
+        } else {
+            return std::max(1, damage);
+        }
+        
     }
 }
 
