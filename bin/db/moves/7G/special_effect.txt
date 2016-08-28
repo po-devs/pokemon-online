@@ -60,7 +60,7 @@
 156 106#rest
 160 19#conversion
 161 #192#Tri Attack
-162 130#super fang
+162 130-1#super fang
 164 8-25|128#SUBSTITUTE
 165 #127#struggle
 166 111#sketch
@@ -315,3 +315,5 @@
 616 175#Thousand Arrows
 617 12#Thousand Waves-- Has Mean Look effect
 621 219#Hyperpsace Fury-- breaks protect
+627 130-2#Nature's Madness
+629 220#Shell Trap
