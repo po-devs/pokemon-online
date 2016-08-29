@@ -1209,7 +1209,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return PokemonInfo::Picture(pokeid, 3, gender, shiny, back);
         } else if (gen.num == 3) {
             return PokemonInfo::Picture(pokeid, 4, gender, shiny, back);
-        } else if (gen.num == 4 || gen.num == 6) {
+        } else if (gen.num == 4 || gen.num >= 6) {
             return PokemonInfo::Picture(pokeid, 5, gender, shiny, back);
         }
         return ret;

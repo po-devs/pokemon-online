@@ -2858,6 +2858,27 @@ struct AMInnardsOut : AM
     }
 };
 
+struct AMDancer : AM
+{
+    AMDancer() {
+        functions["???"] = &aaf; //would need to figure out what can be used here
+    }
+
+    static void aaf(int s, int t, BS &b) {
+        //Don't double dance or dance off someone else's repeated dance
+        //Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
+        if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep) {
+            return;
+        }
+
+        if (tmove(b,t).flags & Move::DanceFlag) {
+            b.battleMemory()["DancingNow"] = true;
+            //Use Attack would go here.
+            b.battleMemory().remove("DancingNow");
+        }
+    }
+};
+
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -3036,10 +3057,10 @@ void AbilityEffect::init()
     REGISTER_AB(137, WaterComposition); // not sure whether water type moves still deal damage or not
     REGISTER_AB(138, Disguise); //only done message so far
     REGISTER_AB(139, InnardsOut);
+    REGISTER_AB(140, Dancer);
 
     //TO-DO. Assign number as completed.
     //REGISTER_AB(xxx, Stakeout);
-    //REGISTER_AB(xxx, Dancer);
     //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics???
     //Corrosion - No message needed
 

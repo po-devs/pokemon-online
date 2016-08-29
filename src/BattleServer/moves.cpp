@@ -7488,7 +7488,7 @@ struct MMShellTrap : public MM {
         poke(b,s)["ShellTrapTurn"] = b.turn();
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void uodr(int s, int, BS &b) {
         if (tmove(b,s).flags & Move::ContactFlag && poke(b,s)["ShellTrapTurn"] == b.turn()) {
             poke(b,s)["ShellTrapDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 2; // needs confirmation
         }

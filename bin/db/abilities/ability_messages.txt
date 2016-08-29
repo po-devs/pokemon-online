@@ -83,6 +83,6 @@
 133 <<Stamina>>
 135 <<Wimp Out>>
 136 <<Surge Surfer (unlikely needed)>>
-138 Its disguise served it as a decoy! | %s's diguise was busted!
+138 %s's disguise served it as a decoy! | %s's diguise was busted!
 139 %s's Innards Out hurts %t!
-
+140 <<Dancer: %s danced to the beat as well!>>
