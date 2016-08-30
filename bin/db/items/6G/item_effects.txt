@@ -24,7 +24,7 @@
 34 10-4Soft Sand
 36 10-10#Wave Incense 
 37 3#white herb
-38 1-6_409#Wide Lens
+38 1-6_2#Wide Lens
 39 9-2#Wise Glasses
 41 15#Zoom Lens
 45 18#Berry Juice
