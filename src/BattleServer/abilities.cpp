@@ -58,7 +58,11 @@ struct AMAdaptability : public AM {
 
     static void dfs(int s, int, BS &b) {
         /* So the regular stab (3) will become 4 and no stab (2) will stay 2 */
-        fturn(b,s).stab = fturn(b,s).stab * 4 / 3;
+        /* Multihit moves would apply adaptability to each hit so we need to prevent that */
+        if (!b.turnMemory(s).value("Adapted").toBool()) {
+            fturn(b,s).stab = fturn(b,s).stab * 4 / 3;
+            b.turnMemory(s)["Adapted"] = true;
+        }
     }
 };
 
