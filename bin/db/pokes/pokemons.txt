@@ -910,3 +910,70 @@
 720:0 Hoopa
 720:1 Hoopa-Unbound
 721:0 Volcanion
+722:0 Rowlett
+723:0 Rowlett Evo
+724:0 Rowlett Evo2
+725:0 Litten
+726:0 Litten Evo
+727:0 Litten Evo2
+728:0 Popplio
+729:0 Popplio Evo
+730:0 Popplio Evo2
+19:1:L Rattata-Alolan
+20:1:L Raticate-Alolan
+26:1:L Raichu-Alolan
+27:1:L Sandshrew-Alolan
+28:1:L Sandslash-Alolan
+37:1:L Vulpix-Alolan
+38:1:L Ninetales-Alolan
+52:1:L Meowth-Alolan
+103:1:L Exeggutor-Alolan
+105:1:L Marowak-Alolan
+1000:0 Rockruff
+1010:0 Komala
+1020:0 Pikipek
+1030:0 Yungoos
+1031:0 Gumshoos
+1040:0 Grubbin
+1041:0 Charjabug
+1042:0 Vikavolt
+1050:0 Drampa
+1060:0 Bruxish
+1070:0 Cutiefly
+1071:0 Cutiefly Evo
+1080:0 Togedemaru
+1090:0 Salandit
+1100:0 Stufful
+1101:0 Bewear
+1110:0 Mimikyu
+1120:0 Wimpod
+1130:0 Bounsweet
+1140:0 Comfey
+1150:0 Mudbray
+1151:0 Mudsdale
+1160:0 Minior
+1160:1:A Minior-Yellow
+1160:2:A Minior-Orange
+1160:3:A Minior-Red
+1160:4:A Minior-Blue
+1170:0 Fomantis
+1171:0 Lurantis
+1180:0 Oricorio-Baile
+1180:1 Oricorio-Pom Pom
+1180:2 Oricorio-Pa'u
+1180:3 Oricorio-Sensu
+1190:0 Sandygast
+1191:0 Palossand
+1200:0 Wishiwashi
+1200:1 Wishiwashi-School
+1210:0 Pyukumuku
+1220:0 Morelull
+1230:0 Turtonator
+1240:0 Crabrawler
+1250:0 Jangmo-o
+1260:0 Type Null
+1270:0 Tapu Koko
+1280:0 Solgaleo
+1290:0 Lunaala
+1300:0 Magearna
+1310:0 UB-01

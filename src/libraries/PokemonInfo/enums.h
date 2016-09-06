@@ -875,6 +875,58 @@ namespace Pokemon
         Diancie,
         Hoopa,
         Volcanion,
+
+        //gen7. Will need reordering as order is confirmed
+        Rowlett,
+        RowlettEvo,
+        RowlettEvo2,
+        Litten,
+        LittenEvo,
+        LittenEvo2,
+        Popplio,
+        PopplioEvo,
+        PopplioEvo2,
+        Rockruff    =1000,
+        Komala      =1010,
+        Pikipek     =1020,
+        Yungoos     =1030,
+        Gumshoos    =1031,
+        Grubbin     =1040,
+        Charjabug   =1041,
+        Vikavolt    =1042,
+        Drampa      =1050,
+        Bruxish     =1060,
+        Cutiefly    =1070,
+        CutieflyEvo =1071,
+        Togedemaru  =1080,
+        Salandit    =1090,
+        Stufful     =1100,
+        Bewear      =1101,
+        Mimikyu     =1110,
+        Wimpod      =1120,
+        Bounsweet   =1130,
+        Comfey      =1140,
+        Mudbray     =1150,
+        Mudsdale    =1151,
+        Minior      =1160,
+        Fomantis    =1170,
+        Lurantis    =1171,
+        Oricorio    =1180,
+        Sandygast   =1190,
+        Palossand   =1191,
+        Wishiwashi  =1200,
+        Pyukumuku   =1210,
+        Morelull    =1220,
+        Turtonator  =1230,
+        Crabrawler  =1240,
+        Jangmo_o    =1250,
+        TypeNull    =1260,
+        TapuKoko    =1270,
+        Solgaleo    =1280,
+        Lunaala     =1290,
+        Magearna    =1300,
+        UB_01       =1310,
+
         // Base forms end here. Cosmetic forms dont need to be listed
         Rotom_Mow = Rotom + (1 << 16),
         Rotom_Heat = Rotom + (2 << 16),
@@ -916,11 +968,25 @@ namespace Pokemon
         Pikachu_PhD = Pikachu + (4 << 16),
         Pikachu_Libre = Pikachu + (5 << 16),
         Pikachu_Cosplay = Pikachu + (6 << 16),
-        //only mega because of different mega evo method
-        Rayquaza_Mega = Rayquaza + (1 << 16),
+        Rayquaza_Mega = Rayquaza + (1 << 16), //only mega because of different mega evo method
         Aegislash_Blade = Aegislash + (1 << 16),
-        //Has different moveset than other Vivis
-        Vivillon_Fancy = Vivillon + (18 << 16)
+        Vivillon_Fancy = Vivillon + (18 << 16), //Has different moveset than other Vivis
+
+        //gen 7 forms
+        Wishiwashi_School = Wishiwashi + (1 << 16),
+        Oricorio_PomPom = Oricorio + (1 << 16),
+        Oricorio_Pau = Oricorio + (2 << 16),
+        Oricorio_Sensu = Oricorio + (3 << 16),
+        Rattata_Alolan = Rattata + (1 << 16),
+        Raticate_Alolan = Raticate + (1 << 16),
+        Sandshrew_Alolan = Sandshrew + (1 << 16),
+        Sandslash_Alolan = Sandslash + (1 << 16),
+        Vulpix_Alolan = Vulpix + (1 << 16),
+        Ninetales_Alolan = Ninetales + (1 << 16),
+        Meowth_Alolan = Meowth + (1 << 16),
+        Raichu_Alolan = Raichu + (1 << 16),
+        Exeggutor_Alolan = Exeggutor + (1 << 16),
+        Marowak_Alolan = Marowak + (1 << 16)
     };
 }
 

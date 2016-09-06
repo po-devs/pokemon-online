@@ -108,6 +108,7 @@ public:
     static bool IsForme(const Pokemon::uniqueId &pokeid);
     static bool IsAesthetic(Pokemon::uniqueId id);
     static bool IsDifferent(Pokemon::uniqueId id);
+    static bool IsAlolan(Pokemon::uniqueId id);
     static Pokemon::uniqueId NonAestheticForme(Pokemon::uniqueId id);
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);

@@ -1105,6 +1105,10 @@ bool PokemonInfo::IsDifferent(Pokemon::uniqueId id)
       A pokemon doesn't get the D if it doesnt have the A */
     return m_Options.value(id).contains('D');
 }
+bool PokemonInfo::IsAlolan(Pokemon::uniqueId id)
+{
+    return m_Options.value(id).contains('L');
+}
 
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 {
