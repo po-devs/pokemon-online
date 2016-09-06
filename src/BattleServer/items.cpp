@@ -647,7 +647,7 @@ struct IMEviolite : public IM
         if (poke(b,s).contains("PreTransformPoke")) {
             id = PokemonInfo::Number(poke(b,s).value("PreTransformPoke").toString());
         }
-        if (PokemonInfo::HasEvolutions(id.pokenum) && id != Pokemon::Floette_EF) {
+        if (PokemonInfo::HasEvolutions(id.pokenum) && id != Pokemon::Floette_Eternal) {
             if (b.gen() < 5) {
                 turn(b,s)["Stat2ItemModifier"] = 10;
                 turn(b,s)["Stat4ItemModifier"] = 10;

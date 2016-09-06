@@ -58,7 +58,11 @@ struct AMAdaptability : public AM {
 
     static void dfs(int s, int, BS &b) {
         /* So the regular stab (3) will become 4 and no stab (2) will stay 2 */
-        fturn(b,s).stab = fturn(b,s).stab * 4 / 3;
+        /* Multihit moves would apply adaptability to each hit so we need to prevent that */
+        if (!b.turnMemory(s).value("Adapted").toBool()) {
+            fturn(b,s).stab = fturn(b,s).stab * 4 / 3;
+            b.turnMemory(s)["Adapted"] = true;
+        }
     }
 };
 
@@ -1633,7 +1637,7 @@ struct AMTwoWayChange : public AM { /*Zen Mode*/
         bool zen = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
 
         if (num.subnum == 0 && zen) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan_D, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan_Zen, true);
             b.sendAbMessage(77, 1, s);
         } else if (num.subnum == 1 && !zen) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
@@ -1739,7 +1743,7 @@ struct AMImposter : public AM
         Pokemon::uniqueId num = b.pokenum(t);
 
         if (b.gen() <= 4) {
-            if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+            if (num.toPokeRef() == Pokemon::Giratina_Origin && b.poke(s).item() != Item::GriseousOrb)
                 num = Pokemon::Giratina;
             if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
                 num.subnum = ItemInfo::PlateType(b.poke(s).item());
@@ -2430,7 +2434,7 @@ struct AMStanceChange : public AM {
         num = fpoke(b,s).id;
 
         if (num.subnum == 0 && tmove(b,s).category != Move::Other) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash_B, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash_Blade, true);
         } else if (num.subnum == 1 && move(b,s) == Move::KingsShield) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash, true);
         }

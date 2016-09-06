@@ -1096,12 +1096,20 @@ int PokemonInfo::Gender(const Pokemon::uniqueId &pokeid)
 
 bool PokemonInfo::IsAesthetic(Pokemon::uniqueId id)
 {
-    return m_AestheticFormes.contains(id);
+    /*For Pokemon with identical movesets, essentially Aesthetic forms*/
+    return m_Options.value(id).contains('A');
+}
+bool PokemonInfo::IsDifferent(Pokemon::uniqueId id)
+{
+    /*Use to escape Aesthetic for pokemon tiered/usage tracked differently.
+      A pokemon doesn't get the D if it doesnt have the A */
+    return m_Options.value(id).contains('D');
 }
 
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 {
-    return IsAesthetic(id) ? OriginalForme(id) : id;
+    //This is used in Tiering pokemon. Different = tiered differently
+    return IsDifferent(id) ? OriginalForme(id) : id;
 }
 
 QPixmap PokemonInfo::Picture(const QString &url)

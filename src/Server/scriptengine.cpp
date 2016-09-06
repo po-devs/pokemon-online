@@ -3870,6 +3870,13 @@ bool ScriptEngine::isAesthetic(int pokeid) {
     warn("isAesthetic(pokeid)", "not a valid pokemon", true);
     return false;
 }
+bool ScriptEngine::isDifferent(int pokeid) {
+    if (PokemonInfo::Exists(pokeid)) {
+        return PokemonInfo::IsDifferent(pokeid);
+    }
+    warn("isDifferent(pokeid)", "not a valid pokemon", true);
+    return false;
+}
 
 int ScriptEngine::stoneForForme(int pokeid) {
     if (PokemonInfo::Exists(pokeid)) {

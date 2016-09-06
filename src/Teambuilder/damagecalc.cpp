@@ -773,7 +773,7 @@ void DamageCalc::calculate()
     // 0N. GEN 4 ORBS //
     if ((mypoke == Pokemon::Palkia && myitem == Item::LustrousOrb && (type == Type::Water || type == Type::Dragon))
             || (mypoke == Pokemon::Dialga && myitem == Item::AdamantOrb && (type == Type::Steel || type == Type::Dragon))
-            || (mypoke == Pokemon::Giratina_O && myitem == Item::GriseousOrb && (type == Type::Ghost || type == Type::Dragon))) {
+            || (mypoke == Pokemon::Giratina_Origin && myitem == Item::GriseousOrb && (type == Type::Ghost || type == Type::Dragon))) {
         bmod = chainmod(bmod, 0x1333);
     }
     // 0O. GEMS // ARE TRULY OUTRAGEOUS

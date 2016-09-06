@@ -48,11 +48,13 @@ void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
     }
 
     if (!positions.contains(pokemon)) {
-        if (!PokemonInfo::IsAesthetic(pokemon)) {
+        //Use bool for merging forms together
+        bool mergeInto = pokemon == Pokemon::Vivillon_Fancy;
+        if (mergeInto || !PokemonInfo::IsDifferent(pokemon)) {
+            TierRank::addUsage(PokemonInfo::OriginalForme(pokemon));
+        } else {
             positions.insert(pokemon, uses.size());
             uses.push_back(QPair<Pokemon::uniqueId, int>(pokemon, 1));
-        } else {
-            TierRank::addUsage(PokemonInfo::OriginalForme(pokemon));
         }
     } else {
         int pos = positions[pokemon];

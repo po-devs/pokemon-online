@@ -4687,7 +4687,7 @@ struct MMPsychoShift : public MM
     static void uas(int s, int t, BS &b) {
         b.sendMoveMessage(98,0,s,type(b,s),t);
         int minTurns(0), maxTurns(0);
-        if (b.poke(s).status() == Pokemon::Poisoned) {
+        if (b.poke(s).status() == Pokemon::Poisoned && b.poke(s).statusCount() > 0) {
             minTurns = maxTurns = MoveInfo::MinTurns(Move::Toxic, b.gen());
         }
         b.inflictStatus(t, b.poke(s).status(), s, minTurns, maxTurns);
@@ -5780,7 +5780,7 @@ struct MMTransform : public MM {
         Pokemon::uniqueId num = b.pokenum(t);
 
         if (b.gen() <= 4) {
-            if (num.toPokeRef() == Pokemon::Giratina_O && b.poke(s).item() != Item::GriseousOrb)
+            if (num.toPokeRef() == Pokemon::Giratina_Origin && b.poke(s).item() != Item::GriseousOrb)
                 num = Pokemon::Giratina;
             if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
                 num.subnum = ItemInfo::PlateType(b.poke(s).item());
@@ -6143,8 +6143,8 @@ struct MMRelicSong : public MM
     static void uas(int s, int, BS &b) {
         if (!turn(b,s).contains("ChangedForm")) {
             if (fpoke(b,s).id == Pokemon::Meloetta) {
-                b.changeForme(b.player(s), b.slotNum(s), Pokemon::Meloetta_P, true);
-            } else if (fpoke(b,s).id == Pokemon::Meloetta_P) {
+                b.changeForme(b.player(s), b.slotNum(s), Pokemon::Meloetta_Pirouette, true);
+            } else if (fpoke(b,s).id == Pokemon::Meloetta_Pirouette) {
                 b.changeForme(b.player(s), b.slotNum(s), Pokemon::Meloetta, true);
             }
             turn(b,s)["ChangedForm"] = true;
@@ -7445,7 +7445,7 @@ struct MMHyperspaceFury : public MM {
 
     static void btl(int s, int, BS &b) {
         //Only Hoopa-Unbound and Transformed pokemon that are Hoopa-Unbound can use this move
-        if (b.poke(s).num() != Pokemon::Hoopa_B) {
+        if (b.poke(s).num() != Pokemon::Hoopa_Unbound) {
             turn(b,s)["SkipProtean"] = true;
             turn(b,s)["HyperspaceFail"] = true;
             b.sendMoveMessage(219, b.poke(s).num() == Pokemon::Hoopa,s,Type::Dark);
