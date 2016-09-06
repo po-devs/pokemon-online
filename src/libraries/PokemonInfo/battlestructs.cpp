@@ -152,13 +152,13 @@ void PokeBattle::init(PokePersonal &poke)
     ability() = poke.ability();
 
     if (!illegal()) {
-        if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_O && p.gen() <= 4) {
+        if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_Origin && p.gen() <= 4) {
             item() = 0;
-        } else if (num() == Pokemon::Giratina_O && item() != Item::GriseousOrb) {
+        } else if (num() == Pokemon::Giratina_Origin && item() != Item::GriseousOrb) {
             num() = Pokemon::Giratina;
             ability() = Ability::Pressure;
         } else if (num() == Pokemon::Giratina && item() == Item::GriseousOrb) {
-            num() = Pokemon::Giratina_O;
+            num() = Pokemon::Giratina_Origin;
             ability() = Ability::Levitate;
         }
 
@@ -173,7 +173,7 @@ void PokeBattle::init(PokePersonal &poke)
             num().subnum = ItemInfo::DriveForme(item());
         }
 
-        if (num() == Pokemon::Keldeo_R && !poke.hasMove(Move::SecretSword)) {
+        if (num() == Pokemon::Keldeo_Resolute && !poke.hasMove(Move::SecretSword)) {
             num() = Pokemon::Keldeo;
         }
 
@@ -616,7 +616,7 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
             if (p.num() == Pokemon::Giratina && p.ability() == Ability::Levitate) {
                 p.ability() = Ability::Pressure;
             }
-            if (p.num() == Pokemon::Giratina_O && p.ability() == Ability::Pressure) {
+            if (p.num() == Pokemon::Giratina_Origin && p.ability() == Ability::Pressure) {
                 p.ability() = Ability::Levitate;
             }
         }

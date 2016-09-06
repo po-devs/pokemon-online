@@ -43,13 +43,8 @@ void PokeMovesDb::init()
     }
 
     foreach(Pokemon::uniqueId id, PokemonInfo::AllIds()) {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
-                && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa)
+        if (PokemonInfo::IsAesthetic(id) || PokemonInfo::IsMegaEvo(id))
             continue;
-
-        if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
-            continue;
-        }
 
         MovesPerPoke p;
         p.init(id);
@@ -63,8 +58,8 @@ void PokeMovesDb::init()
         int preEvo = PokemonInfo::PreEvo(_i);
 
         if (_i == Pokemon::Wormadam) {
-            vpokes.push_back(Pokemon::Wormadam_G);
-            vpokes.push_back(Pokemon::Wormadam_S);
+            vpokes.push_back(Pokemon::Wormadam_Sandy);
+            vpokes.push_back(Pokemon::Wormadam_Trash);
         }
 
         if (preEvo == 0) {
@@ -115,13 +110,8 @@ void PokeMovesDb::save()
 
             for (int i = 0; i < (gen == 5 ? 7 : 6); i++) {
                 foreach (Pokemon::uniqueId id, ids) {
-                    if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
-                            && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa) {
+                    if (PokemonInfo::IsAesthetic(id) || PokemonInfo::IsMegaEvo(id))
                         continue;
-                    }
-                    if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
-                        continue;
-                    }
 
                     //Discard pre-evo/egg moves from event pokemon
                     if (PokemonInfo::IsForme(id) && (id.pokenum == Pokemon::Pikachu || id.pokenum == Pokemon::Floette)) {
@@ -183,13 +173,8 @@ void PokeMovesDb::save()
 
         for (int i = 0; i < 8; i++) {
             foreach (Pokemon::uniqueId id, ids) {
-                if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
-                        && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa) {
+                if (PokemonInfo::IsAesthetic(id) || PokemonInfo::IsMegaEvo(id))
                     continue;
-                }
-                if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
-                    continue;
-                }
 
                 //Discard pre-evo/egg moves from event pokemon
                 if (PokemonInfo::IsForme(id) && (id.pokenum == Pokemon::Pikachu || id.pokenum == Pokemon::Floette)) {
@@ -281,12 +266,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(Pokemon::uniqueId id, ids)
     {
-        if (PokemonInfo::IsForme(id) && id.pokenum != Pokemon::Rotom && id.pokenum != Pokemon::Kyurem && id.pokenum != Pokemon::Wormadam && id.pokenum != Pokemon::Meowstic
-                && id.pokenum != Pokemon::Floette && id.pokenum != Pokemon::Pikachu && id.pokenum != Pokemon::Hoopa)
+        if (PokemonInfo::IsAesthetic(id) || PokemonInfo::IsMegaEvo(id))
             continue;
-        if (PokemonInfo::IsForme(id) && id.pokenum == Pokemon::Floette && id.subnum < 5) {
-            continue;
-        }
         QIdListWidgetItem *it= new QIdListWidgetItem(id.toPokeRef(), PokemonInfo::Name(id));
         ui->pokemonList->addItem(it);
     }

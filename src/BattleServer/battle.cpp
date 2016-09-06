@@ -2709,7 +2709,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
     }
 
     changeStatus(player, status, true, minTurns == 0 ? 0 : minTurns-1 + randint(maxTurns - minTurns + 1));
-    if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_S) {
+    if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_Sky) {
         changeForme(this->player(player), slotNum(player), Pokemon::Shaymin);
     }
     if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
