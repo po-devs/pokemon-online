@@ -1108,8 +1108,8 @@ bool PokemonInfo::IsDifferent(Pokemon::uniqueId id)
 
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 {
-    //dunno what to do with this aesthetic
-    return IsAesthetic(id) ? OriginalForme(id) : id;
+    //This is used in Tiering pokemon. Different = tiered differently
+    return IsDifferent(id) ? OriginalForme(id) : id;
 }
 
 QPixmap PokemonInfo::Picture(const QString &url)
