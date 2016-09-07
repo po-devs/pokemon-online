@@ -989,24 +989,19 @@ bool Team::importFromTxt(const QString &file1, bool hack)
             nickname = first[0];
         }
 
-        static QStringList bef = QStringList() << "Porygonz" << "Deoxys-f" << "Deoxys-e" << "Deoxys-l" << "Rotom-Mow" << "Rotom-Heat" << "Rotom-Frost" << "Rotom-Wash" << "Rotom-Fan"
-                                               << "Tornadus-Therian" << "Landorus-Therian" << "Thundurus-Therian" << "Shaymin-Sky" << "Kyurem-Black" << "Kyurem-White"
-                                               << "Giratina-Origin" << "Keldeo-Resolute" << "Wormadam-Sandy" << "Wormadam-Trash" << "Pumpkaboo-Small" << "Pumpkaboo-Large" << "Pumpkaboo-Super"
-                                               << "Gourgeist-Small" << "Gourgeist-Large" << "Gourgeist-Super";
-
-        static QStringList aft = QStringList() << "Porygon-Z" << "Deoxys-A" << "Deoxys-S" << "Deoxys-D" << "Rotom-C" << "Rotom-H" << "Rotom-F" << "Rotom-W" << "Rotom-S"
-                                               << "Tornadus-T" << "Landorus-T" << "Thundurus-T" << "Shaymin-S" << "Kyurem-B" << "Kyurem-W"
-                                               << "Giratina-O" << "Keldeo-R" << "Wormadam-S" << "Wormadam-T" << "Pumpkaboo-S" << "Pumpkaboo-L" << "Pumpkaboo-XL"
-                                               << "Gourgeist-S" << "Gourgeist-L" << "Gourgeist-XL";
+        static QStringList bef = QStringList() << "Tornadus-T" << "Landorus-T" << "Thundurus-T" << "Shaymin-S" << "Kyurem-B" << "Kyurem-W"
+                                               << "Rotom-C" << "Rotom-H" << "Rotom-F" << "Rotom-W" << "Rotom-S" << "Giratina-O" << "Keldeo-R"
+                                               << "Wormadam-S" << "Wormadam-T" << "Pumpkaboo-S" << "Pumpkaboo-L" << "Pumpkaboo-XL"
+                                               << "Gourgeist-S" << "Gourgeist-L" << "Gourgeist-XL" << "Hoopa-B" << "Aegislash-B";
+        static QStringList aft = QStringList() << "Tornadus-Therian" << "Landorus-Therian" << "Thundurus-Therian" << "Shaymin-Sky" << "Kyurem-Black" << "Kyurem-White"
+                                               << "Rotom-Mow" << "Rotom-Heat" << "Rotom-Frost" << "Rotom-Wash" << "Rotom-Fan" << "Giratina-Origin" << "Keldeo-Resolute"
+                                               << "Wormadam-Sandy" << "Wormadam-Trash" << "Pumpkaboo-Small" << "Pumpkaboo-Large" << "Pumpkaboo-Super"
+                                               << "Gourgeist-Small" << "Gourgeist-Large" << "Gourgeist-Super" << "Hoopa-Unbound" << "Aegislash-Blade";
 
         if (bef.contains(pokestring)) {
             pokestring = aft[bef.indexOf(pokestring)];
         }
 
-        // alternate formes, from Shoddy :s
-        if (pokestring.indexOf('-') != -1 && pokestring.indexOf('-') <= pokestring.length() - 2) {
-            pokestring[pokestring.indexOf('-')+1] = pokestring[pokestring.indexOf('-')+1].toUpper();
-        }
         //PS mega imports
         if (pokestring.indexOf("-") != -1) {
             int index = pokestring.indexOf("-");
@@ -1033,10 +1028,6 @@ bool Team::importFromTxt(const QString &file1, bool hack)
                 itemString = first[1].trimmed();
             }
         }
-
-        //Shoddy fix
-        if (itemString == "Platinum Orb")
-            itemString = "Griseous Orb";
 
         item = ItemInfo::Number(itemString);
 
@@ -1208,7 +1199,7 @@ QString Team::exportToTxt() const
         }
 
         if (p.gen() >= 3) {
-            ret += "Trait: " + AbilityInfo::Name(p.ability()) + "\n";
+            ret += "Ability: " + AbilityInfo::Name(p.ability()) + "\n";
 
             ret += "EVs: ";
 
