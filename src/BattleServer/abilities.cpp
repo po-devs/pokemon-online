@@ -2763,6 +2763,7 @@ struct AMPinch : public AM
     }
 };
 
+//UNTESTED
 struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 {
     AMBerserk() {
@@ -2794,6 +2795,7 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
     }
 };
 
+//UNTESTED
 struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 {
     AMWimpOut() {
@@ -2831,17 +2833,20 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
     }
 };
 
+//UNTESTED/NOT COMPLETE
 struct AMOneWayChange : AM /*Change a pokemon on a criteria but dont change back if criteria is no longer met*/
 {
     //Copy most of Zen Mode and tweak. Lazy right now
 };
 
+//UNTESTED/NOT COMPLETE
 struct AMDisguise : AM
 {
-    //Messages done
+    //Messages done based on announcement trailer
     //138 Its disguise served it as a decoy! | %s's diguise was busted!
 };
 
+//UNTESTED
 struct AMInnardsOut : AM
 {
     AMInnardsOut() {
@@ -2862,6 +2867,7 @@ struct AMInnardsOut : AM
     }
 };
 
+//UNTESTED/NOT COMPLETE
 struct AMDancer : AM
 {
     AMDancer() {

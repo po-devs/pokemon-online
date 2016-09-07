@@ -2248,7 +2248,10 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
 
     if (attacking()) {
         if (heatOfAttack() && player == attacked() && player != attacker() && hasWorkingAbility(attacker(), ability(attacker()))
-                && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze)) {
+            && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze
+                || tmove(opponent(player)).attack == Move::MoongeistBeam || tmove(opponent(player)).attack == Move::SunsteelStrike
+                || (tmove(opponent(player)).attack == Move::CoreEnforcer && hasMoved(player)))
+            ) {
             if (AbilityInfo::moldBreakable(ability(player))) {
                 return false;
             }

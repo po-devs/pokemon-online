@@ -316,4 +316,5 @@
 617 12#Thousand Waves-- Has Mean Look effect
 621 219#Hyperpsace Fury-- breaks protect
 627 130-2#Nature's Madness
+628 221#Revelation Dance
 629 220#Shell Trap

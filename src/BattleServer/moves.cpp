@@ -7426,7 +7426,6 @@ struct MMIonDeluge : public MM {
     }
 };
 
-//ITS VERY IMPORTANT TO CELEBRATE YOUR SPECIAL DAY, OKAY?
 struct MMCelebrate : public MM {
     MMCelebrate() {
         functions["UponAttackSuccessful"] = &uas;
@@ -7462,6 +7461,7 @@ struct MMHyperspaceFury : public MM {
     }
 };
 
+//UNTESTED?
 struct MMShellTrap : public MM {
     MMShellTrap() {
         functions["DetermineAttackFailure"] = &daf;
@@ -7499,8 +7499,28 @@ struct MMShellTrap : public MM {
             turn(b,s)["CustomDamage"] = poke(b,s)["ShellTrapDamage"];
         }
     }
+};
 
+//UNTESTED
+struct MMRevelationDance : public MM
+{
+    MMRevelationDance() {
+        functions["MoveSettings"] = &ms;
+    }
 
+    static void ms (int s, int, BS &b) {
+        Pokemon::uniqueId num = b.poke(s).num();
+        int type; //How does this move work on Non-Oricorio? Defined as Normal in db file right now
+        if (num == Pokemon::Oricorio) {
+            switch(num.toPokeRef()) {
+                case Pokemon::Oricorio_Pau: type = Pokemon::Psychic;
+                case Pokemon::Oricorio_Sensu: type = Pokemon::Ghost;
+                case Pokemon::Oricorio_PomPom: type = Pokemon::Electric;
+                default: type = Pokemon::Fire;
+            }
+        }
+        tmove(b,s).type = type;
+    }
 };
 
 /* List of events:
@@ -7757,5 +7777,8 @@ void MoveEffect::init()
     REGISTER_MOVE(217, IonDeluge);
     REGISTER_MOVE(218, Celebrate);
     REGISTER_MOVE(219, HyperspaceFury);
-    REGISTER_MOVE(220, ShellTrap)
+    REGISTER_MOVE(220, ShellTrap);
+    REGISTER_MOVE(221, RevelationDance);
+
+    //Core Enforcer, Moongeist Beam, Sunsteel Strike - done in battle.cpp. Might need messages though...
 }

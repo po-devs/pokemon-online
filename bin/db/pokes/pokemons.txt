@@ -971,7 +971,7 @@
 1230:0 Turtonator
 1240:0 Crabrawler
 1250:0 Jangmo-o
-1260:0 Type Null
+1260:0 Type: Null
 1270:0 Tapu Koko
 1280:0 Solgaleo
 1290:0 Lunaala
