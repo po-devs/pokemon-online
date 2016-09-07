@@ -976,4 +976,5 @@
 1280:0 Solgaleo
 1290:0 Lunaala
 1300:0 Magearna
-1310:0 UB-01
+718:1 Zygarde-10%
+718:2 Zygarde-Complete

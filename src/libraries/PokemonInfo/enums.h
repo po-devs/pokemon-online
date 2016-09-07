@@ -875,9 +875,7 @@ namespace Pokemon
         Diancie,
         Hoopa,
         Volcanion,
-
-        //gen7. Will need reordering as order is confirmed
-        Rowlett,
+        Rowlett, //gen7. Will need reordering as order is confirmed
         RowlettEvo,
         RowlettEvo2,
         Litten,
@@ -925,7 +923,6 @@ namespace Pokemon
         Solgaleo    =1280,
         Lunaala     =1290,
         Magearna    =1300,
-        UB_01       =1310,
 
         // Base forms end here. Cosmetic forms dont need to be listed
         Rotom_Mow = Rotom + (1 << 16),
@@ -986,7 +983,9 @@ namespace Pokemon
         Meowth_Alolan = Meowth + (1 << 16),
         Raichu_Alolan = Raichu + (1 << 16),
         Exeggutor_Alolan = Exeggutor + (1 << 16),
-        Marowak_Alolan = Marowak + (1 << 16)
+        Marowak_Alolan = Marowak + (1 << 16),
+        Zygarde_10 = Zygarde + (1 << 16),
+        Zygarde_Complete = Zygarde + (2 << 16)
     };
 }
 
