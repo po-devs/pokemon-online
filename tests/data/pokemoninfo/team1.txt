@@ -1,5 +1,5 @@
 Abomasnow (M) @ Icy Rock
-Trait: Snow Warning
+Ability: Snow Warning
 EVs: 252 HP / 4 Def / 252 SDef
 Calm Nature (+SDef, -Atk)
 - Blizzard
@@ -8,7 +8,7 @@ Calm Nature (+SDef, -Atk)
 - Giga Drain
 
 Froslass (F) @ Leftovers
-Trait: Snow Cloak
+Ability: Snow Cloak
 EVs: 252 SAtk / 4 SDef / 252 Spd
 Timid Nature (+Spd, -Atk)
 - Blizzard
@@ -17,7 +17,7 @@ Timid Nature (+Spd, -Atk)
 - Substitute
 
 Mamoswine (M) @ Focus Sash
-Trait: Snow Cloak
+Ability: Snow Cloak
 EVs: 4 HP / 252 Atk / 252 Spd
 Jolly Nature (+Spd, -SAtk)
 - Earthquake
@@ -25,8 +25,8 @@ Jolly Nature (+Spd, -SAtk)
 - Stealth Rock
 - Ice Shard
 
-Kyurem-B @ Choice Band
-Trait: Teravolt
+Kyurem-Black @ Choice Band
+Ability: Teravolt
 EVs: 252 Atk / 4 Def / 252 Spd
 Hasty Nature (+Spd, -Def)
 - Outrage
@@ -35,7 +35,7 @@ Hasty Nature (+Spd, -Def)
 - Blizzard
 
 Avalugg (F) @ Leftovers
-Trait: Sturdy
+Ability: Sturdy
 EVs: 252 HP / 4 Atk / 252 Def
 Impish Nature (+Def, -SAtk)
 - Earthquake
@@ -44,7 +44,7 @@ Impish Nature (+Def, -SAtk)
 - Avalanche
 
 Weavile (M) @ Focus Sash
-Trait: Pickpocket
+Ability: Pickpocket
 EVs: 4 HP / 252 Atk / 252 Spd
 Jolly Nature (+Spd, -SAtk)
 - Knock Off
