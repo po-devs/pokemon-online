@@ -587,3 +587,13 @@
 617 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
 620 Lowers the user's Defense and Special Defense by 1 stage.
 621 Lowers the user's Defense by 1 stage. Cannot be evaded. Fails if the user is not Hoopa-Unbound. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.
+622 If the target has already used a move in the same turn, its Ability will be ignored when it is hit by this move.
+623 If this attack hits, lowers the user's Special Attack by 2 stages.
+624 ???
+625 Deals normal damage.
+626 Ignores the target's Ability when hit by this move.
+627 Deals damage to the target equal to half of its current HP, but not less than 1.
+628 ???
+629 The target of this move is the last of the opponent's Pokémon to have damaged the user with a contact move this turn. Deals damage to the target equal to two times the damage the target dealt to the user with their last attack.
+630 Requires a charge up turn before use. (This attack's power is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.???)
+631 Ignores the target's Ability when hit by this move.

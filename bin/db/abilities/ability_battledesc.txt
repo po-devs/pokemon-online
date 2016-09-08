@@ -13,7 +13,7 @@
 12 Prevents a Pokémon with this ability from being Attracted or affected by Captivate or Taunt.
 13 Prevents weather from having any effect as long as a Pokémon with this ability is on the field.
 14 Raises the accuracy of moves used by a Pokémon with this ability by 30% of their original value.
-15 Prevents a Pokémon with this ability from becoming Asleep.
+15 Prevents a Pokémon with this ability from falling Asleep.
 16 Changes the type of a Pokémon with this ability to that of the last damaging move that hit it.
 17 Prevents a Pokémon with this ability from becoming Poisoned.
 18 Makes a Pokémon with this ability immune to Fire moves, and raises the damage of its Fire moves by 50% until it leaves the field when hit by one.
@@ -159,7 +159,7 @@
 158 Raises priority of all non-attacking moves used by a Pokémon with this ability by 1.
 159 Boosts the power of all Ground, Rock and Steel type attacks used by a Pokémon with this ability during Sandstorm.
 160 Damages the opponent for 1/8 its max HP every time it uses a contact move on a Pokémon with this ability.
-161 Changes Darmanitan into Zen Mode when it falls under 1/2 its max HP.
+161 Changes Darmanitan into Zen Mode when it falls under 1/2 max HP.
 162 Raises accuracy of all moves used by a Pokémon with this ability and its partners by 10%.
 163 Prevents opponent abilities from hindering moves used by a Pokémon with this ability.
 164 Prevents opponent abilities from hindering moves used by a Pokémon with this ability.
@@ -190,3 +190,25 @@
 189 Summons the extremely harsh sunlight weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Fire moves by 50%, and causes Water moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning. Makes all Pokémon immune to being frozen.
 190 Summons the heavy rain weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Water moves by 50%, and causes Fire moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
 191 Summons the strong winds weather condition for as long as a Pokémon with this ability stays on the field. Causes moves of a type that is normally super-effective against Flying to only deal normal damage against Flying. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
+192 Prevents the stats of a Pokémon with this ability from being lowered by the opponent.
+193 Reduces the damage taken from an attack by a Pokémon with this ability if it has max HP.
+194 Prevents a Pokémon with this ability from becoming afflicted with a status condition other than Sleep.
+195 Changes Zygarde 10% or Zygarde 50% into Zygarde Complete when it falls under 1/2 max HP.
+196 Raises the Special Attack of a Pokémon with this ability by one stage every time a Pokémon on the field is knocked out.
+197 Boosts the power of all moves used by a Pokémon with this ability if it attacks an opponent that switched in or entered the field mid-battle.
+198 Summons Electric Terrain (for 5 turns?) when a Pokémon with this ability enters the field.
+199 Prevents opposing Pokémon from using moves with increased priority.
+200 Raises the Special Attack of a Pokémon with this ability by one stage when it drops below 1/2 max HP.
+201 Boosts the power of allies' special moves.
+202 Enables a Pokémon with this ability to poison Steel-type and Poison-type Pokémon.
+203 Once only, blocks a damaging attack and nullifies its effects.
+204 Halves the damage taken from physical moves by a Pokémon with this ability but doubles damage taken from Fire-type attacks.
+205 Raises Defense of a Pokémon with this ability by one stage when it is hit by an attack.
+206 Raises the priority of HP-restoring moves used by a Pokémon with this ability to the highest level.
+207 Switches out Pokémon with this ability when it drops below 1/2 max HP.
+208 When another Pokémon uses Dragon Dance, Quiver Dance, Swords Dance, or Teeter Dance, the Pokémon with this ability will immediately use that move as well.
+209 Protects from status conditions. Boosts Minior's attacks but lowers defenses and loses immunity from status conditions when it falls under 1/2 max HP.
+210 When a Pokémon with this Ability faints, it deals damage to its opponent equal to the amount of HP it had left before last being hit.
+211 <Schooling changes Wishiwashi's form somehow>
+212 Doubles the Speed of a Pokémon with this ability during Electric Terrain.
+213 When a Pokémon with Water Compaction is hit by a Water-type move, its Defense rises by two stages.

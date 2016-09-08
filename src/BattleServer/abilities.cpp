@@ -2663,8 +2663,8 @@ struct AMStamina : public AM {
     }
 };
 
-struct AMWaterComposition : public AM {
-    AMWaterComposition() {
+struct AMWaterCompaction : public AM {
+    AMWaterCompaction() {
         functions["UponBeingHit"] = &ubh;
     }
 
@@ -3064,7 +3064,7 @@ void AbilityEffect::init()
     REGISTER_AB(134, Triage);
     REGISTER_AB(135, WimpOut);
     REGISTER_AB(136, SurgeSurfer);
-    REGISTER_AB(137, WaterComposition); // not sure whether water type moves still deal damage or not
+    REGISTER_AB(137, WaterCompaction); // not sure whether water type moves still deal damage or not
     REGISTER_AB(138, Disguise); //only done message so far
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer);

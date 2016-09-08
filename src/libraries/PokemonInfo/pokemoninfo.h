@@ -537,7 +537,7 @@ private:
     static QVector<QHash<int,Effect> > m_Effects;
     static QHash<int,QStringList> m_Messages;
     static QHash<int,int> m_OldAbilities;
-    static QHash<int,QString> m_Desc;
+    //static QHash<int,QString> m_Desc;
     static QHash<int,QString> m_BattleDesc;
     static QHash<int, bool> m_moldBreaker;
 

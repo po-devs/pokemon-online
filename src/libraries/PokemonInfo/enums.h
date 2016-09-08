@@ -1947,7 +1947,7 @@ namespace Ability
         InnardsOut,
         Schooling,
         SurgeSurfer,
-        WaterComposition
+        WaterCompaction
     };
 }
 

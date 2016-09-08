@@ -79,7 +79,7 @@ QString NatureInfo::m_Directory;
 QHash<int, QString> CategoryInfo::m_Names;
 QString CategoryInfo::m_Directory;
 
-QHash<int,QString> AbilityInfo::m_Names, AbilityInfo::m_Desc, AbilityInfo::m_BattleDesc;
+QHash<int,QString> AbilityInfo::m_Names, AbilityInfo::m_BattleDesc; //AbilityInfo::m_Desc;
 QString AbilityInfo::m_Directory;
 QVector<QHash<int,AbilityInfo::Effect> > AbilityInfo::m_Effects;
 QHash<int, QStringList> AbilityInfo::m_Messages;
@@ -3092,7 +3092,7 @@ void AbilityInfo::loadMessages()
 void AbilityInfo::loadNames()
 {
     fill_int_str(m_Names, path("abilities.txt"), true);
-    fill_int_str(m_Desc, path("ability_desc.txt"), true);
+    //fill_int_str(m_Desc, path("ability_desc.txt"), true);
     fill_int_str(m_BattleDesc, path("ability_battledesc.txt"), true);
 }
 
@@ -3154,10 +3154,10 @@ AbilityInfo::Effect AbilityInfo::Effects(int abnum, Pokemon::gen gen) {
     return m_Effects[gen.num-GEN_MIN].value(abnum);
 }
 
-QString AbilityInfo::Desc(int ab)
+/*QString AbilityInfo::Desc(int ab)
 {
     return m_Desc[ab];
-}
+}*/
 
 QString AbilityInfo::EffectDesc(int abnum)
 {
