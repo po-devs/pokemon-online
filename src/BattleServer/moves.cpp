@@ -2886,7 +2886,7 @@ struct MMRest : public MM
 
     static void daf(int s, int, BS &b) {
         // Insomnia, Vital Spirit, Uproar
-        if ( (b.gen() >= 3 && b.poke(s).status() == Pokemon::Asleep) || !b.canGetStatus(s, Pokemon::Asleep) || b.poke(s).isFull()) {
+        if ( (b.gen() >= 3 && b.poke(s).status() == Pokemon::Asleep) || !b.canGetStatus(s, Pokemon::Asleep, s) || b.poke(s).isFull()) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -4680,7 +4680,8 @@ struct MMPsychoShift : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(s).status() == Pokemon::Fine || b.poke(t).status() != Pokemon::Fine || !b.canGetStatus(t, b.poke(s).status()))
+        //canGetStatus is assuming Corrosion can move the poison status. if it doesnt, change the 3rd arg to "t"
+        if (b.poke(s).status() == Pokemon::Fine || b.poke(t).status() != Pokemon::Fine || !b.canGetStatus(t, b.poke(s).status(), s))
             fturn(b,s).add(TM::Failed);
     }
 
@@ -5322,7 +5323,7 @@ struct MMYawn : public MM {
         if (count != 0) {
 
         } else {
-            if (b.poke(s).status() == Pokemon::Fine && b.canGetStatus(s, Pokemon::Asleep)) {
+            if (b.poke(s).status() == Pokemon::Fine && b.canGetStatus(s, Pokemon::Asleep, s)) {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                     b.notifyClause(ChallengeInfo::SleepClause);
                 } else if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy && !b.isFlying(s)) {

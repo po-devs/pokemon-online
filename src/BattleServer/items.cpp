@@ -312,7 +312,7 @@ struct IMStatusOrb : public IM
             return;
         }
         int status = poke(b,s)["ItemArg"].toInt();
-        if (!b.canGetStatus(s, status))
+        if (!b.canGetStatus(s, status, s))
             return;
         if (status == Pokemon::Burnt) {
             b.sendItemMessage(19,s,0);

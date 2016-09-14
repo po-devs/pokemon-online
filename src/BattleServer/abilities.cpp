@@ -445,17 +445,17 @@ struct AMEffectSpore : public AM {
         if (b.poke(t).status() == Pokemon::Fine && b.coinflip(30, 100)) {
             switch (b.randint(3)) {
             case 0:
-                if (b.canGetStatus(t,Pokemon::Asleep)) {
+                if (b.canGetStatus(t,Pokemon::Asleep,s)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Grass);
                     b.inflictStatus(t, Pokemon::Asleep,s);
                 } break;
             case 1:
-                if (b.canGetStatus(t,Pokemon::Paralysed)) {
+                if (b.canGetStatus(t,Pokemon::Paralysed,s)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Electric);
                     b.inflictStatus(t, Pokemon::Paralysed,s);
                 } break;
             default:
-                if (b.canGetStatus(t,Pokemon::Poisoned)) {
+                if (b.canGetStatus(t,Pokemon::Poisoned, s)) {
                     b.sendAbMessage(16,0,s,t,Pokemon::Poison);
                     b.inflictStatus(t, Pokemon::Poisoned,s);
                 }
@@ -471,7 +471,7 @@ struct AMFlameBody : public AM {
 
     static void upa(int s, int t, BS &b) {
         if (b.poke(t).status() == Pokemon::Fine && b.coinflip(3, 10)) {
-            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
+            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt(),s)) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
             }
@@ -968,7 +968,7 @@ struct AMPoisonTouch : public AM {
         if (tmove(b,s).classification == Move::OffensiveStatChangingMove || tmove(b,s).flinchRate > 0 || b.hasSubstitute(t))
             return;
         if (b.poke(t).status() == Pokemon::Fine && b.coinflip(2, 10)) {
-            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt())) {
+            if (b.canGetStatus(t,poke(b,s)["AbilityArg"].toInt(),s)) {
                 b.sendAbMessage(18,0,s,t,Pokemon::Curse,b.ability(s));
                 b.inflictStatus(t, poke(b,s)["AbilityArg"].toInt(),s);
             }
@@ -2836,7 +2836,9 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 //UNTESTED/NOT COMPLETE
 struct AMOneWayChange : AM /*Change a pokemon on a criteria but dont change back if criteria is no longer met*/
 {
-    //Copy most of Zen Mode and tweak. Lazy right now
+    //Copy most of Zen Mode and tweak.
+    //Schooling depending on mechanic
+    //Power Construct (unless it reverts like Zen Mode)
 };
 
 //UNTESTED/NOT COMPLETE
@@ -3072,11 +3074,11 @@ void AbilityEffect::init()
     //TO-DO. Assign number as completed.
     //REGISTER_AB(xxx, Stakeout);
     //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics???
-    //Corrosion - No message needed
 
     //***Done Elsewhere but might need messages ***
     //FullMetalBody - done (use 31 if message needed)
     //ShadowShield - done. Similar to Multiscale so I doubt it gets a message
     //Comatose - done
-    //SoulHeart - done
+    //SoulHeart - done    
+    //Corrosion - No message needed
 }

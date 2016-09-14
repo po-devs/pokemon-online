@@ -2008,11 +2008,13 @@ ppfunction:
                 bool fail = false;
                 //Poison can't be poisoned regardless of Sleuthed status
                 if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) {
-                    fail = true;
+                    if (!hasWorkingAbility(player, Ability::Corrosion))
+                        fail = true;
                 } else if (!pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()) {
                     //RawTypeEffect is useless here because Inverted will never create an "ineffective" scenario.
                     if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Steel)) {
-                        fail = true;
+                        if (!hasWorkingAbility(player, Ability::Corrosion))
+                            fail = true;
                     } else if (attack == Move::ThunderWave) {
                         //Thunderwave is affected by immunities in all forms of battle
                         if (ineffective(rawTypeEff(type, target))) {
@@ -2537,11 +2539,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
     applyingMoveStatMods = false;
 }
 
-bool BattleSituation::canGetStatus(int target, int status) {
-    if (!BattleBase::canGetStatus(target, status)) {
-        //sendMoveMessage(31,0,target);
-        return false;
-    }
+bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
     if (hasWorkingAbility(target, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(target).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
@@ -2585,10 +2583,44 @@ bool BattleSituation::canGetStatus(int target, int status) {
         }
         return true;
     }
-    case Pokemon::Burnt: return !hasWorkingAbility(target, Ability::WaterVeil);
-    case Pokemon::Frozen: return !hasWorkingAbility(target, Ability::MagmaArmor) && !isWeatherWorking(Sunny) && !isWeatherWorking(StrongSun);
-    case Pokemon::Paralysed: return (gen() < 6 || !hasType(target, Type::Electric)) && !hasWorkingAbility(target, Ability::Limber);
-    case Pokemon::Poisoned: return (gen() < 3 || !hasType(target, Pokemon::Steel)) && !hasWorkingAbility(target, Ability::Immunity);
+    case Pokemon::Burnt: {
+        if (!hasType(target, Pokemon::Fire) || hasWorkingAbility(target, Ability::WaterVeil)) {
+            return false;
+        }
+        return true;
+    }
+    case Pokemon::Frozen: {
+        if (hasType(target, Pokemon::Ice) || hasWorkingAbility(target, Ability::MagmaArmor)) {
+            return false;
+        }
+        if (isWeatherWorking(Sunny) || isWeatherWorking(StrongSun)) {
+            return false;
+        }
+        return true;
+    }
+    case Pokemon::Paralysed: {
+        if (gen() >= 6 && hasType(target, Type::Electric)) {
+            return false;
+        }
+        if (hasWorkingAbility(target, Ability::Limber)) {
+            return false;
+        }
+        return true;
+    }
+    case Pokemon::Poisoned: {
+        if (hasWorkingAbility(target, Ability::Immunity)) {
+            return false;
+        }
+        //As far as we know, Corrosion only allows poisoning Steels and Poison types. Should it bypass other abilities too? (Comatose, Immunity, etc.)
+        //If so, add "&& status == Pokemon::Poisoned" to the conditional and move it to the correct placing (aka, the top if it bypasses everything)
+        if (inflicter != target && hasWorkingAbility(inflicter, Ability::Corrosion)) {
+            return true;
+        }
+        if ((gen() > 2 && hasType(target, Pokemon::Steel)) || hasType(target, Pokemon::Poison)) {
+            return false;
+        }
+        return true;
+    }
     default:
         return false;
     }
@@ -2692,7 +2724,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
         }
     }
 
-    if (!canGetStatus(player, status))
+    if (!canGetStatus(player, status, attacker))
         return;
 
     if (status == Pokemon::Asleep)
@@ -2719,7 +2751,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
     if (status == Pokemon::Frozen && poke(player).num() == Pokemon::Shaymin_Sky) {
         changeForme(this->player(player), slotNum(player), Pokemon::Shaymin);
     }
-    if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status)
+    if (attacker != player && status != Pokemon::Asleep && status != Pokemon::Frozen && poke(attacker).status() == Pokemon::Fine && canGetStatus(attacker,status,player)
             && hasWorkingAbility(player, Ability::Synchronize)) //Synchronize
     {
         sendAbMessage(61,0,player,attacker);
