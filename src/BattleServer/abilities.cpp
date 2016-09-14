@@ -2763,7 +2763,6 @@ struct AMPinch : public AM
     }
 };
 
-//UNTESTED
 struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 {
     AMBerserk() {
@@ -2773,13 +2772,13 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
     }
 
     static void ahpc(int s, int, BS &b) {
-        /* Those berries don't activate immediately when attacked by offensive moves,
+        /* The ability doesn't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
         if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
-        tp(s, 0, b); //does this work?
+        tp(s, 0, b);
     }
 
     static void tp(int s, int, BS &b) {
@@ -2795,7 +2794,6 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
     }
 };
 
-//UNTESTED
 struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 {
     AMWimpOut() {
@@ -2828,7 +2826,7 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 
             b.sendAbMessage(135, 0, p);
             turn(b,p)["SendingBack"] = true;
-            b.requestSwitch(p);
+            b.requestSwitch(p); //does the player get a choice? if not, copy MMRoar
         }
     }
 };
@@ -2848,11 +2846,10 @@ struct AMDisguise : AM
     //138 Its disguise served it as a decoy! | %s's diguise was busted!
 };
 
-//UNTESTED
 struct AMInnardsOut : AM
 {
     AMInnardsOut() {
-        functions["BeforeBeingKoed"] = &bbk;
+        functions["AfterBeingKoed"] = &bbk;
         functions["BeforeTakingDamage"] = &btd;
     }
 
@@ -3056,20 +3053,20 @@ void AbilityEffect::init()
     REGISTER_AB(126, StrongWeather);
 
     // gen 7
-    REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/
-    REGISTER_AB(128, ElectricSurge);
+    REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/ //not completed
+    REGISTER_AB(128, ElectricSurge); //how long does the terrain last?
     REGISTER_AB(129, Dazzling);
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
     REGISTER_AB(132, Fluffy);
     REGISTER_AB(133, Stamina);
-    REGISTER_AB(134, Triage);
-    REGISTER_AB(135, WimpOut);
+    REGISTER_AB(134, Triage); //what priority does this make it?
+    REGISTER_AB(135, WimpOut); //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
     REGISTER_AB(136, SurgeSurfer);
     REGISTER_AB(137, WaterCompaction); // not sure whether water type moves still deal damage or not
-    REGISTER_AB(138, Disguise); //only done message so far
+    REGISTER_AB(138, Disguise); //not completed
     REGISTER_AB(139, InnardsOut);
-    REGISTER_AB(140, Dancer);
+    REGISTER_AB(140, Dancer); //not completed
 
     //TO-DO. Assign number as completed.
     //REGISTER_AB(xxx, Stakeout);
