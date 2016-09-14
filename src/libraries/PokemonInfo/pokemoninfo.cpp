@@ -2099,48 +2099,73 @@ QString MoveInfo::FlagsS(int movenum, Pokemon::gen g)
 
     QStringList ret;
     //Space is very limited here. Only displaying quick blurbs on common thing
-    if (p & Move::ContactFlag) {
-        ret.push_back(QObject::tr("Contact"));
-    }
-    //ChargeFlag, unused
-    //RechargeFlag, unused
-    //ProtectableFlag- Too common
-    //MagicCoatableFlag- Too long of a description
-    if (p & Move::SnatchableFlag) {
-        ret.push_back(QObject::tr("Snatchable"));
-    }
+    //ChargeFlag, RechargeFlag, FlyingFlag- unused
     //MemorableFlag- Too common
-    if (p & Move::PunchFlag) {
-        ret.push_back(QObject::tr("Punch"));
-    }
-    if (p & Move::SoundFlag) {
-        ret.push_back(QObject::tr("Sound"));
-    }
-    //FlyingFlag, unused
-    if (p & Move::UnthawingFlag) {
-        ret.push_back(QObject::tr("Thaws User"));
-    }
+    //MagicCoatableFlag- Too long of a description
     //FarReachFlag- no one really plays Triples
-    if (p & Move::HealingFlag) {
-        ret.push_back(QObject::tr("Healing"));
+
+    //Not a perfect filter but it should help eliminate a lot of noise
+    int mv = MoveInfo::Target(movenum, g);
+    QStringList temp;
+    if (mv != Move::PartnerOrUser
+            && mv != Move::User
+            && mv != Move::Partner
+            && mv != Move::TeamSide
+            && mv != Move::TeamParty
+            && mv != Move::Field) {
+        if (!(p & Move::ProtectableFlag)) {
+            temp.push_back(QObject::tr("Protect"));
+        }
+        if (p & Move::MischievousFlag) {
+            temp.push_back(QObject::tr("Substitute"));
+        }
+        switch(temp.length()) {
+            case 2: ret.push_back(QObject::tr("Bypasses %0 & %1").arg(temp[0]).arg(temp[1])); break;
+            case 1: ret.push_back(QObject::tr("Bypasses %0").arg(temp[0])); break;
+        }
     }
-    if (p & Move::MischievousFlag) {
-        ret.push_back(QObject::tr("Bypasses Substitute"));
+    if (g >= 2) {
+        if (p & Move::ContactFlag) {
+            ret.push_back(QObject::tr("Contact"));
+        }
+        if (p & Move::UnthawingFlag) {
+            ret.push_back(QObject::tr("Thaws User"));
+        }
     }
-    if (p & Move::BiteFlag) {
-        ret.push_back(QObject::tr("Bite"));
+    if (g >= 3) {
+        if (p & Move::SoundFlag) {
+            ret.push_back(QObject::tr("Sound"));
+        }
+        if (p & Move::SnatchableFlag) {
+            ret.push_back(QObject::tr("Snatchable"));
+        }
     }
-    if (p & Move::PowderFlag) {
-        ret.push_back(QObject::tr("Powder"));
+    if (g >= 4) {
+        if (p & Move::PunchFlag) {
+            ret.push_back(QObject::tr("Punch"));
+        }
+        if (p & Move::HealingFlag) {
+            ret.push_back(QObject::tr("Healing"));
+        }
     }
-    if (p & Move::BallFlag) {
-        ret.push_back(QObject::tr("Bullet"));
+    if (g >= 6) {
+        if (p & Move::PowderFlag) {
+            ret.push_back(QObject::tr("Powder"));
+        }
+        if (p & Move::BallFlag) {
+            ret.push_back(QObject::tr("Bullet"));
+        }
+        if (p & Move::LaunchFlag) {
+            ret.push_back(QObject::tr("Launching"));
+        }
+        if (p & Move::BiteFlag) {
+            ret.push_back(QObject::tr("Bite"));
+        }
     }
-    if (p & Move::LaunchFlag) {
-        ret.push_back(QObject::tr("Launching"));
-    }
-    if (p & Move::DanceFlag) {
-        ret.push_back(QObject::tr("Dance"));
+    if (g >= 7) {
+        if (p & Move::DanceFlag) {
+            ret.push_back(QObject::tr("Dance"));
+        }
     }
     if (ret.length() > 0) {
         return ret.join(", ");
