@@ -262,6 +262,7 @@ public:
     static int SpeedPriority(int movenum, Pokemon::gen gen);
     static QString PriorityS(int movenum, Pokemon::gen gen);
     static int Flags(int movenum, Pokemon::gen gen);
+    static QString FlagsS(int movenum, Pokemon::gen gen);
     static bool Exists(int movenum, Pokemon::gen gen);
     static bool isOHKO(int movenum, Pokemon::gen gen);
     static bool isHM(int movenum, Pokemon::gen gen);

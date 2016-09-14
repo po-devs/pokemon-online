@@ -90,11 +90,12 @@ void PokeEdit::fillMoves()
     ui->moveChoice->disconnect(SIGNAL(activated(QModelIndex)), this);
     connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
 #ifdef QT5
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Range, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Priority, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Type, QHeaderView::Fixed);
 #else
     ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);

@@ -2093,6 +2093,63 @@ int MoveInfo::Flags(int movenum, Pokemon::gen g)
     move_find(flags, movenum, g);
 }
 
+QString MoveInfo::FlagsS(int movenum, Pokemon::gen g)
+{
+    int p = MoveInfo::Flags(movenum, g);
+
+    QStringList ret;
+    //Space is very limited here. Only displaying quick blurbs on common thing
+    if (p & Move::ContactFlag) {
+        ret.push_back(QObject::tr("Contact"));
+    }
+    //ChargeFlag, unused
+    //RechargeFlag, unused
+    //ProtectableFlag- Too common
+    //MagicCoatableFlag- Too long of a description
+    if (p & Move::SnatchableFlag) {
+        ret.push_back(QObject::tr("Snatchable"));
+    }
+    //MemorableFlag- Too common
+    if (p & Move::PunchFlag) {
+        ret.push_back(QObject::tr("Punch"));
+    }
+    if (p & Move::SoundFlag) {
+        ret.push_back(QObject::tr("Sound"));
+    }
+    //FlyingFlag, unused
+    if (p & Move::UnthawingFlag) {
+        ret.push_back(QObject::tr("Thaws User"));
+    }
+    //FarReachFlag- no one really plays Triples
+    if (p & Move::HealingFlag) {
+        ret.push_back(QObject::tr("Healing"));
+    }
+    if (p & Move::MischievousFlag) {
+        ret.push_back(QObject::tr("Bypasses Substitute"));
+    }
+    if (p & Move::BiteFlag) {
+        ret.push_back(QObject::tr("Bite"));
+    }
+    if (p & Move::PowderFlag) {
+        ret.push_back(QObject::tr("Powder"));
+    }
+    if (p & Move::BallFlag) {
+        ret.push_back(QObject::tr("Bullet"));
+    }
+    if (p & Move::LaunchFlag) {
+        ret.push_back(QObject::tr("Launching"));
+    }
+    if (p & Move::DanceFlag) {
+        ret.push_back(QObject::tr("Dance"));
+    }
+    if (ret.length() > 0) {
+        return ret.join(", ");
+    } else {
+        return "--";
+    }
+}
+
+
 bool MoveInfo::Exists(int movenum, Pokemon::gen g)
 {
     return m_GenMoves[g.num-GenInfo::GenMin()].contains(movenum);

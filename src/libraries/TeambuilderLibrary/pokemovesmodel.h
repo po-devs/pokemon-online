@@ -27,6 +27,7 @@ public:
         Category,
         Priority,
         Range,
+        Flags,
         LastColumn
     };
 private:
