@@ -2221,33 +2221,33 @@ QString MoveInfo::TargetS(int movenum, Pokemon::gen gen)
 
     switch(p) {
         case Move::ChosenTarget:
-            return QString("Single Target");
+            return QObject::tr("Single Target");
         case Move::PartnerOrUser:
-            return QString("Self or Ally");
+            return QObject::tr("Self or Ally");
         case Move::Partner:
-            return QString("Single Ally");
+            return QObject::tr("Single Ally");
         case Move::MeFirstTarget:
-            return QString("Single Target");
+            return QObject::tr("Single Target");
         case Move::AllButSelf:
-            return QString("All But Self");
+            return QObject::tr("All But Self");
         case Move::Opponents:
-            return QString("Adjacent Foes");
+            return QObject::tr("Adjacent Foes");
         case Move::TeamParty:
-            return QString("User's Team");
+            return QObject::tr("User's Team");
         case Move::User:
-            return QString("Self");
+            return QObject::tr("Self");
         case Move::All:
-            return QString("All");
+            return QObject::tr("All");
         case Move::RandomTarget:
-            return QString("Random");
+            return QObject::tr("Random");
         case Move::Field:
-            return QString("Field");
+            return QObject::tr("Field");
         case Move::OpposingTeam:
-            return QString("All Foes");
+            return QObject::tr("All Foes");
         case Move::TeamSide:
-            return QString("All Allies");
+            return QObject::tr("All Allies");
         case Move::IndeterminateTarget:
-            return QString("Self");
+            return QObject::tr("Self");
         default:
             return QString("---");
     }
