@@ -2888,6 +2888,21 @@ struct AMDancer : AM
     }
 };
 
+//In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
+/*struct AMStakeout : AM
+{
+    AMStakeout() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int t, BS &b) {
+        //Switch turn is called on Switch Choice (manual switches and forced switches), MMRoar, IMRedCard
+        if (b.slotMemory(b.slot(t)).value("SwitchTurn").toInt() == b.turn()) {
+            b.chainBp(s, 0x2000);
+        }
+    }
+};*/
+
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -3069,7 +3084,6 @@ void AbilityEffect::init()
     REGISTER_AB(140, Dancer); //not completed
 
     //TO-DO. Assign number as completed.
-    //REGISTER_AB(xxx, Stakeout);
     //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics???
 
     //***Done Elsewhere but might need messages ***
@@ -3078,4 +3092,5 @@ void AbilityEffect::init()
     //Comatose - done
     //SoulHeart - done    
     //Corrosion - No message needed
+    //REGISTER_AB(xxx, Stakeout); //is there a message needed? is it BP or damage? currently coded like Tinted Lens
 }

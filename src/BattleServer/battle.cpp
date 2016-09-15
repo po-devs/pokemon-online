@@ -3653,8 +3653,9 @@ int BattleSituation::calculateDamage(int p, int t)
         if (this->poke(t).isFull() && (hasWorkingAbility(t, Ability::MultiScale) || hasWorkingAbility(t, Ability::ShadowShield))) {
             finalmod = chainMod(finalmod, 0x800);
         }
-        /* Tinted Lens */
-        if (turnMem(p).typeMod < 0 && hasWorkingAbility(p, Ability::TintedLens)) {
+        /* Tinted Lens, Stakeout */
+        if ((turnMem(p).typeMod < 0 && hasWorkingAbility(p, Ability::TintedLens))
+            || (hasWorkingAbility(p, Ability::Stakeout) && slotMemory(slot(t)).value("SwitchTurn").toInt() == turn())) {
             finalmod = chainMod(finalmod, 0x2000);
         }
         /* Friend Guard */
