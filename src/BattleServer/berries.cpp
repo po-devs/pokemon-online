@@ -281,10 +281,17 @@ struct BMPinchStat : public BMPinch
 
         int arg = poke(b,p)["ItemArg"].toInt();
 
+        //Pinch Berries aren't consumed if the pokemon would gain no effect from it.
         if (b.isOut(s)) {
             if (b.hasWorkingAbility(s, Ability::Contrary)) {
+                if (b.hasMinimalStatMod(s, arg)) {
+                    return;
+                }
                 b.sendBerryMessage(7,s,1,s, berry, arg);
             } else {
+                if (b.hasMaximalStatMod(s, arg)) {
+                    return;
+                }
                 b.sendBerryMessage(7,s,0,s, berry, arg);
             }
             b.inflictStatMod(s, arg, 1, s, false);
