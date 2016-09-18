@@ -1113,7 +1113,7 @@ bool PokemonInfo::IsAlolan(Pokemon::uniqueId id)
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 {
     //This is used in Tiering pokemon. Different = tiered differently
-    return IsDifferent(id) ? OriginalForme(id) : id;
+    return IsDifferent(id) ? id : OriginalForme(id);
 }
 
 QPixmap PokemonInfo::Picture(const QString &url)
