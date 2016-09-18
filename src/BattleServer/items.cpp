@@ -294,7 +294,7 @@ struct IMZoomLens : public IM
             if (b.gen() < 5) {
                 turn(b,s)["Stat6ItemModifier"] = 4;
             } else {
-                turn(b,s)["Stat6ItemModifier"] = 0x1333;
+                turn(b,s)["Stat6ItemModifier"] = 4; //0x1333
             }
         }
     }

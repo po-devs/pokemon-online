@@ -255,7 +255,7 @@ struct AMCompoundEyes : public AM {
         if (b.gen() < 5) {
             turn(b,s)["Stat6AbilityModifier"] = 6;
         } else {
-            turn(b,s)["Stat6AbilityModifier"] = 0x14CD;
+            turn(b,s)["Stat6AbilityModifier"] = 6; //0x14CD
         }
     }
 };
@@ -737,7 +737,7 @@ struct AMHustle : public AM {
         } else {
             turn(b,s)["Stat1AbilityModifier"] = 0x1800;
             if (tmove(b,s).category == Move::Physical) {
-                turn(b,s)["Stat6AbilityModifier"] = 0xCCC;
+                turn(b,s)["Stat6AbilityModifier"] = -4; //0xCCC
             }
         }
     }
@@ -1593,13 +1593,13 @@ struct AMVictoryStar : public AM {
     }
 
     static void sm(int s, int, BS &b) {
-        turn(b,s)["Stat6AbilityModifier"] = 0x1199;
+        turn(b,s)["Stat6AbilityModifier"] = 2; //0x1199
     }
 
     static void sm2(int , int t, BS &b) {
         /* Victory Star doesn't stack */
         if (!b.hasWorkingAbility(t, Ability::VictoryStar)) {
-            turn(b,t)["Stat6PartnerAbilityModifier"] = 0x1199;
+            turn(b,t)["Stat6PartnerAbilityModifier"] = 2; //0x1199
         }
     }
 };
