@@ -413,7 +413,7 @@ struct BMBerryLock : public BMPinch
         if (b.gen() <= 4) {
             poke(b,s)["BerryLock"] = true;
         } else {
-            poke(b,s)["Stat6BerryModifier"] = 0x1333;
+            poke(b,s)["Stat6BerryModifier"] = 4; //0x1333
         }
         b.sendBerryMessage(10,s,0);
     }
