@@ -30,11 +30,11 @@
 23:0 Ekans
 24:0 Arbok
 25:0 Pikachu
-25:1 Pikachu-Rock Star
-25:2 Pikachu-Belle
-25:3 Pikachu-Pop Star
-25:4 Pikachu-Ph. D
-25:5 Pikachu-Libre
+25:1:D Pikachu-Rock Star
+25:2:D Pikachu-Belle
+25:3:D Pikachu-Pop Star
+25:4:D Pikachu-Ph. D
+25:5:D Pikachu-Libre
 25:6:A Pikachu-Cosplay
 26:0 Raichu
 27:0 Sandshrew
@@ -192,7 +192,7 @@
 170:0 Chinchou
 171:0 Lanturn
 172:0 Pichu
-172:1 Pichu-Spiky Eared
+172:1:D Pichu-Spiky Eared
 173:0 Cleffa
 174:0 Igglybuff
 175:0 Togepi
@@ -497,8 +497,8 @@
 412:1:A Burmy-Sandy
 412:2:A Burmy-Trash
 413:0 Wormadam
-413:1 Wormadam-Sandy
-413:2 Wormadam-Trash
+413:1:D Wormadam-Sandy
+413:2:D Wormadam-Trash
 414:0 Mothim
 415:0 Combee
 416:0 Vespiquen
@@ -573,11 +573,11 @@
 477:0 Dusknoir
 478:0 Froslass
 479:0 Rotom
-479:1 Rotom-Mow
-479:2 Rotom-Heat
-479:3 Rotom-Frost
-479:4 Rotom-Wash
-479:5 Rotom-Fan
+479:1:D Rotom-Mow
+479:2:D Rotom-Heat
+479:3:D Rotom-Frost
+479:4:D Rotom-Wash
+479:5:D Rotom-Fan
 480:0 Uxie
 481:0 Mesprit
 482:0 Azelf
@@ -776,8 +776,8 @@
 645:0 Landorus
 645:1:AD Landorus-Therian
 646:0 Kyurem
-646:1 Kyurem-White
-646:2 Kyurem-Black
+646:1:D Kyurem-White
+646:2:D Kyurem-Black
 647:0 Keldeo
 647:1:A Keldeo-Resolute
 648:0:B Meloetta
@@ -857,7 +857,7 @@
 676:9:A Furfrou-Pharaoh
 677:0 Espurr
 678:0 Meowstic
-678:1 Meowstic-F
+678:1:D Meowstic-F
 679:0 Honedge
 680:0 Doublade
 681:0:B Aegislash
@@ -908,5 +908,5 @@
 719:0:H Diancie
 719:1:M Mega Diancie
 720:0 Hoopa
-720:1 Hoopa-Unbound
+720:1:D Hoopa-Unbound
 721:0 Volcanion
