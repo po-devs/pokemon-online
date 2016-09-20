@@ -50,7 +50,7 @@ void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
     if (!positions.contains(pokemon)) {
         //Use bool for merging forms together
         bool mergeInto = pokemon == Pokemon::Vivillon_Fancy;
-        if (mergeInto || !PokemonInfo::IsDifferent(pokemon)) {
+        if (PokemonInfo::IsForme(pokemon) && (mergeInto || !PokemonInfo::IsDifferent(pokemon))) {
             TierRank::addUsage(PokemonInfo::OriginalForme(pokemon));
         } else {
             positions.insert(pokemon, uses.size());
