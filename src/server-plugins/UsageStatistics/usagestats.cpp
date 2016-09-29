@@ -47,32 +47,32 @@ void TierRank::addUsage(const Pokemon::uniqueId &pokemon, int item)
         return;
     }
     if (item != 0 && item == ItemInfo::StoneForForme(pokemon)) {
-        TierRank::addUsage(ItemInfo::MegaStoneForme(item), 0);
-    } else {
-        if (!positions.contains(pokemon)) {
-            //Use bool for merging forms together
-            bool mergeInto = pokemon == Pokemon::Vivillon_Fancy;
-            if (PokemonInfo::IsForme(pokemon) && !PokemonInfo::IsMegaEvo(pokemon) && (mergeInto || !PokemonInfo::IsDifferent(pokemon))) {
-                TierRank::addUsage(PokemonInfo::OriginalForme(pokemon), item);
-            } else {
-                positions.insert(pokemon, uses.size());
-                uses.push_back(QPair<Pokemon::uniqueId, int>(pokemon, 1));
-            }
+        pokemon = ItemInfo::MegaStoneForme(item);
+    }
+
+    if (!positions.contains(pokemon)) {
+        //Use bool for merging forms together
+        bool mergeInto = pokemon == Pokemon::Vivillon_Fancy;
+        if (PokemonInfo::IsForme(pokemon) && !PokemonInfo::IsMegaEvo(pokemon) && (mergeInto || !PokemonInfo::IsDifferent(pokemon))) {
+            TierRank::addUsage(PokemonInfo::OriginalForme(pokemon), item);
         } else {
-            int pos = positions[pokemon];
-            uses[pos].second += 1;
+            positions.insert(pokemon, uses.size());
+            uses.push_back(QPair<Pokemon::uniqueId, int>(pokemon, 1));
+        }
+    } else {
+        int pos = positions[pokemon];
+        uses[pos].second += 1;
 
-            while (pos > 0 && uses[pos-1].second < uses[pos].second) {
-                uses.swap(pos, pos-1);
-                positions[uses[pos-1].first] = pos - 1;
-                positions[uses[pos].first] = pos;
-                pos--;
-            }
+        while (pos > 0 && uses[pos-1].second < uses[pos].second) {
+            uses.swap(pos, pos-1);
+            positions[uses[pos-1].first] = pos - 1;
+            positions[uses[pos].first] = pos;
+            pos--;
+        }
 
-            /* Saves every 5 minutes */
-            if (time(NULL) - timer > 5*60) {
-                writeContents();
-            }
+        /* Saves every 5 minutes */
+        if (time(NULL) - timer > 5*60) {
+            writeContents();
         }
     }
 }
