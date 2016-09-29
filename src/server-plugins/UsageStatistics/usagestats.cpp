@@ -39,22 +39,19 @@ TierRank::~TierRank()
     writeContents();
 }
 
-void TierRank::addUsage(const Pokemon::uniqueId &pokemon, int item)
+void TierRank::addUsage(const Pokemon::uniqueId &pokemon)
 {
     QMutexLocker l(&m);
 
     if (pokemon == Pokemon::NoPoke) {
         return;
     }
-    if (item != 0 && item == ItemInfo::StoneForForme(pokemon)) {
-        pokemon = ItemInfo::MegaStoneForme(item);
-    }
 
     if (!positions.contains(pokemon)) {
         //Use bool for merging forms together
         bool mergeInto = pokemon == Pokemon::Vivillon_Fancy;
-        if (PokemonInfo::IsForme(pokemon) && !PokemonInfo::IsMegaEvo(pokemon) && (mergeInto || !PokemonInfo::IsDifferent(pokemon))) {
-            TierRank::addUsage(PokemonInfo::OriginalForme(pokemon), item);
+        if (PokemonInfo::IsForme(pokemon) && (mergeInto || !PokemonInfo::IsDifferent(pokemon))) {
+            TierRank::addUsage(PokemonInfo::OriginalForme(pokemon));
         } else {
             positions.insert(pokemon, uses.size());
             uses.push_back(QPair<Pokemon::uniqueId, int>(pokemon, 1));
@@ -193,7 +190,7 @@ int PokemonOnlineStatsBattlePlugin::battleStarting(BattleInterface &b)
             QSettings s("config", QSettings::IniFormat);
             int rating = s.value(QString("UsageStats/%1").arg(tier.replace(" ","")), 1100).toInt();
             if (b.rating(i) > rating && ranked_ptr) {
-                ranked_ptr->addUsage(b.poke(i,j).num(), b.poke(i,j).item());
+                ranked_ptr->addUsage(b.poke(i,j).num());
             }
         }
     }

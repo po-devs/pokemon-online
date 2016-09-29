@@ -23,7 +23,7 @@ struct TierRank {
     QHash<Pokemon::uniqueId, int> positions;
     QList<QPair<Pokemon::uniqueId,qint32> > uses;
 
-    void addUsage(const Pokemon::uniqueId &pokemon, int item);
+    void addUsage(const Pokemon::uniqueId &pokemon);
     void writeContents();
 
     QMutex m;
