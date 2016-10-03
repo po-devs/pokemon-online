@@ -1618,44 +1618,7 @@ struct AMDefeatist : public AM {
     }
 };
 
-struct AMTwoWayChange : public AM { /*Zen Mode*/
-    AMTwoWayChange() {
-        functions["EndTurn29.0"] = &et;
-        functions["OnLoss"] = &ol;
-        functions["UponSetup"] = &et;
-    }
 
-    static void et (int s, int, BS &b) {
-        /* Not using field pokemon since Ditto doesn't gain zen mode.
-         * So using b.poke(s) instead of fpoke(b,s). */
-        Pokemon::uniqueId num = b.poke(s).num();
-
-        if (PokemonInfo::OriginalForme(num) != Pokemon::Darmanitan || b.preTransPoke(s, Pokemon::Darmanitan))
-            return;
-
-        num = fpoke(b,s).id;
-        bool zen = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
-
-        if (num.subnum == 0 && zen) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan_Zen, true);
-            b.sendAbMessage(77, 1, s);
-        } else if (num.subnum == 1 && !zen) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
-            b.sendAbMessage(77, 0, s);
-        }
-    }
-
-    static void ol(int s, int, BS &b) {
-        //Retain form if you're not originally a Darmanitan
-        if (b.preTransPoke(s, Pokemon::Darmanitan))
-            return;
-
-        if (b.pokenum(s).subnum != 0) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
-            b.sendAbMessage(77, 0, s);
-        }
-    }
-};
 
 struct AMPickPocket : public AM
 {
@@ -2794,6 +2757,53 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
     }
 };
 
+//UNTESTED
+struct AMTwoWayChange : public AMPinch { /*Zen Mode*/
+    AMTwoWayChange() {
+        functions["EndTurn29.0"] = &et;
+        functions["OnLoss"] = &ol;
+    }
+
+    static void et (int s, int, BS &b) {
+        /* Not using field pokemon since Ditto doesn't gain zen mode/etc.
+         * So using b.poke(s) instead of fpoke(b,s). */
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
+        Pokemon::uniqueId base = args[0];
+        Pokemon::uniqueId alt = args[1];
+        //Perhaps a 3rd arg could be used to define a message set.
+        //if Zen Mode is the only 2 way then AMOneWay can be combined into this by defining a bool for only Zen to use
+
+        if (PokemonInfo::OriginalForme(num) != base || b.preTransPoke(s, base))
+            return;
+
+        num = fpoke(b,s).id;
+        bool zen = testpinch(s,b,2);
+
+        if (num.subnum == 0 && zen) {
+            b.changeForme(b.player(s), b.slotNum(s), alt, true);
+            b.sendAbMessage(77, 1, s);
+        } else if (num.subnum == 1 && !zen) {
+            b.changeForme(b.player(s), b.slotNum(s), base, true);
+            b.sendAbMessage(77, 0, s);
+        }
+    }
+
+    static void ol(int s, int, BS &b) {
+        //Retain form if you're not originally a Darmanitan/etc.
+        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
+        Pokemon::uniqueId base = args[0];
+        if (b.preTransPoke(s, base))
+            return;
+
+        if (b.pokenum(s).subnum != 0) {
+            b.changeForme(b.player(s), b.slotNum(s), base, true);
+            b.sendAbMessage(77, 0, s);
+        }
+    }
+};
+
 struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 {
     AMWimpOut() {
@@ -2837,12 +2847,34 @@ struct AMOneWayChange : AM /*Change a pokemon on a criteria but dont change back
     //Copy most of Zen Mode and tweak.
     //Schooling depending on mechanic
     //Power Construct (unless it reverts like Zen Mode)
+    //See comment in AMTwoWayChange to possibly combine both together
 };
 
 //UNTESTED/NOT COMPLETE
 struct AMDisguise : AM
 {
-    //Messages done based on announcement trailer
+    AMDisguise() {
+        functions["BeforeTakingDamage"] = &btd;
+        //functions["OnLoss"] = &ol; //maybe GastroAcid/etc. would trigger Diguise and break it? Maybe it isn't affected?
+    }
+
+    static void btd(int s, int, BS &b) {
+        //prevent damage once + change form.
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Mimikyu || b.preTransPoke(s, Pokemon::Mimikyu))
+            return;
+
+        //Does it block just damage? Does it block extra effects? Can moves that bypass protect also bypass Disguise?
+        b.sendAbMessage(138, 0, s);
+        //in case after effects I guess? split the messages up.
+
+
+        b.sendAbMessage(138, 1, s);
+        b.changeAForme(s, 1);
+    }
+
+    //Messages done based on announcement trailer. Might need tweaking for clarity, such as merging them depending on whether or not messages from move effects get printed between
     //138 Its disguise served it as a decoy! | %s's diguise was busted!
 };
 

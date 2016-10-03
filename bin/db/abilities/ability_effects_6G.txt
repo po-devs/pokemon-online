@@ -104,7 +104,6 @@
 131 99#Healer
 132 100#Friend Guard
 133 74#Weak Armor
-136 83#Multiscale
 137 84-5#Toxic Boost
 138 84-4#Flare Boost
 139 88#Harvest
@@ -128,7 +127,7 @@
 158 82#Prankster
 159 72#Sand Force
 160 50#Iron Barb
-161 77#Zen Mode
+161 77-555_66091#Zen Mode
 162 75#Victory Star
 163 40#Turbo Blaze
 164 40#TeraVolt

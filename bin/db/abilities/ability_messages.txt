@@ -45,7 +45,7 @@
 70 %s's %a absorbs the attack!|%s's %a made the attack useless!
 71 %s's Wonder Guard blocks the attack!
 74 %s lost part of its armor!
-77 %s's Zen Mode ended!|%s's Zen Mode triggered!
+77 %s's %a ended!|%s's %a triggered!
 78 %s stole %f's %i!
 80 %a sharply raised %s's Attack!|%a sharply raised %s's Defense!|%a sharply raised %s's Sp. Att.!|%a sharply raised %s's Sp. Def.!|%a sharply raised %s's Speed!
 81 %s transformed into %p!
