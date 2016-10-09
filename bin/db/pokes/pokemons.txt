@@ -910,14 +910,14 @@
 720:0 Hoopa
 720:1 Hoopa-Unbound
 721:0 Volcanion
-722:0 Rowlett
-723:0 Rowlett Evo
-724:0 Rowlett Evo2
+722:0 Rowlet
+723:0 Dartrix
+724:0 Rowlet Evo2
 725:0 Litten
-726:0 Litten Evo
+726:0 Torracat
 727:0 Litten Evo2
 728:0 Popplio
-729:0 Popplio Evo
+729:0 Brionne
 730:0 Popplio Evo2
 19:1:L Rattata-Alolan
 20:1:L Raticate-Alolan
