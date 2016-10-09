@@ -630,3 +630,4 @@
 629 Shell Trap
 630 Solar Blade
 631 Sunsteel Strike
+632 Accelerock

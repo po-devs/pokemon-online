@@ -875,14 +875,14 @@ namespace Pokemon
         Diancie,
         Hoopa,
         Volcanion,
-        Rowlett, //gen7. Will need reordering as order is confirmed
-        RowlettEvo,
-        RowlettEvo2,
+        Rowlet, //gen7. Will need reordering as order is confirmed
+        Dartrix,
+        RowletEvo2,
         Litten,
-        LittenEvo,
+        Torracat,
         LittenEvo2,
         Popplio,
-        PopplioEvo,
+        Brionne,
         PopplioEvo2,
         Rockruff,
         Komala,
@@ -1690,7 +1690,8 @@ namespace Move
         RevelationDance,
         ShellTrap,
         SolarBlade,
-        SunsteelStrike
+        SunsteelStrike,
+        Accelerock
     };
 }
 
