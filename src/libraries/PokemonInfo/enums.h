@@ -918,11 +918,16 @@ namespace Pokemon
         Turtonator,
         Crabrawler,
         Jangmo_o,
+        Jarango,
+        Jararanga,
         TypeNull,
+        Silvadi,
         TapuKoko,
         Solgaleo,
         Lunaala,
         Magearna,
+        Passimian,
+        Oranguru,
 
         // Base forms end here. Cosmetic forms dont need to be listed
         Rotom_Mow = Rotom + (1 << 16),
@@ -984,6 +989,7 @@ namespace Pokemon
         Raichu_Alolan = Raichu + (1 << 16),
         Exeggutor_Alolan = Exeggutor + (1 << 16),
         Marowak_Alolan = Marowak + (1 << 16),
+        Grimer_Alolan = Grimer + (1 << 16),
         Zygarde_10 = Zygarde + (1 << 16),
         Zygarde_Complete = Zygarde + (2 << 16)
     };
