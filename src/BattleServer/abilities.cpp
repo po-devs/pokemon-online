@@ -2445,7 +2445,7 @@ struct AMParentalBond : public AM
 
     static void btl(int s, int, BS &b) {
         if (turn(b,s).contains("ParentalBond") && b.repeatCount() == 1) {
-            if (b.gen <= 6)
+            if (b.gen() <= 6)
                 b.chainBp(s, 0x800);
             else 
                 b.chainBp(s, 0x400);
