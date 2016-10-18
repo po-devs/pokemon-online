@@ -2920,6 +2920,35 @@ struct AMDancer : AM
     }
 };
 
+//UNTESTED
+struct AMBattleBond : public AM {
+    AMBattleBond() {
+        functions["AfterKoing"] = &ak;
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void ak(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja || b.preTransPoke(s, Pokemon::Greninja))
+            return;
+        if (b.pokenum(s).subnum == 0) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
+        }
+    }
+
+    //if the boost stays despite switching, this is the code. otherwise you have to set poke(b,s)["BattleBonded"] = true; after the transform line above, then change below to look for "BattleBonded" instead of Ash_Greninja
+    static void bpm(int s, int, BS &b) {
+        if (b.poke(s).num() != Pokemon::Ash_Greninja)
+            return;
+
+        if (tmove(b,s).attack == Move::WaterShuriken) {
+            b.chainBp(s, 0x2000); //how much should the boost be?
+        }
+    }
+};
+
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
@@ -3114,12 +3143,11 @@ void AbilityEffect::init()
     REGISTER_AB(138, Disguise); //not completed
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer); //not completed
+    REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
 
     //TO-DO. Assign number as completed.
-    //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics???
-    //Battle Bond
+    //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
     //Receiver
-    //RKS System (combine with multi-type?)
 
     //***Done Elsewhere but might need messages ***
     //FullMetalBody - done (use 31 if message needed)
