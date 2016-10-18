@@ -169,6 +169,7 @@ void BattleSituation::initializeEndTurnFunctions()
         13.0 Bind, Wrap, Fire Spin, Clamp, Whirlpool, Sand Tomb, Magma Storm
 
         14.0 Taunt ends
+        14.1 Throat Chop ends //UNTESTED (unconfirmed)
 
         15.0 Encore ends
 
@@ -1293,32 +1294,40 @@ void BattleSituation::testCritical(int player, int target)
         return;
     }
 
-    int minch;
-    int craise = tmove(player).critRaise;
-
-    if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
-        craise += 1;
+    /* Laser Focus guarantees next move is a Critical. Similar to Lock On and Accuracy */
+    if (pokeMemory(player).contains("LaserFocused") && pokeMemory(player).value("LaserFocusEnd").toInt() >= turn()) {
+        critical = true;
+        pokeMemory(player).remove("LaserFocused");
     }
 
-    if (gen() < 6) {
-        switch(craise) {
-        case 0: minch = 3; break;
-        case 1: minch = 6; break;
-        case 2: minch = 12; break;
-        case 3: minch = 16; break;
-        case 4: case 5: minch = 24; break;
-        case 6: default: minch = 48;
-        }
-    } else {
-        switch(craise) {
-        case 0: minch = 3; break;
-        case 1: minch = 6; break;
-        case 2: minch = 24; break;
-        case 3: default: minch = 48;
-        }
-    }
+    if (!critical) { //skip this section if critical is already pre-determined to occur
+        int minch;
+        int craise = tmove(player).critRaise;
 
-    critical = coinflip(minch, 48);
+        if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
+            craise += 1;
+        }
+
+        if (gen() < 6) {
+            switch(craise) {
+            case 0: minch = 3; break;
+            case 1: minch = 6; break;
+            case 2: minch = 12; break;
+            case 3: minch = 16; break;
+            case 4: case 5: minch = 24; break;
+            case 6: default: minch = 48;
+            }
+        } else {
+            switch(craise) {
+            case 0: minch = 3; break;
+            case 1: minch = 6; break;
+            case 2: minch = 24; break;
+            case 3: default: minch = 48;
+            }
+        }
+
+        critical = coinflip(minch, 48);
+    }
 
     if (critical) {
         turnMem(player).add(TM::CriticalHit);
@@ -1843,6 +1852,7 @@ ppfunction:
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
+                calleffects(target, player, "OpponentBlock"); //Psychic terrain
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");

@@ -1700,7 +1700,11 @@ namespace Move
         ShellTrap,
         SolarBlade,
         SunsteelStrike,
-        Accelerock
+        Accelerock,
+        PsychicTerrain,
+        ThroatChop,
+        AuroraVeil,
+        LaserFocus
     };
 }
 

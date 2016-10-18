@@ -1918,14 +1918,12 @@ struct AMCloudNine : public AM {
     }
 };
 
-/**
-  Miracle skin evades all "status" moves (including taunt, encore, ...) half the time
-  */
 struct AMMiracleSkin : public AM {
     AMMiracleSkin() {
         functions["TestEvasion"] = &psc;
     }
 
+    //Miracle skin evades all "status" moves (including taunt, encore, ...) half the time
     static void psc(int s, int t, BS &b) {
         if (tmove(b,t).power == 0 && tmove(b,t).accuracy != 0) {
             if (b.coinflip(1,2)) {

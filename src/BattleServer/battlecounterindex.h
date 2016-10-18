@@ -5,7 +5,8 @@ struct BattleCounterIndex {
     enum {
         Encore,
         Disable,
-        Taunt
+        Taunt,
+        ThroatChop
     };
 };
 

@@ -318,3 +318,5 @@
 627 130-2#Nature's Madness
 628 221#Revelation Dance
 629 220#Shell Trap
+633 222#psychic terrain
+636 224#laser focus

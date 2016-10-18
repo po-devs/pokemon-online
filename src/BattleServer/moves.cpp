@@ -7524,6 +7524,145 @@ struct MMRevelationDance : public MM
     }
 };
 
+//UNTESTED
+struct MMPsychicTerrain : public MM {
+    static const int type = -Type::Psychic;
+
+    MMPsychicTerrain() {
+        functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+        functions["OpponentBlock"] = &ob;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 0) ;
+    }
+
+    static void daf(int s, int, BS &b) {
+        if (b.terrain == type && b.terrainCount > 0) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
+    static void uas(int s, int, BS &b) {
+        b.sendMoveMessage(222,0,s,Pokemon::Psychic);
+        b.terrainCount = 5;
+        b.terrain = type;
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "PsychicTerrain", &et);
+    }
+
+    static void et(int s, int, BS &b) {
+        if (b.terrain != type) {
+            return;
+        }
+        b.terrainCount --;
+        if (b.terrainCount <= 0) {
+            b.sendMoveMessage(222,1,s,Pokemon::Psychic);
+            b.terrain = 0;
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "PsychicTerrain");
+        }
+    }
+
+    static void ob(int s, int t, BS &b) {
+        if (b.terrain == type && b.terrainCount > 0 && tmove(b,t).priority > 0) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+            b.sendMoveMessage(222,2,s,Pokemon::Psychic);
+        }
+    }
+};
+
+//UNTESTED. Also chance it might not be Fighting type so might need to change that
+struct MMThroatChop : public MM //copied from taunt
+{
+    MMThroatChop() {
+        functions["OnFoeOnAttack"] = &uas;
+        functions["DetermineAttackFailure"]=  &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.counters(t).hasCounter(BC::ThroatChop))
+            fturn(b,s).add(TM::Failed);
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(14, 1) ;
+    }
+
+    static void uas (int s, int t, BS &b) {
+        //Unconfirmed
+        if (b.hasWorkingTeamAbility(t, Ability::AromaVeil)) {
+            b.sendAbMessage(112,1,t);
+            return;
+        }
+        b.sendMoveMessage(223,1,s,Pokemon::Fighting,t);
+        if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
+            b.sendItemMessage(7,t);
+            b.disposeItem(t);
+        } else {
+            addFunction(poke(b,t), "MovesPossible", "ThroatChop", &msp);
+            addFunction(poke(b,t), "MovePossible", "ThroatChop", &mp);
+            b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "ThroatChop", &et);
+
+            b.counters(t).addCounter(BC::ThroatChop, 1); //does the turn the move is used count?
+        }
+    }
+
+    static void et(int s, int, BS &b)
+    {
+        if (b.koed(s))
+            return;
+
+        if (b.counters(s).count(BC::ThroatChop) < 0) {
+            removeFunction(poke(b,s), "MovesPossible", "ThroatChop");
+            removeFunction(poke(b,s), "MovePossible", "ThroatChop");
+            b.removeEndTurnEffect(BS::PokeEffect, s, "ThroatChop");
+            b.sendMoveMessage(223,2,s,Pokemon::Fighting);
+            b.counters(s).removeCounter(BC::ThroatChop);
+        }
+    }
+
+    static void msp(int s, int, BS &b) {
+        if (!b.counters(s).hasCounter(BC::ThroatChop)) {
+            return;
+        }
+        for (int i = 0; i < 4; i++) {
+            if (MoveInfo::Flags(b.move(s,i), b.gen()) & Move::SoundFlag) {
+                turn(b,s)["Move" + QString::number(i) + "Blocked"] = true;
+            }
+        }
+    }
+
+    static void mp(int s, int, BS &b) {
+        /* Throat Chop doesn't count when bouncing a move */
+        if (!b.counters(s).hasCounter(BC::ThroatChop) || b.battleMemory().value("CoatingAttackNow").toBool()) {
+            return;
+        }
+
+        int mov = turn(b,s)["MoveChosen"].toInt();
+        if (mov != NoMove && MoveInfo::Flags(mov, b.gen()) & Move::SoundFlag) {
+            turn(b,s)["ImpossibleToMove"] = true;
+            b.notify(BS::All, BattleCommands::UseAttack, s, qint16(move(b,s)), false);
+            b.sendMoveMessage(223,0,s,Pokemon::Fighting,s,mov);
+        }
+    }
+};
+
+//UNTESTED
+struct MMLaserFocus : public MM
+{
+    MMLaserFocus() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        poke(b,s)["LaserFocusEnd"] = b.turn() + 1;
+        poke(b,s)["LaserFocused"] = true;;
+
+        b.sendMoveMessage(224,0,s,type(b,s));
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -7780,6 +7919,10 @@ void MoveEffect::init()
     REGISTER_MOVE(219, HyperspaceFury);
     REGISTER_MOVE(220, ShellTrap);
     REGISTER_MOVE(221, RevelationDance);
+    REGISTER_MOVE(222, PsychicTerrain);
+    REGISTER_MOVE(223, ThroatChop);
+    REGISTER_MOVE(224, LaserFocus);
 
     //Core Enforcer, Moongeist Beam, Sunsteel Strike - done in battle.cpp. Might need messages though...
+    //NOT DONE: Aurora Veil (stacks with reflect/light screen?, broke by brick break?)
 }
