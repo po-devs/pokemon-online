@@ -1760,7 +1760,7 @@ struct MMEmbargo : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype)
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem)
             fturn(b,s).add(TM::Failed);
         else if (poke(b,t).contains("EmbargoEnd") && poke(b,t)["EmbargoEnd"].toInt() >= b.turn()) {
             fturn(b,s).add(TM::Failed);
@@ -3524,7 +3524,7 @@ struct MMGastroAcid : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || poke(b,t).value("AbilityNullified").toBool() || b.ability(t) == Ability::StanceChange) {
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || poke(b,t).value("AbilityNullified").toBool() || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5268,7 +5268,7 @@ struct MMWorrySeed : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Truant & multi-type */
-        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::StanceChange) {
+        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5406,7 +5406,7 @@ struct MMRolePlay : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Wonder Guard & multi-type */
-        if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter || b.ability(t) == Ability::StanceChange ) {
+        if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter || b.ability(t) == Ability::StanceChange ) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5426,7 +5426,7 @@ struct MMSkillSwap : public MM {
 
     static void daf(int s, int t, BS &b) {
         /* Wonder Guard & multi-type */
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::WonderGuard || b.ability(s) == Ability::Multitype
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::WonderGuard || b.ability(s) == Ability::Multitype || b.ability(s) == Ability::RKSSystem
                 || b.ability(s) == Ability::WonderGuard || b.ability(s) == Ability::Illusion || b.ability(t) == Ability::Illusion
                 || b.ability(s) == Ability::StanceChange || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
@@ -5956,7 +5956,7 @@ struct MMSoak : public MM {
     static void daf(int s, int t, BS &b) {
         //Soak works on Water Pokemon, ForestCurse/TrickOrTreat don't work on Grass/Ghost
         int type = turn(b,s)["Soak_Arg"].toInt();
-        if ((move(b,s) == Move::Soak && b.poke(t).ability() == Ability::Multitype) || (move(b,s) != Move::Soak && b.hasType(t,type)))
+        if ((move(b,s) == Move::Soak && (b.poke(t).ability() == Ability::Multitype || b.poke(t).ability() == Ability::RKSSystem)) || (move(b,s) != Move::Soak && b.hasType(t,type)))
             fturn(b,s).add(TM::Failed);
     }
 
@@ -5984,7 +5984,7 @@ struct MMEntrainment : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::Truant || b.ability(t) == Ability::StanceChange) {
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::Truant || b.ability(t) == Ability::StanceChange) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6052,6 +6052,7 @@ struct MMBestow : public MM {
         int i1 = b.poke(s).item();
         if (b.koed(t) || !b.canLoseItem(s,s) || b.poke(t).item() != 0
                 || (b.ability(t) == Ability::Multitype && ItemInfo::isPlate(b.poke(s).item()))
+                || (b.ability(t) == Ability::RKSSystem && ItemInfo::isMemoryChip(b.poke(s).item()))
                 || (b.pokenum(t).pokenum == Pokemon::Giratina && b.poke(s).item() == Item::GriseousOrb)
                 || (b.pokenum(t).pokenum == Pokemon::Genesect && ItemInfo::isDrive(b.poke(s).item()))
                 || (!b.canPassMStone(t, i1)))

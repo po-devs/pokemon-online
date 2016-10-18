@@ -973,6 +973,14 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             changeAForme(slot, type);
         }
     }
+    //we need to check for RKSSystem in case Silvally doesn't have its ability
+    if (p.num() == Pokemon::Silvally && ItemInfo::isMemoryChip(p.item()) && p.ability() == Ability::RKSSystem) {
+        int type = ItemInfo::MemoryChipType(p.item());
+
+        if (type != Type::Normal) {
+            changeAForme(slot, type);
+        }
+    }
     if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
         int forme = ItemInfo::DriveForme(p.item());
 
@@ -4047,6 +4055,11 @@ bool BattleSituation::canLoseItem(int player, int attacker)
             return false;
         }
         if (ItemInfo::isPlate(item)) {
+            return false;
+        }
+    }
+    if (ability(player) == Ability::RKSSystem) {
+        if (ItemInfo::isMemoryChip(item)) {
             return false;
         }
     }

@@ -342,6 +342,24 @@
 341 Whipped Dream
 342 Red Orb
 343 Blue Orb
+344 Normal Memory
+345 Fighting Memory
+346 Flying Memory
+347 Poison Memory
+348 Ground Memory
+349 Rock Memory
+350 Bug Memory
+351 Ghost Memory
+352 Steel Memory
+353 Fire Memory
+354 Water Memory
+355 Grass Memory
+356 Electric Memory
+357 Psychic Memory
+358 Ice Memory
+359 Dragon Memory
+360 Dark Memory
+361 Fairy Memory
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite

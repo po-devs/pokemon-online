@@ -851,11 +851,8 @@ struct IMEscapeButton : public IM
 };
 
 /* Needs a function in order for its Item argument to be registered */
-struct IMDrive : public IM {
-    IMDrive() {
-
-    }
-};
+struct IMDrive : public IM { IMDrive() {}};
+struct IMMemoryChip : public IM { IMMemoryChip() {}};
 
 struct IMBerserkGene : public IM {
     IMBerserkGene() {
@@ -1160,6 +1157,7 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
+    //29 Formerly Plates. Doesn't need a function cause their arg is called in BoostType, unlike Drive and MemoryChips
     REGISTER_ITEM(32, Drive);
     REGISTER_ITEM(33, Eviolite);
     REGISTER_ITEM(34, RockyHelmet);
@@ -1173,6 +1171,7 @@ void ItemEffect::init()
     REGISTER_ITEM(42, SafetyGoggles);
     REGISTER_ITEM(43, WeaknessPolicy);
     REGISTER_ITEM(67, PrimalOrb);
+    REGISTER_ITEM(68, MemoryChip);
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);

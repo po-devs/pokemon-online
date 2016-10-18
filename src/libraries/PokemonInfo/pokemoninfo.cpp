@@ -2645,6 +2645,11 @@ bool ItemInfo::isPlate(int itemnum)
     return ((itemnum >= 185 && itemnum <= 202 && itemnum != 190 && itemnum != 200) || itemnum==330);
 }
 
+bool ItemInfo::isMemoryChip(int itemnum)
+{
+    return itemnum >= 344 && itemnum <= 361;
+}
+
 bool ItemInfo::isMegaStone(int itemnum)
 {
     return itemnum >= 2000 && itemnum < 3000;
@@ -2683,6 +2688,15 @@ int ItemInfo::PlateType(int itemnum)
 {
     const auto &effects = Effects(itemnum, GenInfo::GenMax());
     if (effects.size() == 0 || !isPlate(itemnum)) {
+        return 0;
+    }
+    return effects.front().args.toInt();
+}
+
+int ItemInfo::MemoryChipType(int itemnum)
+{
+    const auto &effects = Effects(itemnum, GenInfo::GenMax());
+    if (effects.size() == 0 || !isMemoryChip(itemnum)) {
         return 0;
     }
     return effects.front().args.toInt();

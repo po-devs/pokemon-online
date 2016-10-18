@@ -607,6 +607,9 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus && p.ability() == Ability::Multitype) {
             p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
         }
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Silvally && p.ability() == Ability::RKSSystem) {
+            p.num() = Pokemon::uniqueId(Pokemon::Silvally, ItemInfo::MemoryChipType(p.item()));
+        }
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
             p.num() = Pokemon::uniqueId(Pokemon::Genesect, ItemInfo::DriveForme(p.item()));
         }

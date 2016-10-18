@@ -363,6 +363,7 @@ public:
     static bool Exists(int itemnum, Pokemon::gen gen);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static bool isMemoryChip(int itemnum);
     static bool isMegaStone(int itemnum);
     static bool isPrimalStone(int itemnum);
     static bool isDrive(int itemnum);
@@ -370,6 +371,7 @@ public:
     static bool isGem(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
+    static int MemoryChipType(int itemnum);
     static Pokemon::uniqueId MegaStoneForme(int itemnum);
     static int PlateForType(int type);
     static int DriveType(int itemnum);

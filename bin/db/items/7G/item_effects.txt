@@ -71,24 +71,24 @@
 181 23#Razor Claw 
 183 28#Sticky Barb
 184 8-366_8192_3#Deepseatooth
-185 29-15|10-15#Draco Plate
-186 29-16|10-16#Dread Plate 
-187 29-4|10-4#Earth Plate 
-188 29-1|10-1#Fist Plate 
-189 29-9|10-9#Flame Plate 
+185 10-15#Draco Plate
+186 10-16#Dread Plate
+187 10-4#Earth Plate
+188 10-1#Fist Plate
+189 10-9#Flame Plate
 190 30#Grip Claw
-191 29-14|10-14#Icicle Plate 
-192 29-6|10-6#Insect Plate 
-193 29-8|10-8#Iron Plate 
-194 29-11|10-11#Meadow Plate 
-195 29-13|10-13#Mind Plate 
-196 29-2|10-2#Sky Plate 
-197 29-10|10-10#Splash Plate 
-198 29-7|10-7#Spooky Plate 
-199 29-5|10-5#Stone Plate 
+191 10-14#Icicle Plate
+192 10-6#Insect Plate
+193 10-8#Iron Plate
+194 10-11#Meadow Plate
+195 10-13#Mind Plate
+196 10-2#Sky Plate
+197 10-10#Splash Plate
+198 10-7#Spooky Plate
+199 10-5#Stone Plate
 200 8-104/105_8192_1#Thick Club
-201 29-3|10-3#Toxic Plate 
-202 29-12|10-12#Zap Plate
+201 10-3#Toxic Plate
+202 10-12#Zap Plate
 206 10-5#Hard stone
 212 1-5_2048#Iron Ball
 213 27-487_15_7#Griseous Orb
@@ -223,7 +223,7 @@
 327 3016#Dusk Ball
 328 3017#Cherish Ball
 329 3000#Park Ball
-330 29-17|10-17#Pixie Plate
+330 10-17#Pixie Plate
 331 41|1-4_6144#Assault Vest(check values)
 332 42#Safety Goggles
 333 43#Weakness Policy
@@ -231,6 +231,24 @@
 335 36-10_4#Luminous Moss
 342 67-383:1#Red Orb
 343 67-382:1#Blue Orb
+344 68-0#Normal Memory
+345 68-1#Fighting Memory
+346 68-2#Flying Memory
+347 68-3#Poison Memory
+348 68-4#Ground Memory
+349 68-5#Rock Memory
+350 68-6#Bug Memory
+351 68-7#Ghost Memory
+352 68-8#Steel Memory
+353 68-9#Fire Memory
+354 68-10#Water Memory
+355 68-11#Grass Memory
+356 68-12#Electric Memory
+357 68-13#Psychic Memory
+358 68-14#Ice Memory
+359 68-15#Dragon Memory
+360 68-16#Dark Memory
+361 68-17#Fairy Memory
 2001 66-3:1#2001+ are Megastones
 2002 66-6:1
 2003 66-6:2

@@ -1265,8 +1265,7 @@ struct AMTrace : public AM {
             return;
 
         int ab = b.ability(t);
-        //Multitype
-        if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace
+        if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab != Ability::RKSSystem && ab !=  Ability::Trace
             && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget")) && ab != Ability::StanceChange) {
             b.sendAbMessage(66,0,s,t,0,ab);
             b.loseAbility(s);
@@ -1489,7 +1488,7 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype && !b.koed(t)) {
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype && b.ability(t) !=Ability::RKSSystem && !b.koed(t)) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
@@ -3103,7 +3102,7 @@ void AbilityEffect::init()
     // gen 7
     REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/ //not completed
     REGISTER_AB(128, ElectricSurge); //how long does the terrain last?
-    REGISTER_AB(129, Dazzling);
+    REGISTER_AB(129, Dazzling); //Also Queenly Majesty
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
     REGISTER_AB(132, Fluffy);
@@ -3118,6 +3117,9 @@ void AbilityEffect::init()
 
     //TO-DO. Assign number as completed.
     //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics???
+    //Battle Bond
+    //Receiver
+    //RKS System (combine with multi-type?)
 
     //***Done Elsewhere but might need messages ***
     //FullMetalBody - done (use 31 if message needed)
