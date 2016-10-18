@@ -4470,8 +4470,13 @@ int BattleSituation::getStat(int player, int stat, int purityLevel)
             ret *= 2;
         if (teamMemory(this->player(player)).value("SwampCount").toInt() > 0)
             ret /= 2;
-        if (poke(player).status() == Pokemon::Paralysed && !hasWorkingAbility(player, Ability::QuickFeet))
-            ret /= 4;
+        if (poke(player).status() == Pokemon::Paralysed && !hasWorkingAbility(player, Ability::QuickFeet)) {
+            if (gen() > 6) {
+                ret /= 2;
+            } else {
+                ret /= 4;
+            }
+        }
     }
 
     if (gen() >= 4 && isWeatherWorking(SandStorm) && hasType(player,Pokemon::Rock)) {
