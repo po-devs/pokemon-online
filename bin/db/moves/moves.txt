@@ -635,3 +635,6 @@
 634 Throat Chop
 635 Aurora Veil
 636 Laser Focus
+637 Clanging Scales
+638 Multi-Attack
+639 Trop Kick

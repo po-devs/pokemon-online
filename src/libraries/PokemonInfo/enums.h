@@ -1731,7 +1731,10 @@ namespace Move
         PsychicTerrain,
         ThroatChop,
         AuroraVeil,
-        LaserFocus
+        LaserFocus,
+        ClangingScales,
+        Multi_Attack,
+        TropKick
     };
 }
 
