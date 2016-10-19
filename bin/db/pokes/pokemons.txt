@@ -939,7 +939,6 @@
 88:1:L Alolan Grimer
 89:1:L Alolan Muk
 103:1:L Alolan Exeggutor
-104:1:L Alolan Cubone
 105:1:L Alolan Marowak
 1000:0 Rockruff
 1001:0 Lycanroc-Midday
