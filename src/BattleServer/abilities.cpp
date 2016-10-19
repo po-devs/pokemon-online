@@ -1963,7 +1963,7 @@ struct AMIllusion : public AM {
     AMIllusion() {
         functions["UponBeingHit"] = &ubh;
         functions["OnLoss"] = &ubh;
-        functions["BeforeBeingKoed"] = &ubh;
+        //functions["BeforeBeingKoed"] = &ubh;
     }
 
     static void ubh(int s, int, BS &b) {
@@ -2934,6 +2934,7 @@ struct AMBattleBond : public AM {
         if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja || b.preTransPoke(s, Pokemon::Greninja))
             return;
         if (b.pokenum(s).subnum == 0) {
+            b.sendAbMessage(141, 0, s);
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
         }
     }
@@ -2995,7 +2996,7 @@ struct AMBattleBond : public AM {
     TestPinch
     UponBeingHit
     AfterAttackFinished
-    BeforeBeingKoed
+    //BeforeBeingKoed
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -3144,16 +3145,16 @@ void AbilityEffect::init()
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer); //not completed
     REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
+    // 142 Receiver (message) UNTESTED
+    // 143 Soul Heart (message) UNTESTED
 
-    //TO-DO. Assign number as completed.
-    //REGISTER_AB(xxx, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
-    //Receiver
+    //TO-DO
+    //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
 
     //***Done Elsewhere but might need messages ***
     //FullMetalBody - done (use 31 if message needed)
     //ShadowShield - done. Similar to Multiscale so I doubt it gets a message
     //Comatose - done
-    //SoulHeart - done    
     //Corrosion - No message needed
     //REGISTER_AB(xxx, Stakeout); //is there a message needed? is it BP or damage? currently coded like Tinted Lens
 }

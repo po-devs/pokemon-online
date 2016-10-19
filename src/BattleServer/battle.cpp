@@ -4206,6 +4206,11 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
         changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
     }
+    int ab = 0;
+    /* Don't want to pass Receiver to a pokemon with Receiver */
+    if (hasWorkingTeamAbility(player, Ability::Receiver, player)) {
+        ab = ability(player);
+    }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player).contains("PrimalForme")) {
         turnMemory(player).remove("PrimalForme");
@@ -4220,9 +4225,11 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
             return;
         }
         if (hasWorkingAbility(i,Ability::SoulHeart)) {
-            //b.sendAbMessage(blabla);
+            sendAbMessage(142, 0, i);
             inflictStatMod(i, SpAttack, 1, i, false);
-            return;
+        } else if (hasWorkingAbility(i, Ability::Receiver) && ab != 0) {
+            sendAbMessage(143, 0, i, player, 0, AbilityInfo::Name(ab));
+            acquireAbility(i, ab);
         }
     }
     //useful for third gen

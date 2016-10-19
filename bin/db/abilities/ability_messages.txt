@@ -86,3 +86,6 @@
 138 %s's disguise served it as a decoy! | %s's diguise was busted!
 139 %s's Innards Out hurts %f!
 140 <<Dancer: %s danced to the beat as well!>>
+141 %s became fully charged due to its bond with %ts!
+142 %s's Soul-Heart raises it's Special Attack!
+143 %f's %q was taken over by %s!

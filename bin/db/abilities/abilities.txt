@@ -194,7 +194,7 @@
 193 Shadow Shield
 194 Comatose
 195 Power Construct
-196 Soul Heart
+196 Soul-Heart
 197 Stakeout
 198 Electric Surge
 199 Dazzling
