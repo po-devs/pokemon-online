@@ -231,24 +231,23 @@
 335 36-10_4#Luminous Moss
 342 67-383:1#Red Orb
 343 67-382:1#Blue Orb
-344 68-0#Normal Memory
-345 68-1#Fighting Memory
-346 68-2#Flying Memory
-347 68-3#Poison Memory
-348 68-4#Ground Memory
-349 68-5#Rock Memory
-350 68-6#Bug Memory
-351 68-7#Ghost Memory
-352 68-8#Steel Memory
-353 68-9#Fire Memory
-354 68-10#Water Memory
-355 68-11#Grass Memory
-356 68-12#Electric Memory
-357 68-13#Psychic Memory
-358 68-14#Ice Memory
-359 68-15#Dragon Memory
-360 68-16#Dark Memory
-361 68-17#Fairy Memory
+344 68-1#Fighting Memory
+345 68-2#Flying Memory
+346 68-3#Poison Memory
+347 68-4#Ground Memory
+348 68-5#Rock Memory
+349 68-6#Bug Memory
+350 68-7#Ghost Memory
+351 68-8#Steel Memory
+352 68-9#Fire Memory
+353 68-10#Water Memory
+354 68-11#Grass Memory
+355 68-12#Electric Memory
+356 68-13#Psychic Memory
+357 68-14#Ice Memory
+358 68-15#Dragon Memory
+359 68-16#Dark Memory
+360 68-17#Fairy Memory
 2001 66-3:1#2001+ are Megastones
 2002 66-6:1
 2003 66-6:2

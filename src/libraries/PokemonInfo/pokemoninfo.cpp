@@ -2649,7 +2649,7 @@ bool ItemInfo::isPlate(int itemnum)
 
 bool ItemInfo::isMemoryChip(int itemnum)
 {
-    return itemnum >= 344 && itemnum <= 361;
+    return itemnum >= 344 && itemnum <= 360;
 }
 
 bool ItemInfo::isMegaStone(int itemnum)
