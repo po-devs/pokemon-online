@@ -87,5 +87,5 @@
 139 %s's Innards Out hurts %f!
 140 <<Dancer: %s danced to the beat as well!>>
 141 %s became fully charged due to its bond with %ts!
-142 %s's Soul-Heart raises it's Special Attack!
+142 %s's Soul-Heart raises its Special Attack!
 143 %f's %na was taken over by %s!
