@@ -320,3 +320,4 @@
 629 220#Shell Trap
 633 222#psychic terrain
 636 224#laser focus
+638 69#multi-attack

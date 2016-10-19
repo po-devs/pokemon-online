@@ -4051,7 +4051,8 @@ struct MMJudgment : public MM
 
     static void ms (int s, int, BS &b) {
         int item = b.poke(s).item();
-        if (ItemInfo::isPlate(item) && b.hasWorkingItem(s, item) && !turn(b,s).value("Symbiote").toBool()) {
+        if (((ItemInfo::isPlate(item) && move(b,s) == Move::Judgment) || (ItemInfo::isMemoryChip(item) && move(b,s) == Move::Multi_Attack))
+                && b.hasWorkingItem(s, item) && !turn(b,s).value("Symbiote").toBool()) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
         }
     }
@@ -7767,7 +7768,7 @@ void MoveEffect::init()
     REGISTER_MOVE(66, IceBall);
     REGISTER_MOVE(67, Imprison);
     REGISTER_MOVE(68, MagnetRise);
-    REGISTER_MOVE(69, Judgment);
+    REGISTER_MOVE(69, Judgment);  /*Multi-attack*/
     REGISTER_MOVE(70, KnockOff);
     REGISTER_MOVE(71, LastResort);
     REGISTER_MOVE(72, LeechSeed);
