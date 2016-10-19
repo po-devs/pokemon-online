@@ -4228,7 +4228,7 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
             sendAbMessage(142, 0, i);
             inflictStatMod(i, SpAttack, 1, i, false);
         } else if (hasWorkingAbility(i, Ability::Receiver) && ab != 0) {
-            sendAbMessage(143, 0, i, player, 0, AbilityInfo::Name(ab));
+            sendAbMessage(143, 0, i, player, 0, ab);
             acquireAbility(i, ab);
         }
     }
