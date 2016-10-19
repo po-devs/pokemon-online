@@ -1217,18 +1217,16 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (shiny) {
             return PokemonInfo::Picture(pokeid, gen, gender, false, back);
         }
-        if (gen.num == 1) {
-            return PokemonInfo::Picture(pokeid, 2, gender, shiny, back);
-        } else if (gen.num == 2) {
-            return PokemonInfo::Picture(pokeid, 3, gender, shiny, back);
-        } else if (gen.num == 3) {
-            return PokemonInfo::Picture(pokeid, 4, gender, shiny, back);
-        } else if (gen.num == 4) {
-            return PokemonInfo::Picture(pokeid, 5, gender, shiny, back);
-        }  else if (gen.num > 5) {
-            return PokemonInfo::Picture(pokeid, 6, gender, shiny, back);
+
+        switch(gen.num) {
+            case 7: return PokemonInfo::Picture(pokeid, 6, gender, shiny, back); break;
+            case 6: return PokemonInfo::Picture(pokeid, 5, gender, shiny, back); break;
+            case 5: return PokemonInfo::Picture(pokeid, 4, gender, shiny, back); break;
+            case 4: return PokemonInfo::Picture(pokeid, 3, gender, shiny, back); break;
+            case 3: return PokemonInfo::Picture(pokeid, 2, gender, shiny, back); break;
+            case 2: return PokemonInfo::Picture(pokeid, 1, gender, shiny, back); break;
+            default: return ret;
         }
-        return ret;
     }
 
     ret.loadFromData(data, file.section(".", -1).toLatin1().data());
