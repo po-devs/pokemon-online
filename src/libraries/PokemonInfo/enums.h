@@ -1028,7 +1028,7 @@ namespace Pokemon
         Golem_Alolan = Golem + (1 << 16),
         Zygarde_10 = Zygarde + (1 << 16),
         Zygarde_Complete = Zygarde + (2 << 16),
-        Lycanroc_Midnight = Lycanroc_Midday + (1 << 16),
+        Lycanroc_Midnight = Lycanroc + (1 << 16),
         Ash_Greninja = Greninja + (1 << 16)
     };
 }
