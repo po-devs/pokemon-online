@@ -24,7 +24,9 @@
 18:0:H Pidgeot
 18:1:M Mega Pidgeot
 19:0 Rattata
+19:1:L Alolan Rattata
 20:0 Raticate
+20:1:L Alolan Raticate
 21:0 Spearow
 22:0 Fearow
 23:0 Ekans
@@ -37,8 +39,11 @@
 25:5:D Pikachu-Libre
 25:6:A Pikachu-Cosplay
 26:0 Raichu
+26:1:L Alolan Raichu
 27:0 Sandshrew
+27:1:L Alolan Sandshrew
 28:0 Sandslash
+28:1:L Alolan Sandslash
 29:0 Nidoran-F
 30:0 Nidorina
 31:0 Nidoqueen
@@ -48,7 +53,9 @@
 35:0 Clefairy
 36:0 Clefable
 37:0 Vulpix
+37:1:L Alolan Vulpix
 38:0 Ninetales
+38:1:L Alolan Ninetales
 39:0 Jigglypuff
 40:0 Wigglytuff
 41:0 Zubat
@@ -61,9 +68,13 @@
 48:0 Venonat
 49:0 Venomoth
 50:0 Diglett
+50:1:L Alolan Diglett
 51:0 Dugtrio
+51:1:L Alolan Dugtrio
 52:0 Meowth
+52:1:L Alolan Meowth
 53:0 Persian
+53:1:L Alolan Persian
 54:0 Psyduck
 55:0 Golduck
 56:0 Mankey
@@ -86,8 +97,11 @@
 72:0 Tentacool
 73:0 Tentacruel
 74:0 Geodude
+74:1:L Alolan Geodude
 75:0 Graveler
+75:1:L Alolan Graveler
 76:0 Golem
+76:1:L Alolan Golem
 77:0 Ponyta
 78:0 Rapidash
 79:0 Slowpoke
@@ -101,7 +115,9 @@
 86:0 Seel
 87:0 Dewgong
 88:0 Grimer
+88:1:L Alolan Grimer
 89:0 Muk
+89:1:L Alolan Muk
 90:0 Shellder
 91:0 Cloyster
 92:0 Gastly
@@ -117,8 +133,10 @@
 101:0 Electrode
 102:0 Exeggcute
 103:0 Exeggutor
+103:1:L Alolan Exeggutor
 104:0 Cubone
 105:0 Marowak
+105:1:L Alolan Marowak
 106:0 Hitmonlee
 107:0 Hitmonchan
 108:0 Lickitung
@@ -915,123 +933,113 @@
 721:0 Volcanion
 722:0 Rowlet
 723:0 Dartrix
-724:0 Rowlet Evo2
+724:0 RowletEvo2
 725:0 Litten
 726:0 Torracat
-727:0 Litten Evo2
+727:0 LittenEvo2
 728:0 Popplio
 729:0 Brionne
-730:0 Popplio Evo2
-19:1:L Alolan Rattata
-20:1:L Alolan Raticate
-26:1:L Alolan Raichu
-27:1:L Alolan Sandshrew
-28:1:L Alolan Sandslash
-37:1:L Alolan Vulpix
-38:1:L Alolan Ninetales
-50:1:L Alolan Diglett
-51:1:L Alolan Dugtrio
-52:1:L Alolan Meowth
-53:1:L Alolan Persian
-74:1:L Alolan Geodude
-75:1:L Alolan Graveler
-76:1:L Alolan Golem
-88:1:L Alolan Grimer
-89:1:L Alolan Muk
-103:1:L Alolan Exeggutor
-105:1:L Alolan Marowak
-1000:0 Rockruff
-1001:0 Lycanroc-Midday
-1001:1 Lycanroc-Midnight
-1010:0 Komala
-1020:0 Pikipek
-1021:0 PikipekEvo2
-1022:0 PikipekEvoToucanSam
-1030:0 Yungoos
-1031:0 Gumshoos
-1040:0 Grubbin
-1041:0 Charjabug
-1042:0 Vikavolt
-1050:0 Drampa
-1060:0 Bruxish
-1070:0 Cutiefly
-1071:0 Ribombee
-1080:0 Togedemaru
-1090:0 Salandit
-1091:0 SalanditEvo2
-1100:0 Stufful
-1101:0 Bewear
-1110:0 Mimikyu
-1120:0 Wimpod
-1121:0 WimpodEvo2
-1130:0 Bounsweet
-1131:0 Steenee
-1132:0 Tsareena
-1140:0 Comfey
-1150:0 Mudbray
-1151:0 Mudsdale
-1160:0 Minior
-1160:1:A Minior-Yellow
-1160:2:A Minior-Orange
-1160:3:A Minior-Red
-1160:4:A Minior-Blue
-1160:5:A Minior-Green
-1160:6:A Minior-Purple
-1160:7:A Minior-Black
-1160:8:A Minior-Teal
-1170:0 Fomantis
-1171:0 Lurantis
-1180:0 Oricorio-Baile
-1180:1 Oricorio-Pom Pom
-1180:2 Oricorio-Pa'u
-1180:3 Oricorio-Sensu
-1190:0 Sandygast
-1191:0 Palossand
-1200:0 Wishiwashi
-1200:1 Wishiwashi-School
-1210:0 Pyukumuku
-1220:0 Morelull
-1221:0 MorelullEvo2
-1230:0 Turtonator
-1240:0 Crabrawler
-1241:0 CrabrawlerEvo2
-1250:0 Jangmo-o
-1251:0 Hakamo-o
-1252:0 Kommo-o
-1260:0 Type: Null
-1261:0 Silvally
-1261:1:AD Silvally-Fighting
-1261:2:AD Silvally-Flying
-1261:3:AD Silvally-Poison
-1261:4:AD Silvally-Ground
-1261:5:AD Silvally-Rock
-1261:6:AD Silvally-Bug
-1261:7:AD Silvally-Ghost
-1261:8:AD Silvally-Steel
-1261:9:AD Silvally-Fire
-1261:10:AD Silvally-Water
-1261:11:AD Silvally-Grass
-1261:12:AD Silvally-Electric
-1261:13:AD Silvally-Psychic
-1261:14:AD Silvally-Ice
-1261:15:AD Silvally-Dragon
-1261:16:AD Silvally-Dark
-1261:17:AD Silvally-Fairy
-1270:0 Tapu Koko
-1280:0 SolgaleoBaby
-1281:0 Solgaleo
-1290:0 LunaalaBaby
-1291:0 Lunaala
-1300:0 Magearna
-1300:1:AD Magearna-Pokeball
-1310:0 Passimian
-1311:0 Oranguru
-1320:0 SpikyBlueAnemoneThing
-1321:0 SpikyBlueAnemoneThingEvo2
-1330:0 AnchorThing
-1340:0 SpiderCrabThing
-1341:0 SpiderCrabThingEvo2
-1350:0 Tapu-Purple
-1360:0 Tapu-Pink
-1370:0 Tapu-RedOrange
-1380:0 Marshadow
+730:0 PopplioEvo2
+731:0 Pikipek
+732:0 PikipekEvo
+733:0 PikipekEvo2
+734:0 Yungoos
+735:0 Gumshoos
+736:0 Grubbin
+737:0 Charjabug
+738:0 Vikavolt
+739:0 Crabrawler
+740:0 CrabrawlerEvo
+741:0 Oricorio
+741:1 Oricorio-Pom Pom
+741:2 Oricorio-Pa'u
+741:3 Oricorio-Sensu
+742:0 Cutiefly
+743:0 Ribombee
+744:0 Rockruff
+745:0 Lycanroc
+745:1:AD Lycanroc-Midnight
+746:0 Wishiwashi
+746:1 Wishiwashi-School
+747:0 PurpleAnemoneThing
+748:0 PurpleAnemoneThingEvo
+749:0 Mudbray
+750:0 Mudsdale
+751:0 WaterSpiderThing
+752:0 WaterSpiderThingEvo
+753:0 Fomantis
+754:0 Lurantis
+755:0 Morelull
+756:0 MorelullEvo
+757:0 Salandit
+758:0 SalanditEvo
+759:0 Stufful
+760:0 Bewear
+761:0 Bounsweet
+762:0 Steenee
+763:0 Tsareena
+764:0 Comfey
+765:0 Oranguru
+766:0 Passimian
+767:0 Wimpod
+768:0 WimpodEvo
+769:0 Sandygast
+770:0 Palossand
+771:0 Pyukumuku
+772:0 Type: Null
+773:0 Silvally
+773:1:AD Silvally-Fighting
+773:2:AD Silvally-Flying
+773:3:AD Silvally-Poison
+773:4:AD Silvally-Ground
+773:5:AD Silvally-Rock
+773:6:AD Silvally-Bug
+773:7:AD Silvally-Ghost
+773:8:AD Silvally-Steel
+773:9:AD Silvally-Fire
+773:10:AD Silvally-Water
+773:11:AD Silvally-Grass
+773:12:AD Silvally-Electric
+773:13:AD Silvally-Psychic
+773:14:AD Silvally-Ice
+773:15:AD Silvally-Dragon
+773:16:AD Silvally-Dark
+773:17:AD Silvally-Fairy
+774:0 Minior
+774:1:A Minior-Yellow
+774:2:A Minior-Orange
+774:3:A Minior-Red
+774:4:A Minior-Blue
+774:5:A Minior-Green
+774:6:A Minior-Purple
+774:7:A Minior-Black
+774:8:A Minior-Teal
+775:0 Komala
+776:0 Turtonator
+777:0 Togedemaru
+778:0 Mimikyu
+779:0 Bruxish
+780:0 Drampa
+781:0 SeaAnchorThing
+782:0 Jangmo-o
+783:0 Hakamo-o
+784:0 Kommo-o
+785:0 Tapu Koko
+786:0 PinkTapu
+787:0 RedTapu
+788:0 PurpleTapu
+789:0 SolgaleoBaby
+790:0 Lunalababy
+791:0 Solgaleo
+792:0 Lunala
+793:0 UB-01
+794:0 UB-02 Absorption
+795:0 UB-02 Beauty
+796:0 UB-xx Guzma
+797:0 UB-xx Faba
+798:0 UB-xx Blade
+799:0 UB-xx Hala
+800:0 UB-xx WtfBug
+801:0 Magearna
+801:1:AD Magearna-Pokeball
+802:0 Marshadow

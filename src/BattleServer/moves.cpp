@@ -7659,7 +7659,7 @@ struct MMLaserFocus : public MM
 
     static void uas(int s, int, BS &b) {
         poke(b,s)["LaserFocusEnd"] = b.turn() + 1;
-        poke(b,s)["LaserFocused"] = true;;
+        poke(b,s)["LaserFocused"] = true;
 
         b.sendMoveMessage(224,0,s,type(b,s));
     }
