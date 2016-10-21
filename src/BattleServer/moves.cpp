@@ -7926,5 +7926,5 @@ void MoveEffect::init()
     REGISTER_MOVE(224, LaserFocus);
 
     //Core Enforcer, Moongeist Beam, Sunsteel Strike - done in battle.cpp. Might need messages though...
-    //NOT DONE: Aurora Veil (stacks with reflect/light screen?, broke by brick break?)
+    //NOT DONE: Instruct, Aurora Veil (stacks with reflect/light screen?, broke by brick break?)
 }

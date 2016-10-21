@@ -1742,7 +1742,9 @@ namespace Move
         LaserFocus,
         ClangingScales,
         Multi_Attack,
-        TropKick
+        TropKick,
+        DragonHammer,
+        Instruct
     };
 }
 

@@ -638,3 +638,5 @@
 637 Clanging Scales
 638 Multi-Attack
 639 Trop Kick
+640 Dragon Hammer
+641 Instruct
