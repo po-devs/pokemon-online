@@ -1010,10 +1010,6 @@
 774:2:A Minior-Orange
 774:3:A Minior-Red
 774:4:A Minior-Blue
-774:5:A Minior-Green
-774:6:A Minior-Purple
-774:7:A Minior-Black
-774:8:A Minior-Teal
 775:0 Komala
 776:0 Turtonator
 777:0 Togedemaru
