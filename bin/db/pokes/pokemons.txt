@@ -1006,10 +1006,13 @@
 773:16:AD Silvally-Dark
 773:17:AD Silvally-Fairy
 774:0 Minior
-774:1:A Minior-Yellow
+774:1:A Minior-Red
 774:2:A Minior-Orange
-774:3:A Minior-Red
-774:4:A Minior-Blue
+774:3:A Minior-Yellow
+774:4:A Minior-Green
+774:5:A Minior-Blue
+774:6:A Minior-Indigo
+774:7:A Minior-Violet
 775:0 Komala
 776:0 Turtonator
 777:0 Togedemaru
