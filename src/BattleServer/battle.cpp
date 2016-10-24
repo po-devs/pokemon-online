@@ -1296,50 +1296,43 @@ void BattleSituation::testCritical(int player, int target)
         return;
     }
 
-    bool critical;
+    bool critical = false;
     /* Flail/Reversal don't inflict crits in gen 2 */
     if (gen().num == 2 && (tmove(player).attack == Move::Flail || tmove(player).attack == Move::Reversal)) {
         return;
     }
 
-    /* Laser Focus guarantees next move is a Critical. Similar to Lock On and Accuracy */
-    if (pokeMemory(player).contains("LaserFocused") && pokeMemory(player).value("LaserFocusEnd").toInt() >= turn()) {
-        critical = true;
-        pokeMemory(player).remove("LaserFocused");
+    int minch;
+    int craise = tmove(player).critRaise;
+
+    if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
+        craise += 1;
     }
 
-    if (!critical) { //skip this section if critical is already pre-determined to occur
-        int minch;
-        int craise = tmove(player).critRaise;
-
-        if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
-            craise += 1;
+    if (gen() < 6) {
+        switch(craise) {
+        case 0: minch = 3; break;
+        case 1: minch = 6; break;
+        case 2: minch = 12; break;
+        case 3: minch = 16; break;
+        case 4: case 5: minch = 24; break;
+        case 6: default: minch = 48;
         }
-
-        if (gen() < 6) {
-            switch(craise) {
-            case 0: minch = 3; break;
-            case 1: minch = 6; break;
-            case 2: minch = 12; break;
-            case 3: minch = 16; break;
-            case 4: case 5: minch = 24; break;
-            case 6: default: minch = 48;
-            }
-        } else {
-            switch(craise) {
-            case 0: minch = 3; break;
-            case 1: minch = 6; break;
-            case 2: minch = 24; break;
-            case 3: default: minch = 48;
-            }
+    } else {
+        switch(craise) {
+        case 0: minch = 3; break;
+        case 1: minch = 6; break;
+        case 2: minch = 24; break;
+        case 3: default: minch = 48;
         }
-
-        critical = coinflip(minch, 48);
     }
 
-    if (critical) {
+    critical = coinflip(minch, 48);
+
+    if (critical || (pokeMemory(player).contains("LaserFocused") && pokeMemory(player).value("LaserFocusEnd").toInt() >= turn())) {
         turnMem(player).add(TM::CriticalHit);
-        notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits
+        notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits        
+        pokeMemory(player).remove("LaserFocused");
     } else {
         turnMem(player).remove(TM::CriticalHit);
     }

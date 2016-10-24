@@ -7650,7 +7650,6 @@ struct MMThroatChop : public MM //copied from taunt
     }
 };
 
-//UNTESTED
 struct MMLaserFocus : public MM
 {
     MMLaserFocus() {
