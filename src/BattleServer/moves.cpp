@@ -7757,7 +7757,7 @@ void MoveEffect::init()
     REGISTER_MOVE(66, IceBall);
     REGISTER_MOVE(67, Imprison);
     REGISTER_MOVE(68, MagnetRise);
-    REGISTER_MOVE(69, Judgment);  /*Multi-attack*/
+    REGISTER_MOVE(69, Judgment);  /*Multi-attack <-- Untested*/
     REGISTER_MOVE(70, KnockOff);
     REGISTER_MOVE(71, LastResort);
     REGISTER_MOVE(72, LeechSeed);

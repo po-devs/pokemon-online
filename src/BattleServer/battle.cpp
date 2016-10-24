@@ -4204,11 +4204,6 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     if (pokeMemory(slot(player)).contains("PreTransformPoke")) {
         changeForme(this->player(player),slotNum(player),PokemonInfo::Number(pokeMemory(slot(player)).value("PreTransformPoke").toString()));
     }
-    int ab = 0;
-    /* Don't want to pass Receiver to a pokemon with Receiver */
-    if (hasWorkingTeamAbility(player, Ability::Receiver, player)) {
-        ab = ability(player);
-    }
     //If you primal evolve and die or are forced out on the same turn, the new pokemon's ability isn't loaded without unloading primal forme.
     if (turnMemory(player).contains("PrimalForme")) {
         turnMemory(player).remove("PrimalForme");
@@ -4218,14 +4213,16 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
         notifyKO(player);
     }
 
+    int ab = ability(player);
+    //Untested, both work but the next move crashes the battle server
     foreach(int i, sortedBySpeed()) {
-        if (koed(i)) {
-            return;
+        if (koed(i) || !arePartners(player, i)) {
+            continue;
         }
         if (hasWorkingAbility(i,Ability::SoulHeart)) {
             sendAbMessage(142, 0, i);
             inflictStatMod(i, SpAttack, 1, i, false);
-        } else if (hasWorkingAbility(i, Ability::Receiver) && ab != 0) {
+        } else if (hasWorkingAbility(i, Ability::Receiver) && ab != 0 && ab != Ability::Receiver) {
             sendAbMessage(143, 0, i, player, 0, ab);
             acquireAbility(i, ab);
         }
