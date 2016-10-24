@@ -817,7 +817,7 @@ struct IMEscapeButton : public IM
         //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, or during a switch where pursuit is used
         if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool())
             return;
-        if (b.countAlive(s) <= 1) // Button doesn't activate when target is the last pokemon
+        if (b.countAlive(b.player(s)) <= 1) // Button doesn't activate when target is the last pokemon
             return;
             
         turn(b,s)["EscapeButtonActivated"] = true;
