@@ -156,6 +156,7 @@
 190 126-6#Primordial Sea
 191 126-7#Delta Stream
 192 31-2#Full Metal Body
+196 143#SoulHeart
 198 128#Electric Surge
 199 129#Dazzling
 200 130-3#Berserk
@@ -170,3 +171,4 @@
 213 137#Water Compaction
 214 129#Queenly Majesty
 215 141#Battle Bond
+216 142#Receiver

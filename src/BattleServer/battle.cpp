@@ -2627,7 +2627,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         if (hasWorkingAbility(target, Ability::Immunity)) {
             return false;
         }
-        //As far as we know, Corrosion only allows poisoning Steels and Poison types. Should it bypass other abilities too? (Comatose, Immunity, etc.)
+        //Unconfirmed: As far as we know, Corrosion only allows poisoning Steels and Poison types. Should it bypass other abilities too? (Comatose, Immunity, etc.)
         //If so, add "&& status == Pokemon::Poisoned" to the conditional and move it to the correct placing (aka, the top if it bypasses everything)
         if (inflicter != target && hasWorkingAbility(inflicter, Ability::Corrosion)) {
             return true;
@@ -4213,19 +4213,11 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
         notifyKO(player);
     }
 
-    int ab = ability(player);
-    //Untested, both work but the next move crashes the battle server
-    foreach(int i, sortedBySpeed()) {
+    for (int i : sortedBySpeed()) {
         if (koed(i) || !arePartners(player, i)) {
             continue;
         }
-        if (hasWorkingAbility(i,Ability::SoulHeart)) {
-            sendAbMessage(142, 0, i);
-            inflictStatMod(i, SpAttack, 1, i, false);
-        } else if (hasWorkingAbility(i, Ability::Receiver) && ab != 0 && ab != Ability::Receiver) {
-            sendAbMessage(143, 0, i, player, 0, ab);
-            acquireAbility(i, ab);
-        }
+        callaeffects(i, player, "OnPartnerKO"); //receiver, soul heart
     }
     //useful for third gen
     turnMem(player).add(TM::WasKoed);

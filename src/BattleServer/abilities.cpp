@@ -2949,6 +2949,31 @@ struct AMBattleBond : public AM {
     }
 };
 
+//UNTESTED
+struct AMSoulHeart : public AM {
+    AMSoulHeart() {
+        functions["OnPartnerKO"] = &opk;
+    }
+
+    static void opk(int s, int, BS &b) {
+        b.sendAbMessage(142, 0, s);
+        b.inflictStatMod(s, SpAttack, 1, s, false);
+    }
+};
+
+//UNTESTED
+struct AMReceiver : public AM {
+    AMReceiver() {
+        functions["OnPartnerKO"] = &opk;
+    }
+
+    static void opk(int s, int t, BS &b) {
+        int ab = b.ability(t);
+        b.sendAbMessage(143, 0, s, t, 0, ab);
+        b.acquireAbility(s, ab);
+    }
+};
+
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
@@ -2995,6 +3020,7 @@ struct AMBattleBond : public AM {
     TestPinch
     UponBeingHit
     AfterAttackFinished
+    OnPartnerKO
     //BeforeBeingKoed
 */
 
@@ -3144,8 +3170,8 @@ void AbilityEffect::init()
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer); //not completed
     REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
-    // 142 Receiver (message)
-    // 143 Soul Heart (message)
+    REGISTER_AB(142, Receiver);
+    REGISTER_AB(143, SoulHeart);
 
     //TO-DO
     //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
