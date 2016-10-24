@@ -368,7 +368,7 @@ QList<int> BattleBase::allRevs(int p) const
 
 int BattleBase::opponent(int player) const
 {
-    return 1-player;
+    return 1 - this->player(player);
 }
 
 int BattleBase::partner(int spot) const

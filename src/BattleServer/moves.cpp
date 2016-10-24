@@ -5328,7 +5328,7 @@ struct MMYawn : public MM {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                     b.notifyClause(ChallengeInfo::SleepClause);
                 } else if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy && !b.isFlying(s)) {
-                    b.fail(s, 208, 3, Pokemon::Fairy, b.opponent(s));
+                    b.fail(s, 208, 3, Pokemon::Fairy, b.opponent(b.player(s)));
                 } else {
                     b.inflictStatus(s, Pokemon::Asleep, s);
                     if (b.sleepClause() && b.poke(s).status() == Pokemon::Asleep) {

@@ -2265,12 +2265,15 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
         return false;
 
     if (attacking()) {
-        if (heatOfAttack() && player == attacked() && player != attacker() && hasWorkingAbility(attacker(), ability(attacker()))
-            && (ability(attacker()) == Ability::MoldBreaker || ability(attacker()) == Ability::TeraVolt ||  ability(attacker()) == Ability::TurboBlaze
-                || tmove(opponent(player)).attack == Move::MoongeistBeam || tmove(opponent(player)).attack == Move::SunsteelStrike
-                || (tmove(opponent(player)).attack == Move::CoreEnforcer && hasMoved(player)))
-            ) {
-            if (AbilityInfo::moldBreakable(ability(player))) {
+        if (heatOfAttack() && player == attacked() && player != attacker() && AbilityInfo::moldBreakable(ability(player))) {
+            int ab = ability(attacker());
+            if (hasWorkingAbility(attacker(), ab)) {
+                if (ab == Ability::MoldBreaker || ab == Ability::TeraVolt || ab == Ability::TurboBlaze) {
+                   return false;
+               }
+            }
+            int move = tmove(attacker()).attack;
+            if (move == Move::MoongeistBeam || move == Move::SunsteelStrike || move == Move::CoreEnforcer) {
                 return false;
             }
         }

@@ -2949,7 +2949,6 @@ struct AMBattleBond : public AM {
     }
 };
 
-//UNTESTED
 struct AMSoulHeart : public AM {
     AMSoulHeart() {
         functions["OnPartnerKO"] = &opk;
@@ -2961,7 +2960,6 @@ struct AMSoulHeart : public AM {
     }
 };
 
-//UNTESTED
 struct AMReceiver : public AM {
     AMReceiver() {
         functions["OnPartnerKO"] = &opk;
