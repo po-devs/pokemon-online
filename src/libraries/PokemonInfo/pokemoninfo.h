@@ -407,7 +407,7 @@ private:
     static QHash<int,int> m_Powers;
     static QHash<int,int> m_BerryPowers;
     static QHash<int,int> m_BerryTypes;
-    static QHash<int, bool> m_UsefulItems, m_UsefulBerries;
+    static QSet<int> m_UsefulItems, m_UsefulBerries;
     static QVector<QSet<int> > m_GenItems;
     static QHash<int,QString> m_ItemDesc;
     static QHash<int,QString> m_BerryDesc;

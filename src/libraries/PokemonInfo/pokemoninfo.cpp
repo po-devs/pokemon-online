@@ -62,7 +62,7 @@ QHash<int, QStringList> ItemInfo::m_BerryMessages;
 QHash<int,int> ItemInfo::m_Powers;
 QHash<int,int> ItemInfo::m_BerryPowers;
 QHash<int,int> ItemInfo::m_BerryTypes;
-QHash<int, bool> ItemInfo::m_UsefulItems, ItemInfo::m_UsefulBerries;
+QSet<int> ItemInfo::m_UsefulItems, ItemInfo::m_UsefulBerries;
 QVector<QSet<int> > ItemInfo::m_GenItems;
 QHash<int,QString> ItemInfo::m_ItemDesc;
 QHash<int,QString> ItemInfo::m_BerryDesc;
@@ -2337,8 +2337,8 @@ void ItemInfo::retranslate()
 
 void ItemInfo::loadGenData()
 {
-    fill_int_bool(m_UsefulItems, path("item_useful.txt"));
-    fill_int_bool(m_UsefulBerries, path("berry_useful.txt"));
+    fill_container_with_file(m_UsefulItems, path("item_useful.txt"));
+    fill_container_with_file(m_UsefulBerries, path("berry_useful.txt"));
 
     m_GenItems.clear();
     m_GenItems.resize(GenInfo::NumberOfGens());
@@ -2680,9 +2680,9 @@ bool ItemInfo::isMail(int itemnum)
 bool ItemInfo::isUseful(int itemnum)
 {
     if (isBerry(itemnum)) {
-        return m_UsefulBerries.isEmpty() || m_UsefulBerries.value(itemnum - 8000) == true;
+        return m_UsefulBerries.isEmpty() || m_UsefulBerries.contains(itemnum - 8000);
     } else {
-        return m_UsefulItems.isEmpty() || m_UsefulItems.value(itemnum) == true;
+        return m_UsefulItems.isEmpty() || m_UsefulItems.contains(itemnum);
     }
 }
 
