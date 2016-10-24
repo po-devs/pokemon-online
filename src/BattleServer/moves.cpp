@@ -7574,7 +7574,6 @@ struct MMPsychicTerrain : public MM {
     }
 };
 
-//UNTESTED. Also chance it might not be Fighting type so might need to change that
 struct MMThroatChop : public MM //copied from taunt
 {
     MMThroatChop() {
@@ -7597,7 +7596,7 @@ struct MMThroatChop : public MM //copied from taunt
             b.sendAbMessage(112,1,t);
             return;
         }
-        b.sendMoveMessage(223,1,s,Pokemon::Fighting,t);
+        b.sendMoveMessage(223,1,s,Pokemon::Dark,t);
         if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
             b.disposeItem(t);
@@ -7619,7 +7618,7 @@ struct MMThroatChop : public MM //copied from taunt
             removeFunction(poke(b,s), "MovesPossible", "ThroatChop");
             removeFunction(poke(b,s), "MovePossible", "ThroatChop");
             b.removeEndTurnEffect(BS::PokeEffect, s, "ThroatChop");
-            b.sendMoveMessage(223,2,s,Pokemon::Fighting);
+            b.sendMoveMessage(223,2,s,Pokemon::Dark);
             b.counters(s).removeCounter(BC::ThroatChop);
         }
     }

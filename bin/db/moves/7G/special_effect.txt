@@ -319,5 +319,6 @@
 628 221#Revelation Dance
 629 220#Shell Trap
 633 222#psychic terrain
+634 223#throat chop
 636 224#laser focus
 638 69#multi-attack
