@@ -778,7 +778,7 @@ struct IMRedCard : public IM
         int s = turn(b,t)["RedCardUser"].toInt();
         if (b.koed(s) || b.koed(t) || turn(b,t)["RedCardGiverCount"] != slot(b,s)["SwitchCount"])
             return;
-        if (!b.hasWorkingItem(s, Item::RedCard) && turn(b,s).value("LostItem") != Item::RedCard)
+        if (!b.hasWorkingItem(s, Item::RedCard))
             return;
 
         int target = b.player(t);
@@ -824,6 +824,9 @@ struct IMEscapeButton : public IM
         //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, during a switch where pursuit is used, or during Wimp Out
         if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool() || turn(b,s).value("WimpedOut").toBool())
             return;
+        if (b.countAlive(b.player(s)) <= 1) // Button doesn't activate when target is the last pokemon
+            return;
+            
         turn(b,s)["EscapeButtonActivated"] = true;
         turn(b,s)["EscapeButtonCount"] = slot(b,s)["SwitchCount"];
 
@@ -835,7 +838,7 @@ struct IMEscapeButton : public IM
 
         for (unsigned i = 0; i < speeds.size(); i++) {
             int p = speeds[i];
-            if (!b.hasWorkingItem(p, Item::EscapeButton) && turn(b,p).value("LostItem") != Item::EscapeButton)
+            if (!b.hasWorkingItem(p, Item::EscapeButton))
                 continue;
             if (!turn(b,p).contains("EscapeButtonActivated"))
                 continue;
