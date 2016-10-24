@@ -7526,14 +7526,12 @@ struct MMRevelationDance : public MM
     }
 };
 
-//UNTESTED
 struct MMPsychicTerrain : public MM {
-    static const int type = -Type::Psychic;
+    static const int type = Type::Psychic;
 
     MMPsychicTerrain() {
         functions["UponAttackSuccessful"] = &uas;
         functions["DetermineAttackFailure"] = &daf;
-        functions["OpponentBlock"] = &ob;
     }
 
     static ::bracket bracket(Pokemon::gen) {
@@ -7548,7 +7546,7 @@ struct MMPsychicTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        b.sendMoveMessage(222,0,s,Pokemon::Psychic);
+        b.sendMoveMessage(222,0,s,type);
         b.terrainCount = 5;
         b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "PsychicTerrain", &et);
@@ -7560,16 +7558,9 @@ struct MMPsychicTerrain : public MM {
         }
         b.terrainCount --;
         if (b.terrainCount <= 0) {
-            b.sendMoveMessage(222,1,s,Pokemon::Psychic);
+            b.sendMoveMessage(222,1,s,type);
             b.terrain = 0;
             b.removeEndTurnEffect(BS::FieldEffect, 0, "PsychicTerrain");
-        }
-    }
-
-    static void ob(int s, int t, BS &b) {
-        if (b.terrain == type && b.terrainCount > 0 && tmove(b,t).priority > 0) {
-            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-            b.sendMoveMessage(222,2,s,Pokemon::Psychic);
         }
     }
 };
@@ -7652,7 +7643,7 @@ struct MMThroatChop : public MM //copied from taunt
 struct MMLaserFocus : public MM
 {
     MMLaserFocus() {
-        functions["OnFoeOnAttack"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {

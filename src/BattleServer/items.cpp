@@ -575,8 +575,8 @@ struct IMMentalHerb : public IM
                 b.removeEndTurnEffect(BS::PokeEffect, s, "HealBlock");
                 poke(b,s).remove("HealBlocked");
                 used = true;
-            }            
-            //UNTESTED (well unconfirmed, but i want to be able to find this later)
+            }
+            //Unconfirmed
             if (b.counters(s).hasCounter(BC::ThroatChop)) {
                 removeFunction(poke(b,s), "MovesPossible", "ThroatChop");
                 removeFunction(poke(b,s), "MovePossible", "ThroatChop");

@@ -169,7 +169,7 @@ void BattleSituation::initializeEndTurnFunctions()
         13.0 Bind, Wrap, Fire Spin, Clamp, Whirlpool, Sand Tomb, Magma Storm
 
         14.0 Taunt ends
-        14.1 Throat Chop ends //UNTESTED (unconfirmed)
+        14.1 Throat Chop ends //Unconfirmed
 
         15.0 Encore ends
 
@@ -1394,7 +1394,8 @@ bool BattleSituation::testStatus(int player)
 
             notify(All, StatusMessage, player, qint8(FeelConfusion));
 
-            if (coinflip(1, 2)) {
+            int coin = gen() > 6 ? 3 : 2; //gen 7 confuse is 1/3
+            if (coinflip(1, coin)) {
                 inflictConfusedDamage(player);
                 return false;
             }
@@ -1853,7 +1854,11 @@ ppfunction:
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
-                calleffects(target, player, "OpponentBlock"); //Psychic terrain
+                if (!isFlying(target) && terrainCount > 0 && terrain == Type::Psychic && tmove(player).priority > 0) {
+                    sendMoveMessage(222,2,target,Type::Psychic);
+                    calleffects(player,target,"AttackSomehowFailed");
+                    continue;
+                }
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
