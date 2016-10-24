@@ -2920,7 +2920,6 @@ struct AMDancer : AM
     }
 };
 
-//UNTESTED
 struct AMBattleBond : public AM {
     AMBattleBond() {
         functions["AfterKoing"] = &ak;
@@ -3145,8 +3144,8 @@ void AbilityEffect::init()
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer); //not completed
     REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
-    // 142 Receiver (message) UNTESTED
-    // 143 Soul Heart (message) UNTESTED
+    // 142 Receiver (message)
+    // 143 Soul Heart (message)
 
     //TO-DO
     //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
