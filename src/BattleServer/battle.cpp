@@ -3296,7 +3296,7 @@ int BattleSituation::calculateDamage(int p, int t)
             typemod--;
         }
 
-        if (attackused == Move::Present) // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2)) // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
             typemod--;
 
         while (typemod < 0) {
