@@ -3141,6 +3141,49 @@ int BattleSituation::calculateDamage(int p, int t)
             qD = "Stat"+QString::number(SpDefense);
         }
 
+        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2)) {
+            // In GSC, a glitch causes the level, Attack, and Defense variables to be replaced.
+            // Attack will be replaced with 10, level will be based on the index number of the defending Pokémon's type.
+            //Defense will be based on the index number of the attacking Pokémon's type.
+            // If a Pokémon has two types, its secondary type will be used.
+
+            // Index numbers:
+            // 0 = Normal
+            // 1 = Fighting
+            // 2 = Flying
+            // 3 = Poison
+            // 4 = Ground
+            // 5 = Rock
+            // 7 = Bug
+            // 8 = Ghost
+            // 9 = Steel
+            // 20 = Fire
+            // 21 = Water
+            // 22 = Grass
+            // 23 = Electric
+            // 24 = Psychic
+            // 25 = Ice
+            // 26 = Dragon
+            // 27 = Dark
+
+            attack = 10;
+            int x = getType(p, 2);
+            int y = getType(t, 2);
+
+            if (x >= 6)
+                x++;
+            else if (y >= 6)
+                y++;
+
+            if (x >= 10)
+                x += 10;
+            else if (y >= 10)
+                y += 10;
+
+            level = y;
+            def = x;
+        }
+
         if (!(crit && turnMemory(p).value("CritIgnoresAll").toBool())
             && teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
             def *= 2;
@@ -3252,6 +3295,10 @@ int BattleSituation::calculateDamage(int p, int t)
             damage *= 2;
             typemod--;
         }
+
+        if (attackused == Move::Present) // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+            typemod--;
+
         while (typemod < 0) {
             damage /= 2;
             typemod++;
