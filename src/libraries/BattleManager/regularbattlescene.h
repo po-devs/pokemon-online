@@ -192,7 +192,7 @@ private:
     };
 
     struct Info {
-        Info(int nslots);
+        Info(int nslots, bool rated);
 
         QVector<int> time;
         QVector<int> startingTime;

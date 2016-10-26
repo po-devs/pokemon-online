@@ -525,7 +525,7 @@ struct RBYHaze : public MM
         int t = b.opponent(s);
         b.healStatus(t, b.poke(t).status());
 
-        for (int i = Attack; i < AllStats; i++) {
+        for (int i = (int) Attack; i < (int) AllStats; i++) {
             b.changeStatMod(s, i, 0);
             b.changeStatMod(t, i, 0);
             fpoke(b,s).stats[i] = b.getBoostedStat(s, i);

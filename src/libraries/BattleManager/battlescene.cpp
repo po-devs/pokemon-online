@@ -102,7 +102,7 @@ void BattleScene::launch() {
     emit launched();
 }
 
-bool BattleScene::newSprites()
+bool BattleScene::newSprites() const
 {
     // return value set at the beginning to prevent switching between the two mid-battle, as the scene doesn't handle that well //
     return mNewSprites;
@@ -113,9 +113,14 @@ BattleScene::~BattleScene()
     delete mOwnProxy;
 }
 
-bool BattleScene::reversed()
+bool BattleScene::reversed() const
 {
     return data()->role(1) == BattleConfiguration::Player;
+}
+
+bool BattleScene::rated() const
+{
+    return data()->rated();
 }
 
 int BattleScene::width() const
@@ -129,6 +134,11 @@ int BattleScene::height() const
 }
 
 BattleScene::battledata_ptr BattleScene::data()
+{
+    return mData;
+}
+
+const AdvancedBattleData * BattleScene::data() const
 {
     return mData;
 }
