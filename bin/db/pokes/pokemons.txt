@@ -933,13 +933,13 @@
 721:0 Volcanion
 722:0 Rowlet
 723:0 Dartrix
-724:0 RowletEvo2
+724:0 Decidueye
 725:0 Litten
 726:0 Torracat
-727:0 LittenEvo2
+727:0 Incineroar
 728:0 Popplio
 729:0 Brionne
-730:0 PopplioEvo2
+730:0 Primarina
 731:0 Pikipek
 732:0 PikipekEvo
 733:0 PikipekEvo2
@@ -1024,11 +1024,11 @@
 783:0 Hakamo-o
 784:0 Kommo-o
 785:0 Tapu Koko
-786:0 PinkTapu
-787:0 RedTapu
-788:0 PurpleTapu
+786:0 Tapu Lele
+787:0 Tapu Bulu
+788:0 Tapu Fini
 789:0 SolgaleoBaby
-790:0 Lunalababy
+790:0 Cosmog
 791:0 Solgaleo
 792:0 Lunala
 793:0 UB-01

@@ -2653,31 +2653,45 @@ struct AMBattery : public AM {
     }
 };
 
+//Untested
 struct AMElectricSurge : public AM
 {
     AMElectricSurge() {
         functions["UponSetup"] = &us;
-        functions["UponSwitchOut"] = &uso;
-        functions["UponKoed"] = &uso;
-        functions["OnLoss"] = &uso;
+    }
+
+    static ::bracket bracket(Pokemon::gen) {
+        return makeBracket(24, 0) ;
     }
 
     static void us (int s, int , BS &b) {
-        b.sendAbMessage(128, 0, s, 0, Type::Electric);
-        b.terrain = Type::Electric;
+        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
+        int type = args[0];
+        if (b.terrain == type && b.terrainCount > 0) {
+            return;
+        }
+        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain"); //remove this so it creates a new one
+        b.sendMoveMessage(args[1], 0, s, 0, type);
+        b.terrain = type;
+        b.terrainCount = 5;
+        b.battleMemory()["LastSurgedTerrain"] = type;
+        b.battleMemory()["TerrainMessageReference"] = args[1];
+        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "AbilityTerrain", &et);
 
     }
-    static void uso (int s, int , BS &b) {
-        //we need to make sure there's no other pokemon with ElectricSurge
-        foreach(int i, b.sortedBySpeed()) {
-            if (i == s || b.koed(i)) {
-                continue;
-            }
-            if (b.hasWorkingAbility(i,Ability::ElectricSurge)) {
-                return;
-            }
+    static void et(int s, int, BS &b) {
+        int type = b.battleMemory().value("LastSurgedTerrain").toInt();
+        if (b.terrain != type) {
+            //If the last terrain that got surged isnt the current terrain then we should discard the AbilityTerrain function as it is no longer in use
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
+            return;
         }
-        b.terrain = 0;
+        b.terrainCount -= 1;
+        if (b.terrainCount <= 0) {
+            b.sendMoveMessage(b.battleMemory().value("TerrainMessageReference").toInt(), 1, s, 0, type);
+            b.terrain = 0;
+            b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
+        }
     }
 };
 
@@ -3154,7 +3168,7 @@ void AbilityEffect::init()
 
     // gen 7
     REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/ //not completed
-    REGISTER_AB(128, ElectricSurge); //how long does the terrain last?
+    REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/ //how long does the terrain last?
     REGISTER_AB(129, Dazzling); //Also Queenly Majesty
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
@@ -3171,13 +3185,6 @@ void AbilityEffect::init()
     REGISTER_AB(142, Receiver);
     REGISTER_AB(143, SoulHeart);
 
-    //TO-DO
+    //NOT DONE: Disguise, Shields Down, Power Construct, Schooling, Dancer
     //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
-
-    //***Done Elsewhere but might need messages ***
-    //FullMetalBody - done (use 31 if message needed)
-    //ShadowShield - done. Similar to Multiscale so I doubt it gets a message
-    //Comatose - done
-    //Corrosion - No message needed
-    //REGISTER_AB(xxx, Stakeout); //is there a message needed? is it BP or damage? currently coded like Tinted Lens
 }

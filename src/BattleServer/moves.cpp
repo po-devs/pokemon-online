@@ -1046,12 +1046,12 @@ struct MMBlock : public MM
     }
 
     static void daf (int s, int t, BS &b) {
-        if (b.linked(t, "Blocked") && move(b,s) != ThousandWaves)
+        if (b.linked(t, "Blocked") && tmove(b,s).power == 0)
             fturn(b,s).add(TM::Failed);
     }
 
     static void uas (int s, int t, BS &b) {
-        if (!b.linked(t, "Blocked")) {
+        if (!b.linked(t, "Blocked") && !b.koed(t)) {
             b.link(s, t, "Blocked");
             b.sendMoveMessage(12, 0, s, type(b,s), t);
         }
@@ -5006,7 +5006,8 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        if (b.hasSubstitute(t) && tmove(b,s).attack != Move::Hex)
+        //Unconfirmed: Sparkling aria doesnt have increased damaged that we know of
+        if ((b.hasSubstitute(t) && tmove(b,s).attack != Move::Hex) || tmove(b,s).attack == Move::SparklingAria)
             return;
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
@@ -6945,6 +6946,7 @@ struct MMElectricTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
+        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(201,0,s,Pokemon::Electric);
         b.terrainCount = 5;
         b.terrain = Type::Electric;
@@ -7044,6 +7046,7 @@ struct MMGrassyTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
+        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(205,0,s,Pokemon::Grass);
         b.terrainCount = 5;
         b.terrain = Type::Grass;
@@ -7179,7 +7182,8 @@ struct MMMistyTerrain : public MM {
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
-    static void uas(int s, int, BS &b) {
+    static void uas(int s, int, BS &b) {        
+        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(208,0,s,Pokemon::Fairy);
         b.terrainCount = 5;
         b.terrain = type;
@@ -7545,6 +7549,7 @@ struct MMPsychicTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
+        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(222,0,s,type);
         b.terrainCount = 5;
         b.terrain = type;
@@ -7912,7 +7917,6 @@ void MoveEffect::init()
     REGISTER_MOVE(222, PsychicTerrain);
     REGISTER_MOVE(223, ThroatChop);
     REGISTER_MOVE(224, LaserFocus);
-
-    //Core Enforcer, Moongeist Beam, Sunsteel Strike - done in battle.cpp. Might need messages though...
-    //NOT DONE: Instruct, Aurora Veil (stacks with reflect/light screen?, broke by brick break?)
+    //NOT DONE: Instruct, Aurora Veil
+    //Aurora veil: stacks with reflect/light screen?, broke by brick break?
 }

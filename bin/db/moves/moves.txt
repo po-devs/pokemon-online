@@ -640,3 +640,6 @@
 639 Trop Kick
 640 Dragon Hammer
 641 Instruct
+642 Spirit Shackle
+643 Darkest Lariat
+644 Sparkling Aria

@@ -4563,7 +4563,7 @@ PokeFraction BattleSituation::getStatBoost(int player, int stat)
     if (attacker != -1 && attacked != -1) {
         //Unaware / Sacred sword / Keeneye ignores evasion in gen 6
         if (attacker != player && attacked == player) {
-            if (((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::SacredSword)
+            if (((hasWorkingAbility(attacker, Ability::Unaware) || tmove(attacker).attack == Move::ChipAway || tmove(attacker).attack == Move::DarkestLariat || tmove(attacker).attack == Move::SacredSword)
                     && (stat == SpDefense || stat == Defense || stat == Evasion)) || (gen() > 5 && stat == Evasion && hasWorkingAbility(attacker, Ability::KeenEye))) {
                 boost = 0;
             }

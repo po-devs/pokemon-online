@@ -322,3 +322,5 @@
 634 223#throat chop
 636 224#laser focus
 638 69#multi-attack
+642 12#Spirit Shackle
+644 117-4#Sparkling Aria

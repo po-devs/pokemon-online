@@ -133,6 +133,6 @@
 217 Ions are storming the terrain!
 218 Congratulations, %ts!
 219 But %s can't use the move!|But %s can't use it the way it is now!
-222 <Psychic terrain activates>|<Psychic terrain fades>|<Priority move blocked!>|%s surrounds itself with psychic terrain!
+222 The battlefield got weird!|<Psychic terrain fades>|<Priority move blocked!>|%s surrounds itself with psychic terrain!
 223 <%s can't use %m after the Throat Chop!>|The effects of Throat Chop prevent %f from using Sound-based moves!|<%s can speak again>
 224 <Laser Focus used>

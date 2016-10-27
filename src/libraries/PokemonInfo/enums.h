@@ -877,13 +877,13 @@ namespace Pokemon
         Volcanion,
         Rowlet, //gen7. Will need reordering as order is confirmed
         Dartrix,
-        RowletEvo2,
+        Decidueye,
         Litten,
         Torracat,
-        LittenEvo2,
+        Incineroar,
         Popplio,
         Brionne,
-        PopplioEvo2,
+        Primarina,
         Pikipek,
         PikipekEvo,
         PikipekEvo2,
@@ -939,9 +939,9 @@ namespace Pokemon
         Hakamo_o,
         Kommo_o,
         Tapu_Koko,
-        PinkTapu,
-        RedTapu,
-        PurpleTapu,
+        Tapu_Lele,
+        Tapu_Bulu,
+        Tapu_Fini,
         BabySolgaleo,
         BabyLunaala,
         Solgaleo,
@@ -1744,7 +1744,10 @@ namespace Move
         Multi_Attack,
         TropKick,
         DragonHammer,
-        Instruct
+        Instruct,
+        SpiritShackle,
+        DarkestLariat,
+        SparklingAria
     };
 }
 
@@ -2003,7 +2006,10 @@ namespace Ability
         QueenlyMajesty,
         BattleBond,
         Receiver,
-        RKSSystem
+        RKSSystem,
+        PsychicSurge,
+        GrassySurge,
+        MistySurge
     };
 }
 

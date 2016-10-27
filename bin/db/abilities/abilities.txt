@@ -216,3 +216,6 @@
 215 Battle Bond
 216 Receiver
 217 RKS System
+218 Psychic Surge
+219 Grassy Surge
+220 Misty Surge
