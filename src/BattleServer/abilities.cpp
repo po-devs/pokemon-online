@@ -2658,39 +2658,32 @@ struct AMElectricSurge : public AM
 {
     AMElectricSurge() {
         functions["UponSetup"] = &us;
-    }
-
-    static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 0) ;
+        functions["EndTurn24.0"] = &et;
     }
 
     static void us (int s, int , BS &b) {
         QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
-        int type = args[0];
+        int type = args[0].toInt();
         if (b.terrain == type && b.terrainCount > 0) {
             return;
         }
-        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain"); //remove this so it creates a new one
-        b.sendMoveMessage(args[1], 0, s, 0, type);
+        b.sendMoveMessage(args[1].toInt(), 0, s, 0, type);
         b.terrain = type;
         b.terrainCount = 5;
         b.battleMemory()["LastSurgedTerrain"] = type;
-        b.battleMemory()["TerrainMessageReference"] = args[1];
-        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "AbilityTerrain", &et);
+        b.battleMemory()["TerrainMessageReference"] = args[1].toInt();
 
     }
     static void et(int s, int, BS &b) {
         int type = b.battleMemory().value("LastSurgedTerrain").toInt();
         if (b.terrain != type) {
-            //If the last terrain that got surged isnt the current terrain then we should discard the AbilityTerrain function as it is no longer in use
-            b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
             return;
         }
         b.terrainCount -= 1;
         if (b.terrainCount <= 0) {
-            b.sendMoveMessage(b.battleMemory().value("TerrainMessageReference").toInt(), 1, s, 0, type);
+            int msg = b.battleMemory().value("TerrainMessageReference").toInt();
+            b.sendMoveMessage(msg, 1, s, 0, type);
             b.terrain = 0;
-            b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         }
     }
 };

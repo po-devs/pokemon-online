@@ -6946,7 +6946,6 @@ struct MMElectricTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(201,0,s,Pokemon::Electric);
         b.terrainCount = 5;
         b.terrain = Type::Electric;
@@ -7046,7 +7045,6 @@ struct MMGrassyTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(205,0,s,Pokemon::Grass);
         b.terrainCount = 5;
         b.terrain = Type::Grass;
@@ -7183,7 +7181,6 @@ struct MMMistyTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {        
-        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(208,0,s,Pokemon::Fairy);
         b.terrainCount = 5;
         b.terrain = type;
@@ -7549,7 +7546,6 @@ struct MMPsychicTerrain : public MM {
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        b.removeEndTurnEffect(BS::FieldEffect, 0, "AbilityTerrain");
         b.sendMoveMessage(222,0,s,type);
         b.terrainCount = 5;
         b.terrain = type;
