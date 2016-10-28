@@ -943,7 +943,7 @@ namespace Pokemon
         Tapu_Bulu,
         Tapu_Fini,
         BabySolgaleo,
-        BabyLunaala,
+        Cosmog,
         Solgaleo,
         Lunala,
         UB01,
