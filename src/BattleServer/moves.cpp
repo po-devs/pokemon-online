@@ -7306,7 +7306,7 @@ struct MMFlowerShield : public MM {
         functions["DetermineAttackFailure"] = &daf;
     }
 
-    static void daf(int s, int t, BS &b) {
+    static void daf(int s, int, BS &b) {
         bool didStuff;
         for (int p : b.sortedBySpeed()) {
             if (b.hasType(p, Type::Grass)) {

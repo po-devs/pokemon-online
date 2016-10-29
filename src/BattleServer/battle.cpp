@@ -1554,6 +1554,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callaeffects(player, player, "DetermineAttackPossible");
     /*Normalize, Aerilate, etc. Needs to be higher than "MovesPossible" to allow proper interaction with Ion Deluge*/
     callaeffects(player, player, "MoveSettings");
+    callieffects(player, player, "MoveSettings"); //Z Moves
 
     if (!specialOccurence) {
         if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {

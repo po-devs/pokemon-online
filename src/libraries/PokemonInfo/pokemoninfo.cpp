@@ -2709,6 +2709,15 @@ int ItemInfo::MemoryChipType(int itemnum)
     return effects.front().args.toInt();
 }
 
+int ItemInfo::CrystalMove(int itemnum)
+{
+    const auto &effects = Effects(itemnum, GenInfo::GenMax());
+    if (effects.size() == 0 || !isZCrystal(itemnum)) {
+        return 0;
+    }
+    return effects.front().args.toInt();
+}
+
 Pokemon::uniqueId ItemInfo::MegaStoneForme(int itemnum)
 {
     const auto &effects = Effects(itemnum, GenInfo::GenMax());

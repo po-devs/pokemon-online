@@ -1133,6 +1133,17 @@ struct IMPrimalOrb : public IM {
     }
 };
 
+struct IMZCrystal : public IM {
+    IMZCrystal() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms (int s, int, BS &b) {
+        tmove(b,s).power += 80; //unconfirmed: not true but close for now
+        tmove(b,s).attack = ItemInfo::CrystalMove(b.poke(s).item()); //should override the move then
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -1173,8 +1184,10 @@ void ItemEffect::init()
     REGISTER_ITEM(41, AssaultVest);
     REGISTER_ITEM(42, SafetyGoggles);
     REGISTER_ITEM(43, WeaknessPolicy);
+    //66 Mega stones
     REGISTER_ITEM(67, PrimalOrb);
     REGISTER_ITEM(68, MemoryChip);
+    //69 Z-Stones
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);

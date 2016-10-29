@@ -373,6 +373,7 @@ public:
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
     static int MemoryChipType(int itemnum);
+    static int CrystalMove(int itemnum);
     static Pokemon::uniqueId MegaStoneForme(int itemnum);
     static int PlateForType(int type);
     static int DriveType(int itemnum);

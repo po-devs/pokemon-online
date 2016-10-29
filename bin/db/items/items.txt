@@ -359,6 +359,12 @@
 358 Dragon Memory
 359 Dark Memory
 360 Fairy Memory
+361 ???
+362 ???
+363 ???
+364 ???
+365 ???
+366 ???
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
@@ -437,3 +443,32 @@
 3026 ??? Z-Crystal
 3027 ??? Z-Crystal
 3028 ??? Z-Crystal
+3029 Small Normal Z-Crystal
+3030 Small Fighting Z-Crystal
+3031 Small Flying Z-Crystal
+3032 Small Poison Z-Crystal
+3033 Small Ground Z-Crystal
+3034 Small Rock Z-Crystal
+3035 Small Bug Z-Crystal
+3036 Small Ghost Z-Crystal
+3037 Small Steel Z-Crystal
+3038 Small Fire Z-Crystal
+3039 Small Water Z-Crystal
+3040 Small Grass Z-Crystal
+3041 Small Electric Z-Crystal
+3042 Small Psychic Z-Crystal
+3043 Small Ice Z-Crystal
+3044 Small Dragon Z-Crystal
+3045 Small Dark Z-Crystal
+3046 Small Fairy Z-Crystal
+3047 Small Pikachu Z-Crystal
+3048 Small Raichu Z-Crystal
+3049 Small Eevee Z-Crystal
+3050 Small Snorlax Z-Crystal
+3051 Small Mimikyu Z-Crystal
+3052 Small Guardian Z-Crystal
+3053 Small ??? Z-Crystal
+3054 Small ??? Z-Crystal
+3055 Small ??? Z-Crystal
+3056 Small ??? Z-Crystal
+3057 Small ??? Z-Crystal
