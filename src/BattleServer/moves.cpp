@@ -7302,7 +7302,21 @@ struct MMVenomDrench : public MM {
 struct MMFlowerShield : public MM {
     MMFlowerShield() {
         functions["BeforeTargetList"] = &btl;
-        functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;        
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        bool didStuff;
+        for (int p : b.sortedBySpeed()) {
+            if (b.hasType(p, Type::Grass)) {
+                didStuff = true;
+                break;
+            }
+        }
+        if (!didStuff) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     /* Copied from Haze*/
@@ -7314,8 +7328,7 @@ struct MMFlowerShield : public MM {
     }
     static void uas(int s, int, BS &b) {
         if (tmove(b,s).power == 0) {
-            foreach (int p, b.sortedBySpeed())
-            {
+            for (int p : b.sortedBySpeed()) {
                 if (b.hasType(p, Type::Grass)) {
                     b.inflictStatMod(p, Defense, 1, s);
                 }
