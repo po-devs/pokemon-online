@@ -1187,7 +1187,7 @@ void ItemEffect::init()
     //66 Mega stones
     REGISTER_ITEM(67, PrimalOrb);
     REGISTER_ITEM(68, MemoryChip);
-    //69 Z-Stones
+    REGISTER_ITEM(69, ZCrystal);
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);
