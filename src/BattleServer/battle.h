@@ -53,6 +53,7 @@ public:
     void sendBack(int player, bool silent = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
     void megaEvolve(int spot);
+    void useZMove(int spot);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
     void koPoke(int player, int source, bool straightattack = false);
@@ -83,6 +84,7 @@ public:
     bool canPassMStone(int target, int item);
     bool preTransPoke(int s, Pokemon::uniqueId check);
     bool canMegaEvolve(int slot);
+    bool canUseZMove(int slot);
     int intendedMoveSlot(int s, int slot, int mv);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);
@@ -413,6 +415,7 @@ private:
     /* Used when pokemon shift slots */
     QVector<int> indexes;
     bool megas[2];
+    bool zmoves[2];
 };
 
 Q_DECLARE_METATYPE(BattleSituation::MechanicsFunction)

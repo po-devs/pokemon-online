@@ -397,6 +397,9 @@ void BattleWindow::attackClicked(int zone)
             if (myazones[n]->megaevo->isChecked()) {
                 b.setMegaEvo(true);
             }
+            if (myazones[n]->zmove->isChecked()) {
+                b.setZMove(true);
+            }
 
             if (!data().multiples()) {
                 info().done[n] = true;
@@ -487,6 +490,8 @@ void BattleWindow::goToNextChoice()
                 int snum = data().slotNum(slot);
                 myazones[snum]->megaevo->setVisible(info().choices[n].mega);
                 myazones[snum]->megaevo->setChecked(false);
+                myazones[snum]->zmove->setVisible(info().choices[n].zmove);
+                myazones[snum]->zmove->setChecked(false);
                 if (info().choices[n].attacksAllowed == false) {
                     myattack->setEnabled(false);
                     for (int i = 0; i < 4; i ++) {
@@ -1009,6 +1014,13 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     megaevo->setObjectName("MegaEvo");
     l->addWidget(megaevo, 2, 0, 1, 2);
     megaevo->setVisible(false);
+
+    zmove = new QPushButton(this);
+    zmove->setText(tr("Z Move"));
+    zmove->setCheckable(true);
+    zmove->setObjectName("MegaEvo");
+    l->addWidget(zmove, 3, 0, 1, 2);
+    zmove->setVisible(false);
 
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }

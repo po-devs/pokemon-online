@@ -24,5 +24,6 @@
 43 %s used its Weakness Policy!
 66 %s has Mega Evolved into %p!
 67 %s's Primal Reversion! It reverted to its primal form!
+68 %s surrounded itself with its Z-Power!
 1007 %s recovered from fainting!
 1999 %s recovered from fainting!

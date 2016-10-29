@@ -2657,6 +2657,11 @@ bool ItemInfo::isMegaStone(int itemnum)
     return itemnum >= 2000 && itemnum < 3000;
 }
 
+bool ItemInfo::isZCrystal(int itemnum)
+{
+    return itemnum >= 3000 && itemnum < 4000;
+}
+
 bool ItemInfo::isPrimalStone(int itemnum)
 {
     return itemnum == 342 || itemnum == 343;

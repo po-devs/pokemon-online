@@ -250,6 +250,7 @@ struct BattleChoices
     bool attackAllowed[4];
     quint8 numSlot;
     bool mega;
+    bool zmove;
 
     bool struggle() const { return qFind(attackAllowed, attackAllowed+4, true) == attackAllowed+4; }
 
@@ -283,6 +284,7 @@ struct AttackChoice {
     qint8 attackSlot;
     qint8 attackTarget;
     bool mega;
+    bool zmove;
 };
 
 struct SwitchChoice {
@@ -394,6 +396,10 @@ struct BattleChoice {
         return choice.attack.mega;
     }
 
+    bool zmove() const {
+        return choice.attack.zmove;
+    }
+
     int pokeSlot() const {
         return choice.switching.pokeSlot;
     }
@@ -425,6 +431,10 @@ struct BattleChoice {
 
     void setMegaEvo(bool megaevo) {
         choice.attack.mega = megaevo;
+    }
+
+    void setZMove(bool zmove) {
+        choice.attack.zmove = zmove;
     }
 
     void setPokeSlot(int slot) {

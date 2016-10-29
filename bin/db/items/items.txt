@@ -408,3 +408,32 @@
 2045 Diancite
 2046 Latiasite
 2047 Latiosite
+3000 Normal Z-Crystal
+3001 Fighting Z-Crystal
+3002 Flying Z-Crystal
+3003 Poison Z-Crystal
+3004 Ground Z-Crystal
+3005 Rock Z-Crystal
+3006 Bug Z-Crystal
+3007 Ghost Z-Crystal
+3008 Steel Z-Crystal
+3009 Fire Z-Crystal
+3010 Water Z-Crystal
+3011 Grass Z-Crystal
+3012 Electric Z-Crystal
+3013 Psychic Z-Crystal
+3014 Ice Z-Crystal
+3015 Dragon Z-Crystal
+3016 Dark Z-Crystal
+3017 Fairy Z-Crystal
+3018 Pikachu Z-Crystal
+3019 Raichu Z-Crystal
+3020 Eevee Z-Crystal
+3021 Snorlax Z-Crystal
+3022 Mimikyu Z-Crystal
+3023 Guardian Z-Crystal
+3024 ??? Z-Crystal
+3025 ??? Z-Crystal
+3026 ??? Z-Crystal
+3027 ??? Z-Crystal
+3028 ??? Z-Crystal

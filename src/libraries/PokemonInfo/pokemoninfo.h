@@ -365,6 +365,7 @@ public:
     static bool isPlate(int itemnum);
     static bool isMemoryChip(int itemnum);
     static bool isMegaStone(int itemnum);
+    static bool isZCrystal(int itemnum);
     static bool isPrimalStone(int itemnum);
     static bool isDrive(int itemnum);
     static bool isMail(int itemnum);

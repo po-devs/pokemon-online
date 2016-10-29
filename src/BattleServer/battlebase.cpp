@@ -989,6 +989,16 @@ bool BattleBase::validChoice(const BattleChoice &b)
                 }
             }
         }
+        /* And the copy/paste for ZMoves */
+        if (b.zmove()) {
+            for (int i = 0; i < numberOfSlots(); i++) {
+                int p2 = this->player(i);
+                if (i != b.slot() && p2 == player && couldMove[i] && hasChoice[i] == false && choice(i).attackingChoice()
+                        && choice(i).zmove()) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 

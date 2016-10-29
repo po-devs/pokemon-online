@@ -29,6 +29,7 @@ BattleSituation::BattleSituation(const BattlePlayer &p1, const BattlePlayer &p2,
     }
 
     megas[0] = megas[1] = false;
+    zmoves[0] = zmoves[1] = false;
 }
 
 BattleSituation::~BattleSituation()
@@ -625,6 +626,10 @@ BattleChoices BattleSituation::createChoice(int slot)
             ret.mega = true;
         }
     }
+    //Assuming same for ZMove, unconfirmed
+    if (canUseZMove(slot)) {
+        ret.zmove = true;
+    }
 
     if (!hasWorkingItem(slot, Item::ShedShell) && (gen() < 6 || !hasType(slot, Type::Ghost))) {
         /* Shed Shell */
@@ -849,6 +854,7 @@ void BattleSituation::analyzeChoices()
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
             megaEvolve(slot);
+            useZMove(slot);
         }
     }
 
@@ -910,6 +916,17 @@ void BattleSituation::megaEvolve(int slot)
                 megas[player(slot)] = true;
                 pokeMemory(player(slot))["MegaEvolveTurn"] = turn();
             }
+        }
+    }
+}
+
+void BattleSituation::useZMove(int slot)
+{
+    if (choice(slot).zmove()) {
+        if (canUseZMove(slot)) {
+            sendItemMessage(68, slot); //TODO: Change this to only print before the pokemon moves. currently prints at beginning of turn.
+            zmoves[player(slot)] = true;
+            pokeMemory(player(slot))["ZMoveTurn"] = turn();
         }
     }
 }
@@ -4733,20 +4750,34 @@ bool BattleSituation::canMegaEvolve (int slot)
     if (megas[player(slot)]) {
         return false;
     }
-    if (ItemInfo::isMegaStone(poke(slot).item())) {
+    int item = poke(slot).item();
+    if (ItemInfo::isMegaStone(item)) {
         //Pokemon can't mega into themselves
-        if (ItemInfo::MegaStoneForme(poke(slot).item()) == poke(slot).num()) {
+        if (ItemInfo::MegaStoneForme(item) == poke(slot).num()) {
             return false;
         }
         //But they can mega between forms! (Ex: Char X -> Char Y)
-        if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == poke(slot).num()) {
+        if (ItemInfo::MegaStoneForme(item).original() == poke(slot).num()) {
             return true;
         }
-        if (ItemInfo::MegaStoneForme(poke(slot).item()).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0) && !pokeMemory(slot).contains("PreTransformPoke")) {
+        if (ItemInfo::MegaStoneForme(item).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0) && !pokeMemory(slot).contains("PreTransformPoke")) {
             return true;
         }
     }
     if ((poke(slot).num() == Pokemon::Rayquaza && hasMove(slot, Move::DragonAscent))) {
+        return true;
+    }
+    return false;
+}
+
+bool BattleSituation::canUseZMove (int slot)
+{
+    if (zmoves[player(slot)]) {
+        return false;
+    }
+    int item = poke(slot).item();
+    if (ItemInfo::isZCrystal(item)) {
+        //need something here
         return true;
     }
     return false;

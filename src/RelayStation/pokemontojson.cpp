@@ -57,6 +57,7 @@ QVariantMap toJson(const BattleChoices &choices)
     ret.insert("switch", choices.switchAllowed);
     ret.insert("attack", choices.attacksAllowed);
     ret.insert("mega", choices.mega);
+    ret.insert("zmove", choices.zmove);
 
     QVariantList list;
     for (int i = 0; i < 4; i++) {
@@ -200,6 +201,7 @@ BattleChoice fromJson<BattleChoice>(const QVariantMap &v){
     if (info.type == AttackType) {
         info.choice.attack.attackSlot = v.value("attackSlot").toInt();
         info.choice.attack.mega = v.value("mega").toBool();
+        info.choice.attack.zmove = v.value("zmove").toBool();
         if (v.value("target").isValid()) {
             info.choice.attack.attackTarget = v.value("target").toInt();
         } else {
