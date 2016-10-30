@@ -7527,14 +7527,16 @@ struct MMRevelationDance : public MM
     static void ms (int s, int, BS &b) {
         Pokemon::uniqueId num = b.poke(s).num();
         int type; //How does this move work on Non-Oricorio? Defined as Normal in db file right now
-        if (num == Pokemon::Oricorio) {
-            switch(num.toPokeRef()) {
+        //Messy + doesn't work. there has to be an easier way...
+        //Make sure to port the same check over to battlewindow.cpp#1074 to color the button appropriately
+        /*if (PokemonInfo::OriginalForme(num) == Pokemon::Oricorio) {
+            switch(num.subnum) {
                 case Pokemon::Oricorio_Pau: type = Pokemon::Psychic;
                 case Pokemon::Oricorio_Sensu: type = Pokemon::Ghost;
                 case Pokemon::Oricorio_PomPom: type = Pokemon::Electric;
                 default: type = Pokemon::Fire;
             }
-        }
+        }*/
         tmove(b,s).type = type;
     }
 };
@@ -7770,7 +7772,7 @@ void MoveEffect::init()
     REGISTER_MOVE(66, IceBall);
     REGISTER_MOVE(67, Imprison);
     REGISTER_MOVE(68, MagnetRise);
-    REGISTER_MOVE(69, Judgment);  /*Multi-attack <-- Untested*/
+    REGISTER_MOVE(69, Judgment);  /*Multi-attack*/
     REGISTER_MOVE(70, KnockOff);
     REGISTER_MOVE(71, LastResort);
     REGISTER_MOVE(72, LeechSeed);
