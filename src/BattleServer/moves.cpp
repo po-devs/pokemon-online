@@ -7517,7 +7517,6 @@ struct MMShellTrap : public MM {
     }
 };
 
-//UNTESTED
 struct MMRevelationDance : public MM
 {
     MMRevelationDance() {

@@ -2653,7 +2653,7 @@ struct AMBattery : public AM {
     }
 };
 
-//Untested
+//Untested. Crashes if a similar ability is called. Doesn't end properly. Type isn't defined at point of message
 struct AMElectricSurge : public AM
 {
     AMElectricSurge() {
