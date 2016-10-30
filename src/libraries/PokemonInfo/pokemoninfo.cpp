@@ -1217,6 +1217,9 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (shiny) {
             return PokemonInfo::Picture(pokeid, gen, gender, false, back);
         }
+        if (back) {
+            return PokemonInfo::Picture(pokeid, gen, gender);
+        }
 
         switch(gen.num) {
             case 7: return PokemonInfo::Picture(pokeid, 6, gender, shiny, back); break;
@@ -2301,6 +2304,19 @@ QSet<int> MoveInfo::Moves(Pokemon::gen gen)
 QString MoveInfo::path(const QString &file)
 {
     return m_Directory+file;
+}
+
+int MoveInfo::DanceType (Pokemon::uniqueId poke) {
+    int type = Pokemon::Normal;
+    if (PokemonInfo::OriginalForme(poke) == Pokemon::Oricorio) {
+        switch(poke.toPokeRef()) {
+            case Pokemon::Oricorio: type = Pokemon::Fire; break;
+            case Pokemon::Oricorio_Pau: type = Pokemon::Psychic; break;
+            case Pokemon::Oricorio_Sensu: type = Pokemon::Ghost; break;
+            case Pokemon::Oricorio_PomPom: type = Pokemon::Electric; break;
+        }
+    }
+    return type;
 }
 
 #undef move_find

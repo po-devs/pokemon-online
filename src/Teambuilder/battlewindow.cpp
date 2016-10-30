@@ -1070,8 +1070,8 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Poke
         type = ItemInfo::BerryType(p.item());
     } else if (b.num() == Move::Multi_Attack && ItemInfo::isMemoryChip(p.item())) {
         type = ItemInfo::MemoryChipType(p.item());
-    } else if (b.num() == Move::RevelationDance && PokemonInfo::OriginalForme(p.num()) == Pokemon::Oricorio) {
-        //UNTESTED: Do something here to color Revelation Dance appropriately
+    } else if (b.num() == Move::RevelationDance) {
+        type = MoveInfo::DanceType(p.num());
     }
     /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
