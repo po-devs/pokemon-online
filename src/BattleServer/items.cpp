@@ -1139,8 +1139,7 @@ struct IMZCrystal : public IM {
     }
 
     static void ms (int s, int, BS &b) {
-        tmove(b,s).power += 80; //unconfirmed: not true but close for now
-        tmove(b,s).attack = ItemInfo::CrystalMove(b.poke(s).item()); //should override the move then
+        tmove(b,s).power += 80; //unconfirmed, rather not true but we dont know much yet
     }
 };
 

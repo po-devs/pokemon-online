@@ -924,7 +924,6 @@ void BattleSituation::useZMove(int slot)
 {
     if (choice(slot).zmove()) {
         if (canUseZMove(slot)) {
-            sendItemMessage(68, slot); //TODO: Change this to only print before the pokemon moves. currently prints at beginning of turn.
             zmoves[player(slot)] = true;
             pokeMemory(player(slot))["ZMoveTurn"] = turn();
         }
@@ -1554,7 +1553,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     callaeffects(player, player, "DetermineAttackPossible");
     /*Normalize, Aerilate, etc. Needs to be higher than "MovesPossible" to allow proper interaction with Ion Deluge*/
     callaeffects(player, player, "MoveSettings");
-    callieffects(player, player, "MoveSettings"); //Z Moves
 
     if (!specialOccurence) {
         if (turnMemory(player).value("ImpossibleToMove").toBool() == true) {
@@ -1568,6 +1566,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     }
 
     turnMem(player).add(TM::HasPassedStatus);
+
+    //Down here so it doesnt get overridden but still defines it before the announcement
+    if (pokeMemory(player).value("ZMoveTurn") == turn()) {
+        sendItemMessage(68, player);
+        attack = ItemInfo::CrystalMove(poke(player).item());
+        callieffects(player, player, "MoveSettings"); //Z Moves
+    }
 
     turnMemory(player)["MoveChosen"] = attack;
 
@@ -4778,8 +4783,15 @@ bool BattleSituation::canUseZMove (int slot)
     }
     int item = poke(slot).item();
     if (ItemInfo::isZCrystal(item)) {
-        //need something here
-        return true;
+        //A Pokemon must have a move of equal type to the Z Crystal in order to use.
+        //Special cases may apply
+        int zmove = ItemInfo::CrystalMove(item);
+        int ztype = MoveInfo::Type(zmove, gen());
+        for (int i = 0; i < 4; i++) {
+            if (MoveInfo::Type(move(slot, i), gen()) == ztype) {
+                return true;
+            }
+        }
     }
     return false;
 }
