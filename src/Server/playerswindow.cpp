@@ -38,7 +38,13 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
         QTableWidgetItem *witem = new QTableWidgetItem(m.name);
         mytable->setItem(i, 0, witem);
 
-        witem = new QTableWidgetItem(authgrade[m.authority() > 4 ? 4 : m.authority()]);
+        int cleanauth = m.authority();
+        if (cleanauth > 4) {
+            cleanauth = 4;
+        } else if (cleanauth < 0) {
+            cleanauth = 0;
+        }
+        witem = new QTableWidgetItem(authgrade[cleanauth]);
         mytable->setItem(i, 1, witem);
 
         QString bannedString = "Banned";
