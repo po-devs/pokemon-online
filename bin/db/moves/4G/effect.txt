@@ -258,7 +258,7 @@
 257 Has a $effect_chance% chance to burn the target.
 258 Changes the weather to a hailstorm for five turns.
 259 Prevents the target from using the same move twice in a row.
-260 Raises the target's Special Attack by two levels and confuses the target.
+260 Raises the target's Special Attack by one level and confuses the target.
 261 Burns the target.
 262 Lowers the target's Attack and Special Attack by two levels. User faints.
 263 Power doubles if user is burned, paralyzed, or poisoned.

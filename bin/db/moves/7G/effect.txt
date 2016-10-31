@@ -240,7 +240,7 @@
 257 Has a 10% chance to burn the target.
 258 Summons the hail weather condition for five turns. At the end of every turn except the last, damages all Pokémon on the field that aren't Ice-type for 1/16 of their max HP.
 259 Until the target switches out, the target cannot use the same move twice in a row.
-260 Raises the target's Special Attack by 2 stages, but confuses it.
+260 Raises the target's Special Attack by 1 stage, but confuses it.
 261 Burns the target.
 262 The user faints after using this attack. Lowers the target's Attack and Special Attack by 2 stages.
 263 This attack's power is doubled if the user is Poisoned, Burned, or Paralyzed. Ignores the Attack loss from being Burned.
