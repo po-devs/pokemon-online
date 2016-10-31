@@ -259,6 +259,7 @@ struct BMPinchStat : public BMPinch
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
         functions["UponReactivation"] = &tp;
+        functions["AfterStatChange"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -271,6 +272,7 @@ struct BMPinchStat : public BMPinch
         tp(p, s, b);
     }
 
+    //If a pokemon couldn't boost when Pinched but they can at a later point and still are within the threshold it will activate
     static void tp(int p, int s, BS &b) {
         /* The berry may change after the call to test pinch (eaten),
            so saved before. */

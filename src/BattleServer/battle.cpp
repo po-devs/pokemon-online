@@ -2525,6 +2525,7 @@ void BattleSituation::applyMoveStatMods(int player, int target)
 
     if (statChange == true) {
         callieffects(target, player, "AfterStatChange");
+        callaeffects(target, player, "AfterStatChange");
         //Done Elsewhere
         /*if (target != player && negativeStatChange && gen() >= 5) {
             callaeffects(target, player, "AfterNegativeStatChange");
@@ -2713,6 +2714,7 @@ bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker,
 
         if (!applyingMoveStatMods) {
             callieffects(player, attacker, "AfterStatChange");
+            callaeffects(player, attacker, "AfterStatChange");
         }
         if (player != attacker) {
             callaeffects(player, attacker, "AfterNegativeStatChange");

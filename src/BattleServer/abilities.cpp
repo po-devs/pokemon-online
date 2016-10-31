@@ -2739,6 +2739,7 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
+        functions["AfterStatChange"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
@@ -2751,6 +2752,7 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         tp(s, 0, b);
     }
 
+    //If a pokemon couldn't boost when Pinched but they can at a later point and still are within the threshold it will activate
     static void tp(int s, int, BS &b) {
         int arg = poke(b,s)["AbilityArg"].toInt();
 
@@ -2758,8 +2760,10 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
             return;
 
         if (b.isOut(s)) {
-            b.sendAbMessage(130,0, s);
-            b.inflictStatMod(s, arg, 1, s, false);
+            if (!b.hasMaximalStatMod(s, arg)) {
+                b.sendAbMessage(130,0, s);
+                b.inflictStatMod(s, arg, 1, s, false);
+            }
         }
     }
 };
