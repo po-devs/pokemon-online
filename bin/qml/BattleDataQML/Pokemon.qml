@@ -25,9 +25,9 @@ Item {
 
         Behavior on x { enabled: grid.loaded; NumberAnimation { duration: 400; easing.type: Easing.InOutCubic}}
         Behavior on y { enabled: grid.loaded; NumberAnimation { duration: 400; easing.type: Easing.InOutCubic}}
-
-        source: pokemon.numRef === 0 ? "../images/pokeballicon.png" : ("image://pokeinfo/icon/"+ pokemon.numRef)
-        width: 32
+        
+        source: pokemon.numRef === 0 ? "../images/pokeballicon.png" : ("image://pokeinfo/icon/"+ pokemon.numRef + "/" + pokemon.gender)       
+        width: 32 
         height: 32
 
         onSourceChanged: shader.grab()
