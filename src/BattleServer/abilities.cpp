@@ -231,9 +231,15 @@ struct AMColorChange : public AM {
 
     /* gen 5 event */
     static void abp(int s, int t, BS &b) {
-        if ((s!=t) && type(b,t) != Pokemon::Curse) {
-            int tp = type(b,t);
-            if (fpoke(b,s).types.count() == 1&& tp == fpoke(b,s).types[0]) {
+        int tp = type(b,t);
+        // Future Sight and Doom Desire are handled as Ghost-type moves, so make sure that
+        // still works with these moves.
+        if (tmove(b,t).attack == Move::FutureSight || tmove(b,t).attack == Move::DoomDesire) {
+            tp = MoveInfo::Type(tmove(b,s).attack, b.gen());
+        }
+        
+        if (s!=t && tp != Pokemon::Ghost) {
+            if (fpoke(b,s).types.count() == 1 && tp == fpoke(b,s).types[0]) {
                 return;
             }
             /* Sheer Force seems to negate Color Change */
@@ -2653,38 +2659,31 @@ struct AMBattery : public AM {
     }
 };
 
-//Untested. Crashes if a similar ability is called. Doesn't end properly. Type isn't defined at point of message
 struct AMElectricSurge : public AM
 {
     AMElectricSurge() {
         functions["UponSetup"] = &us;
-        functions["EndTurn24.0"] = &et;
+        functions["UponSwitchOut"] = &uso;
+        functions["UponKoed"] = &uso;
+        functions["OnLoss"] = &uso;
     }
 
     static void us (int s, int , BS &b) {
-        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
-        int type = args[0].toInt();
-        if (b.terrain == type && b.terrainCount > 0) {
-            return;
-        }
-        b.sendMoveMessage(args[1].toInt(), 0, s, 0, type);
-        b.terrain = type;
-        b.terrainCount = 5;
-        b.battleMemory()["LastSurgedTerrain"] = type;
-        b.battleMemory()["TerrainMessageReference"] = args[1].toInt();
+        b.sendAbMessage(128, 0, s, 0, Type::Electric);
+        b.terrain = Type::Electric;
 
     }
-    static void et(int s, int, BS &b) {
-        int type = b.battleMemory().value("LastSurgedTerrain").toInt();
-        if (b.terrain != type) {
-            return;
+    static void uso (int s, int , BS &b) {
+        //we need to make sure there's no other pokemon with ElectricSurge
+        foreach(int i, b.sortedBySpeed()) {
+            if (i == s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i,Ability::ElectricSurge)) {
+                return;
+            }
         }
-        b.terrainCount -= 1;
-        if (b.terrainCount <= 0) {
-            int msg = b.battleMemory().value("TerrainMessageReference").toInt();
-            b.sendMoveMessage(msg, 1, s, 0, type);
-            b.terrain = 0;
-        }
+        b.terrain = 0;
     }
 };
 
@@ -2739,7 +2738,6 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         functions["UponSetup"] = &tp;
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
-        functions["AfterStatChange"] = &tp;
     }
 
     static void ahpc(int s, int, BS &b) {
@@ -2752,7 +2750,6 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         tp(s, 0, b);
     }
 
-    //If a pokemon couldn't boost when Pinched but they can at a later point and still are within the threshold it will activate
     static void tp(int s, int, BS &b) {
         int arg = poke(b,s)["AbilityArg"].toInt();
 
@@ -2760,10 +2757,8 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
             return;
 
         if (b.isOut(s)) {
-            if (!b.hasMaximalStatMod(s, arg)) {
-                b.sendAbMessage(130,0, s);
-                b.inflictStatMod(s, arg, 1, s, false);
-            }
+            b.sendAbMessage(130,0, s);
+            b.inflictStatMod(s, arg, 1, s, false);
         }
     }
 };
@@ -3165,7 +3160,7 @@ void AbilityEffect::init()
 
     // gen 7
     REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/ //not completed
-    REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/ //how long does the terrain last?
+    REGISTER_AB(128, ElectricSurge); //how long does the terrain last?
     REGISTER_AB(129, Dazzling); //Also Queenly Majesty
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
@@ -3182,6 +3177,13 @@ void AbilityEffect::init()
     REGISTER_AB(142, Receiver);
     REGISTER_AB(143, SoulHeart);
 
-    //NOT DONE: Disguise, Shields Down, Power Construct, Schooling, Dancer
+    //TO-DO
     //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
+
+    //***Done Elsewhere but might need messages ***
+    //FullMetalBody - done (use 31 if message needed)
+    //ShadowShield - done. Similar to Multiscale so I doubt it gets a message
+    //Comatose - done
+    //Corrosion - No message needed
+    //REGISTER_AB(xxx, Stakeout); //is there a message needed? is it BP or damage? currently coded like Tinted Lens
 }
