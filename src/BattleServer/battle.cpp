@@ -705,9 +705,6 @@ void BattleSituation::analyzeChoice(int slot)
            In 5th gen, it's like a normal KO */
         if (gen() <= 4 || !koed(slot) || wasKoed) {
             sendPoke(slot, choice(slot).pokeSlot());
-        } else {
-            /* Entry effects are already called by analyzeChoices */
-            requestSwitch(slot, false);
         }
     } else if (choice(slot).moveToCenterChoice()) {
         if (!wasKoed(slot)) {
