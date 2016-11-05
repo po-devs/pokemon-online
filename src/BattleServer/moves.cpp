@@ -226,6 +226,10 @@ struct MMBatonPass : public MM
             if (b.linked(opp, "Attract"))
                 poke(b, opp).remove("AttractBy");
         }
+        // Remove the last move memomy
+        c.remove("AnyLastMoveUsed");
+        c.remove("LastMoveUsed");
+        c.remove("LastMoveUsedTurn");
 
         QList<int> boosts;
 
