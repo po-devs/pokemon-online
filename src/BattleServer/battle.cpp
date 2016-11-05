@@ -3221,6 +3221,38 @@ int BattleSituation::calculateDamage(int p, int t)
             qD = "Stat"+QString::number(SpDefense);
         }
 
+        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2)) {
+            // In GSC, a glitch causes the level, Attack, and Defense variables to be replaced.
+            // Attack will be replaced with 10, level will be based on the index number of the defending Pokémon's type.
+            //Defense will be based on the index number of the attacking Pokémon's type.
+            // If a Pokémon has two types, its secondary type will be used.
+
+            // Index numbers:
+            // 0 = Normal
+            // 1 = Fighting
+            // 2 = Flying
+            // 3 = Poison
+            // 4 = Ground
+            // 5 = Rock
+            // 7 = Bug
+            // 8 = Ghost
+            // 9 = Steel
+            // 20 = Fire
+            // 21 = Water
+            // 22 = Grass
+            // 23 = Electric
+            // 24 = Psychic
+            // 25 = Ice
+            // 26 = Dragon
+            // 27 = Dark
+            
+            attack = 10;
+            int typeConversions[] = {0, 1, 2, 3, 4, 5, 7, 8, 9, 20, 21, 22, 23, 24, 25, 26, 27};
+            def = typeConversions[getType(p, 2)];
+            level = typeConversions[getType(t, 2)];
+
+        }
+
         if (!(crit && turnMemory(p).value("CritIgnoresAll").toBool())
             && teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
             def *= 2;
@@ -3332,6 +3364,10 @@ int BattleSituation::calculateDamage(int p, int t)
             damage *= 2;
             typemod--;
         }
+
+        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2) && typemod < 0) // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+            typemod--;
+
         while (typemod < 0) {
             damage /= 2;
             typemod++;
@@ -3667,7 +3703,7 @@ int BattleSituation::calculateDamage(int p, int t)
         /*Apply burn mods */
         damage /= (((poke.status() == Pokemon::Burnt || turnMemory(p).contains("WasBurned")) && cat == Move::Physical && !hasWorkingAbility(p,Ability::Guts)
                      && !(gen() >= 6 && attackused == Move::Facade)) ? 2 : 1);
-                     
+
         // in Gen 5 the rounding is done before finalmods are applied, so it is possible to deal 0 damage
         if (gen() == 5 && damage < 1)
             damage = 1;
@@ -3751,13 +3787,13 @@ int BattleSituation::calculateDamage(int p, int t)
         }
         turnMemory(t)["FinalModifier"] = finalmod;
         damage = applyMod(damage, finalmod);
-            
+
         if (gen() == 5) {
             return std::round(damage); // it is possible to deal 0 damage in Gen 5, but not in Gen 6
         } else {
             return std::max(1, damage);
         }
-        
+
     }
 }
 
