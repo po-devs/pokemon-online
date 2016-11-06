@@ -1256,21 +1256,32 @@ struct AMThickFat : public AM {
 struct AMTrace : public AM {
     AMTrace() {
         functions["UponSetup"] = &us;
+        functions["UponOpponentSwitchIn"] = &us;
     }
 
     static void us(int s, int, BS &b) {
-        int t = b.randomOpponent(s);
-
-        if (t == - 1)
-            return;
-
-        int ab = b.ability(t);
-        //Multitype
-        if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab !=  Ability::Trace
-            && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget")) && ab != Ability::StanceChange) {
-            b.sendAbMessage(66,0,s,t,0,ab);
-            b.loseAbility(s);
-            b.acquireAbility(s, ab);
+        //Randomly choose among adjacent and valid ability
+        QList<int> opps = b.revs(s);
+        for(int i = 0; i < opps.size(); i++) {
+            if(!b.areAdjacent(s, opps[i])) {
+                opps.removeAt(i);
+                i--;
+            }
+        }
+        while(!opps.empty()) {
+            int i = b.randint(opps.size());
+            int t = opps[i];
+            int ab = b.ability(t);
+            //Multitype
+            if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab != Ability::Trace && ab != Ability::FlowerGift
+                && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget")) && ab != Ability::StanceChange) {
+                b.sendAbMessage(66,0,s,t,0,ab);
+                b.loseAbility(s);
+                b.acquireAbility(s, ab);
+                return;
+            } else {
+                opps.removeAt(i);
+            }
         }
     }
 };

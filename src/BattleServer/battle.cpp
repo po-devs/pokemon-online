@@ -992,6 +992,12 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     calleffects(slot, slot, "UponSwitchIn");
     callseffects(slot, slot, "UponSwitchIn");
     callzeffects(player, slot, "UponSwitchIn");
+    if(turn() != 0) {
+        QList<int> opps = revs(slot);
+        foreach(int opp, opps){
+            callaeffects(opp, opp, "UponOpponentSwitchIn");
+        }
+    }
 }
 
 void BattleSituation::callEntryEffects(int player)
