@@ -235,7 +235,7 @@ struct AMColorChange : public AM {
         // Future Sight and Doom Desire are handled as Ghost-type moves, so make sure that
         // still works with these moves.
         if (tmove(b,t).attack == Move::FutureSight || tmove(b,t).attack == Move::DoomDesire) {
-            tp = MoveInfo::Type(tmove(b,s).attack, b.gen());
+            tp = MoveInfo::Type(tmove(b,t).attack, b.gen());
         }
         
         if (s!=t && tp != Pokemon::Ghost) {
