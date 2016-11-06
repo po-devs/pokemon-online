@@ -232,13 +232,13 @@ struct AMColorChange : public AM {
     /* gen 5 event */
     static void abp(int s, int t, BS &b) {
         int tp = type(b,t);
-        // Future Sight and Doom Desire are handled as Ghost-type moves, so make sure that
+        // Future Sight and Doom Desire are handled as Curse-type moves, so make sure that
         // still works with these moves.
         if (tmove(b,t).attack == Move::FutureSight || tmove(b,t).attack == Move::DoomDesire) {
             tp = MoveInfo::Type(tmove(b,t).attack, b.gen());
         }
         
-        if (s!=t && tp != Pokemon::Ghost) {
+        if (s!=t && tp != Pokemon::Curse) {
             if (fpoke(b,s).types.count() == 1 && tp == fpoke(b,s).types[0]) {
                 return;
             }
