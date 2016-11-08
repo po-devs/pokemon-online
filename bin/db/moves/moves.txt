@@ -702,9 +702,9 @@
 701 Hydro Vortex
 702 Bloom Doom
 703 Gigavolt Havoc
-704 Psychic Z-Crystal
+704 Maximum Psy-Breaker
 705 Ice Z-Crystal
-706 Dragon Z-Crystal
+706 Ultimate Dragon Burn
 707 Dark Z-Crystal
 708 Fairy Z-Crystal
 709 Catastropika
@@ -713,7 +713,7 @@
 712 Pulversing Pancake
 713 Mimikyu Z-Crystal
 714 Guardian of Alola
-715 ??? Z-Crystal
+715 Sinister Arrow Raid
 716 ??? Z-Crystal
 717 ??? Z-Crystal
 718 ??? Z-Crystal

@@ -414,19 +414,19 @@
 2045 Diancite
 2046 Latiasite
 2047 Latiosite
-3000 Normal Z-Crystal
+3000 Normalium Z
 3001 Fighting Z-Crystal
 3002 Flying Z-Crystal
 3003 Poison Z-Crystal
 3004 Ground Z-Crystal
 3005 Rock Z-Crystal
 3006 Bug Z-Crystal
-3007 Ghost Z-Crystal
+3007 Ghostium Z
 3008 Steel Z-Crystal
-3009 Fire Z-Crystal
+3009 Firium Z
 3010 Water Z-Crystal
-3011 Grass Z-Crystal
-3012 Electric Z-Crystal
+3011 Grassium Z
+3012 Electrium Z
 3013 Psychic Z-Crystal
 3014 Ice Z-Crystal
 3015 Dragon Z-Crystal
@@ -435,40 +435,11 @@
 3018 Pikachu Z-Crystal
 3019 Raichu Z-Crystal
 3020 Eevee Z-Crystal
-3021 Snorlax Z-Crystal
+3021 Snorlium Z
 3022 Mimikyu Z-Crystal
 3023 Guardian Z-Crystal
-3024 ??? Z-Crystal
-3025 ??? Z-Crystal
-3026 ??? Z-Crystal
+3024 Decidium Z
+3025 Incineroar Z-Crystal
+3026 Primarina Z-Crystal
 3027 ??? Z-Crystal
 3028 ??? Z-Crystal
-3029 Small Normal Z-Crystal
-3030 Small Fighting Z-Crystal
-3031 Small Flying Z-Crystal
-3032 Small Poison Z-Crystal
-3033 Small Ground Z-Crystal
-3034 Small Rock Z-Crystal
-3035 Small Bug Z-Crystal
-3036 Small Ghost Z-Crystal
-3037 Small Steel Z-Crystal
-3038 Small Fire Z-Crystal
-3039 Small Water Z-Crystal
-3040 Small Grass Z-Crystal
-3041 Small Electric Z-Crystal
-3042 Small Psychic Z-Crystal
-3043 Small Ice Z-Crystal
-3044 Small Dragon Z-Crystal
-3045 Small Dark Z-Crystal
-3046 Small Fairy Z-Crystal
-3047 Small Pikachu Z-Crystal
-3048 Small Raichu Z-Crystal
-3049 Small Eevee Z-Crystal
-3050 Small Snorlax Z-Crystal
-3051 Small Mimikyu Z-Crystal
-3052 Small Guardian Z-Crystal
-3053 Small ??? Z-Crystal
-3054 Small ??? Z-Crystal
-3055 Small ??? Z-Crystal
-3056 Small ??? Z-Crystal
-3057 Small ??? Z-Crystal

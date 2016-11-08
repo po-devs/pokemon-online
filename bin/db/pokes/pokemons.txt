@@ -941,8 +941,8 @@
 729:0 Brionne
 730:0 Primarina
 731:0 Pikipek
-732:0 PikipekEvo
-733:0 PikipekEvo2
+732:0 Trumbeak
+733:0 Toucannon
 734:0 Yungoos
 735:0 Gumshoos
 736:0 Grubbin
@@ -965,14 +965,14 @@
 748:0 PurpleAnemoneThingEvo
 749:0 Mudbray
 750:0 Mudsdale
-751:0 WaterSpiderThing
+751:0 Dewpider
 752:0 WaterSpiderThingEvo
 753:0 Fomantis
 754:0 Lurantis
 755:0 Morelull
 756:0 MorelullEvo
 757:0 Salandit
-758:0 SalanditEvo
+758:0 Salazzle
 759:0 Stufful
 760:0 Bewear
 761:0 Bounsweet
@@ -982,7 +982,7 @@
 765:0 Oranguru
 766:0 Passimian
 767:0 Wimpod
-768:0 WimpodEvo
+768:0 Golisopod
 769:0 Sandygast
 770:0 Palossand
 771:0 Pyukumuku
