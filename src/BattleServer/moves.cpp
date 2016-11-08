@@ -7919,6 +7919,9 @@ void MoveEffect::init()
     REGISTER_MOVE(222, PsychicTerrain);
     REGISTER_MOVE(223, ThroatChop);
     REGISTER_MOVE(224, LaserFocus);
-    //NOT DONE: Instruct, Aurora Veil
-    //Aurora veil: stacks with reflect/light screen?, broke by brick break?
+    //NOT DONE:
+    //Instruct, Aurora Veil, Shore Up, First Impression, Baneful Bunker, Ice Hammer, Floral Healing, Strength Sap, Spotlight,
+    //Toxic Thread, Gear Up, Pollen Puff, Anchor Shot, Lunge, Fire Lash, Power Trip, Burn Up,
+    //Speed Swap, Smart Strike, Purify, Beak Blast, Brutal Swing, Psychic Fangs, Stomping Tantrum,
+    //Shadow Bone, Liquidation, Prismatic Laser, Spectral Thief, Tearful Look, Zing Zap
 }

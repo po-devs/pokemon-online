@@ -3200,6 +3200,6 @@ void AbilityEffect::init()
     REGISTER_AB(142, Receiver);
     REGISTER_AB(143, SoulHeart);
 
-    //NOT DONE: Disguise, Shields Down, Power Construct, Schooling, Dancer
+    //NOT DONE: Disguise, Shields Down, Power Construct, Schooling, Dancer, Emergency Exit, Merciless, Water Bubble, Steelworker, Long Reach, Liquid Voice, Galvanize, Tangling Hair, Power of Alchemy, Beast Boost, Prism Armor
     //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
 }

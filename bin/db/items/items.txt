@@ -359,12 +359,13 @@
 358 Dragon Memory
 359 Dark Memory
 360 Fairy Memory
-361 ???
-362 ???
-363 ???
-364 ???
-365 ???
-366 ???
+361 Adrenaline Orb
+362 Terrain Extender
+363 Protective Pads
+364 Electric Seed
+365 Psychic Seed
+366 Misty Seed
+367 Grassy Seed
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
@@ -415,31 +416,31 @@
 2046 Latiasite
 2047 Latiosite
 3000 Normalium Z
-3001 Fighting Z-Crystal
-3002 Flying Z-Crystal
-3003 Poison Z-Crystal
-3004 Ground Z-Crystal
-3005 Rock Z-Crystal
-3006 Bug Z-Crystal
+3001 Fightinium Z
+3002 Flyinium Z
+3003 Poisonium Z
+3004 Groundium Z
+3005 Rockium Z
+3006 Buginium Z
 3007 Ghostium Z
-3008 Steel Z-Crystal
+3008 Steelium Z
 3009 Firium Z
-3010 Water Z-Crystal
+3010 Waterium Z
 3011 Grassium Z
 3012 Electrium Z
-3013 Psychic Z-Crystal
-3014 Ice Z-Crystal
-3015 Dragon Z-Crystal
-3016 Dark Z-Crystal
-3017 Fairy Z-Crystal
-3018 Pikachu Z-Crystal
-3019 Raichu Z-Crystal
-3020 Eevee Z-Crystal
+3013 Psychium Z
+3014 Icium Z
+3015 Dragonium Z
+3016 Darkinium Z
+3017 Fairium Z
+3018 Pikanium Z
+3019 Aloraichium Z
+3020 Eevium Z
 3021 Snorlium Z
-3022 Mimikyu Z-Crystal
-3023 Guardian Z-Crystal
+3022 Mewnium Z
+3023 Tapunium Z
 3024 Decidium Z
-3025 Incineroar Z-Crystal
-3026 Primarina Z-Crystal
-3027 ??? Z-Crystal
-3028 ??? Z-Crystal
+3025 Incinium Z
+3026 Primarium Z
+3027 Marshadium Z
+3028 Pikashunium Z

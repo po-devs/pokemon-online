@@ -949,7 +949,7 @@
 737:0 Charjabug
 738:0 Vikavolt
 739:0 Crabrawler
-740:0 CrabrawlerEvo
+740:0 Crabominable
 741:0 Oricorio
 741:1 Oricorio-Pom Pom
 741:2 Oricorio-Pa'u
@@ -961,16 +961,16 @@
 745:1:AD Lycanroc-Midnight
 746:0 Wishiwashi
 746:1 Wishiwashi-School
-747:0 PurpleAnemoneThing
-748:0 PurpleAnemoneThingEvo
+747:0 Mareanie
+748:0 Toxapex
 749:0 Mudbray
 750:0 Mudsdale
 751:0 Dewpider
-752:0 WaterSpiderThingEvo
+752:0 Araquanid
 753:0 Fomantis
 754:0 Lurantis
 755:0 Morelull
-756:0 MorelullEvo
+756:0 Shiinotic
 757:0 Salandit
 758:0 Salazzle
 759:0 Stufful
@@ -1019,7 +1019,7 @@
 778:0 Mimikyu
 779:0 Bruxish
 780:0 Drampa
-781:0 SeaAnchorThing
+781:0 Dhelmise
 782:0 Jangmo-o
 783:0 Hakamo-o
 784:0 Kommo-o
@@ -1027,18 +1027,18 @@
 786:0 Tapu Lele
 787:0 Tapu Bulu
 788:0 Tapu Fini
-789:0 SolgaleoBaby
-790:0 Cosmog
+789:0 Cosmog
+790:0 Cosmoem
 791:0 Solgaleo
 792:0 Lunala
-793:0 UB-01
-794:0 UB-02 Absorption
-795:0 UB-02 Beauty
-796:0 UB-xx Guzma
-797:0 UB-xx Faba
-798:0 UB-xx Blade
-799:0 UB-xx Hala
-800:0 UB-xx WtfBug
+793:0 Nihilego
+794:0 Buzzwole
+795:0 Pheromosa
+796:0 Xurkitree
+797:0 Celesteela
+798:0 Kartana
+799:0 Guzzlord
+800:0 Necrozma
 801:0 Magearna
 801:1:AD Magearna-Pokeball
 802:0 Marshadow

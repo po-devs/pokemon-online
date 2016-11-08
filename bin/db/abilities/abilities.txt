@@ -219,3 +219,15 @@
 218 Psychic Surge
 219 Grassy Surge
 220 Misty Surge
+221 Slush Rush
+222 Emergency Exit
+223 Merciless
+224 Water Bubble
+225 Steelworker
+226 Long Reach
+227 Liquid Voice
+228 Galvanize
+229 Tangling Hair
+230 Power of Alchemy
+231 Beast Boost
+232 Prism Armor

@@ -175,3 +175,4 @@
 218 128-13_222#Psychic Surge
 219 128-11_205#Grassy Surge
 220 128-17_208#Misty Surge
+221 8-1#Slush Rush
