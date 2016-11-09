@@ -1228,24 +1228,28 @@ struct AMTechnician : public AM {
     }
 };
 
+//UNTESTED
 struct AMThickFat : public AM {
     AMThickFat() {
         functions["FoeDamageFormulaStart"] = &bpfm;
     }
 
     static void bpfm (int , int t, BS &b) {
-        int tp = tmove(b,t).type;
-        if (tp == Type::Ice || tp == Type::Fire) {
-            if (b.gen().num == 3) {
-                b.chainAtk(t, -10);
-            } else if (b.gen().num == 4) {
-                b.chainBp(t, -10);
-            } else {
-                b.chainAtk(t, 0x800);
+        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
+        for (int i = 0; i < args.length(); i++) {
+            if (args[i] == tmove(b,t).type) {
+                if (b.gen().num == 3) {
+                    b.chainAtk(t, -10);
+                } else if (b.gen().num == 4) {
+                    b.chainBp(t, -10);
+                } else {
+                    b.chainAtk(t, 0x800);
+                }
             }
         }
     }
 };
+
 //Moved to calculateDamage
 /*struct AMTintedLens : public AM {
     AMTintedLens() {
@@ -3001,6 +3005,45 @@ struct AMReceiver : public AM {
     }
 };
 
+//UNTESTED
+struct AMLongReach : public AM {
+    AMLongReach() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int t, BS &b) {
+        //Ignore Contact Flag
+    }
+};
+
+//UNTESTED
+struct AMLiquidVoice : public AM {
+    AMLiquidVoice() {
+        functions["MoveSettings"] = &ms;
+    }
+
+    static void ms(int s, int t, BS &b) {
+        if (tmove(b,s).flags & Move::SoundFlag) {
+            //b.sendMoveMessage(x, 0, s);
+            tmove(b,s).type = Pokemon::Water;
+        }
+    }
+};
+
+//UNTESTED
+struct AMSteelWorker : public AM {
+    AMSteelWorker() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm (int s, int, BS &b) {
+        if (tmove(b, s).type == poke(b,s)["AbilityArg"].toInt()) {
+            b.chainBp(s, 0x1400);
+            //Does this give Pseudo Stab? What if a steel type has it?
+        }
+    }
+};
+
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
@@ -3048,7 +3091,6 @@ struct AMReceiver : public AM {
     UponBeingHit
     AfterAttackFinished
     OnPartnerKO
-    //BeforeBeingKoed
 */
 
 #define REGISTER_AB(num, name) mechanics[num] = AM##name(); names[num] = #name; nums[#name] = num;
@@ -3168,13 +3210,13 @@ void AbilityEffect::init()
     //112 sweet veil, aroma veil
     //113 Competitive
     REGISTER_AB(114, GaleWings);
-    REGISTER_AB(115, Gooey);
+    REGISTER_AB(115, Gooey); /* Tangling Hair */
     REGISTER_AB(116, Magician);
     REGISTER_AB(117, AuraBreak);
     REGISTER_AB(118, BulletProof);
     REGISTER_AB(119, GrassPelt);
     REGISTER_AB(120, Levitate);
-    REGISTER_AB(121, Aerilate);
+    REGISTER_AB(121, Aerilate); /*Pixilate, Refrigerate, Galvanize*/
     //122 Sticky Hold message
     REGISTER_AB(123, Klutz);
     REGISTER_AB(124, Symbiosis);
@@ -3184,22 +3226,27 @@ void AbilityEffect::init()
     // gen 7
     REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/ //not completed
     REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/ //how long does the terrain last?
-    REGISTER_AB(129, Dazzling); //Also Queenly Majesty
+    REGISTER_AB(129, Dazzling); /*Queenly Majesty*/
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
     REGISTER_AB(132, Fluffy);
     REGISTER_AB(133, Stamina);
     REGISTER_AB(134, Triage); //what priority does this make it?
-    REGISTER_AB(135, WimpOut); //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
+    REGISTER_AB(135, WimpOut); /* Emergency Exit*/ //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
     REGISTER_AB(136, SurgeSurfer);
     REGISTER_AB(137, WaterCompaction); // not sure whether water type moves still deal damage or not
-    REGISTER_AB(138, Disguise); //not completed
+    REGISTER_AB(138, Disguise);
     REGISTER_AB(139, InnardsOut);
-    REGISTER_AB(140, Dancer); //not completed
+    REGISTER_AB(140, Dancer);
     REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
-    REGISTER_AB(142, Receiver);
+    REGISTER_AB(142, Receiver); /*Power of Alchemy*/
     REGISTER_AB(143, SoulHeart);
+    REGISTER_AB(144, LongReach);
+    REGISTER_AB(145, LiquidVoice);
+    REGISTER_AB(146, SteelWorker);
+    REGISTER_AB(147, Schooling);
+    REGISTER_AB(148, BeastBoost);
 
-    //NOT DONE: Disguise, Shields Down, Power Construct, Schooling, Dancer, Emergency Exit, Merciless, Water Bubble, Steelworker, Long Reach, Liquid Voice, Galvanize, Tangling Hair, Power of Alchemy, Beast Boost, Prism Armor
-    //REGISTER_AB(145, Schooling); -- AMTwoWayChange / AMOneWayChange depending on mechanics??
+    //Started: Disguise, Dancer, Steelworker, Long Reach, Shields Down, Power Construct
+    //Not started: Schooling, Beast Boost
 }

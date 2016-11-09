@@ -37,7 +37,7 @@
 44 32-2#Rain Dish
 45 14-3#Sandstream
 46 46#Pressure
-47 64#Thick fat
+47 64-9_14#Thick fat
 49 18-4#Flame Body
 51 30-6#Keen Eye
 52 30-1#Hyper Cutter
@@ -167,6 +167,7 @@
 207 135#Wimpout
 208 140#Dancer
 210 139#Innards Out
+211 147#Schooling
 212 136#Surge Surfer
 213 137#Water Compaction
 214 129#Queenly Majesty
@@ -176,3 +177,12 @@
 219 128-11_205#Grassy Surge
 220 128-17_208#Misty Surge
 221 8-1#Slush Rush
+222 135#Emergency Exit
+224 64-9#Water Bubble
+225 146-8#Steelworker
+226 144#Long Reach
+227 145#Liquid Voice
+228 121-12#Galvanize
+229 115#Tangling Hair
+230 142#Power of Alchemy
+231 148#Beast Boost

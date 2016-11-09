@@ -1348,7 +1348,15 @@ void BattleSituation::testCritical(int player, int target)
 
     critical = coinflip(minch, 48);
 
-    if (critical || (pokeMemory(player).contains("LaserFocused") && pokeMemory(player).value("LaserFocusEnd").toInt() >= turn())) {
+    bool isCrit;
+    if (pokeMemory(player).contains("LaserFocused") && pokeMemory(player).value("LaserFocusEnd").toInt() >= turn()) {
+        isCrit = true;
+    }
+    if (hasWorkingAbility(player, Ability::Merciless) && poke(target).status() == Pokemon::Poisoned) {
+        isCrit = true;
+    }
+
+    if (critical || otherCrits) {
         turnMem(player).add(TM::CriticalHit);
         notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits        
         pokeMemory(player).remove("LaserFocused");
@@ -2630,7 +2638,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         return true;
     }
     case Pokemon::Burnt: {
-        if (!hasType(target, Pokemon::Fire) || hasWorkingAbility(target, Ability::WaterVeil)) {
+        if (!hasType(target, Pokemon::Fire) || hasWorkingAbility(target, Ability::WaterVeil) || hasWorkingAbility(target, Ability::WaterBubble)) {
             return false;
         }
         return true;
@@ -3563,7 +3571,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /*** MOD 3 ***/ //Aka: Gen 4
         /* Solid Rock & Filter */
-        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
+        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
             damage = damage * 3 / 4;
         }
         /* Expert Belt */

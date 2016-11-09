@@ -31,8 +31,8 @@
 30 Heals all status conditions of a Pokémon with this ability when it leaves the field.
 31 Makes a Pokémon with this ability draw to itself and be immune to all Electric moves, and raises its Special Attack by one stage every time it is hit by one.
 32 Doubles the chance of an attacking move's added effect occurring when used by a Pokémon with this ability.
-33 Doubles the Speed of a Pokémon with this ability during Rain Dance.
-34 Doubles the Speed of a Pokémon with this ability during Sunny Day.
+33 Doubles the Speed of a Pokémon with this ability in the Rain.
+34 Doubles the Speed of a Pokémon with this ability in the Sun.
 35 If a Pokémon with this ability is the first in your belt, doubles the chance of a wild encounter.
 36 Makes a Pokémon with this ability copy the ability of the opponent when it enters the field.
 37 Doubles the Attack of a Pokémon with this ability.
@@ -196,7 +196,7 @@
 195 Changes Zygarde 10% or Zygarde 50% into Zygarde Complete when it falls under 1/2 max HP.
 196 Raises the Special Attack of a Pokémon with this ability by one stage every time a Pokémon on the field is knocked out.
 197 Boosts the power of all moves used by a Pokémon with this ability if it attacks an opponent that switched in or entered the field mid-battle.
-198 Summons Electric Terrain (for 5 turns?) when a Pokémon with this ability enters the field.
+198 Summons Electric Terrain for 5 turns when a Pokémon with this ability enters the field.
 199 Prevents opposing Pokémon from using moves with increased priority.
 200 Raises the Special Attack of a Pokémon with this ability by one stage when it drops below 1/2 max HP.
 201 Boosts the power of allies' special moves.
@@ -209,6 +209,25 @@
 208 When another Pokémon uses Dragon Dance, Quiver Dance, Swords Dance, or Teeter Dance, the Pokémon with this ability will immediately use that move as well.
 209 Protects from status conditions. Boosts Minior's attacks but lowers defenses and loses immunity from status conditions when it falls under 1/2 max HP.
 210 When a Pokémon with this Ability faints, it deals damage to its opponent equal to the amount of HP it had left before last being hit.
-211 <Schooling changes Wishiwashi's form somehow>
+211 Changes Wishiwashi to School Forme when it has over 1/4 max hp.
 212 Doubles the Speed of a Pokémon with this ability during Electric Terrain.
 213 When a Pokémon with Water Compaction is hit by a Water-type move, its Defense rises by two stages.
+214 Prevents opposing Pokémon from using moves with increased priority.
+215 Transforms Greninja into Ash-Greninja and boosts the power of Water Shuriken when it defeats an opposing Pokémon in battle.
+216 Copies the ability of a defeated partner Pokémon.
+217 Changes the type of a Pokémon with this ability to match the Memory it holds.
+218 Summons Psychic Terrain for 5 turns when a Pokémon with this ability enters the field.
+219 Summons Grassy Terrain for 5 turns when a Pokémon with this ability enters the field.
+220 Summons Misty Terrain for 5 turns when a Pokémon with this ability enters the field.
+221 Doubles the Speed of a Pokémon with this ability in Hail.
+222 Switches out Pokémon with this ability when it drops below 1/2 max HP.
+223 All attacks used on a poisoned Pokémon become Critical Hits.
+224 <Halves?> the damage a Pokémon with this ability receives from Fire moves and prevents the Pokémon from being Burned.
+225 Increases the damage of Steel-type moves by <50%?>.
+226 All moves used by a Pokémon with this ability do not make contact.
+227 All sound-based moves used by a Pokémon with this ability become Water-type moves.
+228 Changes all Normal-type moves used by a Pokémon with this Ability to Electric-type, and boosts their power by 30%.
+229 Lowers the Speed of the opponent every time it uses a contact move on a Pokémon with this ability.
+230 Copies the ability of a defeated partner Pokémon.
+231 <The Pokémon boosts its most proficient stat each time it knocks out a Pokémon.?>
+232 Lowers the damage a Pokémon with this ability takes from super-effective attacks by <25%?>.

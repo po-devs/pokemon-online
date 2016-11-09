@@ -2084,7 +2084,19 @@ namespace Ability
         RKSSystem,
         PsychicSurge,
         GrassySurge,
-        MistySurge
+        MistySurge,
+        SlushRush,
+        EmergencyExit,
+        Merciless,
+        WaterBubble,
+        Steelworker,
+        LongReach,
+        LiquidVoice,
+        Galvanize,
+        TanglingHair,
+        PowerOfAlchemy,
+        BeastBoost,
+        PrismArmor
     };
 }
 
