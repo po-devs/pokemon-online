@@ -3948,7 +3948,7 @@ end:
                 callieffects(player, source, "UponOffensiveDamageReceived");
             }
 
-            if (tmove(source).flags & Move::ContactFlag && player != source) {
+            if (makesContact(source) && player != source) {
                 if (!sub) {
                     callieffects(player, source, "UponPhysicalAssault");
                     callaeffects(player,source,"UponPhysicalAssault");
@@ -4856,4 +4856,15 @@ int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
         }
     }
     return slot;
+}
+
+bool BattleSituation::makesContact(int s)
+{
+    if (hasWorkingAbility(s, Ability::LongReach)) {
+        return false;
+    }
+    if (tmove(s).flags & Move::ContactFlag) {
+        return true;
+    }
+    return false;
 }

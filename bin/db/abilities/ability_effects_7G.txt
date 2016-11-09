@@ -180,9 +180,8 @@
 222 135#Emergency Exit
 224 64-9#Water Bubble
 225 146-8#Steelworker
-226 144#Long Reach
 227 145#Liquid Voice
 228 121-12#Galvanize
 229 115#Tangling Hair
 230 142#Power of Alchemy
-231 148#Beast Boost
+231 144#Beast Boost

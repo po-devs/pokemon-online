@@ -7114,7 +7114,7 @@ struct MMKingsShield: public MM
         }
         b.fail(s, 27, 0, Pokemon::Normal, t);
 
-        if (tmove(b,s).flags & Move::ContactFlag) {
+        if (b.makesContact(s)) {
             b.inflictStatMod(s, Attack, -2, t);
         }
     }
@@ -7238,7 +7238,7 @@ struct MMSpikyShield : public MM
         }
         b.fail(s, 27, 0, Pokemon::Grass, t);
 
-        if ((tmove(b, s).flags & Move::ContactFlag) && !b.hasWorkingAbility(t, Ability::MagicGuard) ) {
+        if (b.makesContact(s) && !b.hasWorkingAbility(t, Ability::MagicGuard) ) {
             b.inflictDamage(s,b.poke(s).totalLifePoints()/6,s,false);
             b.sendMoveMessage(209,0,s);
             return;
@@ -7509,7 +7509,7 @@ struct MMShellTrap : public MM {
     }
 
     static void uodr(int s, int, BS &b) {
-        if (tmove(b,s).flags & Move::ContactFlag && poke(b,s)["ShellTrapTurn"] == b.turn()) {
+        if (b.makesContact(s) && poke(b,s)["ShellTrapTurn"] == b.turn()) {
             poke(b,s)["ShellTrapDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 2; // needs confirmation
         }
     }

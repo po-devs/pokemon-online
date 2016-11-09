@@ -2394,7 +2394,7 @@ struct AMToughClaws : public AM {
     }
 
     static void bpm (int s, int t, BS &b) {
-        if (s != t && (tmove(b,s).flags & Move::ContactFlag)) {
+        if (s != t && b.makesContact(s)) {
             b.chainBp(s, 0x1555);
         }
     }
@@ -2627,7 +2627,7 @@ struct AMFluffy: public AM {
     }
 
     static void bpfm(int , int t, BS &b) {
-        if (tmove(b,t).flags & Move::ContactFlag && type(b,t) != Pokemon::Fire) {
+        if (b.makesContact(t) && type(b,t) != Pokemon::Fire) {
             b.chainBp(t, 0x800);
         } else if (type(b,t) == Pokemon::Fire) {
             b.chainBp(t, 0x1800);
@@ -3006,17 +3006,6 @@ struct AMReceiver : public AM {
 };
 
 //UNTESTED
-struct AMLongReach : public AM {
-    AMLongReach() {
-        functions["MoveSettings"] = &ms;
-    }
-
-    static void ms(int s, int t, BS &b) {
-        //Ignore Contact Flag
-    }
-};
-
-//UNTESTED
 struct AMLiquidVoice : public AM {
     AMLiquidVoice() {
         functions["MoveSettings"] = &ms;
@@ -3241,12 +3230,11 @@ void AbilityEffect::init()
     REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
     REGISTER_AB(142, Receiver); /*Power of Alchemy*/
     REGISTER_AB(143, SoulHeart);
-    REGISTER_AB(144, LongReach);
+    //REGISTER_AB(144, BeastBoost);
     REGISTER_AB(145, LiquidVoice);
     REGISTER_AB(146, SteelWorker);
     //REGISTER_AB(147, Schooling);
-    //REGISTER_AB(148, BeastBoost);
 
-    //Started: Disguise, Dancer, Steelworker, Long Reach, Shields Down, Power Construct
+    //Started: Disguise, Dancer, Steelworker, Shields Down, Power Construct
     //Not started: Schooling, Beast Boost
 }
