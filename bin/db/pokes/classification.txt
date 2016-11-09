@@ -791,13 +791,13 @@
 790 ??? Pokémon
 791 Sunne Pokémon
 792 Moone Pokémon
-793 ??? Pokémon
-794 ??? Pokémon
-795 ??? Pokémon
-796 ??? Pokémon
-797 ??? Pokémon
-798 ??? Pokémon
-799 ??? Pokémon
-800 ??? Pokémon
+793 Parasite Pokémon
+794 Swollen Pokémon
+795 Lissome Pokémon
+796 Glowing Pokémon
+797 Launch Pokémon
+798 Drawn Sword Pokémon
+799 Junkivore Pokémon
+800 Prism Pokémon
 801 Artificial Pokémon
 802 ??? Pokémon
