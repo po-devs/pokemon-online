@@ -1356,7 +1356,7 @@ void BattleSituation::testCritical(int player, int target)
         isCrit = true;
     }
 
-    if (critical || otherCrits) {
+    if (critical || isCrit) {
         turnMem(player).add(TM::CriticalHit);
         notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits        
         pokeMemory(player).remove("LaserFocused");

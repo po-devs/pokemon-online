@@ -722,13 +722,13 @@
 721 Steam Pokémon
 722 Grass Quill Pokémon
 723 Blade Quill Pokémon
-724 ??? Pokémon
+724 Arrow Quill Pokémon
 725 Fire Cat Pokémon
 726 Fire Cat Pokémon
-727 ??? Pokémon
+727 Heel Pokémon
 728 Sea Lion Pokémon
 729 Pop Star Pokémon
-730 ??? Pokémon
+730 Soloist Pokémon
 731 Woodpecker Pokémon
 732 ??? Pokémon
 733 ??? Pokémon
@@ -784,9 +784,9 @@
 783 Scaly Pokémon
 784 Scaly Pokémon
 785 Land Spirit Pokémon
-786 ??? Pokémon
-787 ??? Pokémon
-788 ??? Pokémon
+786 Land Spirit Pokémon
+787 Land Spirit Pokémon
+788 Land Spirit Pokémon
 789 ??? Pokémon
 790 ??? Pokémon
 791 Sunne Pokémon

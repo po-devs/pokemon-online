@@ -1235,9 +1235,9 @@ struct AMThickFat : public AM {
     }
 
     static void bpfm (int , int t, BS &b) {
-        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
+        QStringList args = poke(b,t)["AbilityArg"].toString().split('_');
         for (int i = 0; i < args.length(); i++) {
-            if (args[i] == tmove(b,t).type) {
+            if (args[i].toInt() == tmove(b,t).type) {
                 if (b.gen().num == 3) {
                     b.chainAtk(t, -10);
                 } else if (b.gen().num == 4) {
@@ -3244,8 +3244,8 @@ void AbilityEffect::init()
     REGISTER_AB(144, LongReach);
     REGISTER_AB(145, LiquidVoice);
     REGISTER_AB(146, SteelWorker);
-    REGISTER_AB(147, Schooling);
-    REGISTER_AB(148, BeastBoost);
+    //REGISTER_AB(147, Schooling);
+    //REGISTER_AB(148, BeastBoost);
 
     //Started: Disguise, Dancer, Steelworker, Long Reach, Shields Down, Power Construct
     //Not started: Schooling, Beast Boost
