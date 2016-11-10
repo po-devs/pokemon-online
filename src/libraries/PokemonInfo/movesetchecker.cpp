@@ -288,10 +288,10 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 }
                 else if(ab.ab(2) == ability) {
                     /* Some Pokemon change hidden abilities from gen 5 to 6 */
-                    int priorHA = PokemonInfo::Abilities(pokeid, 5).ab(2);
+                    int priorHA = PokemonInfo::Abilities(pokeid, g).ab(2);
                     if(priorHA != 0 && priorHA != ability)
                     {
-                        return isValid(pokeid, g, moves, PokemonInfo::Abilities(pokeid, 5).ab(2), gender, level, false, invalid_moves, error);
+                        return isValid(pokeid, g, moves, priorHA, gender, level, false, invalid_moves, error);
                     }
                     else {
                         if (invalid_moves) {
