@@ -4806,6 +4806,10 @@ bool BattleSituation::canMegaEvolve (int slot)
         return false;
     }
     int item = poke(slot).item();
+    if (ItemInfo::isZCrystal(item)) {
+        //Rayquaza can't mega evolve if it holds a Z Crystal
+        return false;
+    }
     if (ItemInfo::isMegaStone(item)) {
         //Pokemon can't mega into themselves
         if (ItemInfo::MegaStoneForme(item) == poke(slot).num()) {

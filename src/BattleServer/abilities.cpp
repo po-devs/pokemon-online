@@ -2431,7 +2431,9 @@ struct AMGaleWings : public AM
 
     static void pc(int s, int, BS &b) {
         if (tmove(b,s).type == Type::Flying)
-            tmove(b,s).priority += 1;
+            if (b.gen() < 7 || b.poke(s).isFull()) {
+                tmove(b,s).priority += 1;
+            }
     }
 };
 
