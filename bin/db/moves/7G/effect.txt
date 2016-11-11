@@ -342,7 +342,7 @@
 361 The user faints after using this move. Immediately after using this move, a new Pokémon will be switched in. This move recovers the HP of that Pokémon to full and heals all of its status problems as soon as it enters the field. Fails if the user is the last Pokémon of its party.
 362 This attack's power is doubled if the target's HP is less than or equal to half of its max HP.
 363 This attack's type and power depend on the Berry the user is holding. Unless this attack misses, the user's Berry is used up in the attack, but not consumed by the user.
-364 Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party. Priority level 2.
+364 Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party. Priority level 2.
 365 If the target is holding a Berry, the user consumes that Berry.
 366 For four turns, doubles the Speed of any Pokémon on the user's side.
 367 Raises by 2 stages one of the target's stats that is not maxed out. Can target the user or its ally.
@@ -421,7 +421,7 @@
 446 Damages the opponent's Pokémon as they switch in for X/8 of their max HP, where X is the effectiveness of Rock moves against that Pokémon.
 447 This attack's power is 20 if the target's weight is 10 kilograms (kg) or less, 40 if 25 kg or less, 60 if 50 kg or less, 80 if 100 kg or less, 100 if 200 kg or less, and 120 if more than 200 kg.
 448 Confuses the target.
-449 This attack's type changes to match the Plate held by the user.
+449 This attack's type changes to match the Plate or Z Crystal held by the user.
 450 If the target is holding a Berry, the user consumes that Berry.
 451 Has a 70% chance to raise the user's Special Attack by 1 stage.
 452 The user takes recoil damage equal to 1/3 of HP lost by the target from this attack.
@@ -439,7 +439,7 @@
 464 Puts both opponents to sleep in a double battle, or all adjacent opponents in a triple battle.
 465 Has a 40% chance to lower the target's Special Defense by 2 stages.
 466 Has a 10% chance to raise the user's Attack, Defense, Speed, Special Attack, and Special Defense by 1 stage.
-467 Requires a charge up turn before use. While the user is using this attack, the user can't be hit by any move. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party. This attack's power is doubled, and it will not miss, if the target has used Minimize.
+467 Requires a charge up turn before use. While the user is using this attack, the user can't be hit by any move. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party. This attack's power is doubled, and it will not miss, if the target has used Minimize.
 468 Raises the user's Attack and Accuracy by one stage.
 469 Protects the user's team from moves that target more than one Pokémon, but fails if the user acts last in the turn it is used. Priority level 3.
 470 Makes the user's and the target's Defense equal to the average of their Defense stats, and their Special Defense equal to the average of their Special Defense stats. Stat changes are not considered or changed.
@@ -474,7 +474,7 @@
 499 Resets the target's stat changes to 0.
 500 This attack's power is increased by 20 for every stage the user's stats are raised.
 501 Protects the user's team from moves with positive priority, but fails if the user acts last in the turn it is used. Priority level 3.
-502 In double and triple battles, switches the user's position with the ally on the opposite side of the field. Priority level 1.
+502 In double and triple battles, switches the user's position with the ally on the opposite side of the field. Priority level 2.
 503 Has a 30% chance to burn the target. Thaws the user and the target if either is frozen.
 504 Raises the user's Attack, Special Attack and Speed by 2 stages, but lowers the user's Defense and Special Defense by 1 stage.
 505 Recovers 1/2 of the target's max HP.
@@ -546,7 +546,7 @@
 575 Paralyzes the target.
 576 The user is healed for 3/4 of the HP lost by the target from this attack.
 577 The user is healed for 1/2 of the HP lost by the target from this attack.
-578 Requires a charge up turn before use. While the user is using this attack, the user can't be hit by any move. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party. This attack's power is doubled, and it will not miss, if the target has used Minimize.
+578 Requires a charge up turn before use. While the user is using this attack, the user can't be hit by any move. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party. This attack's power is doubled, and it will not miss, if the target has used Minimize.
 579 Has a 10% chance to lower the target's Attack by 1 stage.
 580 Lowers the target's Attack by 1 stage. Ignores the effects of Protect, Detect, and Spiky Shield.
 581 Adds Ghost typing to the target.
@@ -578,110 +578,92 @@
 608 Doubles the money received after a battle.
 609 Congratulates you on your special day!
 610 Cannot bring the target to 0 HP.
-611 Has a 50% chance to raise the user's Defense by 1 stage.
+611 Has a 50% chance to raise the user's Defense by 2 stages.
 612 The user takes recoil damage equal to 1/2 of HP lost by the target from this attack.
 613 Has a 30% chance to burn the target. Thaws the user and the target if either is frozen.
-614 Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.
+614 Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party.
 615 The user and an ally hold hands. This makes them very happy.
 616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
 617 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
 620 Lowers the user's Defense and Special Defense by 1 stage.
-621 Lowers the user's Defense by 1 stage. Cannot be evaded. Fails if the user is not Hoopa-Unbound. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, and King's Shield for the target or its party.
+621 Lowers the user's Defense by 1 stage. Cannot be evaded. Fails if the user is not Hoopa-Unbound. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party.
 622 If the target has already used a move in the same turn, its Ability will be ignored when it is hit by this move.
 623 If this attack hits, lowers the user's Special Attack by 2 stages.
-624 ??? <Highhorse Power>
+624 Deals normal damage.
 625 Deals normal damage.
 626 Ignores the target's Ability when hit by this move.
 627 Deals damage to the target equal to half of its current HP, but not less than 1.
-628 ??? <Revelation Dance>
+628 The user's type determines the type of this move.
 629 The target of this move is the last of the opponent's Pokémon to have damaged the user with a contact move this turn. Deals damage to the target equal to two times the damage the target dealt to the user with their last attack.
 630 Requires a charge up turn before use. (This attack's power is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.???)
 631 Ignores the target's Ability when hit by this move.
-632 <Accelerock>
+632 Priority level 1.
 633 Terrain move. For 5 turns, grounded Pokémon will be unaffected by priority moves and have the power of their Psychic-type moves boosted by 50%.
 634 Prevents the target from using Sound-based moves for 2 turns.
-635 For five turns, the damage that Pokémon on the user's side take from all attacks is reduced by 50%, or 33% if there is more than one Pokémon on the user's side. Ignored by critical hits, and fails if this move is already active for the user.
+635 For five turns, the damage that Pokémon on the user's side take from all attacks is reduced by 50%, or 33% if there is more than one Pokémon on the user's side. Ignored by critical hits, and fails if this move is already active for the user. Can only be used during Hail.
 636 Guarantees the next move used will deal a Critical Hit.
-637
-638
-639
-640
-641
-642
-643
-644
-645
-646
-647
-648
-649
-650
-651
-652
-653
-654
-655
-656
-657
-658
-659
-660
-661
-662
-663
-664
-665
-666
-667
-668
-669
-670
-671
-672
-673
-674
-675
-676
-677
-678
-679
-680
-681
-682
-683
-684
-685
-686
-687
-688
-689
-690
-691
-692
-693
-694
-695
-696
-697
-698
-699
-700
-701
-702
-703
-704
-705
-706
-707
-708
-709
-710
-711
-712
-713
-714
-715
-716
-717
-718
-719
+637 Lowers the user's Defense by 1 stage.
+638 This attack's type changes to match the Memory held by the user.
+639 Lowers the target's Attack by 1 stage.
+640 Deals normal damage.
+641 Causes the target to use the attack it last used again.
+642 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
+643 Damage is calculated ignoring the target's Defense stat changes, and hit chance is calculated ignoring the target's Evasion stat changes.
+644 Cures the target of Burn.
+645 Recovers 1/2 of the user's max HP, but 2/3 during Sandstorm.
+646 Can only be used on the first turn after the user has switched in. Priority level 2.
+647 Protects the user from offensive moves used by any other Pokémon, but fails if the user acts last in the turn it is used. If a Pokémon attacks the user with a contact move, that Pokémon becomes Poisoned. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
+648 Lowers the user's Speed by 1 stage.
+649 Recovers 1/2 of the user's max HP, but 2/3 during Grassy Terrain.
+650 Recovers HP equal to the value of the target's Attack stat. Lowers the target's Attack by 1 stage.
+651 Draws to the target any single-target move used by any of the opponent's Pokémon. Priority level 3.
+652 Lowers the target's Speed by 1. Poisons the target.
+653 Raises Attack and Special Attack of Pokémon on the user's side with the Plus or Minus ability by 1 stage.
+654 <If the target is one of the user's allies, restores HP by x/x.>
+655 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
+656 Lowers the target's Attack by 1 stage.
+657 Lowers the target's Defense by 1 stage.
+658 This attack's power is increased by 20 for every stage the user's stats are raised.
+659 Removes Fire-type from the user after dealing damage. Fails if the user is not Fire-type.
+660 Switches the user's stat changes in Speed with the target's.
+661 Cannot be evaded.
+662 <Cures the target of any status condition. If this move is successful, it also restores the user's HP by x/x.>
+663 Burns any Pokémon that make contact with the user before the move finishes. Priority level -3.
+664 Deals normal damage.
+665 If this attack hits the target, destroys the target's Reflect and Light Screen before dealing damage.
+666 Attack power doubles if the previous move used by the user failed.
+667 <Has a x% chance to lower the target's Defense by 1 stage.>
+668 <Has a x% chance to lower the target's Defense by 1 stage.>
+669 On the turn after this move hits, the user can't take any action or switch out.
+670 Before attacking, steals the target's positive stat boosts.
+671 Lowers the target's Attack and Special Attack by 1 stage.
+672 Has a 30% chance to cause the target to flinch.
+673 Z-Move. Requires a Normal-type move and the item Normalium Z.
+674 Z-Move. Requires a Fighting-type move and the item Fightinium Z.
+675 Z-Move. Requires a Flying-type move and the item Flyinium Z.
+676 Z-Move. Requires a Poison-type move and the item Poisonium Z.
+677 Z-Move. Requires a Ground-type move and the item Groundium Z.
+678 Z-Move. Requires a Rock-type move and the item Rockium Z.
+679 Z-Move. Requires a Bug-type move and the item Buginium Z.
+680 Z-Move. Requires a Ghost-type move and the item Ghostium Z.
+681 Z-Move. Requires a Steel-type move and the item Steelium Z.
+682 Z-Move. Requires a Fire-type move and the item Firium Z.
+683 Z-Move. Requires a Water-type move and the item Waterium Z.
+684 Z-Move. Requires a Grass-type move and the item Grassium Z.
+685 Z-Move. Requires an Electric-type move and the item Electrium Z.
+686 Z-Move. Requires a Psychic-type move and the item Psychium Z.
+687 Z-Move. Requires an Ice-type move and the item Icium Z.
+688 Z-Move. Requires a Dragon-type move and the item Dragonium Z.
+689 Z-Move. Requires a Dark-type move and the item Darkinium Z.
+690 Z-Move. Requires a Fairy-type move and the item Fairium Z.
+691 Z-Move. Deals immense damage. Requires the move Volt Tackle, the item Pikanium Z, and can only be used by Pikachu.
+692 Z-Move. Deals immense damage. Paralyzes the target. Requires the move Thunderbolt, the item Aloraichium Z, and can only be used by Alolan Raichu.
+693 Z-Move. Increases the user's Attack, Defense, Special Attack, Special Defense, and Speed by 2 stages. Requires the move Last Resort, the item Eevium Z, and can only be used by Eevee.
+694 Z-Move. Deals immense damage. Requires the move Giga Impact, the item Snorlium Z, and can only be used by Snorlax.
+695 Z-Move. Deals immense damage. Sets up Psychic Terrain for 5 turns after the move is finished. Requires the move Psychic, the item Mewnium Z, and can only be used by Mew.
+696 Z-Move. Deals damage to the target equal to 3/4 of its current HP, but not less than 1. Requires the move Nature's Madness, the item Tapunium Z, and can only be used by Tapu Koko, Tapu Lele, Tapu Bulu, or Tapu Fini.
+697 Z-Move. Deals immense damage. Requires the move Spirit Shackle, the item Decidium Z, and can only be used by Decidueye.
+698 Z-Move. Deals immense damage. Requires the move Darkest Lariat, the item Incinium Z, and can only be used by Incineroar.
+699 Z-Move. Deals immense damage. Requires the move Sparkling Aria, the item Primarium Z, and can only be used by Primarina.
+700 Z-Move. Deals immense damage. Requires the move Spectral Thief, the item Marshadium Z, and can only be used by Marshadow.
+701 Z-Move. Deals immense damage. The critical hit rate for this move is raised by 2 stages. Requires the move Thunderbolt, item Pikashunium Z, and can only be used by Pikachu in Cap.
