@@ -276,7 +276,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                     return nobreeding == false &&
                             isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, false, invalid_moves, error);
                 }
-                if(gen < 6 || ab.ab(2) == ability) {
+                if(gen < 6) {
                     if (invalid_moves) {
                         *invalid_moves = moves;
                     }
@@ -285,6 +285,24 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                                 .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
                     }
                     return false;
+                }
+                else if(ab.ab(2) == ability) {
+                    /* Some Pokemon change hidden abilities from gen 5 to 6 */
+                    int priorHA = PokemonInfo::Abilities(pokeid, g).ab(2);
+                    if(priorHA != 0 && priorHA != ability)
+                    {
+                        return isValid(pokeid, g, moves, priorHA, gender, level, false, invalid_moves, error);
+                    }
+                    else {
+                        if (invalid_moves) {
+                            *invalid_moves = moves;
+                        }
+                        if (error) {
+                            *error = QObject::tr("%1 can't learn the following moves from older generations at the same time as having the ability %2: %3.")
+                                    .arg(PokemonInfo::Name(pokeid), AbilityInfo::Name(ability), getCombinationS(moves));
+                        }
+                        return false;
+                    }
                 }
             }
         }
