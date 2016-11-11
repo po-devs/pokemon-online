@@ -57,7 +57,7 @@ void PureMechanicsBase::initMove(int num, Pokemon::gen gen, BattleBase::BasicMov
     data.healing = MoveInfo::Healing(num, gen);
     data.classification = MoveInfo::Classification(num, gen);
     data.status = MoveInfo::Status(num, gen);
-    data.statusKind = MoveInfo::StatusKind(num, gen);
+    //data.statusKind = MoveInfo::StatusKind(num, gen);
     data.minTurns = MoveInfo::MinTurns(num, gen);
     data.maxTurns = MoveInfo::MaxTurns(num, gen);
     data.statAffected = MoveInfo::StatAffected(num, gen);

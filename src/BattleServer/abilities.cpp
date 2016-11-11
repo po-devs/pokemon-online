@@ -3013,7 +3013,7 @@ struct AMLiquidVoice : public AM {
         functions["MoveSettings"] = &ms;
     }
 
-    static void ms(int s, int t, BS &b) {
+    static void ms(int s, int, BS &b) {
         if (tmove(b,s).flags & Move::SoundFlag) {
             //b.sendMoveMessage(x, 0, s);
             tmove(b,s).type = Pokemon::Water;

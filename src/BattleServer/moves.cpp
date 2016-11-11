@@ -7851,7 +7851,7 @@ struct MMAuroraVeil : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int s, int t, BS &b) {
+    static void daf(int s, int, BS &b) {
         if (!b.isWeatherWorking(BattleSituation::Hail)) {
             fturn(b,s).add(TM::Failed);
         }
