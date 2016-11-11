@@ -188,8 +188,8 @@ void BattleSituation::initializeEndTurnFunctions()
 
         22.0 Perish Song
 
-        23.0 Reflect ends
-        23.1 Light Screen ends
+        23.0 Reflect ends, Light Screen ends
+        23.1 Aurora Veil ends
         23.2 Safeguard ends
         23.3 Mist ends
         23.4 Tailwind ends
@@ -2307,7 +2307,10 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
                }
             }
             int move = tmove(attacker()).attack;
-            if (move == Move::MoongeistBeam || move == Move::SunsteelStrike || move == Move::CoreEnforcer) {
+            if (move == Move::MoongeistBeam || move == Move::SunsteelStrike) {
+                return false;
+            }
+            if (move == Move::CoreEnforcer && hasMoved(attacker())) {
                 return false;
             }
         }

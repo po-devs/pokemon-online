@@ -320,7 +320,27 @@
 629 220#Shell Trap
 633 222#psychic terrain
 634 223#throat chop
+635 236#Aurora Veil
 636 224#laser focus
 638 69#multi-attack
+641 225#Instruct
 642 12#Spirit Shackle
 644 117-4#Sparkling Aria
+645 226#ShoreUp
+646 40#FirstImpression
+647 227#Baneful Bunker
+649 228#Floral Healing
+650 229#Strength Sap
+651 48#Spotlight
+653 231#Gear Up
+654 232#Pollen Puff
+655 12#Anchor Shot
+658 185#Power Trip, stored power clone
+659 233#Burn Up
+660 55-5#Speed Swap
+662 234#Purify
+663 235#Beak Blast
+665 14#Psychic Fangs
+666 237#Stomping Tantrum
+669 11#Prismatic Laser
+670 230#Spectral Thief

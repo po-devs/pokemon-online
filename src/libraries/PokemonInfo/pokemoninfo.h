@@ -329,7 +329,7 @@ private:
         QHash<int, signed char> priority;
         QHash<int, char> range;
         QHash<int, signed char> recoil;
-        QHash<int, char> status;
+        //QHash<int, char> status;
         QHash<int, char> type;
         QHash<int, bool> kingRock;
         QSet<int> HMs;

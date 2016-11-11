@@ -1807,7 +1807,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_int_char(priority, path("priority.txt"));
     fill_int_char(range, path("range.txt"));
     fill_int_char(recoil, path("recoil.txt"));
-    fill_int_char(status, path("status.txt"));
+    //fill_int_char(status, path("status.txt"));
     fill_int_char(type, path("type.txt"));
     fill_int_bool(kingRock, path("king_rock.txt"));
 

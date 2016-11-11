@@ -1966,6 +1966,7 @@ bool BattleBase::testFail(int player)
 {
     if (turnMem(player).failed() == true) {
         pokeMemory(player).remove("ProteanActivated");
+        pokeMemory(player)["LastFailedTurn"] = turn();
         /* Silently or not ? */
         notify(All, Failed, player, !turnMem(player).failingMessage());
         return true;

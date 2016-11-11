@@ -136,3 +136,4 @@
 222 The battlefield got weird!|<Psychic terrain fades>|<Priority move blocked!>|%s surrounds itself with psychic terrain!
 223 <%s can't use %m after the Throat Chop!>|The effects of Throat Chop prevent %f from using Sound-based moves!|<%s can speak again>
 224 <Laser Focus used>
+238 %s stole the target's boosted stats!
