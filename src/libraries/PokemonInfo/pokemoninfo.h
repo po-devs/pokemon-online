@@ -277,7 +277,7 @@ public:
     static int MinTurns(int movenum, Pokemon::gen gen);
     static int MaxTurns(int movenum, Pokemon::gen gen);
     static int Status(int movenum, Pokemon::gen gen);
-    static int StatusKind(int movenum, Pokemon::gen gen);
+    //static int StatusKind(int movenum, Pokemon::gen gen);
     static int ConvertFromOldMove(int oldmovenum);
     static QString MoveMessage(int moveeffect, int part);
     /* the status mod of a move*/

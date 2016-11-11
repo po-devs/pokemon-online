@@ -2278,10 +2278,10 @@ int MoveInfo::Status(int movenum, Pokemon::gen g)
     move_find(causedEffect, movenum, g);
 }
 
-int MoveInfo::StatusKind(int movenum, Pokemon::gen g)
+/*int MoveInfo::StatusKind(int movenum, Pokemon::gen g)
 {
     move_find(status, movenum, g);
-}
+}*/
 
 QString MoveInfo::MoveMessage(int moveeffect, int part)
 {
