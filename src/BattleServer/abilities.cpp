@@ -2417,8 +2417,10 @@ struct AMStanceChange : public AM {
 
         if (num.subnum == 0 && tmove(b,s).category != Move::Other) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash_Blade, true);
+            b.sendAbMessage(110,0,0);
         } else if (num.subnum == 1 && move(b,s) == Move::KingsShield) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash, true);
+            b.sendAbMessage(110,1,0);
         }
     }
 };
@@ -2693,7 +2695,7 @@ struct AMElectricSurge : public AM
         }
         b.sendMoveMessage(args[1].toInt(), 0, s, 0, type);
         b.terrain = type;
-        b.terrainCount = 5;
+        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.battleMemory()["LastSurgedTerrain"] = type;
         b.battleMemory()["TerrainMessageReference"] = args[1].toInt();
 
@@ -2877,15 +2879,6 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 };
 
 //UNTESTED/NOT COMPLETE
-struct AMOneWayChange : AM /*Change a pokemon on a criteria but dont change back if criteria is no longer met*/
-{
-    //Copy most of Zen Mode and tweak.
-    //Schooling depending on mechanic
-    //Power Construct (unless it reverts like Zen Mode)
-    //See comment in AMTwoWayChange to possibly combine both together
-};
-
-//UNTESTED/NOT COMPLETE
 struct AMDisguise : AM
 {
     AMDisguise() {
@@ -2970,6 +2963,7 @@ struct AMBattleBond : public AM {
         if (b.pokenum(s).subnum == 0) {
             b.sendAbMessage(141, 0, s);
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
+            b.sendAbMessage(141, 1, s);
         }
     }
 
@@ -3214,8 +3208,8 @@ void AbilityEffect::init()
     //125 Cheek pouch message
     REGISTER_AB(126, StrongWeather);
 
-    // gen 7
-    REGISTER_AB(127, OneWayChange); /*Shields Down, Power Construct*/ //not completed
+    // gen 7    
+    //127 comatose message
     REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/ //how long does the terrain last?
     REGISTER_AB(129, Dazzling); /*Queenly Majesty*/
     REGISTER_AB(130, Berserk);
@@ -3236,7 +3230,8 @@ void AbilityEffect::init()
     REGISTER_AB(145, LiquidVoice);
     REGISTER_AB(146, SteelWorker);
     //REGISTER_AB(147, Schooling);
+    //REGISTER_AB(148, PowerConstruct);
+    //REGISTER_AB(149, ShieldsDown);
 
-    //Started: Disguise, Dancer, Steelworker, Shields Down, Power Construct
-    //Not started: Schooling, Beast Boost
+    //NOT DONE: Disguise, Dancer, Steelworker, Shields Down, Power Construct, Schooling, Beast Boost
 }

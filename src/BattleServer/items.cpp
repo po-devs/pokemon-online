@@ -1139,7 +1139,23 @@ struct IMZCrystal : public IM {
     }
 
     static void ms (int s, int, BS &b) {
-        tmove(b,s).power += 80; //unconfirmed, rather not true but we dont know much yet
+        if (tmove(b,s).power > 0) {
+            tmove(b,s).power = tmove(b,s).zpower;
+        }
+    }
+};
+
+//UNTESTED
+struct IMSeeds : public IM {
+    IMSeeds() {
+
+    }
+};
+
+//UNTESTED
+struct IMAdrenalineOrb : public IM {
+    IMAdrenalineOrb() {
+
     }
 };
 
@@ -1187,6 +1203,9 @@ void ItemEffect::init()
     REGISTER_ITEM(67, PrimalOrb);
     REGISTER_ITEM(68, MemoryChip);
     REGISTER_ITEM(69, ZCrystal);
+    REGISTER_ITEM(70, Seeds);
+    REGISTER_ITEM(71, AdrenalineOrb);
+    //72 Protective pads
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);
@@ -1196,4 +1215,6 @@ void ItemEffect::init()
     REGISTER_ITEM(1007, Revive);
     REGISTER_ITEM(1999, SacredAsh);
     initBerries();
+
+    //NOT DONE: Seeds, Adrenaline Orb
 }

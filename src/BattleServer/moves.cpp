@@ -1183,7 +1183,7 @@ struct MMAssist : public MM
                        move == Fly || move == Bounce || move == FreezeShock || move == IceBurn || move == RazorWind || move == SkullBash ||
                        move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce || move == Roar || move == Whirlwind){
                 return gen >= 6;
-            } else if (move == SolarBlade) {
+            } else if (move == SolarBlade || move == DarkVoid) {
                 return gen >= 7;
             } else {
                 return QSet<int>::contains(move);
@@ -2480,14 +2480,14 @@ struct MMMetronome : public MM
                                      << Move::TechnoBlast << Move::V_create << Move::WideGuard << Move::Snarl << Move::RagePowder << Move::AfterYou
                                      << Move::Bestow << Move::NaturePower << Move::Snore << Move::HyperspaceHole << Move::SteamEruption << Move::LightOfRuin
                                      << Move::DiamondStorm << Move::ThousandArrows << Move::ThousandWaves << Move::HoldHands << Move::Celebrate << Move::HappyHour
-                                     << Move::PrecipiceBlades << Move::OriginPulse << Move::DragonAscent << Move::HyperspaceFury;
-            //UNCONFIRMED, signature moves usually blocked: << Move::MoongeistBeam << Move::SunsteelStrike << Move::SpectralThief << Move::PrismaticLaser;
+                                     << Move::PrecipiceBlades << Move::OriginPulse << Move::DragonAscent << Move::HyperspaceFury
+                                     << Move::MoongeistBeam << Move::SunsteelStrike << Move::SpectralThief << Move::PrismaticLaser;
         }
         bool contains(int move, Pokemon::gen gen) const {
             if (gen <= 4) {
                 return MMAssist::forbidden_moves.contains(move, gen);
             } else {
-                return QSet<int>::contains(move);
+                return QSet<int>::contains(move) || (gen >= 7 && move == Move::DarkVoid);
             }
         }
     };
@@ -6954,7 +6954,7 @@ struct MMElectricTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(201,0,s,Pokemon::Electric);
-        b.terrainCount = 5;
+        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = Type::Electric;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
     }
@@ -7053,7 +7053,7 @@ struct MMGrassyTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(205,0,s,Pokemon::Grass);
-        b.terrainCount = 5;
+        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = Type::Grass;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrain", &et);
     }
@@ -7189,7 +7189,7 @@ struct MMMistyTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {        
         b.sendMoveMessage(208,0,s,Pokemon::Fairy);
-        b.terrainCount = 5;
+        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MistyTerrain", &et);
     }
@@ -7503,12 +7503,13 @@ struct MMShellTrap : public MM {
         }
 
         if (fail) {
-            fturn(b,s).add(TM::Failed);
+            b.fail(s, 220, 1);
         }
     }
 
     static void uas(int s, int, BS &b) {
         poke(b,s)["ShellTrapTurn"] = b.turn();
+        b.sendMoveMessage(220, 1, s);
     }
 
     static void uodr(int s, int, BS &b) {
@@ -7524,6 +7525,7 @@ struct MMShellTrap : public MM {
     }
 };
 
+//UNCONFIRMED: Revelation Dance is ALWAYS the user's Type 1.
 struct MMRevelationDance : public MM
 {
     MMRevelationDance() {
@@ -7556,7 +7558,7 @@ struct MMPsychicTerrain : public MM {
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
         b.sendMoveMessage(222,0,s,type);
-        b.terrainCount = 5;
+        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "PsychicTerrain", &et);
     }
@@ -7802,6 +7804,7 @@ struct MMBurnUp : public MM
 
     static void uas(int s, int, BS &b) {
         b.removeType(s, Pokemon::Fire);
+        b.sendMoveMessage(233, 0, s);
     }
 };
 
@@ -7839,7 +7842,7 @@ struct MMBeakBlast : public MM
     }
 
     static void os(int s, int, BS &b) {
-        b.sendMoveMessage(235,1,s,Pokemon::Flying);
+        b.sendMoveMessage(235,0,s,Pokemon::Flying);
     }
 };
 
@@ -7925,7 +7928,6 @@ struct MMSpectralThief : public MM {
     }
 };
 
-
 //UNTESTED
 struct MMInstruct : public MM
 {
@@ -7937,7 +7939,6 @@ struct MMInstruct : public MM
     //Probably fails if the target doesnt have a last move memory
 };
 
-
 //UNTESTED
 struct MMPollenPuff : public MM
 {
@@ -7945,6 +7946,20 @@ struct MMPollenPuff : public MM
 
     }
     //Deals damage if enemy, heals if ally
+};
+
+//UNTESTED
+struct MMDarkVoid : public MM
+{
+    MMDarkVoid() {
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.gen() >= 7 && b.poke(s).num() != Pokemon::Darkrai) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
 };
 
 /* List of events:
@@ -8219,6 +8234,8 @@ void MoveEffect::init()
     REGISTER_MOVE(235, BeakBlast);
     REGISTER_MOVE(236, AuroraVeil);
     REGISTER_MOVE(237, StompingTantrum);
+    REGISTER_MOVE(238, DarkVoid);
+    //239 Core Enforcer/Moongeist/Sunsteel message
 
     //NOT DONE: Instruct, Pollen Puff
     //UNTESTED: Spotlight

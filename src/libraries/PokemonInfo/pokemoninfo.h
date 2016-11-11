@@ -250,6 +250,7 @@ public:
     static int Recoil(int movenum, Pokemon::gen gen);
     static QString Description(int movenum, Pokemon::gen gen);
     static int Power(int movenum, Pokemon::gen gen);
+    static int ZPower(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum, Pokemon::gen gen);
     static int PP(int movenum, Pokemon::gen gen);
@@ -325,6 +326,7 @@ private:
         QHash<int,long> statboost;
         QHash<int,long> statrate;
         QHash<int, unsigned char> power;
+        QHash<int, unsigned char> zpower;
         QHash<int, char> pp;
         QHash<int, signed char> priority;
         QHash<int, char> range;

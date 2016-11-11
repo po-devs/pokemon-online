@@ -730,33 +730,33 @@
 729 Pop Star Pokémon
 730 Soloist Pokémon
 731 Woodpecker Pokémon
-732 ??? Pokémon
-733 ??? Pokémon
+732 Woodpecker Pokémon
+733 Bugle Beak Pokémon
 734 Loitering Pokémon
 735 Stakeout Pokémon
 736 Larva Pokémon
 737 Battery Pokémon
 738 Stag Beetle Pokémon
 739 Boxing Pokémon
-740 ??? Pokémon
+740 Woolly Crab Pokémon
 741 Dancing Pokémon
 742 Bee Fly Pokémon
 743 Bee Fly Pokémon
 744 Puppy Pokémon
 745 Wolf Pokémon
 746 Small Fry Pokémon
-747 ??? Pokémon
-748 ??? Pokémon
+747 Brutal Star Pokémon
+748 Brutal Star Pokémon
 749 Donkey Pokémon
 750 Draft Horse Pokémon
-751 ??? Pokémon
-752 ??? Pokémon
+751 Water Bubble Pokémon
+752 Water Bubble Pokémon
 753 Sickle Grass Pokémon
 754 Bloom Sickle Pokémon
 755 Illuminating Pokémon
-756 ??? Pokémon
+756 Illuminating Pokémon
 757 Toxic Lizard Pokémon
-758 ??? Pokémon
+758 Toxic Lizard Pokémon
 759 Flailing Pokémon
 760 Strong Arm Pokémon
 761 Fruit Pokémon
@@ -766,7 +766,7 @@
 765 Sage Pokémon
 766 Teamwork Pokémon
 767 Turn Tail Pokémon
-768 ??? Pokémon
+768 Hard Scale Pokémon
 769 Sand Mound Pokémon
 770 Sand Castle Pokémon
 771 Sea Cucumber Pokémon
@@ -779,7 +779,7 @@
 778 Disguise Pokémon
 779 Gnash Teeth Pokémon
 780 Placid Pokémon
-781 ??? Pokémon
+781 Sea Creeper Pokémon
 782 Scaly Pokémon
 783 Scaly Pokémon
 784 Scaly Pokémon
@@ -787,8 +787,8 @@
 786 Land Spirit Pokémon
 787 Land Spirit Pokémon
 788 Land Spirit Pokémon
-789 ??? Pokémon
-790 ??? Pokémon
+789 Nebula Pokémon
+790 Protostar Pokémon
 791 Sunne Pokémon
 792 Moone Pokémon
 793 Parasite Pokémon
@@ -800,4 +800,4 @@
 799 Junkivore Pokémon
 800 Prism Pokémon
 801 Artificial Pokémon
-802 ??? Pokémon
+802 Gloomdweller Pokémon

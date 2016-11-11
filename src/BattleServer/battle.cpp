@@ -979,9 +979,15 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
     slotMemory(slot)["SwitchTurn"] = turn();
 
     //we need to check for Multitype in case Arceus doesn't have its ability
-    if (p.num() == Pokemon::Arceus && ItemInfo::isPlate(p.item()) && p.ability() == Ability::Multitype) {
-        int type = ItemInfo::PlateType(p.item());
-
+    if (p.num() == Pokemon::Arceus && p.ability() == Ability::Multitype) {
+        int type;
+        if (ItemInfo::isPlate(p.item())) {
+            type = ItemInfo::PlateType(p.item());
+        }
+        //TODO: Code Z Crystal Types
+        /*else if (ItemInfo::isZCrystal(p.item())) {
+            type = ItemInfo::ZCrystalType(p.item());
+        }*/
         if (type != Type::Normal) {
             changeAForme(slot, type);
         }
@@ -2308,9 +2314,11 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
             }
             int move = tmove(attacker()).attack;
             if (move == Move::MoongeistBeam || move == Move::SunsteelStrike) {
+                sendMoveMessage(239,0,attacker(),0,player); //UNTESTED. Might look really bad
                 return false;
             }
             if (move == Move::CoreEnforcer && hasMoved(attacker())) {
+                sendMoveMessage(239,0,attacker(),0,player); //UNTESTED. Might look really bad
                 return false;
             }
         }
@@ -2605,6 +2613,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         return false;
     }
     if (hasWorkingAbility(target, Ability::Comatose) && status != Pokemon::Asleep) {
+        sendAbMessage(148,0,target);
         return false;
     }
 
@@ -4868,6 +4877,10 @@ int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
 bool BattleSituation::makesContact(int s)
 {
     if (hasWorkingAbility(s, Ability::LongReach)) {
+        return false;
+    }
+    if (hasWorkingItem(s, Item::ProtectivePads)) {
+        sendItemMessage(72, s, 0);
         return false;
     }
     if (tmove(s).flags & Move::ContactFlag) {

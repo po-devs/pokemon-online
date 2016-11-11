@@ -375,6 +375,7 @@ public:
         signed char priority;
         int flags;
         int power; /* unsigned char in the game, but can be raised by effects */
+        int zpower;
         int accuracy; /* Same */
         char type;
         char category; /* Physical/Special/Other */

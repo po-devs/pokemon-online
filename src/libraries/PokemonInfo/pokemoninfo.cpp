@@ -1803,6 +1803,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_double(statboost, path("statboost.txt"));
     fill_double(statrate, path("statrate.txt"));
     fill_int_char(power, path("power.txt"));
+    fill_int_char(zpower, path("zpower.txt"));
     fill_int_char(pp, path("pp.txt"));
     fill_int_char(priority, path("priority.txt"));
     fill_int_char(range, path("range.txt"));
@@ -2022,6 +2023,11 @@ QString MoveInfo::Description(int movenum, Pokemon::gen g)
 int MoveInfo::Power(int movenum, Pokemon::gen g)
 {
     move_find(power, movenum, g);
+}
+
+int MoveInfo::ZPower(int movenum, Pokemon::gen g)
+{
+    move_find(zpower, movenum, g);
 }
 
 QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
