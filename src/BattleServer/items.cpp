@@ -838,7 +838,7 @@ struct IMEscapeButton : public IM
 
         for (unsigned i = 0; i < speeds.size(); i++) {
             int p = speeds[i];
-            if (!b.hasWorkingItem(p, Item::EscapeButton))
+            if (!b.hasWorkingItem(p, Item::EjectButton))
                 continue;
             if (!turn(b,p).contains("EscapeButtonActivated"))
                 continue;

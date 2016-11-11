@@ -2020,14 +2020,14 @@ QString MoveInfo::Description(int movenum, Pokemon::gen g)
     return r;
 }
 
-int MoveInfo::Power(int movenum, Pokemon::gen g)
+int MoveInfo::Power(int movenum, Pokemon::gen gen)
 {
-    move_find(power, movenum, g);
+    move_find(power, movenum, gen);
 }
 
-int MoveInfo::ZPower(int movenum, Pokemon::gen g)
+int MoveInfo::ZPower(int movenum, Pokemon::gen gen)
 {
-    move_find(zpower, movenum, g);
+    move_find(zpower, movenum, gen);
 }
 
 QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
@@ -2691,12 +2691,12 @@ bool ItemInfo::isPrimalStone(int itemnum)
 
 bool ItemInfo::isDrive(int itemnum)
 {
-    return itemnum == Item::DouseDrive || itemnum == Item::BurnDrive || itemnum == Item::ChillDrive || itemnum == Item::ShockDrive;
+    return itemnum >= 227 && itemnum <= 230;
 }
 
 bool ItemInfo::isGem(int itemnum)
 {
-    return itemnum == Item::NormalGem || itemnum == Item::FightGem || itemnum == Item::SteelGem || itemnum == Item::PsychicGem || itemnum == Item::DarkGem || itemnum == Item::FireGem || itemnum == Item::WaterGem || itemnum == Item::ElectricGem || itemnum == Item::IceGem || itemnum == Item::FlightGem || itemnum == Item::PoisonGem || itemnum == Item::GhostGem || itemnum == Item::BugGem || itemnum == Item::GrassGem || itemnum == Item::RockGem || itemnum == Item::EarthGem || itemnum == Item::DragonGem;
+    return itemnum >= 243 && itemnum <= 259;
 }
 
 bool ItemInfo::isMail(int itemnum)

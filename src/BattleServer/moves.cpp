@@ -7955,7 +7955,7 @@ struct MMDarkVoid : public MM
         functions["DetermineAttackFailure"] = &daf;
     }
 
-    static void daf(int s, int t, BS &b) {
+    static void daf(int s, int, BS &b) {
         if (b.gen() >= 7 && b.poke(s).num() != Pokemon::Darkrai) {
             fturn(b,s).add(TM::Failed);
         }

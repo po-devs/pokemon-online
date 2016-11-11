@@ -45,7 +45,7 @@ void PureMechanicsBase::initMove(int num, Pokemon::gen gen, BattleBase::BasicMov
     data.priority = MoveInfo::SpeedPriority(num, gen);
     data.flags = MoveInfo::Flags(num, gen);
     data.power = MoveInfo::Power(num, gen);
-    data.power = MoveInfo::ZPower(num, gen);
+    data.zpower = MoveInfo::ZPower(num, gen);
     data.accuracy = MoveInfo::Acc(num, gen);
     data.type = MoveInfo::Type(num, gen);
     data.category = MoveInfo::Category(num, gen);
