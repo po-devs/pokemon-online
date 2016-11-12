@@ -742,6 +742,12 @@ struct MMDetect : public MM
             return;
         }
 
+        if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+            turn(b,s)["ZMoveProtected"] = true;
+            b.sendItemMessage(68, t, 1);
+            return;
+        }
+
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
@@ -7804,6 +7810,7 @@ struct MMBurnUp : public MM
 
     static void uas(int s, int, BS &b) {
         b.removeType(s, Pokemon::Fire);
+        poke(b,s)["BurnedUp"] = true;
         b.sendMoveMessage(233, 0, s);
     }
 };

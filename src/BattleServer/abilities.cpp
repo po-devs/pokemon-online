@@ -2973,7 +2973,7 @@ struct AMBattleBond : public AM {
             return;
 
         if (tmove(b,s).attack == Move::WaterShuriken) {
-            b.chainBp(s, 0x2000); //how much should the boost be?
+            b.chainBp(s, 0x2000);
         }
     }
 };
@@ -2996,6 +2996,9 @@ struct AMReceiver : public AM {
 
     static void opk(int s, int t, BS &b) {
         int ab = b.ability(t);
+        if (ab == Ability::Multitype || ab == Ability::RKSSystem || ab == Ability::FlowerGift || ab == Ability::Illusion || ab == Ability::StanceChange) {
+            return;
+        }
         b.sendAbMessage(143, 0, s, t, 0, ab);
         b.acquireAbility(s, ab);
     }
@@ -3219,7 +3222,7 @@ void AbilityEffect::init()
     REGISTER_AB(134, Triage); //what priority does this make it?
     REGISTER_AB(135, WimpOut); /* Emergency Exit*/ //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
     REGISTER_AB(136, SurgeSurfer);
-    REGISTER_AB(137, WaterCompaction); // not sure whether water type moves still deal damage or not
+    REGISTER_AB(137, WaterCompaction);
     REGISTER_AB(138, Disguise);
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer);

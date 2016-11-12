@@ -594,8 +594,16 @@ void BattleSituation::endTurnBurn(int player)
         return;
 
     notify(All, StatusMessage, player, qint8(HurtBurn));
-    //HeatProof: burn does only 1/16, also Gen 1 only does 1/16
-    inflictDamage(player, poke(player).totalLifePoints() / (8 * (1 + hasWorkingAbility(player, Ability::Heatproof))), player);
+    //HeatProof cuts burn damage in half
+    int denom = 8;
+    if (hasWorkingAbility(player, Ability::Heatproof)) {
+        denom *= 2;
+    }
+    //Gen 7 cut burn damage in half (1/8 to 1/16)
+    if (gen() >= 7) {
+        denom *= 2;
+    }
+    inflictDamage(player, poke(player).totalLifePoints() / denom, player);
 }
 
 BattleChoices BattleSituation::createChoice(int slot)
@@ -792,6 +800,16 @@ void BattleSituation::analyzeChoices()
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
+    //UNTESTED: Gen 7 mega evolution changes turn order now.
+    if (gen() >= 7) {
+        foreach(int i, playersByOrder) {
+            if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
+                int slot = i;
+                megaEvolve(slot);
+            }
+        }
+        playersByOrder = sortedBySpeed();
+    }
 
     foreach(int i, playersByOrder) {
         if (choice(i).itemChoice()) {
@@ -850,7 +868,9 @@ void BattleSituation::analyzeChoices()
     foreach(int i, playersByOrder) {
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
-            megaEvolve(slot);
+            if (gen() < 7) {
+                megaEvolve(slot);
+            }
             useZMove(slot);
         }
     }
@@ -2971,7 +2991,12 @@ QVector<int> BattleSituation::getTypes(int player, bool transform) const
     }
 
     if (ret.isEmpty()) {
-        ret.push_back(Type::Normal);
+        //If a pokemon was pure fire and lost its type via burn up, it takes neutral damage from all moves
+        if (pokeMemory(player).value("BurnedUp").toBool()) {
+            ret.push_back(Type::Curse);
+        } else {
+            ret.push_back(Type::Normal);
+        }
     }
 
     return ret;
@@ -3814,12 +3839,15 @@ int BattleSituation::calculateDamage(int p, int t)
         turnMemory(t)["FinalModifier"] = finalmod;
         damage = applyMod(damage, finalmod);
 
+        //If a pokemon protects against a Z move, damage is reduced to 1/4
+        if (turnMemory(s).value("ZMoveProtected").toBool()) {
+            damage /= 4;
+        }
         if (gen() == 5) {
             return std::round(damage); // it is possible to deal 0 damage in Gen 5, but not in Gen 6
         } else {
             return std::max(1, damage);
         }
-
     }
 }
 
