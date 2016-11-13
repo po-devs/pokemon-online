@@ -127,7 +127,7 @@
 158 82#Prankster
 159 72#Sand Force
 160 50#Iron Barb
-161 77-555_66091#Zen Mode
+161 77#Zen Mode
 162 75#Victory Star
 163 40#Turbo Blaze
 164 40#TeraVolt

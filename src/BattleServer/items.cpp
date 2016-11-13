@@ -1142,6 +1142,8 @@ struct IMZCrystal : public IM {
         if (tmove(b,s).power > 0) {
             tmove(b,s).power = tmove(b,s).zpower;
         }
+        //UNTESTED: Protect's reduction
+        //UNFINISHED: Special effects for Other type moves
     }
 };
 

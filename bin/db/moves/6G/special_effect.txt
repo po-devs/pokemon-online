@@ -299,7 +299,7 @@
 593 205#Grassy Terrain
 594 217#Ion Deluge
 595 206#King's Shield
-597 216#Magnetic Flux
+597 216-2_4#Magnetic Flux
 598 207#Mat Block
 599 208#Misty Terrain
 600 140#Parting Shot

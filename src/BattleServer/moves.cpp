@@ -627,10 +627,18 @@ struct MMCurse : public MM
     }
 };
 
+//UNTESTED
 struct MMDestinyBond : public MM
 {
     MMDestinyBond() {
+        functions["DetermineAttackFailure"] = &daf;
         functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void daf(int, int, BS &b) {
+        if (b.gen() >= 7) {
+            //Unconfirmed: There needs to be a fail rate. No idea if its the same as protect?
+        }
     }
 
     static void uas(int s, int, BS &b) {
@@ -850,12 +858,12 @@ struct MMFeint : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        const char *shields[] = {"DetectUsed", "KingsShieldUsed", "SpikyShieldUsed", "CraftyShieldUsed", "MatBlockUsed", "WideGuardUsed", "QuickGuardUsed", "BanefulBunkerUsed"};
+        const char *shields[] = {"DetectUsed", "KingsShieldUsed", "SpikyShieldUsed", "BanefulBunkerUsed", "CraftyShieldUsed", "MatBlockUsed", "WideGuardUsed", "QuickGuardUsed"};
         bool remove = false;
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 8; i++) {
             //Single Target: Protect/Detect, KingShield, SpikyShield
-            if (i < 3) {
+            if (i < 4) {
                 if (turn(b,t).value(shields[i]).toBool()) {
                     turn(b,t).remove(shields[i]);
                     b.sendMoveMessage(42,i,s,0,t);
@@ -7113,6 +7121,12 @@ struct MMKingsShield: public MM
             return;
         }
 
+        if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+            turn(b,s)["ZMoveProtected"] = true;
+            b.sendItemMessage(68, t, 1);
+            return;
+        }
+
         /* Mind Reader */
         if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
             return;
@@ -7420,12 +7434,14 @@ struct MMMagneticFlux : public MM {
     }
 
     static void uas(int s, int, BS &b) {
+        QStringList args = turn(b,s)["MagneticFlux_Arg"].toString().split('_');
         foreach (int p, b.sortedBySpeed())
         {
             if (b.player(p) == b.player(s)) {
                 if (b.hasWorkingAbility(p, Ability::Minus) || b.hasWorkingAbility(p, Ability::Plus)) {
-                    b.inflictStatMod(p, Defense, 1, s);
-                    b.inflictStatMod(p, SpDefense, 1, s);
+                    foreach(QString str, args) {
+                        b.inflictStatMod(p, str.toInt(), 1, s);
+                    }
                 }
             }
         }
@@ -7671,7 +7687,6 @@ struct MMLaserFocus : public MM
     }
 };
 
-//UNTESTED
 struct MMShoreUp : public MM
 {
     MMShoreUp() {
@@ -7685,7 +7700,6 @@ struct MMShoreUp : public MM
     }
 };
 
-//UNTESTED
 struct MMBanefulBunker: public MM
 {
     MMBanefulBunker() {
@@ -7696,7 +7710,7 @@ struct MMBanefulBunker: public MM
     static void uas(int s, int, BS &b) {
         addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "BanefulBunker", &dgaf);
         turn(b,s)["BanefulBunkerUsed"] = true;
-        b.sendMoveMessage(227, 0, s, type(b,s));
+        b.sendMoveMessage(27, 0, s, type(b,s));
     }
 
     static void dgaf(int s, int t, BS &b) {
@@ -7712,6 +7726,12 @@ struct MMBanefulBunker: public MM
         }
 
         if (tmove(b,s).category == Move::Other) {
+            return;
+        }
+
+        if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+            turn(b,s)["ZMoveProtected"] = true;
+            b.sendItemMessage(68, t, 1);
             return;
         }
 
@@ -7731,7 +7751,6 @@ struct MMBanefulBunker: public MM
     }
 };
 
-//UNTESTED
 struct MMFloralHealing : public MM
 {
     MMFloralHealing() {
@@ -7745,7 +7764,6 @@ struct MMFloralHealing : public MM
     }
 };
 
-//UNTESTED
 struct MMStrengthSap : public MM
 {
     MMStrengthSap() {
@@ -7754,43 +7772,8 @@ struct MMStrengthSap : public MM
 
     static void uas(int s, int t, BS &b) {
         b.healLife(s, b.getStat(t, Attack));
-    }
-};
-
-//UNTESTED
-struct MMGearUp : public MM {
-    MMGearUp() {
-        functions["BeforeTargetList"] = &btl;
-        functions["UponAttackSuccessful"] = &uas;
-    }
-
-    /* Copied from Haze*/
-    static void btl(int s, int, BS &b) {
-        if (tmove(b,s).power == 0) {
-            b.targetList.clear();
-            b.targetList.push_back(s);
-        }
-    }
-
-    static void uas(int s, int, BS &b) {
-        bool boosted = false;
-        if (tmove(b,s).power == 0) {
-            foreach (int p, b.sortedBySpeed())
-            {
-                if (b.koed(p) || !b.arePartners(s, p)) {
-                    continue;
-                }
-                if (b.hasWorkingAbility(p, Ability::Plus) || b.hasWorkingAbility(p, Ability::Minus)) {
-                    b.inflictStatMod(p, Attack, 1, s);
-                    b.inflictStatMod(p, SpAttack, 1, s);
-                    boosted = true;
-                }
-            }
-        }
-        //If nothing happens, the user should get feedback.
-        if (!boosted) {
-            b.notify(BS::All, BattleCommands::Failed, s);
-        }
+        b.sendMoveMessage(229, 0, s, type(b,s), t);
+        b.inflictStatMod(t, Attack, -1, s);
     }
 };
 
@@ -7802,7 +7785,6 @@ struct MMBurnUp : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        //UNCONFIRMED: Do you need fire type?
         if (!b.hasType(s, Pokemon::Fire)) {
             fturn(b,s).add(TM::Failed);
         }
@@ -7815,7 +7797,6 @@ struct MMBurnUp : public MM
     }
 };
 
-//UNTESTED
 struct MMPurify : public MM
 {
     MMPurify() {
@@ -7831,20 +7812,25 @@ struct MMPurify : public MM
 
     static void uas(int s, int t, BS &b) {
         b.healStatus(t, 0);
+        b.sendMoveMessage(234,0,s,type(b,s),t);
         //UNCONFIRMED. How much does this heal? Currently at 50%
-        b.healLife(s, b.poke(s).totalLifePoints() / 2);
+        if (b.canHeal(s, BS::HealByMove, Move::Purify)) {
+            b.healLife(s, b.poke(s).totalLifePoints() / 2);
+            b.sendMoveMessage(234,1,s,type(b,s),t);
+        }
     }
 };
 
 //UNTESTED
+//Broken: Doesn't burn
 struct MMBeakBlast : public MM
 {
     MMBeakBlast() {
-        functions["UponPhysicalAssault"] = &upa;
         functions["OnSetup"] = &os;
+        functions["UponPhysicalAssault"] = &uas;
     }
 
-    static void upa(int s, int t, BS &b) {
+    static void uas(int s, int t, BS &b) {
         b.inflictStatus(t, Pokemon::Burnt, s);
     }
 
@@ -7904,6 +7890,8 @@ struct MMAuroraVeil : public MM
 };
 
 //UNTESTED
+//Unconfirmed: Misses count?
+//Broken: certain fails dont trigger. Ex: canHeal + recover
 struct MMStompingTantrum : public MM
 {
     MMStompingTantrum() {
@@ -7911,26 +7899,30 @@ struct MMStompingTantrum : public MM
     }
 
     static void bcd(int s, int, BS &b) {
-        if (poke(b,s)["LastFailedTurn"].toInt() == b.turn() - 1) {
+        if (poke(b,s).contains("LastFailedTurn") && poke(b,s)["LastFailedTurn"].toInt() == b.turn() - 1) {
             b.chainBp(s, 0x2000);
         }
     }
 };
 
-//UNTESTED
+//Unconfirmed: Does it steal if the move fails? like immunity
 struct MMSpectralThief : public MM {
     MMSpectralThief() {
         functions["BeforeCalculatingDamage"] = &bh;
     }
 
     static void bh(int s, int t, BS &b) {
-        b.sendMoveMessage(238,0,s,type(b,s),t);
+        bool stole = false;
         for (int i = 1; i <= 7; i++) {
             int oppBoost = fpoke(b,t).boosts[i];
             if (oppBoost > 0) {
-                fpoke(b,s).boosts[i] = oppBoost;
-                fpoke(b,t).boosts[i] = 0;
+                b.inflictStatMod(s, i, oppBoost, s, false);
+                b.inflictStatMod(t, i, -oppBoost, s, false);
+                stole = true;
             }
+        }
+        if (stole) {
+            b.sendMoveMessage(238,0,s,type(b,s),t);
         }
     }
 };
@@ -7955,7 +7947,6 @@ struct MMPollenPuff : public MM
     //Deals damage if enemy, heals if ally
 };
 
-//UNTESTED
 struct MMDarkVoid : public MM
 {
     MMDarkVoid() {
@@ -7965,6 +7956,19 @@ struct MMDarkVoid : public MM
     static void daf(int s, int, BS &b) {
         if (b.gen() >= 7 && b.poke(s).num() != Pokemon::Darkrai) {
             fturn(b,s).add(TM::Failed);
+        }
+    }
+};
+
+struct MMAbilityIgnore : public MM
+{
+    MMAbilityIgnore() {
+        functions["BeforeHitting"] = &bh;
+    }
+
+    static void bh(int s, int t, BS &b) {
+        if (AbilityInfo::moldBreakable(b.ability(t))) {
+            b.sendMoveMessage(239,0,s,type(b,s),t);
         }
     }
 };
@@ -8219,7 +8223,7 @@ void MoveEffect::init()
     REGISTER_MOVE(213, FlowerShield);
     REGISTER_MOVE(214, Rototiller);
     REGISTER_MOVE(215, Powder);
-    REGISTER_MOVE(216, MagneticFlux);
+    REGISTER_MOVE(216, MagneticFlux); /*Gear Up*/
     REGISTER_MOVE(217, IonDeluge);
     REGISTER_MOVE(218, Celebrate);
     REGISTER_MOVE(219, HyperspaceFury);
@@ -8234,7 +8238,7 @@ void MoveEffect::init()
     REGISTER_MOVE(228, FloralHealing);
     REGISTER_MOVE(229, StrengthSap);
     REGISTER_MOVE(230, SpectralThief);
-    REGISTER_MOVE(231, GearUp);
+    REGISTER_MOVE(231, AbilityIgnore); /*Core Enforcer/Moongeist/Sunsteel*/
     //REGISTER_MOVE(232, PollenPuff);
     REGISTER_MOVE(233, BurnUp);
     REGISTER_MOVE(234, Purify);
@@ -8242,9 +8246,7 @@ void MoveEffect::init()
     REGISTER_MOVE(236, AuroraVeil);
     REGISTER_MOVE(237, StompingTantrum);
     REGISTER_MOVE(238, DarkVoid);
-    //239 Core Enforcer/Moongeist/Sunsteel message
 
-    //NOT DONE: Instruct, Pollen Puff
-    //UNTESTED: Spotlight
+    //NOT DONE: Instruct, Pollen Puff, Spotlight
     //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate
 }

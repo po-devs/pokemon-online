@@ -1228,14 +1228,13 @@ struct AMTechnician : public AM {
     }
 };
 
-//UNTESTED
 struct AMThickFat : public AM {
     AMThickFat() {
         functions["FoeDamageFormulaStart"] = &bpfm;
     }
 
-    static void bpfm (int , int t, BS &b) {
-        QStringList args = poke(b,t)["AbilityArg"].toString().split('_');
+    static void bpfm (int s, int t, BS &b) {
+        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
         for (int i = 0; i < args.length(); i++) {
             if (args[i].toInt() == tmove(b,t).type) {
                 if (b.gen().num == 3) {
@@ -2794,48 +2793,40 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
     }
 };
 
-//UNTESTED
-struct AMTwoWayChange : public AMPinch { /*Zen Mode*/
-    AMTwoWayChange() {
+struct AMZenMode : public AM {
+    AMZenMode() {
         functions["EndTurn29.0"] = &et;
         functions["OnLoss"] = &ol;
+        functions["UponSetup"] = &et;
     }
 
     static void et (int s, int, BS &b) {
-        /* Not using field pokemon since Ditto doesn't gain zen mode/etc.
+        /* Not using field pokemon since Ditto doesn't gain zen mode.
          * So using b.poke(s) instead of fpoke(b,s). */
         Pokemon::uniqueId num = b.poke(s).num();
 
-        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
-        Pokemon::uniqueId base = args[0];
-        Pokemon::uniqueId alt = args[1];
-        //Perhaps a 3rd arg could be used to define a message set.
-        //if Zen Mode is the only 2 way then AMOneWay can be combined into this by defining a bool for only Zen to use
-
-        if (PokemonInfo::OriginalForme(num) != base || b.preTransPoke(s, base))
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Darmanitan || b.preTransPoke(s, Pokemon::Darmanitan))
             return;
 
         num = fpoke(b,s).id;
-        bool zen = testpinch(s,b,2);
+        bool zen = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
 
         if (num.subnum == 0 && zen) {
-            b.changeForme(b.player(s), b.slotNum(s), alt, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan_Zen, true);
             b.sendAbMessage(77, 1, s);
         } else if (num.subnum == 1 && !zen) {
-            b.changeForme(b.player(s), b.slotNum(s), base, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
             b.sendAbMessage(77, 0, s);
         }
     }
 
     static void ol(int s, int, BS &b) {
-        //Retain form if you're not originally a Darmanitan/etc.
-        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
-        Pokemon::uniqueId base = args[0];
-        if (b.preTransPoke(s, base))
+        //Retain form if you're not originally a Darmanitan
+        if (b.preTransPoke(s, Pokemon::Darmanitan))
             return;
 
         if (b.pokenum(s).subnum != 0) {
-            b.changeForme(b.player(s), b.slotNum(s), base, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Darmanitan, true);
             b.sendAbMessage(77, 0, s);
         }
     }
@@ -3004,7 +2995,6 @@ struct AMReceiver : public AM {
     }
 };
 
-//UNTESTED
 struct AMLiquidVoice : public AM {
     AMLiquidVoice() {
         functions["MoveSettings"] = &ms;
@@ -3012,13 +3002,11 @@ struct AMLiquidVoice : public AM {
 
     static void ms(int s, int, BS &b) {
         if (tmove(b,s).flags & Move::SoundFlag) {
-            //b.sendMoveMessage(x, 0, s);
             tmove(b,s).type = Pokemon::Water;
         }
     }
 };
 
-//UNTESTED
 struct AMSteelWorker : public AM {
     AMSteelWorker() {
         functions["BasePowerModifier"] = &bpm;
@@ -3026,8 +3014,8 @@ struct AMSteelWorker : public AM {
 
     static void bpm (int s, int, BS &b) {
         if (tmove(b, s).type == poke(b,s)["AbilityArg"].toInt()) {
-            b.chainBp(s, 0x1400);
-            //Does this give Pseudo Stab? What if a steel type has it?
+            b.chainBp(s, 0x1800);
+            //Unconfirmed: Does this give Pseudo Stab? What if a steel type has it?
         }
     }
 };
@@ -3159,7 +3147,7 @@ void AbilityEffect::init()
     REGISTER_AB(74, WeakArmor);
     REGISTER_AB(75, VictoryStar);
     REGISTER_AB(76, Defeatist);
-    REGISTER_AB(77, TwoWayChange); /*Zen Mode*/
+    REGISTER_AB(77, ZenMode);
     REGISTER_AB(78, PickPocket);
     REGISTER_AB(79, SheerForce);
     REGISTER_AB(80, Defiant); /*Defiant, Competitive*/
@@ -3226,7 +3214,7 @@ void AbilityEffect::init()
     REGISTER_AB(138, Disguise);
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer);
-    REGISTER_AB(141, BattleBond); //how strong is the boost? what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
+    REGISTER_AB(141, BattleBond); //what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
     REGISTER_AB(142, Receiver); /*Power of Alchemy*/
     REGISTER_AB(143, SoulHeart);
     //REGISTER_AB(144, BeastBoost);

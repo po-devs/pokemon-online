@@ -300,7 +300,7 @@
 593 205#Grassy Terrain
 594 217#Ion Deluge
 595 206#King's Shield
-597 216#Magnetic Flux
+597 216-2_4#Magnetic Flux
 598 207#Mat Block
 599 208#Misty Terrain
 600 140#Parting Shot
@@ -316,9 +316,12 @@
 616 175#Thousand Arrows
 617 12#Thousand Waves-- Has Mean Look effect
 621 219#Hyperpsace Fury-- breaks protect
+622 231#core enforcer
+626 231#moongeist beam
 627 130-2#Nature's Madness
 628 221#Revelation Dance
 629 220#Shell Trap
+631 231#sunsteel strike
 633 222#psychic terrain
 634 223#throat chop
 635 236#Aurora Veil
@@ -332,8 +335,8 @@
 647 227#Baneful Bunker
 649 228#Floral Healing
 650 229#Strength Sap
-651 48#Spotlight
-653 231#Gear Up
+651 #Spotlight
+653 216-1_3#Gear Up
 654 232#Pollen Puff
 655 12#Anchor Shot
 658 185#Power Trip, stored power clone

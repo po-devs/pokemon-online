@@ -138,7 +138,9 @@
 223 %s can't use %m after the Throat Chop!|The effects of Throat Chop prevent %f from using Sound-based moves!|<%s can speak again>
 224 %s concentrated intensely!
 225 %t used the move instructed by %s!
+229 <%s sapped %t's strength to regain its own health!>
+231 %t's Ability was ignored!
 233 %s burned itself out!
+234 <%t was cured of its status!>|<%s regained health!>
 235 %s started heating up its break!
 238 %s stole the target's boosted stats!
-239 %t's Ability was suppressed!

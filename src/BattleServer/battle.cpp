@@ -800,7 +800,7 @@ void BattleSituation::analyzeChoices()
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
-    //UNTESTED: Gen 7 mega evolution changes turn order now.
+    //Gen 7 mega evolution changes turn order now.
     if (gen() >= 7) {
         foreach(int i, playersByOrder) {
             if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
@@ -1374,7 +1374,7 @@ void BattleSituation::testCritical(int player, int target)
 
     critical = coinflip(minch, 48);
 
-    bool isCrit;
+    bool isCrit = false;
     if (pokeMemory(player).contains("LaserFocused") && pokeMemory(player).value("LaserFocusEnd").toInt() >= turn()) {
         isCrit = true;
     }
@@ -2334,11 +2334,9 @@ bool BattleSituation::hasWorkingAbility(int player, int ab)
             }
             int move = tmove(attacker()).attack;
             if (move == Move::MoongeistBeam || move == Move::SunsteelStrike) {
-                sendMoveMessage(239,0,attacker(),0,player); //UNTESTED. Might look really bad
                 return false;
             }
             if (move == Move::CoreEnforcer && hasMoved(attacker())) {
-                sendMoveMessage(239,0,attacker(),0,player); //UNTESTED. Might look really bad
                 return false;
             }
         }
