@@ -1029,7 +1029,8 @@ namespace Pokemon
         Zygarde_10 = Zygarde + (1 << 16),
         Zygarde_Complete = Zygarde + (2 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
-        Ash_Greninja = Greninja + (1 << 16)
+        Greninja_Unbonded = Greninja + (1 << 16),
+        Ash_Greninja = Greninja + (2 << 16)
     };
 }
 

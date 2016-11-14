@@ -2949,7 +2949,7 @@ struct AMBattleBond : public AM {
         if (b.koed(s))
             return;
 
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja || b.preTransPoke(s, Pokemon::Greninja))
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja_Unbonded || b.preTransPoke(s, Pokemon::Greninja_Unbonded))
             return;
         if (b.pokenum(s).subnum == 0) {
             b.sendAbMessage(141, 0, s);
