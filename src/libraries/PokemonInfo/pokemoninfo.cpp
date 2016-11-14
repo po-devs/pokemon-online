@@ -67,6 +67,7 @@ QVector<QSet<int> > ItemInfo::m_GenItems;
 QHash<int,QString> ItemInfo::m_ItemDesc;
 QHash<int,QString> ItemInfo::m_BerryDesc;
 QHash<Pokemon::uniqueId,int> ItemInfo::m_StoneFormes;
+QHash<int,int> ItemInfo::m_CrystalTypes;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -2439,6 +2440,7 @@ void ItemInfo::loadNames()
 void ItemInfo::loadStoneFormes()
 {
     fill_uid_int(m_StoneFormes, path("item_for_forme.txt"));
+    fill_double(m_CrystalTypes, path("crystal_types.txt")); //no sense making another function to load 1 thing
 }
 
 void ItemInfo::loadMessages()
@@ -2731,6 +2733,14 @@ int ItemInfo::MemoryChipType(int itemnum)
     return effects.front().args.toInt();
 }
 
+int ItemInfo::ZCrystalType(int itemnum)
+{
+    if (ItemInfo::isZCrystal(itemnum)) {
+        return m_CrystalTypes.value(itemnum);
+    }
+    return 0;
+}
+
 int ItemInfo::CrystalMove(int itemnum)
 {
     const auto &effects = Effects(itemnum, GenInfo::GenMax());
@@ -2773,6 +2783,32 @@ int ItemInfo::PlateForType(int type)
         Item::NoItem
     };
     return plates[type];
+}
+
+int ItemInfo::MemoryChipForType(int type)
+{
+    static const int chips[] = {
+        Item::NoItem,
+        Item::FightingMemory,
+        Item::FlyingMemory,
+        Item::PoisonMemory,
+        Item::GroundMemory,
+        Item::RockMemory,
+        Item::BugMemory,
+        Item::GhostMemory,
+        Item::SteelMemory,
+        Item::FireMemory,
+        Item::WaterMemory,
+        Item::GrassMemory,
+        Item::ElectricMemory,
+        Item::PsychicMemory,
+        Item::IceMemory,
+        Item::DragonMemory,
+        Item::DarkMemory,
+        Item::FairyMemory,
+        Item::NoItem
+    };
+    return chips[type];
 }
 
 int ItemInfo::DriveType(int itemnum)

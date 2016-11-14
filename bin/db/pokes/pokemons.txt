@@ -815,7 +815,7 @@
 657:0 Frogadier
 658:0 Greninja
 658:1:AD Greninja-Unbonded
-658:2:AD Ash Greninja
+658:2:A Ash Greninja
 659:0 Bunnelby
 660:0 Diggersby
 661:0 Fletchling
@@ -928,7 +928,7 @@
 718:1:AD Zygarde-10%
 718:2:AD Zygarde-10% Uncomplete
 718:3:AD Zygarde-50% Uncomplete
-718:4:AD Zygarde-Complete
+718:4:A Zygarde-Complete
 719:0:H Diancie
 719:1:M Mega Diancie
 720:0 Hoopa
@@ -962,8 +962,8 @@
 744:0 Rockruff
 745:0 Lycanroc
 745:1:AD Lycanroc-Midnight
-746:0 Wishiwashi
-746:1 Wishiwashi-School
+746:0:B Wishiwashi
+746:1:A Wishiwashi-School
 747:0 Mareanie
 748:0 Toxapex
 749:0 Mudbray
@@ -1008,7 +1008,7 @@
 773:15:AD Silvally-Dragon
 773:16:AD Silvally-Dark
 773:17:AD Silvally-Fairy
-774:0 Minior
+774:0:B Minior
 774:1:A Minior-Red
 774:2:A Minior-Orange
 774:3:A Minior-Yellow

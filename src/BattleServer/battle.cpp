@@ -1003,11 +1003,9 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         int type = Type::Normal;
         if (ItemInfo::isPlate(p.item())) {
             type = ItemInfo::PlateType(p.item());
-        }
-        //TODO: Code Z Crystal Types
-        /*else if (ItemInfo::isZCrystal(p.item())) {
+        } else if (gen() >= 7 && ItemInfo::isZCrystal(p.item())) {
             type = ItemInfo::ZCrystalType(p.item());
-        }*/
+        }
         if (type != Type::Normal) {
             changeAForme(slot, type);
         }

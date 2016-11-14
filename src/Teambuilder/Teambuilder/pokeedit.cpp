@@ -408,7 +408,9 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
             }
         } else if (num.pokenum == Pokemon::Arceus && ItemInfo::PlateType(poke().item()) != num.subnum) {
             poke().item() = ItemInfo::PlateForType(num.subnum);
-        } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
+        }  else if (num.pokenum == Pokemon::Silvally && ItemInfo::MemoryChipType(poke().item()) != num.subnum) {
+            poke().item() = ItemInfo::MemoryChipForType(num.subnum);
+        }else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
             poke().item() = ItemInfo::DriveForForme(num.subnum);
         } else if (PokemonInfo::IsMegaEvo(num)) {
             poke().item() = ItemInfo::StoneForForme(num);
@@ -459,6 +461,10 @@ void PokeEdit::changeItem(const QString &itemName)
         }
         if (poke().num().pokenum == Pokemon::Arceus) {
             int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
+            setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+        }
+        if (poke().num().pokenum == Pokemon::Silvally) {
+            int subnum = ItemInfo::isMemoryChip(itemNum) ? ItemInfo::MemoryChipType(itemNum) : 0;
             setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
         }
         if (poke().num().pokenum == Pokemon::Genesect) {

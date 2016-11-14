@@ -5808,6 +5808,9 @@ struct MMTransform : public MM {
             if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
                 num.subnum = ItemInfo::PlateType(b.poke(s).item());
             }
+            if (PokemonInfo::OriginalForme(num) == Pokemon::Silvally) {
+                num.subnum = ItemInfo::MemoryChipType(b.poke(s).item());
+            }
             if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect)
                 num.subnum = ItemInfo::DriveForme(b.poke(s).item());
         }

@@ -376,9 +376,11 @@ public:
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
     static int MemoryChipType(int itemnum);
+    static int ZCrystalType(int itemnum);
     static int CrystalMove(int itemnum);
     static Pokemon::uniqueId MegaStoneForme(int itemnum);
     static int PlateForType(int type);
+    static int MemoryChipForType(int type);
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
     static int DriveForForme(int forme);
@@ -417,6 +419,7 @@ private:
     static QHash<int,QString> m_ItemDesc;
     static QHash<int,QString> m_BerryDesc;
     static QHash<Pokemon::uniqueId,int> m_StoneFormes;
+    static QHash<int,int> m_CrystalTypes;
 
     static void loadNames();
     static void loadEffects();

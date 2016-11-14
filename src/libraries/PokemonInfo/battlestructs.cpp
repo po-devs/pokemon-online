@@ -169,6 +169,13 @@ void PokeBattle::init(PokePersonal &poke)
                 num().subnum = 0;
             }
         }
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Silvally) {
+            if (ItemInfo::isMemoryChip(item())) {
+                num().subnum = ItemInfo::MemoryChipType(item());
+            } else {
+                num().subnum = 0;
+            }
+        }
         if (PokemonInfo::OriginalForme(num()) == Pokemon::Genesect) {
             num().subnum = ItemInfo::DriveForme(item());
         }
@@ -705,9 +712,9 @@ void ShallowShownPoke::init(const PokeBattle &b)
     gender = b.gender();
 
     /* All arceus formes have the same icon */
-    if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+    /*if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
         num = Pokemon::Arceus;
-    }
+    }*/
     if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect) {
         num = Pokemon::Genesect;
     }
