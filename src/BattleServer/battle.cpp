@@ -4872,9 +4872,47 @@ bool BattleSituation::canUseZMove (int slot)
     }
     int item = poke(slot).item();
     if (ItemInfo::isZCrystal(item)) {
-        //A Pokemon must have a move of equal type to the Z Crystal in order to use.
-        //Special cases may apply
         int zmove = ItemInfo::CrystalMove(item);
+        Pokemon::uniqueId pk = poke(slot).num();
+        switch(zmove) {
+            case Move::Catastropika:
+                return pk == Pokemon::Pikachu && hasMove(slot, Move::VoltTackle);
+            break;
+            case Move::StokedSparkSurfer:
+                return pk == Pokemon::Raichu_Alolan && hasMove(slot, Move::Thunderbolt);
+            break;
+            case Move::ExtremeEvoboost:
+                return pk == Pokemon::Eevee && hasMove(slot, Move::LastResort);
+            break;
+            case Move::PulversingPancake:
+                return pk == Pokemon::Snorlax && hasMove(slot, Move::GigaImpact);
+            break;
+            case Move::GenesisSupernova:
+                return pk == Pokemon::Mew && hasMove(slot, Move::Psychic);
+            break;
+            case Move::GuardianofAlola:
+                return (pk == Pokemon::Tapu_Bulu || pk == Pokemon::Tapu_Koko || pk == Pokemon::Tapu_Lele || pk == Pokemon::Tapu_Fini)
+                        && hasMove(slot, Move::NaturesMadness);
+            break;
+            case Move::SinisterArrowRaid:
+                return pk == Pokemon::Decidueye && hasMove(slot, Move::SpiritShackle);
+            break;
+            case Move::MaliciousMoonsault:
+                return pk == Pokemon::Incineroar && hasMove(slot, Move::DarkestLariat);
+            break;
+            case Move::OceanicOperetta:
+                return pk == Pokemon::Primarina && hasMove(slot, Move::SparklingAria);
+            break;
+            case Move::Soul_Stealing7_StarStrike:
+                return pk == Pokemon::Marshadow && hasMove(slot, Move::SpectralThief);
+            break;
+            case Move::_10_000_000VoltThunderBolt:
+                //UNTESTED: we dont have cap pikachu fully in yet
+                return false /*pk == Pokemon::Pikachu_in_Cap*/ && hasMove(slot, Move::Thunderbolt);
+            break;
+        }
+
+        //If its not a special case then a Pokemon must have a move of equal type to the Z Crystal in order to use.
         int ztype = MoveInfo::Type(zmove, gen());
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(move(slot, i), gen()) == ztype) {

@@ -67,7 +67,7 @@ QVector<QSet<int> > ItemInfo::m_GenItems;
 QHash<int,QString> ItemInfo::m_ItemDesc;
 QHash<int,QString> ItemInfo::m_BerryDesc;
 QHash<Pokemon::uniqueId,int> ItemInfo::m_StoneFormes;
-QHash<int,int> ItemInfo::m_CrystalTypes;
+QHash<int,int> ItemInfo::m_ZCrystalTypes;
 
 QHash<int, QString> TypeInfo::m_Names;
 QString TypeInfo::m_Directory;
@@ -2736,7 +2736,7 @@ int ItemInfo::MemoryChipType(int itemnum)
 int ItemInfo::ZCrystalType(int itemnum)
 {
     if (ItemInfo::isZCrystal(itemnum)) {
-        return m_CrystalTypes.value(itemnum);
+        return m_ZCrystalTypes.value(itemnum);
     }
     return 0;
 }

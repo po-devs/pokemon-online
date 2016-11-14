@@ -1156,10 +1156,11 @@ struct IMSeeds : public IM {
     }
 
     static void us(int s, int, BS &b){
-        QString args = poke(b,s)["ItemArg"].toString().split('_');
+        QStringList args = poke(b,s)["ItemArg"].toString().split('_');
         int terrainType = args[0].toInt();
         if (b.terrainCount > 0 && std::abs(b.terrain) == terrainType) {
-            b.inflictStatMod(s, args[1].toInt(), 1);
+            //probably a message here too, even if one isnt in game
+            b.inflictStatMod(s, args[1].toInt(), 1, s);
             b.disposeItem(s);
         }
     }

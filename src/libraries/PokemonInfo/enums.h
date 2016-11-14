@@ -1032,7 +1032,8 @@ namespace Pokemon
         Zygarde_Complete = Zygarde + (4 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
-        Ash_Greninja = Greninja + (2 << 16)
+        Ash_Greninja = Greninja + (2 << 16),
+        Pikachu_in_Cap = Pikachu + (7 << 16) //something like this
     };
 }
 

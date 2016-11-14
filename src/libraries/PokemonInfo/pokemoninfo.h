@@ -419,7 +419,7 @@ private:
     static QHash<int,QString> m_ItemDesc;
     static QHash<int,QString> m_BerryDesc;
     static QHash<Pokemon::uniqueId,int> m_StoneFormes;
-    static QHash<int,int> m_CrystalTypes;
+    static QHash<int,int> m_ZCrystalTypes;
 
     static void loadNames();
     static void loadEffects();
