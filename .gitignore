@@ -79,3 +79,4 @@ bin/bfdata/bfteams.json
 *.md
 bin/tourconfig/tourwinverbs.txt
 build
+bin/extraction
