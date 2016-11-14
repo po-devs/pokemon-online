@@ -962,12 +962,23 @@ struct AMMotorDrive : public AM {
 
 struct AMNormalize : public AM {
     AMNormalize() {
+        functions["BeforeTargetList"] = &btl;
         functions["MoveSettings"] = &btl;
+        functions["BasePowerModifier"] = &bpm;
     }
 
     static void btl(int s, int, BS &b) {
-        if (tmove(b,s).type != Type::Curse)
+        //Unconfirmed: Do normally Normal types get buffed too?
+        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal) {
             tmove(b,s).type = Type::Normal;
+            turn(b,s)["Normalized"] = true;
+        }
+    }
+
+    static void bpm(int s, int, BS &b) {
+        if (turn(b,s).value("Normalized").toBool() && b.gen() >= 7) {
+            b.chainBp(s, 0x1333);
+        }
     }
 };
 
@@ -2895,28 +2906,41 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
 struct AMDisguise : AM
 {
     AMDisguise() {
-        functions["BeforeTakingDamage"] = &btd;
-        //functions["OnLoss"] = &ol; //maybe GastroAcid/etc. would trigger Diguise and break it? Maybe it isn't affected?
+        functions["OpponentBlock"] = &btd;
+        functions["UponSetup"] = &us;
+        //functions["OnLoss"] = &ol; //maybe GastroAcid/etc. would trigger Disguise and break it? Maybe it isn't affected?
     }
 
-    static void btd(int s, int, BS &b) {
-        //prevent damage once + change form.
-        Pokemon::uniqueId num = b.poke(s).num();
+    static void us(int s, int, BS &b) {
+        //[Tested] disguise is only once per battle
+        if (b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
+            b.changeAForme(s, 1);
+        }
+    }
 
+    static void btd(int s, int t, BS &b) {
+        //[Tested] prevent damage once + change form.
+        Pokemon::uniqueId num = b.poke(s).num();
         if (PokemonInfo::OriginalForme(num) != Pokemon::Mimikyu || b.preTransPoke(s, Pokemon::Mimikyu))
             return;
 
-        //Does it block just damage? Does it block extra effects? Can moves that bypass protect also bypass Disguise?
-        b.sendAbMessage(138, 0, s);
-        //in case after effects I guess? split the messages up.
 
-
-        b.sendAbMessage(138, 1, s);
-        b.changeAForme(s, 1);
+        //[Untested] It should also block self inflicted confuse damage once
+        //[Untested] Can still flinch from fake out
+        //[Untested] fully blocks z moves!
+        //[Untested] Weakness policy doesnt activate
+        //[Untested] Substitute takes priority
+        //[Untested] Weather and entry hazards dont break
+        //[Untested] Does mold breaker break sub? it bypasses disguise but does dealing damage break the disguise still?
+        if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
+            if (tmove(b,t).power > 0 && s != t) {
+                b.sendAbMessage(138, 0, s);
+                turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+                b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
+                b.changeAForme(s, 1);
+            }
+        }
     }
-
-    //Messages done based on announcement trailer. Might need tweaking for clarity, such as merging them depending on whether or not messages from move effects get printed between
-    //138 Its disguise served it as a decoy! | %s's diguise was busted!
 };
 
 struct AMInnardsOut : AM
@@ -2939,24 +2963,50 @@ struct AMInnardsOut : AM
     }
 };
 
-//UNTESTED/NOT COMPLETE
+//Unconfirmed stuff aplenty below
 struct AMDancer : AM
 {
     AMDancer() {
-        functions["???"] = &aaf; //would need to figure out what can be used here
+        functions["DanceInvite"] = &aaf;
     }
 
-    static void aaf(int s, int t, BS &b) {
-        //Don't double dance or dance off someone else's repeated dance
-        //Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
+    static void aaf(int s, int, BS &b) {
+        //[Tested] Don't double dance or dance off someone else's repeated dance
+        //[Untested] Unconfirmed: Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
         if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep) {
             return;
         }
 
-        if (tmove(b,t).flags & Move::DanceFlag) {
+        int target = -1;
+        int mv = b.battleMemory().value("AnyLastMoveUsed").toInt();
+        if (MoveInfo::Classification(mv, b.gen()) == Move::User) {
+            target = s;
+        } else {
+            //Unconfirmed: dunno. but i need something for now
+            target = b.randomOpponent(s);
+        }
+
+        //Copied off Magic Bounce :)
+        //[Tested] The ability works so far (Fiery/Lunar/Dragon/Quiver tested)
+        if (MoveInfo::Flags(mv, b.gen()) & Move::DanceFlag) {
+            BS::context ctx = turn(b,s);
+            BS::BasicMoveInfo info = tmove(b,s);
+            BS::TurnMemory turnMem = fturn(b, s);
+            int lastMove = fpoke(b,s).lastMoveUsed;
+
+            turn(b,s).clear();
+            MoveEffect::setup(mv,s,target,b);
+
+            turn(b,s)["Target"] = target;
             b.battleMemory()["DancingNow"] = true;
-            //Use Attack would go here.
+            b.sendAbMessage(140, 0, s, type(b,s));
+            b.useAttack(s,mv,true,true);
             b.battleMemory().remove("DancingNow");
+
+            turn(b,s) = ctx;
+            tmove(b,s) = info;
+            fturn(b,s) = turnMem;
+            fpoke(b,s).lastMoveUsed = lastMove;
         }
     }
 };
@@ -3241,10 +3291,11 @@ void AbilityEffect::init()
     REGISTER_AB(143, SoulHeart);
     //REGISTER_AB(144, BeastBoost);
     REGISTER_AB(145, LiquidVoice);
-    REGISTER_AB(146, SteelWorker);
+    REGISTER_AB(146, SteelWorker); //what is the boost amount?
     //REGISTER_AB(147, Schooling);
     //REGISTER_AB(148, PowerConstruct);
     //REGISTER_AB(149, ShieldsDown);
 
-    //NOT DONE: Disguise, Dancer, Steelworker, Shields Down, Power Construct, Schooling, Beast Boost
+    //ALMOST DONE: Disguise, Dancer
+    //NOT DONE: Shields Down, Power Construct, Schooling, Beast Boost
 }

@@ -1605,7 +1605,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     //Down here so it doesnt get overridden but still defines it before the announcement
     if (pokeMemory(player).value("ZMoveTurn") == turn()) {
         sendItemMessage(68, player);
-        attack = ItemInfo::CrystalMove(poke(player).item());
+        attack = ItemInfo::ZCrystalMove(poke(player).item());
         callieffects(player, player, "MoveSettings"); //Z Moves
     }
 
@@ -2177,6 +2177,11 @@ trueend:
     foreach(int target, targetList) {
         callaeffects(target, target, "AfterAttackFinished"); //Immunity & such
         turnMemory(target)["HadSubstitute"] = false;
+    }
+    foreach(int target, sortedBySpeed()) {
+        if (target != player) {
+            callaeffects(target, target, "DanceInvite");
+        }
     }
 }
 
@@ -4872,7 +4877,7 @@ bool BattleSituation::canUseZMove (int slot)
     }
     int item = poke(slot).item();
     if (ItemInfo::isZCrystal(item)) {
-        int zmove = ItemInfo::CrystalMove(item);
+        int zmove = ItemInfo::ZCrystalMove(item);
         Pokemon::uniqueId pk = poke(slot).num();
         switch(zmove) {
             case Move::Catastropika:
@@ -4908,12 +4913,11 @@ bool BattleSituation::canUseZMove (int slot)
             break;
             case Move::_10_000_000VoltThunderBolt:
                 //UNTESTED: we dont have cap pikachu fully in yet
-                return false /*pk == Pokemon::Pikachu_in_Cap*/ && hasMove(slot, Move::Thunderbolt);
+                return false && hasMove(slot, Move::Thunderbolt);
             break;
         }
-
         //If its not a special case then a Pokemon must have a move of equal type to the Z Crystal in order to use.
-        int ztype = MoveInfo::Type(zmove, gen());
+        int ztype = ItemInfo::ZCrystalType(item);
         for (int i = 0; i < 4; i++) {
             if (MoveInfo::Type(move(slot, i), gen()) == ztype) {
                 return true;

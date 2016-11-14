@@ -161,6 +161,7 @@
 199 129#Dazzling
 200 130-3#Berserk
 201 131#Battery
+203 138#disguise
 204 132#Fluffy
 205 133#Stamina
 206 134#Triage

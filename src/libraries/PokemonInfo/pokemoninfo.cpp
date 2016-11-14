@@ -2440,7 +2440,7 @@ void ItemInfo::loadNames()
 void ItemInfo::loadStoneFormes()
 {
     fill_uid_int(m_StoneFormes, path("item_for_forme.txt"));
-    fill_double(m_CrystalTypes, path("crystal_types.txt")); //no sense making another function to load 1 thing
+    fill_double(m_ZCrystalTypes, path("crystal_types.txt")); //no sense making another function to load 1 thing
 }
 
 void ItemInfo::loadMessages()
@@ -2741,7 +2741,7 @@ int ItemInfo::ZCrystalType(int itemnum)
     return 0;
 }
 
-int ItemInfo::CrystalMove(int itemnum)
+int ItemInfo::ZCrystalMove(int itemnum)
 {
     const auto &effects = Effects(itemnum, GenInfo::GenMax());
     if (effects.size() == 0 || !isZCrystal(itemnum)) {
