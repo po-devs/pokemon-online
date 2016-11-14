@@ -925,8 +925,10 @@
 716:0 Xerneas
 717:0 Yveltal
 718:0 Zygarde
-718:1 Zygarde-10%
-718:2 Zygarde-Complete
+718:1:AD Zygarde-10%
+718:2:AD Zygarde-10% Uncomplete
+718:3:AD Zygarde-50% Uncomplete
+718:4:AD Zygarde-Complete
 719:0:H Diancie
 719:1:M Mega Diancie
 720:0 Hoopa
