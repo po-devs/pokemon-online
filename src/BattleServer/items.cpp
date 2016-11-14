@@ -1150,14 +1150,18 @@ struct IMZCrystal : public IM {
 //UNTESTED
 struct IMSeeds : public IM {
     IMSeeds() {
-
+        functions["UponSetup"] = &us;
+        functions["UponReactivation"] = &us;
+        //need something for when the terrain gets set up
     }
-};
 
-//UNTESTED
-struct IMAdrenalineOrb : public IM {
-    IMAdrenalineOrb() {
-
+    static void us(int s, int, BS &b){
+        QString args = poke(b,s)["ItemArg"].toString().split('_');
+        int terrainType = args[0].toInt();
+        if (b.terrainCount > 0 && std::abs(b.terrain) == terrainType) {
+            b.inflictStatMod(s, args[1].toInt(), 1);
+            b.disposeItem(s);
+        }
     }
 };
 
@@ -1206,8 +1210,8 @@ void ItemEffect::init()
     REGISTER_ITEM(68, MemoryChip);
     REGISTER_ITEM(69, ZCrystal);
     REGISTER_ITEM(70, Seeds);
-    REGISTER_ITEM(71, AdrenalineOrb);
-    //72 Protective pads
+    //71 Adrenaline orb message
+    //72 Protective pads message
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);

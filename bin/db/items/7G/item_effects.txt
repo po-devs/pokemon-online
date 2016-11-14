@@ -248,13 +248,10 @@
 358 68-15#Dragon Memory
 359 68-16#Dark Memory
 360 68-17#Fairy Memory
-361 #Adrenaline Orb, +1 speed when "intimidated"
-362 #Terrain Extender, extend terrain to 8 turns
-363 #Protective Pads, strip contact flag
-364 #Electric Seed, + 1 def in Electric
-365 #Psychic Seed, + 1 sdef in psychic
-366 #Misty Seed, + 1 sdef in misty
-367 #Grassy Seed, + 1 def in Grassy
+364 70-12_2#Electric Seed, + 1 def in Electric
+365 70-13_4#Psychic Seed, + 1 sdef in psychic
+366 70-17_4#Misty Seed, + 1 sdef in misty
+367 70-11_2#Grassy Seed, + 1 def in Grassy
 2001 66-3:1#2001+ are Megastones
 2002 66-6:1
 2003 66-6:2

@@ -25,6 +25,7 @@
 66 %s has Mega Evolved into %p!
 67 %s's Primal Reversion! It reverted to its primal form!
 68 %s surrounded itself with its Z-Power!|%t couldn't fully protect itself and got hurt!
+71 The Adrenaline Orb raised %'s Speed!
 72 %s protected itself with the Protective Pads!
 1007 %s recovered from fainting!
 1999 %s recovered from fainting!

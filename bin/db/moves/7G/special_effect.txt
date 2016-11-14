@@ -341,7 +341,7 @@
 655 12#Anchor Shot
 658 185#Power Trip, stored power clone
 659 233#Burn Up
-660 55-5#Speed Swap
+660 239#Speed Swap
 662 234#Purify
 663 235#Beak Blast
 665 14#Psychic Fangs

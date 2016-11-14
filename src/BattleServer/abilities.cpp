@@ -881,6 +881,12 @@ struct AMIntimidate : public AM {
                 b.sendAbMessage(34,0,s,t);
                 b.inflictStatMod(t,Attack,-1,s);
             }
+
+            if (b.hasWorkingItem(t, Item::AdrenalineOrb)) {
+                b.sendItemMessage(71, t, 0);
+                b.inflictStatMod(t, Speed, 1, t, false);
+                b.disposeItem(t);
+            }
         }
     }
 };
@@ -1231,6 +1237,7 @@ struct AMTechnician : public AM {
 struct AMThickFat : public AM {
     AMThickFat() {
         functions["FoeDamageFormulaStart"] = &bpfm;
+        functions["BasePowerModifier"] = &bpm;
     }
 
     static void bpfm (int s, int t, BS &b) {
@@ -1245,6 +1252,13 @@ struct AMThickFat : public AM {
                     b.chainAtk(t, 0x800);
                 }
             }
+        }
+    }
+
+    //UNTESTED: Also should boost z moves
+    static void bpm (int s, int, BS &b) {
+        if (b.poke(s).ability() == Ability::WaterBubble && tmove(b, s).type == Pokemon::Water) {
+            b.chainBp(s, 0x2000);
         }
     }
 };
@@ -1601,7 +1615,11 @@ struct AMWeakArmor : public AM {
             b.inflictStatMod(s, Defense, -1, s);
         }
         if (!b.hasMaximalStatMod(s, Speed)) {
-            b.inflictStatMod(s, Speed, 1, s);
+            if (b.gen() >= 7) {
+                b.inflictStatMod(s, Speed, 2, s);
+            } else {
+                b.inflictStatMod(s, Speed, 1, s);
+            }
         }
     }
 };
@@ -2235,7 +2253,11 @@ struct AMAerilate : public AM {
 
     static void bpm(int s, int, BS &b) {
         if (turn(b,s).value("Aerilated").toBool()) {
-            b.chainBp(s, 0x14CD);
+            if (b.gen() >= 7) {
+                b.chainBp(s, 0x1333);
+            } else {
+                b.chainBp(s, 0x14CD);
+            }
         }
     }
 };

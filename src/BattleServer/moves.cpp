@@ -905,7 +905,8 @@ struct MMOHKO : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(s).level() < b.poke(t).level()) {
+        if (b.poke(s).level() < b.poke(t).level()
+                || (b.hasType(t, Pokemon::Ice) && move(b,s) == Move::SheerCold && b.gen() >= 7)) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -5862,7 +5863,7 @@ struct MMPayback : public MM
     static void bcd(int s, int t, BS &b) {
         //Attack / Switch --> power *= 2
         //In gen 5, switch doesn't increase the power
-        if ( (b.gen() <= 4 && b.hasMoved(t)) || (b.gen() >= 5 && fturn(b,t).contains(TM::HasMoved))) {
+        if ( ((b.gen() <= 4 || b.gen().num == 6) && b.hasMoved(t)) || ((b.gen() >= 7 || b.gen().num == 5) && fturn(b,t).contains(TM::HasMoved))) {
             tmove(b, s).power = tmove(b, s).power * 2;
         }
     }
@@ -7976,6 +7977,19 @@ struct MMAbilityIgnore : public MM
     }
 };
 
+//UNTESTED
+struct MMSpeedSwap : public MM
+{
+    MMSpeedSwap() {
+        functions["OnFoeOnAttack"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        //swaps raw speed stat with opponent
+        b.sendMoveMessage(239,0,s);
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -8249,7 +8263,8 @@ void MoveEffect::init()
     REGISTER_MOVE(236, AuroraVeil);
     REGISTER_MOVE(237, StompingTantrum);
     REGISTER_MOVE(238, DarkVoid);
+    REGISTER_MOVE(239, SpeedSwap);
 
-    //NOT DONE: Instruct, Pollen Puff, Spotlight
+    //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
     //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate
 }

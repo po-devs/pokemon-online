@@ -144,3 +144,4 @@
 234 <%t was cured of its status!>|<%s regained health!>
 235 %s started heating up its break!
 238 %s stole the target's boosted stats!
+239 %s switched Speed with its target!
