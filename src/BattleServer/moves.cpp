@@ -3546,7 +3546,7 @@ struct MMGastroAcid : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || poke(b,t).value("AbilityNullified").toBool() || b.ability(t) == Ability::StanceChange) {
+        if (AbilityInfo::abFlags(b.ability(t)) & Ability::GastroAcidFlag || poke(b,t).value("AbilityNullified").toBool()) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5290,9 +5290,14 @@ struct MMWorrySeed : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        /* Truant & multi-type */
-        if (b.ability(t) == Ability::Truant || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::StanceChange) {
-            fturn(b,s).add(TM::Failed);
+        if (tmove(b,s).attack == Move::SimpleBeam) {
+            if (AbilityInfo::abFlags(b.ability(t)) & Ability::SimpleBeamFlag) {
+                fturn(b,s).add(TM::Failed);
+            }
+        } else {
+            if (AbilityInfo::abFlags(b.ability(t)) & Ability::WorrySeedFlag) {
+                fturn(b,s).add(TM::Failed);
+            }
         }
     }
 
@@ -5428,8 +5433,7 @@ struct MMRolePlay : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        /* Wonder Guard & multi-type */
-        if (b.ability(t) == Ability::WonderGuard || b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::Illusion || b.ability(t) == Ability::FlowerGift || b.ability(t) == Ability::Forecast ||  b.ability(t) == Ability::ZenMode ||  b.ability(t) == Ability::Trace ||  b.ability(t) == Ability::Imposter || b.ability(t) == Ability::StanceChange ) {
+        if (AbilityInfo::abFlags(b.ability(t)) & Ability::RolePlayFlag) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -5448,10 +5452,7 @@ struct MMSkillSwap : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        /* Wonder Guard & multi-type */
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::WonderGuard || b.ability(s) == Ability::Multitype || b.ability(s) == Ability::RKSSystem
-                || b.ability(s) == Ability::WonderGuard || b.ability(s) == Ability::Illusion || b.ability(t) == Ability::Illusion
-                || b.ability(s) == Ability::StanceChange || b.ability(t) == Ability::StanceChange) {
+        if (AbilityInfo::abFlags(b.ability(t)) & Ability::SkillSwapFlag || AbilityInfo::abFlags(b.ability(s)) & Ability::SkillSwapFlag) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -6010,7 +6011,7 @@ struct MMEntrainment : public MM {
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::Truant || b.ability(t) == Ability::StanceChange) {
+        if (AbilityInfo::abFlags(b.ability(t)) & Ability::EntrainmentFlag) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -7881,7 +7882,7 @@ struct MMAuroraVeil : public MM
     static void et(int s, int, BS &b) {
         team(b,s)["AuroraVeilCount"] = team(b,s)["AuroraVeilCount"].toInt() - 1;
 
-        if (team(b,s)["AuroraVeilCount"].toInt() == 1) {`
+        if (team(b,s)["AuroraVeilCount"].toInt() == 1) {
             b.sendMoveMessage(236, 1, s, Pokemon::Ice);
         }
     }

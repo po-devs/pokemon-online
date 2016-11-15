@@ -1307,8 +1307,7 @@ struct AMTrace : public AM {
             int t = opps[i];
             int ab = b.ability(t);
             //Multitype
-            if (b.hasWorkingAbility(t, ab) && ab != Ability::Multitype && ab != Ability::RKSSystem && ab != Ability::Trace && ab != Ability::FlowerGift
-                && !(ab == Ability::Illusion && poke(b,t).contains("IllusionTarget")) && ab != Ability::StanceChange) {
+            if (b.hasWorkingAbility(t, ab) && !(AbilityInfo::abFlags(ab) & Ability::TraceFlag)) {
                 b.sendAbMessage(66,0,s,t,0,ab);
                 b.loseAbility(s);
                 b.acquireAbility(s, ab);
@@ -1534,7 +1533,10 @@ struct AMMummy : public AM {
     }
 
     static void upa(int s, int t, BS &b) {
-        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && b.ability(t) != Ability::Mummy && b.ability(t) !=Ability::Multitype && b.ability(t) !=Ability::RKSSystem && !b.koed(t)) {
+        if (AbilityInfo::abFlags(b.ability(t)) & Ability::MummyFlag) {
+            return;
+        }
+        if ( (b.countBackUp(b.player(s)) > 0 || !b.koed(s)) && !b.koed(t)) {
             b.sendAbMessage(47, 0, t);
             b.loseAbility(t);
             b.acquireAbility(t, Ability::Mummy);
@@ -3059,7 +3061,7 @@ struct AMReceiver : public AM {
 
     static void opk(int s, int t, BS &b) {
         int ab = b.ability(t);
-        if (ab == Ability::Multitype || ab == Ability::RKSSystem || ab == Ability::FlowerGift || ab == Ability::Illusion || ab == Ability::StanceChange) {
+        if (AbilityInfo::abFlags(ab) & Ability::ReceiverFlag) {
             return;
         }
         b.sendAbMessage(143, 0, s, t, 0, ab);
@@ -3086,8 +3088,7 @@ struct AMSteelWorker : public AM {
 
     static void bpm (int s, int, BS &b) {
         if (tmove(b, s).type == poke(b,s)["AbilityArg"].toInt()) {
-            b.chainBp(s, 0x1800);
-            //Unconfirmed: Does this give Pseudo Stab? What if a steel type has it?
+            b.chainBp(s, 0x1555);
         }
     }
 };
@@ -3283,18 +3284,18 @@ void AbilityEffect::init()
     REGISTER_AB(135, WimpOut); /* Emergency Exit*/ //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
     REGISTER_AB(136, SurgeSurfer);
     REGISTER_AB(137, WaterCompaction);
-    REGISTER_AB(138, Disguise);
+    REGISTER_AB(138, Disguise); //Unconfirmed: Needs ability flags
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer);
-    REGISTER_AB(141, BattleBond); //what is interaction with ability null/switch (gastro, etc.)? does boost to water shuriken get retained when switching out?
-    REGISTER_AB(142, Receiver); /*Power of Alchemy*/
+    REGISTER_AB(141, BattleBond); //Unconfirmed: Needs ability flags; does boost to water shuriken get retained when switching out?
+    REGISTER_AB(142, Receiver); /*Power of Alchemy*/ //Unconfirmed: Needs ability flags
     REGISTER_AB(143, SoulHeart);
     //REGISTER_AB(144, BeastBoost);
     REGISTER_AB(145, LiquidVoice);
-    REGISTER_AB(146, SteelWorker); //what is the boost amount?
-    //REGISTER_AB(147, Schooling);
-    //REGISTER_AB(148, PowerConstruct);
-    //REGISTER_AB(149, ShieldsDown);
+    REGISTER_AB(146, SteelWorker);
+    //REGISTER_AB(147, Schooling);  //Unconfirmed: Needs ability flags
+    //REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
+    //REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
 
     //ALMOST DONE: Disguise, Dancer
     //NOT DONE: Shields Down, Power Construct, Schooling, Beast Boost

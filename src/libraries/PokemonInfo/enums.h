@@ -1848,6 +1848,20 @@ namespace Type
 
 namespace Ability
 {
+    enum Flags
+    {
+        //can the ability be affected by the following
+        TraceFlag = 1,
+        SkillSwapFlag = 2,
+        RolePlayFlag = 4,
+        GastroAcidFlag = 8,
+        WorrySeedFlag = 16,
+        EntrainmentFlag = 32,
+        MummyFlag = 64,
+        SimpleBeamFlag = 128,
+        ReceiverFlag = 256 //also power of alchemy cause identical ability
+    };
+
     enum Name
     {
         NoAbility,

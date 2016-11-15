@@ -86,6 +86,7 @@ QVector<QHash<int,AbilityInfo::Effect> > AbilityInfo::m_Effects;
 QHash<int, QStringList> AbilityInfo::m_Messages;
 QHash<int,int> AbilityInfo::m_OldAbilities;
 QHash<int,bool> AbilityInfo::m_moldBreaker;
+QHash<int,int> AbilityInfo::m_abFlags;
 
 QHash<int, QString> GenderInfo::m_Names;
 QString GenderInfo::m_Directory;
@@ -3299,6 +3300,7 @@ bool AbilityInfo::Exists(int ability, Pokemon::gen gen)
 void AbilityInfo::loadEffects()
 {
     fill_int_bool(m_moldBreaker, path("mold_breaker.txt"));
+    fill_double(m_abFlags, path("ability_flags.txt"));
 
     m_Effects.clear();
     m_Effects.resize(GenInfo::NumberOfGens());
@@ -3385,6 +3387,11 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
         }
         return std::min(hc, total); //safety check, in case db was edited
     }
+}
+
+int AbilityInfo::abFlags(int abnum)
+{
+    return m_abFlags[abnum];
 }
 
 void GenderInfo::init(const QString &dir)
