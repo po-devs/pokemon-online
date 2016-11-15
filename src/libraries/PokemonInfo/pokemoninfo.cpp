@@ -2314,19 +2314,6 @@ QString MoveInfo::path(const QString &file)
     return m_Directory+file;
 }
 
-int MoveInfo::DanceType (Pokemon::uniqueId poke) {
-    int type = Pokemon::Normal;
-    if (PokemonInfo::OriginalForme(poke) == Pokemon::Oricorio) {
-        switch(poke.toPokeRef()) {
-            case Pokemon::Oricorio: type = Pokemon::Fire; break;
-            case Pokemon::Oricorio_Pau: type = Pokemon::Psychic; break;
-            case Pokemon::Oricorio_Sensu: type = Pokemon::Ghost; break;
-            case Pokemon::Oricorio_PomPom: type = Pokemon::Electric; break;
-        }
-    }
-    return type;
-}
-
 #undef move_find
 #undef move_find2
 

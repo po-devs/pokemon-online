@@ -2664,10 +2664,15 @@ struct AMFluffy: public AM {
         functions["BasePowerFoeModifier"] = &bpfm;
     }
 
-    static void bpfm(int , int t, BS &b) {
-        if (b.makesContact(t) && type(b,t) != Pokemon::Fire) {
-            b.chainBp(t, 0x800);
+    static void bpfm(int, int t, BS &b) {
+        if (b.makesContact(t)) {
+            //Contact is reduced
+            //Fire + Contact = nothing changes
+            if (type(b,t) != Pokemon::Fire) {
+                b.chainBp(t, 0x800);
+            }
         } else if (type(b,t) == Pokemon::Fire) {
+            //Fire increased
             b.chainBp(t, 0x1800);
         }
     }
@@ -3299,4 +3304,6 @@ void AbilityEffect::init()
 
     //ALMOST DONE: Disguise, Dancer
     //NOT DONE: Shields Down, Power Construct, Schooling, Beast Boost
+    //CODED WRONG: Comatose [Pokemon is treated like it has the sleep status already. Can't rest. Can use snore/sleep talk at will. Wakeup slap increased damage]
+
 }

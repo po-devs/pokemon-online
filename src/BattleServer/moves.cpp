@@ -1209,6 +1209,7 @@ struct MMAssist : public MM
 
     static void uas(int s, int, BS &b)
     {
+        //UNTESTED: Assist Dark Void on non-Darkrai
         removeFunction(turn(b,s), "UponAttackSuccessful", "Assist");
         removeFunction(turn(b,s), "DetermineAttackFailure", "Assist");
         int attack = turn(b,s)["AssistMove"].toInt();
@@ -7552,7 +7553,6 @@ struct MMShellTrap : public MM {
     }
 };
 
-//UNCONFIRMED: Revelation Dance is ALWAYS the user's Type 1.
 struct MMRevelationDance : public MM
 {
     MMRevelationDance() {
@@ -7560,7 +7560,12 @@ struct MMRevelationDance : public MM
     }
 
     static void ms (int s, int, BS &b) {
-        tmove(b,s).type = MoveInfo::DanceType(b.poke(s).num());
+        //Even if a pokemon has other types, if they have used burn up revelation dance turns typeless
+        if (poke(b,s).value("BurnedUp").toBool()) {
+            tmove(b,s).type = Pokemon::Curse;
+        } else {
+            tmove(b,s).type = b.getType(s, 1);
+        }
     }
 };
 
@@ -7796,6 +7801,7 @@ struct MMBurnUp : public MM
     }
 
     static void uas(int s, int, BS &b) {
+        //NOT DONE: Fire Arceus with Multitype won't lose fire type
         b.removeType(s, Pokemon::Fire);
         poke(b,s)["BurnedUp"] = true;
         b.sendMoveMessage(233, 0, s);

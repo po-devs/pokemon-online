@@ -2883,6 +2883,11 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
         return;
     }
 
+    if(gen() >= 7 && std::abs(terrain) == Type::Fairy && terrainCount > 0 && !isFlying(player)) {
+        sendMoveMessage(208, 2, player,Pokemon::Fairy, player, tmove(player).attack);
+        return;
+    }
+
     poke(player).addStatus(Pokemon::Confused);
     pokeMemory(player)["ConfusedCount"] = randint(4) + 1;
 
