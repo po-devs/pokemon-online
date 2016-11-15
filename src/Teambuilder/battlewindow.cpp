@@ -1072,7 +1072,7 @@ void OldAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Poke
         type = ItemInfo::MemoryChipType(p.item());
     } else if (b.num() == Move::RevelationDance) {
         //UNTESTED: If Burn Up is used, then type should be Curse
-        type = PokemonInfo::Type1(p.num());
+        type = PokemonInfo::Type1(p.num(), gen);
     }
     /*QString model = QString("db/BattleWindow/Buttons/%1%2.png").arg(type);
     changePics(model.arg("D"), model.arg("H"), model.arg("C"));*/
