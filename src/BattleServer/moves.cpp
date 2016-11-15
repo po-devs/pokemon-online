@@ -4283,7 +4283,7 @@ struct MMDefog : public MM
         foreach (int p, players) {
             BS::context &c = team(b,p);
 
-            if (c.remove("Barrier1Count") + c.remove("Barrier2Count")) {
+            if (c.remove("Barrier1Count") + c.remove("Barrier2Count") + c.remove("AuroraVeilCount")) {
                 clear = true;
             }
         }
@@ -7856,10 +7856,9 @@ struct MMAuroraVeil : public MM
             fturn(b,s).add(TM::Failed);
         }
 
-        //UNCONFIRMED: Stacks with reflect? Currently coded to "no". Fails if either are in effect.
         int source = b.player(s);
-        if (team(b,source).value("AuroraVeilCount").toInt() > 0
-            || team(b,source).value("Barrier1Count").toInt() + team(b,source).value("Barrier2Count").toInt() > 0) {
+        //Stacks with Reflect/Light Screen so we only check it against itself
+        if (team(b,source).value("AuroraVeilCount").toInt() > 0) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -7870,24 +7869,19 @@ struct MMAuroraVeil : public MM
     static void uas(int s, int, BS &b) {
         int source = b.player(s);
         int nturn = 5;
-        //UNCONFIRMED: Clay works?
         if (b.hasWorkingItem(s, Item::LightClay)) {
             nturn = 8;
         }
         b.sendMoveMessage(236, 0, s, Pokemon::Ice);
-        team(b,source)["Barrier1Count"] = nturn;
-        team(b,source)["Barrier2Count"] = nturn;
         team(b,source)["AuroraVeilCount"] = nturn;
 
         b.addEndTurnEffect(BS::ZoneEffect, bracket(b.gen()), source, "AuroraVeil", &et);
     }
 
     static void et(int s, int, BS &b) {
-        team(b,s)["Barrier1Count"] = team(b,s)["Barrier1Count"].toInt() - 1;
-        team(b,s)["Barrier2Count"] = team(b,s)["Barrier2Count"].toInt() - 1;
         team(b,s)["AuroraVeilCount"] = team(b,s)["AuroraVeilCount"].toInt() - 1;
 
-        if (team(b,s)["AuroraVeilCount"].toInt() == 1) {
+        if (team(b,s)["AuroraVeilCount"].toInt() == 1) {`
             b.sendMoveMessage(236, 1, s, Pokemon::Ice);
         }
     }

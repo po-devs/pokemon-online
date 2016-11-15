@@ -969,7 +969,7 @@ struct AMNormalize : public AM {
 
     static void btl(int s, int, BS &b) {
         //Unconfirmed: Do normally Normal types get buffed too?
-        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal) {
+        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal && tmove(b,s).attack != Move::HiddenPower && tmove(b,s).attack != Move::WeatherBall) {
             tmove(b,s).type = Type::Normal;
             turn(b,s)["Normalized"] = true;
         }
@@ -2753,8 +2753,8 @@ struct AMTriage : public AM
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).category & Move::HealingMove) { // needs testing if every move is covered
-            tmove(b,s).priority = 6; // needs confirmation. Helping Hand has priority +5 and the descripion says that it gains the "highest priority"
+        if (tmove(b,s).category & Move::HealingMove) {
+            tmove(b,s).priority = 3;
         }
     }
 };

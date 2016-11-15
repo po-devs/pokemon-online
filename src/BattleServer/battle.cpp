@@ -3769,12 +3769,22 @@ int BattleSituation::calculateDamage(int p, int t)
          */
         int finalmod = 0x1000;
         //*** 1 ***//
-        /* Reflect, Light Screen */
-        if (!crit && !hasWorkingAbility(p, Ability::Infiltrator) && teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
-            if (!multiples()) {
-                finalmod = chainMod(finalmod, 0x800);
-            } else {
-                finalmod = chainMod(finalmod, 0xA8F);
+        /* Reflect, Light Screen, Aurora Veil */
+        if (!crit && !hasWorkingAbility(p, Ability::Infiltrator)) {
+                if (teamMemory(this->player(t)).value("Barrier" + QString::number(cat) + "Count").toInt() > 0) {
+                    if (!multiples()) {
+                        finalmod = chainMod(finalmod, 0x800);
+                    } else {
+                        finalmod = chainMod(finalmod, 0xA8F);
+                    }
+                }
+                if (teamMemory(this->player(t)).value("AuroraVeilCount").toInt() > 0) {
+                    if (!multiples()) {
+                        finalmod = chainMod(finalmod, 0x800);
+                    } else {
+                        finalmod = chainMod(finalmod, 0xA8F);
+                    }
+                }
             }
         }
         //*** 2 ***//
