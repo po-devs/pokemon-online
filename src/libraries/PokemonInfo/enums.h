@@ -1033,7 +1033,12 @@ namespace Pokemon
         Lycanroc_Midnight = Lycanroc + (1 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
         Ash_Greninja = Greninja + (2 << 16),
-        Pikachu_in_Cap = Pikachu + (7 << 16) //something like this
+        Pikachu_First_Hat = Pikachu + (7 << 16),
+        Pikachu_Second_Hat = Pikachu + (8 << 16),
+        Pikachu_Third_Hat = Pikachu + (9 << 16),
+        Pikachu_Fourth_Hat = Pikachu + (10 << 16),
+        Pikachu_Fifth_Hat = Pikachu + (11 << 16),
+        Pikachu_Sixth_Hat = Pikachu + (12 << 16)
     };
 }
 

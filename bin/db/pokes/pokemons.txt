@@ -38,6 +38,12 @@
 25:4:D Pikachu-Ph. D
 25:5:D Pikachu-Libre
 25:6:A Pikachu-Cosplay
+25:7:A Pikachu-First Hat
+25:8:A Pikachu-Second Hat
+25:9:A Pikachu-Third Hat
+25:10:A Pikachu-Fourth Hat
+25:11:A Pikachu-Fifth Hat
+25:12:A Pikachu-Sixth Hat
 26:0 Raichu
 26:1:L Alolan Raichu
 27:0 Sandshrew
