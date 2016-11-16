@@ -142,9 +142,9 @@ public:
         field().setTerrain(Terrain::NoTerrain);
     }
 
-    void onContinueTerrain(int terrain) {
+    /*void onContinueTerrain(int terrain) {
         field().setTerrain(terrain);
-    }
+    }*/
 
     void onClockStart(int player, int time) {
         team(player).setTimeLeft(time,true);

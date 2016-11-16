@@ -101,7 +101,7 @@ protected:
     start(Recoil, onRecoil, int spot) end(onRecoil, spot)
     start(Drained, onDrained, int spot) end(onDrained, spot)
     start(WeatherMessage, onContinueWeather, int weather) end(onContinueWeather, weather)
-    start(TerrainMessage, onContinueTerrain, int terrain) end(onContinueTerrain, terrain)
+    /*start(TerrainMessage, onContinueTerrain, int terrain) end(onContinueTerrain, terrain)*/
     start(EndWeather, onEndWeather, int weather) end(onEndWeather, weather)
     start(EndTerrain, onEndTerrain, int terrain) end(onEndTerrain, terrain)
     start(StartWeather, onStartWeather, int spot, int weather, bool ability) end(onStartWeather, spot, weather, ability)

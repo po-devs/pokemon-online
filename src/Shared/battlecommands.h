@@ -101,7 +101,6 @@ namespace BattleCommands {
 
     enum TerrainM
     {
-        ContinueTerrain,
         EndTerrain
     };
 }
