@@ -2400,7 +2400,7 @@ struct MMGravity : public MM
 
     struct FM : public QSet<int> {
         FM() {
-            (*this) << Bounce << Fly << SkyDrop << JumpKick << HiJumpKick << Splash << MagnetRise << FlyingPress;
+            (*this) << Bounce << Fly << SkyDrop << JumpKick << HiJumpKick << Splash << MagnetRise << FlyingPress << Telekinesis;
         }
     };
     static FM forbidden_moves;
