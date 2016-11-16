@@ -2634,7 +2634,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         //Rest, 2nd part of Yawn, Status Orbs, Effect Spore, Flame Body, Poison Point, Psycho Shift
         return false;
     }
-    if (hasWorkingAbility(target, Ability::Comatose) && status != Pokemon::Asleep) {
+    if (hasWorkingAbility(target, Ability::Comatose)) {
         sendAbMessage(148,0,target);
         return false;
     }
@@ -2699,7 +2699,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         if (hasWorkingAbility(target, Ability::Immunity)) {
             return false;
         }
-        //Unconfirmed: As far as we know, Corrosion only allows poisoning Steels and Poison types. Should it bypass other abilities too? (Comatose, Immunity, etc.)
+        //Unconfirmed: As far as we know, Corrosion only allows poisoning Steels and Poison types. Should it bypass other abilities too? (Immunity, etc.)
         //If so, add "&& status == Pokemon::Poisoned" to the conditional and move it to the correct placing (aka, the top if it bypasses everything)
         if (inflicter != target && hasWorkingAbility(inflicter, Ability::Corrosion)) {
             return true;

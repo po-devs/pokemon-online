@@ -3072,7 +3072,7 @@ struct AMSteelWorker : public AM {
 
     static void bpm (int s, int, BS &b) {
         if (tmove(b, s).type == poke(b,s)["AbilityArg"].toInt()) {
-            b.chainBp(s, 0x1555);
+            b.chainBp(s, 0x1800);
         }
     }
 };
@@ -3281,8 +3281,7 @@ void AbilityEffect::init()
     //REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
     //REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
 
+    //UNTESTED: Comatose
     //ALMOST DONE: Disguise, Dancer
     //NOT DONE: Shields Down, Power Construct, Schooling, Beast Boost
-    //CODED WRONG: Comatose [Pokemon is treated like it has the sleep status already. Can't rest. Can use snore/sleep talk at will. Wakeup slap increased damage]
-
 }
