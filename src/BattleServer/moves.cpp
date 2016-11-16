@@ -2194,20 +2194,21 @@ struct MMFling : public MM
     }
 
     static void btl(int s, int, BS &b) {
-        if (b.canLoseItem(s,s) && ItemInfo::Power(b.poke(s).item()) > 0) {
+        int item = b.poke(s).item();
+        if (b.canLoseItem(s,s) && ItemInfo::Power(item) > 0) {
             if (b.gen() >= 5 && b.hasWorkingAbility(s, Ability::Klutz)) {
                 return;
             } else if (poke(b,s).value("Embargoed").toBool()) {
                 return;
             } else if (b.battleMemory().value("MagicRoomCount").toInt() > 0) {
                 return;
-            } else if (ItemInfo::isGem(b.poke(s).item())) {
+            } else if (ItemInfo::isGem(item) || ItemInfo::isMegaStone(item) || ItemInfo::isPrimalStone(item) || ItemInfo::isZCrystal(item)) {
                 return;
             }
-            tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
+            tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(item);
             int t = b.targetList.front();
-            b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
-            turn(b,s)["FlingItem"] = b.poke(s).item();//needed for failure check
+            b.sendMoveMessage(45, 0, s, type(b,s), t, item);
+            turn(b,s)["FlingItem"] = item;//needed for failure check
         }
     }
 

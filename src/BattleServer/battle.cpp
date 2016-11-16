@@ -1913,8 +1913,8 @@ ppfunction:
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
-                if (!isFlying(target) && terrainCount > 0 && terrain == Type::Psychic && tmove(player).priority > 0) {
-                    sendMoveMessage(222,2,target,Type::Psychic);
+                if (!isFlying(target) && terrain == PsychicTerrain && tmove(player).priority > 0) {
+                    sendMoveMessage(222,2,target,Type::Psychic,player,tmove(player).attack);
                     calleffects(player,target,"AttackSomehowFailed");
                     continue;
                 }

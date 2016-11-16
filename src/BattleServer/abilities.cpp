@@ -2702,7 +2702,6 @@ struct AMWaterCompaction : public AM {
         }
 
         if (type(b, t) == Type::Water && !b.hasMaximalStatMod(s, Defense)) {
-            b.sendAbMessage(40,0,s);
             b.inflictStatMod(s, Defense, 2, s, false);
         }
     }
