@@ -1054,15 +1054,15 @@ namespace Move
     enum Flags
     {
         ContactFlag = 1, // Is the move a contact move
-        unusedFlag1 = 2,
-        unusedFlag2 = 4,
+        ChargeFlag = 2, // Is the move a charging move? not used by PO yet
+        RechargeFlag = 4, // Is the move a recharging move? not used by PO yet
         ProtectableFlag = 8, //Can the move be protected against
         MagicCoatableFlag = 16, //Can the move be magic coated
         SnatchableFlag = 32, //Can the move be snatched
         MemorableFlag = 64, //Can the move be mirror moves
         PunchFlag = 128, //Is the move boosted with Iron Fist
         SoundFlag = 256, //Is the move blocked with SoundProof
-        DanceFlag = 512, // Dancing moves for ability Dancer
+        FlyingFlag = 512, //Is the move an invulnerable move (shadow force/...)? not used by PO yet
         UnthawingFlag = 1024, // Does the user of this move unthaw when frozen?
         FarReachFlag = 2048, // Can this move reach targets far across in triples?
         HealingFlag = 4096, //Can this move be blocked with Heal Block
@@ -1070,7 +1070,8 @@ namespace Move
         BiteFlag = 16384,//Strong jaw moves
         PowderFlag = 32768, //Powder moves
         BallFlag = 65536, //Ball moves for Bulletproof
-        LaunchFlag = 131072 //Moves that get boosted by Mega Launcher
+        LaunchFlag = 131072, //Moves that get boosted by Mega Launcher
+        DanceFlag = 262144 // Dancing moves for ability Dancer
     };
 
     enum Target
