@@ -292,17 +292,17 @@
 578 13-4_248_353#phantom force
 581 157-7#Trick or Treat
 584 200#Belch
-588 201#Electriy Terrain
+588 240-1#Electric Terrain
 589 202#Electrify
 590 203#Fairy Lock
 591 204#Fell Stinger
 592 213#Flower Shield
-593 205#Grassy Terrain
+593 240-2#Grassy Terrain
 594 217#Ion Deluge
 595 206#King's Shield
 597 216-2_4#Magnetic Flux
 598 207#Mat Block
-599 208#Misty Terrain
+599 240-3#Misty Terrain
 600 140#Parting Shot
 601 215#Powder
 603 214#Rototiller
@@ -322,7 +322,7 @@
 628 221#Revelation Dance
 629 220#Shell Trap
 631 231#sunsteel strike
-633 222#psychic terrain
+633 240-4#psychic terrain
 634 223#throat chop
 635 236#Aurora Veil
 636 224#laser focus

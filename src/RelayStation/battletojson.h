@@ -45,8 +45,10 @@ public:
     void onRecoil(int spot);
     void onDrained(int spot);
     void onStartWeather(int spot, int weather, bool ability);
+    void onStartTerrain(int spot, int terrain, bool ability);
     void onContinueWeather(int weather);
     void onEndWeather(int weather);
+    void onEndTerrain(int terrain);
     void onHurtWeather(int spot, int weather);
     void onDamageDone(int spot, int damage);
     void onAbilityMessage(int spot, int ab, int part, int type, int foe, int other);

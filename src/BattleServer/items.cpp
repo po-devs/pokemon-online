@@ -1152,16 +1152,21 @@ struct IMSeeds : public IM {
     IMSeeds() {
         functions["UponSetup"] = &us;
         functions["UponReactivation"] = &us;
-        //need something for when the terrain gets set up
+        functions["TerrainChange"] = &us;
     }
 
     static void us(int s, int, BS &b){
         QStringList args = poke(b,s)["ItemArg"].toString().split('_');
         int terrainType = args[0].toInt();
-        if (b.terrainCount > 0 && std::abs(b.terrain) == terrainType) {
+        if (b.terrain == terrainType) {
+            int stat = args[1].toInt();
+            if (b.hasMaximalStatMod(s, stat))
+                return;
+
             //probably a message here too, even if one isnt in game
-            b.inflictStatMod(s, args[1].toInt(), 1, s);
+            b.sendItemMessage(36, s, 0, s, b.poke(s).item(), stat);
             b.disposeItem(s);
+            b.inflictStatMod(s, stat, 1, s, false);
         }
     }
 };

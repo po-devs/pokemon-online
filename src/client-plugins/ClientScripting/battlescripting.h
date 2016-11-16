@@ -117,11 +117,17 @@ public:
     void onStartWeather(int spot, int weather, bool ability) {
         makeEvent("onStartWeather", spot, weather, ability);
     }
+    void onStartTerrain(int spot, int terrain, bool ability) {
+        makeEvent("onStartTerrain", spot, terrain, ability);
+    }
     void onContinueWeather(int weather) {
         makeEvent("onContinueWeather", weather);
     }
     void onEndWeather(int weather) {
         makeEvent("onEndWeather", weather);
+    }
+    void onEndTerrain(int terrain) {
+        makeEvent("onEndTerrain", terrain);
     }
     void onHurtWeather(int spot, int weather) {
         makeEvent("onHurtWeather", spot, weather);

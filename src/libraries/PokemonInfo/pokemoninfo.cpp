@@ -3009,18 +3009,40 @@ int TypeInfo::TypeForWeather(int weather) {
     }
 }
 
+int TypeInfo::TypeForTerrain(int terrain){
+    switch(terrain) {
+    case ElectricTerrain: return Type::Electric;
+    case GrassyTerrain: return Type::Grass;
+    case MistyTerrain: return Type::Fairy;
+    case PsychicTerrain: return Type::Psychic;
+    default: return Type::Normal;
+    }
+}
+
 QString TypeInfo::weatherName(int weather)
 {
-    // Supposed to be lowercase and unique.
+    // Supposed to start lowercase. needs to be unique also
     switch(weather) {
     case Hail: return QObject::tr("hailstorm");
     case Rain: return QObject::tr("rain");
     case SandStorm: return QObject::tr("sandstorm");
     case Sunny: return QObject::tr("sunny");
-    case StrongSun: return QObject::tr("intense sun");
-    case StrongRain: return QObject::tr("heavy rain");
-    case StrongWinds: return QObject::tr("strong winds");
+    case StrongSun: return QObject::tr("intense Sun");
+    case StrongRain: return QObject::tr("heavy Rain");
+    case StrongWinds: return QObject::tr("strong Winds");
     default: return QObject::tr("normal", "weather");
+    }
+}
+
+QString TypeInfo::terrainName(int terrain)
+{
+    // Supposed to start lowercase.
+    switch(terrain) {
+    case ElectricTerrain: return QObject::tr("electric Terrain");
+    case GrassyTerrain: return QObject::tr("grassy Terrain");
+    case MistyTerrain: return QObject::tr("misty Terrain");
+    case PsychicTerrain: return QObject::tr("psychic Terrain");
+    default: return QObject::tr("normal", "terrain");
     }
 }
 

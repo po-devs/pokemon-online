@@ -39,8 +39,10 @@ public:
     void endTurnPoison(int player);
     void endTurnBurn(int player);
     void endTurnWeather();
+    void endTurnTerrain();
     void endTurnDefrost();
     void callForth(int weather, int turns);
+    void coverField(int terrain, int turns);
     /* Attack... */
     /* if special occurence = true, then it means a move like mimic/copycat/metronome has been used. In that case attack does not
 	represent the moveslot but rather than that it represents the move num, plus PP will not be lost */
@@ -180,6 +182,20 @@ public:
         StrongSun = 5,
         StrongRain = 6,
         StrongWinds = 7
+    };
+
+    enum TerrainM
+    {
+        EndTerrain
+    };
+
+    enum Terrain
+    {
+        NoTerrain = 0,
+        ElectricTerrain = 1,
+        GrassyTerrain = 2,
+        MistyTerrain = 3,
+        PsychicTerrain = 4
     };
 
     enum HealBlockBlock

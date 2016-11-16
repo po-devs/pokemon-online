@@ -118,8 +118,11 @@ protected:
     start(Recoil, int spot) end(spot)
     start(Drained, int spot) end(spot)
     start(WeatherMessage, int weather) end(weather)
+    start(TerrainMessage, int terrain) end(terrain)
     start(EndWeather, int weather) end(weather)
+    start(EndTerrain, int terrain) end(terrain)
     start(StartWeather, int spot; int weather; bool ability) end(spot, weather, ability)
+    start(StartTerrain, int spot; int terrain; bool ability) end(spot, terrain, ability)
     start(WeatherDamage, int spot; int weather) end(spot, weather)
     start(Damaged, int spot; int damage) end(spot, damage)
     start(AbilityMessage, int spot; int ab; int part; int type; int foe; int other)
@@ -285,6 +288,9 @@ BattleExtracter<C>::BattleExtracter()
     addCallback(UseItem);
     addCallback(ItemCountChange);
     addCallback(ItemChange);
+    addCallback(StartTerrain);
+    addCallback(TerrainMessage);
+    addCallback(EndTerrain);
 
 #undef addCallback
 }

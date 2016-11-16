@@ -198,11 +198,11 @@ void BattleSituation::initializeEndTurnFunctions()
 
         24.0 Gravity ends
 
-        25.0 Trick Room ends
+        25.0 Terrains end or something, unconfirmed
 
-        26.0 Wonder Room ends
-
-        27.0 Magic Room ends
+        26.0 Trick Room ends
+        26.1 Wonder Room ends
+        26.2 Magic Room ends
 
         28.0 Uproar message
         28.1 Speed Boost, Bad Dreams, Harvest, Moody
@@ -218,6 +218,7 @@ void BattleSituation::initializeEndTurnFunctions()
         31.0 Slow Start, Forecast
         */
         ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(25, &BattleSituation::endTurnTerrain));
         ownEndFunctions.push_back(QPair<int, VoidFunction>(30, &BattleSituation::requestEndOfTurnSwitchIns));
 
         addEndTurnEffect(AbilityEffect, 5, 1); /* Shed skin, Hydration, Healer */
@@ -2629,7 +2630,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
     if (hasWorkingAbility(target, Ability::LeafGuard) && isWeatherWorking(Sunny) && !(tmove(target).attack == Move::Rest && gen().num == 4))
         //Gen 4 allows the use of Rest with working Leaf Guard.
         return false;
-    if (!isFlying(target) && terrainCount > 0 && terrain == Type::Fairy) {
+    if (!isFlying(target) && terrain == MistyTerrain) {
         //Rest, 2nd part of Yawn, Status Orbs, Effect Spore, Flame Body, Poison Point, Psycho Shift
         return false;
     }
@@ -2664,7 +2665,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
             //sendMoveMessage(141,4,target); //Needs to remove "But it failed" from Rest first
             return false;
         }
-        if (!isFlying(target) && terrainCount > 0 && terrain == Type::Electric) {
+        if (!isFlying(target) && terrain == ElectricTerrain) {
             sendMoveMessage(201,3,target);
             return false;
         }
@@ -2806,7 +2807,7 @@ void BattleSituation::inflictStatus(int player, int status, int attacker, int mi
                 return;
             }
         }
-        if(std::abs(terrain) == Type::Fairy && terrainCount > 0 && !isFlying(player)) {
+        if(terrain == MistyTerrain && !isFlying(player)) {
             sendMoveMessage(208, 2, player,Pokemon::Fairy, player, tmove(player).attack);
             return;
         }
@@ -2883,7 +2884,7 @@ void BattleSituation::inflictConfused(int player, int attacker, bool tell)
         return;
     }
 
-    if(gen() >= 7 && std::abs(terrain) == Type::Fairy && terrainCount > 0 && !isFlying(player)) {
+    if(gen() >= 7 && terrain == MistyTerrain && !isFlying(player)) {
         sendMoveMessage(208, 2, player,Pokemon::Fairy, player, tmove(player).attack);
         return;
     }
@@ -2903,6 +2904,17 @@ void BattleSituation::callForth(int weather, int turns)
         this->weather = weather;
         foreach (int i, sortedBySpeed()) {
             callaeffects(i,i,"WeatherChange");
+        }
+    }
+}
+
+void BattleSituation::coverField(int terrain, int turns)
+{
+    terrainCount = turns;
+    if (terrain != this->terrain) {
+        this->terrain = terrain;
+        foreach (int i, sortedBySpeed()) {
+            callieffects(i,i,"TerrainChange");
         }
     }
 }
@@ -2930,7 +2942,7 @@ void BattleSituation::endTurnWeather()
             } else {
                 immuneTypes << Pokemon::Rock << Pokemon::Ground << Pokemon::Steel;
             }
-            foreach (int i, speedsVector) {
+            foreach (int i, sortedBySpeed()) {
                 callaeffects(i,i,"WeatherSpecial");
                 callieffects(i,i,"WeatherSpecial");
                 if (!turnMemory(i).contains("WeatherSpecialed") && (weather == Hail || weather == SandStorm) && getTypes(i).toList().toSet().intersect(immuneTypes).isEmpty()
@@ -2944,6 +2956,37 @@ void BattleSituation::endTurnWeather()
         }
         if (count > 0) {
             weatherCount = count;
+        }
+    }
+}
+
+void BattleSituation::endTurnTerrain()
+{
+    int terrain = this->terrain;
+
+    if (terrain == NoTerrain) {
+        return;
+    }
+
+    int count = terrainCount - 1;
+    if (count == 0) {
+        notify(All, TerrainMessage, Player1, qint8(EndTerrain), qint8(terrain));
+        coverField(NoTerrain, -1);
+    } else {
+        if (terrain == GrassyTerrain) {
+            bool healed = false;
+            foreach (int i, sortedBySpeed()) {
+                if (!isFlying(i)) {
+                    healLife(i, poke(i).totalLifePoints()/16);
+                    healed = true;
+                }
+            }
+            if (healed) {
+                sendMoveMessage(205,2,0,Pokemon::Grass);
+            }
+        }
+        if (count > 0) {
+            terrainCount = count;
         }
     }
 }
@@ -3723,14 +3766,14 @@ int BattleSituation::calculateDamage(int p, int t)
         }
 
         /* Apply Terrain mods, no idea if in the right spot */
-        if (std::abs(terrain) == Type::Fairy && type == Type::Dragon && !isFlying(oppPlayer)) {
+        if (terrain == MistyTerrain && type == Type::Dragon && !isFlying(oppPlayer)) {
             damage = applyMod(damage, 0x800);
         }
-        if (std::abs(terrain) == Type::Grass && (attackused == Move::Bulldoze || attackused == Move::Earthquake || attackused == Move::Magnitude)) {
+        if (terrain == GrassyTerrain && (attackused == Move::Bulldoze || attackused == Move::Earthquake || attackused == Move::Magnitude)) {
             damage = applyMod(damage, 0x800);
         }
         //Terrains boost moves of same type
-        if (terrainCount > 0 && terrain > 0 && terrain < Type::Curse && terrain == type && !isFlying(p)) {
+        if (TypeInfo::TypeForTerrain(terrain) == type && !isFlying(p)) {
             damage = applyMod(damage, 0x1800);
         }
 

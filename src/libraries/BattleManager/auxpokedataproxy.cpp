@@ -233,6 +233,15 @@ void FieldProxy::setWeather(int weather)
     emit weatherChanged();
 }
 
+void FieldProxy::setTerrain(int terrain)
+{
+    if (mTerrain == terrain) {
+        return;
+    }
+    mTerrain = terrain;
+    emit terrainChanged();
+}
+
 FieldProxy::FieldProxy(int numOfSlots) : mWeather(NormalWeather) {
     for (int i = 0; i < numOfSlots; i++) {
         AuxPokeDataProxy *ptr = new AuxPokeDataProxy();

@@ -764,6 +764,9 @@ void RegularBattleScene::updateToolTip(int spot)
     if (data()->field().weather() != Weather::NormalWeather) {
         tooltip += "\n" + tr("Weather: %1").arg(tu(TypeInfo::weatherName(data()->field().weather())));
     }
+    if (data()->field().terrain() != Terrain::NoTerrain) {
+        tooltip += "\n" + tr("Terrain: %1").arg(tu(TypeInfo::terrainName(data()->field().terrain())));
+    }
 
     if (!data()->isPlayer(spot) && data()->poke(spot).move(0)->num() != Move::NoMove) {
         tooltip += "\n\nKnown Moves:\n";

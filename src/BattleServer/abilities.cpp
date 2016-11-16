@@ -2548,7 +2548,7 @@ struct AMGrassPelt : public AM
     }
 
     static void sm (int s, int, BS &b) {
-        if (b.terrain == Type::Grass && b.terrainCount >= 0) {
+        if (b.terrain == BS::GrassyTerrain) {
             turn(b,s)[QString("Stat%1AbilityModifier").arg(Defense)] = 0x1800;
         }
     }
@@ -2653,7 +2653,7 @@ struct AMSurgeSurfer : public AM
     }
 
     static void sm(int s, int, BS &b) {
-        if (b.terrain == Type::Electric && b.terrainCount >= 0) {
+        if (b.terrain == BS::ElectricTerrain) {
             turn(b,s)["Stat5AbilityModifier"] = 0x2000;
         }
     }
@@ -2718,37 +2718,17 @@ struct AMBattery : public AM {
     }
 };
 
-//Untested. Crashes if a similar ability is called. Doesn't end properly. Type isn't defined at point of message
 struct AMElectricSurge : public AM
 {
     AMElectricSurge() {
         functions["UponSetup"] = &us;
-        functions["EndTurn24.0"] = &et;
     }
 
     static void us (int s, int , BS &b) {
-        QStringList args = poke(b,s)["AbilityArg"].toString().split('_');
-        int type = args[0].toInt();
-        if (b.terrain == type && b.terrainCount > 0) {
-            return;
-        }
-        b.sendMoveMessage(args[1].toInt(), 0, s, 0, type);
-        b.terrain = type;
-        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
-        b.battleMemory()["LastSurgedTerrain"] = type;
-        b.battleMemory()["TerrainMessageReference"] = args[1].toInt();
-
-    }
-    static void et(int s, int, BS &b) {
-        int type = b.battleMemory().value("LastSurgedTerrain").toInt();
-        if (b.terrain != type) {
-            return;
-        }
-        b.terrainCount -= 1;
-        if (b.terrainCount <= 0) {
-            int msg = b.battleMemory().value("TerrainMessageReference").toInt();
-            b.sendMoveMessage(msg, 1, s, 0, type);
-            b.terrain = 0;
+        int ter = poke(b,s)["AbilityArg"].toInt();
+        if (ter != b.terrain) {
+            b.sendAbMessage(128, ter-1, s, s, TypeInfo::TypeForTerrain(ter));
+            b.coverField(ter, (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5));
         }
     }
 };

@@ -78,7 +78,10 @@ enum /* class */ BattleEnum
     CappedStat,
     UsePP,
     ItemChange,
-    PrintRule
+    PrintRule,
+    StartTerrain,
+    TerrainMessage,
+    EndTerrain
 };
 
 inline unsigned int qHash(const BattleEnum &b) {

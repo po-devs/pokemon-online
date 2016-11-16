@@ -444,8 +444,10 @@ public:
     static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GenInfo::GenMax()); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
+    static int TypeForTerrain(int terrain);
     static int Category(int type);
     static QString weatherName(int weather);
+    static QString terrainName(int terrain);
 private:
     enum Weather
     {
@@ -457,6 +459,15 @@ private:
         StrongSun = 5,
         StrongRain = 6,
         StrongWinds = 7
+    };
+
+    enum Terrain
+    {
+        NoTerrain = 0,
+        ElectricTerrain = 1,
+        GrassyTerrain = 2,
+        MistyTerrain = 3,
+        PsychicTerrain = 4
     };
 
     static QHash<int, QString> m_Names;

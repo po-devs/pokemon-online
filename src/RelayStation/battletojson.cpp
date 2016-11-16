@@ -203,6 +203,7 @@ void BattleToJson::onStartWeather(int spot, int weather, bool ability)
     makeCommand("weatherstart");
     map.insert("weather", weather);
     map.insert("permanent", ability);
+    (void) spot;
 }
 
 void BattleToJson::onContinueWeather(int weather)
@@ -215,6 +216,20 @@ void BattleToJson::onEndWeather(int weather)
 {
     map.insert("command", "weatherend");
     map.insert("weather", weather);
+}
+
+void BattleToJson::onStartTerrain(int spot, int terrain, bool ability)
+{
+    makeCommand("terrainstart");
+    map.insert("terrain", terrain);
+    (void) ability;
+    (void) spot;
+}
+
+void BattleToJson::onEndTerrain(int terrain)
+{
+    map.insert("command", "terrainend");
+    map.insert("terrain", terrain);
 }
 
 void BattleToJson::onHurtWeather(int spot, int weather)

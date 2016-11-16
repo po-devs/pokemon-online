@@ -122,6 +122,12 @@ public:
         field().setWeather(weather);
     }
 
+    void onStartTerrain(int spot, int terrain, bool ability) {
+        (void) ability;
+        (void) spot;
+        field().setTerrain(terrain);
+    }
+
     void onContinueWeather(int weather) {
         field().setWeather(weather);
     }
@@ -129,6 +135,15 @@ public:
     void onEndWeather(int weather) {
         (void) weather;
         field().setWeather(Weather::NormalWeather);
+    }
+
+    void onEndTerrain(int terrain) {
+        (void) terrain;
+        field().setTerrain(Terrain::NoTerrain);
+    }
+
+    void onContinueTerrain(int terrain) {
+        field().setTerrain(terrain);
     }
 
     void onClockStart(int player, int time) {

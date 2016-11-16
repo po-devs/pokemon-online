@@ -2518,4 +2518,15 @@ namespace Weather {
     };
 }
 
+namespace Terrain {
+    enum Terrain
+    {
+        NoTerrain = 0,
+        ElectricTerrain = 1,
+        GrassyTerrain = 2,
+        MistyTerrain = 3,
+        PsychicTerrain = 4
+    };
+}
+
 #endif // ENUMS_H

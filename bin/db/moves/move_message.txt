@@ -145,3 +145,4 @@
 235 %s started heating up its break!
 238 %s stole the target's boosted stats!
 239 %s switched Speed with its target!
+240 An electric current runs across the battlefield!|Grass grew to cover the battlefield!|Mist swirls around the battlefield!|The battlefield got weird!

@@ -320,7 +320,7 @@ struct MMCamouflage : public MM {
         if (b.gen().num == 5) {
             type = Pokemon::Ground;
         }
-        if (b.terrain != 0 && b.terrain != Type::Curse) {
+        if (b.terrain != BS::NoTerrain) {
             type = std::abs(b.terrain);
         }
         //Move fails if the type you're transforming to is EXACTLY your typing.
@@ -3202,7 +3202,7 @@ struct MMToxicSpikes : public MM
         if (b.ability(source) == Ability::MagicGuard && b.gen() <= 4) {
             return;
         }
-        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy) {
+        if (b.terrain == BS::MistyTerrain) {
             return;
         }
 
@@ -5232,7 +5232,7 @@ struct MMTrickRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(9, 0) : makeBracket(25, 0) ;
+        return gen <= 4 ? makeBracket(9, 0) : makeBracket(26, 0) ;
     }
 
     static void uas(int s, int, BS &b) {
@@ -5331,7 +5331,7 @@ struct MMYawn : public MM {
             b.notifyClause(ChallengeInfo::SleepClause);
             fturn(b,s).add(TM::Failed);
         }
-        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Electric && !b.isFlying(t)) {
+        if (b.terrain == BS::ElectricTerrain && !b.isFlying(t)) {
             b.fail(s, 201, 3, Pokemon::Electric, t);
         }	
     }
@@ -5355,7 +5355,7 @@ struct MMYawn : public MM {
             if (b.poke(s).status() == Pokemon::Fine && b.canGetStatus(s, Pokemon::Asleep, s)) {
                 if (b.sleepClause() && b.currentForcedSleepPoke[b.player(s)] != -1) {
                     b.notifyClause(ChallengeInfo::SleepClause);
-                } else if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Fairy && !b.isFlying(s)) {
+                } else if (b.terrain == BS::MistyTerrain && !b.isFlying(s)) {
                     b.fail(s, 208, 3, Pokemon::Fairy, b.opponent(b.player(s)));
                 } else {
                     b.inflictStatus(s, Pokemon::Asleep, s);
@@ -5397,20 +5397,18 @@ struct MMNaturePower : public MM
         if (b.gen().num == 5) {
             type = Type::Ground;
         }
-        if (b.terrain != 0) {
-            type = std::abs(b.terrain);
-        }
 
         int move;
+        //Unconfirmed: Psychic Terrain
         if (type == Type::Ground) {
             move = Earthquake;
         } else if (type == Type::Water) {
             move = HydroPump;
-        } else if (type == Type::Grass) {
+        } else if (b.terrain == BS::GrassyTerrain) {
             move = EnergyBall;
-        } else if (type == Type::Fairy) {
+        } else if (b.terrain == BS::MistyTerrain) {
             move = Moonblast;
-        } else if (type == Type::Electric) {
+        } else if (b.terrain == BS::ElectricTerrain) {
             move = Thunderbolt;
         } else {
             if (b.gen().num == 3) {
@@ -5488,22 +5486,23 @@ struct MMSecretPower : public MM {
             tmove(b,s).statAffected = Accuracy << 16;
             tmove(b,s).boostOfStat = uchar(-1) << 16;
         } else {
-            if (b.terrain != 0) {
+            if (b.terrain != BS::NoTerrain) {
                 int type = std::abs(b.terrain);
-                if (type == Type::Grass) {
+                if (type == BS::GrassyTerrain) {
                     tmove(b,s).classification = Move::OffensiveStatusInducingMove;
                     tmove(b,s).status = Pokemon::Asleep;
                     tmove(b,s).rate = 30;
-                } else if (type == Type::Electric) {
+                } else if (type == BS::ElectricTerrain) {
                     tmove(b,s).classification = Move::OffensiveStatusInducingMove;
                     tmove(b,s).status = Pokemon::Paralysed;
                     tmove(b,s).rate = 30;
-                } else if (type == Type::Fairy) {
+                } else if (type == BS::MistyTerrain) {
                     tmove(b,s).classification = Move::OffensiveStatChangingMove;
                     tmove(b,s).rateOfStat = 30 << 16;
                     tmove(b,s).statAffected = SpAttack << 16;
                     tmove(b,s).boostOfStat = uchar(-1) << 16;
                 }
+                //UNCONFIRMED: Psychic terrain anything?
             } else {
                 tmove(b,s).classification = Move::OffensiveStatusInducingMove;
                 tmove(b,s).status = Pokemon::Paralysed;
@@ -5941,7 +5940,7 @@ struct MMMagicRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(27, 0) ;
+        return makeBracket(26, 2) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
@@ -6214,7 +6213,7 @@ struct MMWonderRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(26, 0) ;
+        return makeBracket(26, 1) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
@@ -6955,40 +6954,23 @@ struct MMBelch :  public MM
     }
 };
 
-struct MMElectricTerrain : public MM {
-    MMElectricTerrain() {
+//UNTESTED: Message when Terrain ends is incorrect. Terrain ends properly though
+struct MMTerrain : public MM {
+    MMTerrain() {
         functions["UponAttackSuccessful"] = &uas;
         functions["DetermineAttackFailure"] = &daf;
     }
 
-    static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(24, 0) ;
-    }
-
     static void daf(int s, int, BS &b) {
-        if (b.terrain == Type::Electric && b.terrainCount > 0) {
+        if (b.terrain == turn(b,s)["Terrain_Arg"].toInt()) {
             fturn(b,s).add(TM::Failed);
         }
     }
 
-    //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
     static void uas(int s, int, BS &b) {
-        b.sendMoveMessage(201,0,s,Pokemon::Electric);
-        b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
-        b.terrain = Type::Electric;
-        b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "ElectricTerrain", &et);
-    }
-
-    static void et(int s, int, BS &b) {
-        if (b.terrain != Type::Electric) {
-            return;
-        }
-        b.terrainCount -= 1;
-        if (b.terrainCount <= 0) {
-            b.sendMoveMessage(201,1,s,Pokemon::Electric);
-            b.terrain = 0;
-            b.removeEndTurnEffect(BS::FieldEffect, 0, "ElectricTerrain");
-        }
+        int terrain = turn(b,s)["Terrain_Arg"].toInt();
+        b.sendMoveMessage(240,terrain-1,s,type(b,s));
+        b.coverField(terrain, (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5));
     }
 };
 
@@ -7054,7 +7036,8 @@ struct MMFellStinger : public MM {
     }
 };
 
-struct MMGrassyTerrain : public MM {
+//TODO: End Turn Healing
+/*struct MMGrassyTerrain : public MM {
     MMGrassyTerrain() {
         functions["UponAttackSuccessful"] = &uas;
         functions["DetermineAttackFailure"] = &daf;
@@ -7076,6 +7059,7 @@ struct MMGrassyTerrain : public MM {
         b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = Type::Grass;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "GrassyTerrain", &et);
+        b.terrainStarted();
     }
 
     static void et(int s, int, BS &b) {
@@ -7096,7 +7080,7 @@ struct MMGrassyTerrain : public MM {
             }
         }
     }
-};
+};*/
 
 struct MMKingsShield: public MM
 {
@@ -7194,7 +7178,7 @@ struct MMMatBlock : public MM
     }
 };
 
-struct MMMistyTerrain : public MM {
+/*struct MMMistyTerrain : public MM {
     static const int type = -Type::Fairy;
 
     MMMistyTerrain() {
@@ -7218,6 +7202,7 @@ struct MMMistyTerrain : public MM {
         b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "MistyTerrain", &et);
+        b.terrainStarted();
     }
 
     static void et(int s, int, BS &b) {
@@ -7231,7 +7216,7 @@ struct MMMistyTerrain : public MM {
             b.removeEndTurnEffect(BS::FieldEffect, 0, "MistyTerrain");
         }
     }
-};
+};*/
 
 struct MMSpikyShield : public MM
 {
@@ -7569,7 +7554,7 @@ struct MMRevelationDance : public MM
     }
 };
 
-struct MMPsychicTerrain : public MM {
+/*struct MMPsychicTerrain : public MM {
     static const int type = Type::Psychic;
 
     MMPsychicTerrain() {
@@ -7593,6 +7578,7 @@ struct MMPsychicTerrain : public MM {
         b.terrainCount = (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5);
         b.terrain = type;
         b.addEndTurnEffect(BS::FieldEffect, bracket(b.gen()), 0, "PsychicTerrain", &et);
+        b.terrainStarted();
     }
 
     static void et(int s, int, BS &b) {
@@ -7606,7 +7592,7 @@ struct MMPsychicTerrain : public MM {
             b.removeEndTurnEffect(BS::FieldEffect, 0, "PsychicTerrain");
         }
     }
-};
+};*/
 
 struct MMThroatChop : public MM //copied from taunt
 {
@@ -7768,7 +7754,7 @@ struct MMFloralHealing : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        if (b.terrainCount > 0 && std::abs(b.terrain) == Type::Grass) {
+        if (b.terrain == BS::GrassyTerrain) {
             tmove(b,s).healing = 66;
         }
     }
@@ -7987,7 +7973,7 @@ struct MMSpeedSwap : public MM
 
     static void uas(int s, int t, BS &b) {
         //swaps raw speed stat with opponent
-        b.sendMoveMessage(239,0,s);
+        b.sendMoveMessage(239,0,s,type(b,s),t);
     }
 };
 
@@ -8226,14 +8212,14 @@ void MoveEffect::init()
         //REGISTER_MOVE(198, Spore);
     REGISTER_MOVE(199, CraftyShield);
     REGISTER_MOVE(200, Belch);
-    REGISTER_MOVE(201, ElectricTerrain);
+        //REGISTER_MOVE(201, ElectricTerrain);
     REGISTER_MOVE(202, Electrify);
     REGISTER_MOVE(203, FairyLock);
     REGISTER_MOVE(204, FellStinger);
-    REGISTER_MOVE(205, GrassyTerrain);
+        //REGISTER_MOVE(205, GrassyTerrain);
     REGISTER_MOVE(206, KingsShield);
     REGISTER_MOVE(207, MatBlock);
-    REGISTER_MOVE(208, MistyTerrain);
+        //REGISTER_MOVE(208, MistyTerrain);
     REGISTER_MOVE(209, SpikyShield);
     REGISTER_MOVE(210, StickyWeb);
     REGISTER_MOVE(211, TopsyTurvy);
@@ -8247,7 +8233,7 @@ void MoveEffect::init()
     REGISTER_MOVE(219, HyperspaceFury);
     REGISTER_MOVE(220, ShellTrap);
     REGISTER_MOVE(221, RevelationDance);
-    REGISTER_MOVE(222, PsychicTerrain);
+        //REGISTER_MOVE(222, PsychicTerrain);
     REGISTER_MOVE(223, ThroatChop);
     REGISTER_MOVE(224, LaserFocus);
     //REGISTER_MOVE(225, Instruct);
@@ -8265,6 +8251,7 @@ void MoveEffect::init()
     REGISTER_MOVE(237, StompingTantrum);
     REGISTER_MOVE(238, DarkVoid);
     REGISTER_MOVE(239, SpeedSwap);
+    REGISTER_MOVE(240, Terrain);
 
     //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
     //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate
