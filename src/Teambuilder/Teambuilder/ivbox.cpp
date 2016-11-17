@@ -125,7 +125,7 @@ void IvBox::changeIV(int newValue)
 {
     int stat = sender()->property("ivstat").toInt();
 
-    if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+    if(!poke().illegal() && poke().gen().num == 6 && poke().num().pokenum >= Pokemon::Xerneas) {
         int numFlawless = 6;
         for (int i = 0; i < 6; i++) {
             if(i == stat) {
@@ -188,7 +188,7 @@ void IvBox::updateHiddenPowerSelection()
     foreach(QStringList s, possibilities) {
         int c = ui->hpchoice->rowCount();
         ui->hpchoice->insertRow(c);
-        if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+        if(!poke().illegal() && poke().gen().num == 6 && poke().num().pokenum >= Pokemon::Xerneas) {
             int numFlawless = 0;
             for (int i = 0; i < 6; i++) {
                 if(s[i].toInt() == 31) {
@@ -227,7 +227,7 @@ void IvBox::changeHiddenPower(int newType)
     if (poke().gen() > 2) {
         QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(newType, poke().gen());
 
-        if(poke().num().pokenum == Pokemon::Xerneas || poke().num().pokenum == Pokemon::Yveltal || poke().num().pokenum == Pokemon::Zygarde) {
+        if(!poke().illegal() && poke().gen().num == 6 && poke().num().pokenum >= Pokemon::Xerneas) {
             foreach(QStringList s, possibilities) {
                 int numFlawless = 0;
                 for (int i = 0; i < 6; i++) {

@@ -221,7 +221,7 @@ void PokeBattle::init(PokePersonal &poke)
     }
 
     dvs().clear();   
-    if(poke.num().pokenum == Pokemon::Xerneas || poke.num().pokenum == Pokemon::Yveltal || poke.num().pokenum == Pokemon::Zygarde) {
+    if(!illegal() && poke.gen().num == 6 && poke.num().pokenum >= Pokemon::Xerneas) {
         int numFlawless = 6;
         for (int i = 0; i < 6; i++) {
             if(poke.DV(i) < 31) {
