@@ -1027,8 +1027,8 @@ namespace Pokemon
         Graveler_Alolan = Graveler + (1 << 16),
         Golem_Alolan = Golem + (1 << 16),
         Zygarde_10 = Zygarde + (1 << 16),
-        Zygarde_10_Uncomplete = Zygarde + (2 << 16),
-        Zygarde_50_Uncomplete = Zygarde + (3 << 16),
+        Zygarde_10_Incomplete = Zygarde + (2 << 16),
+        Zygarde_50_Incomplete = Zygarde + (3 << 16),
         Zygarde_Complete = Zygarde + (4 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
@@ -1038,7 +1038,8 @@ namespace Pokemon
         Pikachu_Third_Hat = Pikachu + (9 << 16),
         Pikachu_Fourth_Hat = Pikachu + (10 << 16),
         Pikachu_Fifth_Hat = Pikachu + (11 << 16),
-        Pikachu_Sixth_Hat = Pikachu + (12 << 16)
+        Pikachu_Sixth_Hat = Pikachu + (12 << 16),
+        Minior_Red = Minior + (1 << 16)
     };
 }
 

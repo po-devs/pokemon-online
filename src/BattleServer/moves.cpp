@@ -7769,7 +7769,9 @@ struct MMStrengthSap : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        b.healLife(s, b.getStat(t, Attack));
+        if (b.canHeal(s, BS::HealByMove, StrengthSap)) {
+            b.healLife(s, b.getStat(t, Attack));
+        }
         b.sendMoveMessage(229, 0, s, type(b,s), t);
         b.inflictStatMod(t, Attack, -1, s);
     }
@@ -7925,10 +7927,19 @@ struct MMInstruct : public MM
 {
     MMInstruct() {
         //functions["UponAttackSuccessful"] = &uas;
-        //functions["DetermineAttackFailure"] = &daf;
+        functions["DetermineAttackFailure"] = &daf;
     }
-    //Makes partner repeat their last move
-    //Probably fails if the target doesnt have a last move memory
+
+    static void daf(int s, int t, BS &b) {
+        //The pokemon has to have used a move in the same turn as Instruct
+        if (poke(b,t).value("LastMoveUsedTurn") != b.turn()) {
+            fturn(b,s).add(TM::Failed);
+        }
+    }
+
+    static void uas(int s, int t, BS &b) {
+
+    }
 };
 
 //UNTESTED

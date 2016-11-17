@@ -2777,6 +2777,7 @@ struct AMPinch : public AM
     }
 };
 
+//UNTESTED: Weather/status shouldnt trigger
 struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 {
     AMBerserk() {
@@ -3099,6 +3100,92 @@ struct AMBeastBoost : public AM {
     }
 };
 
+//UNTESTED
+struct AMSchooling : public AM {
+    AMSchooling() {
+        functions["EndTurn29.0"] = &et;
+        functions["UponSetup"] = &et;
+    }
+
+    static void et (int s, int, BS &b) {
+        /* Not using field pokemon since Ditto doesn't gain schooling.
+         * So using b.poke(s) instead of fpoke(b,s). */
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Wishiwashi || b.preTransPoke(s, Pokemon::Wishiwashi))
+            return;
+
+        //Schooling doesn't do anything before level 20.
+        if (b.poke(s).level() < 20) {
+            return;
+        }
+
+        num = fpoke(b,s).id;
+        //1%-24% = Solo Form, 25%-100% = School form
+        bool school = b.poke(s).lifePoints() >= b.poke(s).totalLifePoints() / 4;
+        if (num.subnum == 0 && school) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Wishiwashi_School, true);
+            b.sendAbMessage(147, 0, s);
+        } else if (num.subnum == 1 && !school) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Wishiwashi, true);
+            b.sendAbMessage(147, 1, s);
+        }
+    }
+};
+
+//UNTESTED
+struct AMShieldsDown : public AM {
+    AMShieldsDown() {
+        functions["EndTurn29.0"] = &et;
+        functions["UponSetup"] = &et;
+    }
+
+    static void et (int s, int, BS &b) {
+        /* Not using field pokemon since Ditto doesn't gain shields down.
+         * So using b.poke(s) instead of fpoke(b,s). */
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Minior || b.preTransPoke(s, Pokemon::Minior))
+            return;
+
+
+        num = fpoke(b,s).id;
+        bool shield = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
+        if (num.subnum == 0 && shield) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Minior_Red, true);
+            b.sendAbMessage(149, 0, s);
+        } else if (num.subnum > 1 && !shield) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Minior, true);
+            b.sendAbMessage(149, 1, s);
+        }
+    }
+};
+
+//UNTESTED
+struct AMPowerConstruct : public AM {
+    AMPowerConstruct() {
+        functions["EndTurn29.0"] = &et;
+        functions["UponSetup"] = &et;
+    }
+
+    static void et (int s, int, BS &b) {
+        /* Not using field pokemon since Ditto doesn't gain shields down.
+         * So using b.poke(s) instead of fpoke(b,s). */
+        Pokemon::uniqueId num = b.poke(s).num();
+
+        if (num != Pokemon::Zygarde_10_Incomplete || b.preTransPoke(s, Pokemon::Zygarde_10_Incomplete) ||
+                num != Pokemon::Zygarde_50_Incomplete || b.preTransPoke(s, Pokemon::Zygarde_50_Incomplete))
+            return;
+
+
+        num = fpoke(b,s).id;
+        bool complete = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
+        if ((num == Pokemon::Zygarde_10_Incomplete || num == Pokemon::Zygarde_50_Incomplete) && complete) {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Zygarde_Complete, true);
+            b.sendAbMessage(148, 0, s);
+        }
+    }
+};
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
@@ -3296,14 +3383,13 @@ void AbilityEffect::init()
     REGISTER_AB(141, BattleBond); //Unconfirmed: Needs ability flags; does boost to water shuriken get retained when switching out?
     REGISTER_AB(142, Receiver); /*Power of Alchemy*/ //Unconfirmed: Needs ability flags
     REGISTER_AB(143, SoulHeart);
-    //REGISTER_AB(144, BeastBoost);
+    REGISTER_AB(144, BeastBoost);
     REGISTER_AB(145, LiquidVoice);
     REGISTER_AB(146, SteelWorker);
-    //REGISTER_AB(147, Schooling);  //Unconfirmed: Needs ability flags
-    //REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
-    //REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
+    REGISTER_AB(147, Schooling);  //Unconfirmed: Needs ability flags
+    REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
+    REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
 
     //UNTESTED: Comatose
     //ALMOST DONE: Disguise, Dancer
-    //NOT DONE: Shields Down, Power Construct, Schooling, Beast Boost
 }
