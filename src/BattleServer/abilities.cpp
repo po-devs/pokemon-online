@@ -3077,6 +3077,28 @@ struct AMSteelWorker : public AM {
     }
 };
 
+//UNTESTED
+struct AMBeastBoost : public AM {
+    AMBeastBoost() {
+        functions["AfterKoing"] = &ak;
+    }
+
+    static void ak(int s, int, BS &b) {
+        if (b.koed(s))
+            return;
+
+        int bestStat = 1;
+        // 1 = Attack, 2 = Defense, 3 = Sp.Atk, 4 = Sp.Def, 5 = Speed
+        //Start at 2 because Attack is already "best stat" at this point
+        for (int i = 2; i < 6; i++) {
+            if (b.getStat(s, i) > b.getStat(s, bestStat)) {
+                bestStat = i;
+            }
+        }
+        b.inflictStatMod(s, bestStat, 1, s);
+    }
+};
+
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
