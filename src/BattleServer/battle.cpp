@@ -1452,7 +1452,12 @@ bool BattleSituation::testStatus(int player)
 
             int coin = gen() > 6 ? 3 : 2; //gen 7 confuse is 1/3
             if (coinflip(1, coin)) {
-                inflictConfusedDamage(player);
+                if (isDisguised(player)) {
+                    callaeffects(player, player, "Disguise");
+                } else {
+                    inflictConfusedDamage(player);
+                }
+
                 return false;
             }
         } else {
@@ -1613,7 +1618,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (zmoving) {
         sendItemMessage(68, player);
         if (tmove(player).power > 0) {
-            notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, special);
+            notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
+            //notify(All, UseAttack, player, qint16(attack), true, false); //to register it on move tracking?
             callieffects(player, player, "MoveSettings"); //Z Moves
             zmovenotify = true;
         } else {
@@ -1989,6 +1995,9 @@ ppfunction:
                     notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                 }
 
+                if (zmoving && isDisguised(target)) {
+                    continue;
+                }
                 if (tmove(player).power > 1 || tmove(player).attack == Move::GyroBall) {
                     calleffects(player, target, "BeforeHitting");
                     callaeffects(player, target, "ActivateProtean");
@@ -5025,4 +5034,9 @@ bool BattleSituation::makesContact(int s)
         return true;
     }
     return false;
+}
+
+bool BattleSituation::isDisguised(int s)
+{
+    return hasWorkingAbility(s, Ability::Disguise) && !battleMemory().value(QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool();
 }

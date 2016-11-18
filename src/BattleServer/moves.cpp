@@ -1198,7 +1198,7 @@ struct MMAssist : public MM
                        move == Fly || move == Bounce || move == FreezeShock || move == IceBurn || move == RazorWind || move == SkullBash ||
                        move == SkyDrop || move == SolarBeam || move == SkyAttack || move == ShadowForce || move == Roar || move == Whirlwind){
                 return gen >= 6;
-            } else if (move == SolarBlade || move == DarkVoid) {
+            } else if (move == SolarBlade) {
                 return gen >= 7;
             } else {
                 return QSet<int>::contains(move);
@@ -8061,7 +8061,7 @@ struct MMZCurse : public MM
         if (b.hasType(s,Pokemon::Ghost)) {
             MMZRecovery::zm(s,s,b);
         } else {
-            MMZBoost::zm(s,s,b);
+            b.inflictStatMod(s, Attack, 1, s);
         }
     }
 };

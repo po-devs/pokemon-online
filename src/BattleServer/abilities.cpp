@@ -1266,7 +1266,6 @@ struct AMThickFat : public AM {
         }
     }
 
-    //UNTESTED: Also should boost z moves
     static void bpm (int s, int, BS &b) {
         if (b.poke(s).ability() == Ability::WaterBubble && tmove(b, s).type == Pokemon::Water) {
             b.chainBp(s, 0x2000);
@@ -1818,7 +1817,8 @@ struct AMPrankster : public AM
 
     static void btl(int s, int t, BS&b) {
         if (b.gen() >= 7 && b.hasType(t, Pokemon::Dark) && poke(b,s).value("PlayingAPrank").toBool() && !b.arePartners(s,t)) {
-            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+            turn(b,t)[QString("Block%1").arg(b.attackCount())] = true;
+            b.notify(BS::All, BattleCommands::Effective, s, quint8(0));
         }
     }
 };
@@ -2905,7 +2905,7 @@ struct AMDisguise : AM
     AMDisguise() {
         functions["OpponentBlock"] = &btd;
         functions["UponSetup"] = &us;
-        //functions["OnLoss"] = &ol; //maybe GastroAcid/etc. would trigger Disguise and break it? Maybe it isn't affected?
+        functions["Disguise"] = &disguise;
     }
 
     static void us(int s, int, BS &b) {
@@ -2923,20 +2923,21 @@ struct AMDisguise : AM
 
 
         //[Untested] It should also block self inflicted confuse damage once
-        //[Untested] Can still flinch from fake out
+        //[Untested] Can stil be affected by secondary effects (Flinch from Fakeout, Paralyze from Zap Cannon)
         //[Untested] fully blocks z moves!
-        //[Untested] Weakness policy doesnt activate
         //[Untested] Substitute takes priority
-        //[Untested] Weather and entry hazards dont break
-        //[Untested] Does mold breaker break sub? it bypasses disguise but does dealing damage break the disguise still?
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
-                b.sendAbMessage(138, 0, s);
                 turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-                b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
-                b.changeAForme(s, 1);
+                disguise(s,t,b);
             }
         }
+    }
+
+    static void disguise (int s, int t, BS &b) {
+        b.sendAbMessage(138, 0, s);
+        b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
+        b.changeAForme(s, 1);
     }
 };
 
@@ -3088,7 +3089,6 @@ struct AMSteelWorker : public AM {
     }
 };
 
-//UNTESTED
 struct AMBeastBoost : public AM {
     AMBeastBoost() {
         functions["AfterKoing"] = &ak;
@@ -3109,7 +3109,6 @@ struct AMBeastBoost : public AM {
     }
 };
 
-//UNTESTED
 struct AMSchooling : public AM {
     AMSchooling() {
         functions["EndTurn29.0"] = &et;

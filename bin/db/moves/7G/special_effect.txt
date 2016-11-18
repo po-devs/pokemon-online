@@ -92,7 +92,7 @@
 205 66#rollout
 206 41#false swipe
 207 196#Swagger
-208 1003#healing - milk drink
+208 1002#healing - milk drink
 210 50#fury cutter
 212 12#mean look
 213 58#attract

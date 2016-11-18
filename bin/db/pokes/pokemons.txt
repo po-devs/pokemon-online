@@ -932,8 +932,8 @@
 717:0 Yveltal
 718:0 Zygarde
 718:1:AD Zygarde-10%
-718:2:AD Zygarde-10% Uncomplete
-718:3:AD Zygarde-50% Uncomplete
+718:2:AD Zygarde-10% Incomplete
+718:3:AD Zygarde-50% Incomplete
 718:4:A Zygarde-Complete
 719:0:H Diancie
 719:1:M Mega Diancie

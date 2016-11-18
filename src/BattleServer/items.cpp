@@ -1143,11 +1143,9 @@ struct IMZCrystal : public IM {
             tmove(b,s).power = tmove(b,s).zpower;
         }
         //UNTESTED: Protect's reduction
-        //UNFINISHED: Special effects for Other type moves
     }
 };
 
-//UNTESTED
 struct IMSeeds : public IM {
     IMSeeds() {
         functions["UponSetup"] = &us;
