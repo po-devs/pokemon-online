@@ -95,6 +95,7 @@ class PokePersonal
     PROPERTY(quint16, item)
     PROPERTY(quint16, ability)
     PROPERTY(quint8, nature)
+    PROPERTY(quint8, hiddenPower)
     PROPERTY(quint8, gender)
     PROPERTY(bool, shiny)
     PROPERTY(quint8, happiness)
@@ -131,6 +132,7 @@ public:
     quint8 DV(int stat) const;
     void setDV(int stat, quint8 DV);
     void controlHPDV();
+    void setHiddenPower(int type);
     void controlShininess();
     void controlGender();
 

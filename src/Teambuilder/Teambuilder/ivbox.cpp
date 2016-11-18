@@ -64,7 +64,11 @@ void IvBox::updateAll()
     } else {
         ui->hpivspin->setDisabled(false);
         ui->spdefivspin->setDisabled(false);
-        ui->hpchoice->show();
+        if (poke().gen() > 6) {
+            ui->hpchoice->hide();
+        } else {
+            ui->hpchoice->show();
+        }
 
         for (int i = 0; i < 6; i++) {
             m_ivchangers[i]->setRange(0, 31);
@@ -171,8 +175,14 @@ void IvBox::updateIV(int stat)
 
 void IvBox::updateHiddenPower()
 {
+    if (poke().gen() > 6 && hasValidHiddenPower()) {
+        ui->hiddenPowerType->setCurrentIndex(poke().hiddenPower() - 1);
+        return;
+    }
+
     ui->hiddenPowerPower->setText(tr("(%1 pow)").arg(QString::number(calculateHiddenPowerPower())));
     int type = calculateHiddenPowerType();
+    poke().setHiddenPower(type);
     ui->hiddenPowerType->setCurrentIndex(type - 1);
     updateHiddenPowerSelection();
 }
@@ -224,6 +234,17 @@ void IvBox::changeHiddenPower(int newType)
         return;
     }
 
+    if (poke().gen() > 6) {
+        poke().setHiddenPower(newType);
+        if (!hasValidHiddenPower()) {
+            QMessageBox::information(NULL, tr("Invalid Hidden Power"), tr("Cannot have Hidden Power type %1 with those IVs.").arg(poke().hiddenPower()));
+            int type = calculateHiddenPowerType();
+            ui->hiddenPowerType->setCurrentIndex(type - 1);
+            poke().setHiddenPower(type);
+        }
+        return;
+    }
+
     if (poke().gen() > 2) {
         QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(newType, poke().gen());
 
@@ -272,3 +293,23 @@ void IvBox::changeHPSelection(int row)
     updateIVs();
 }
 
+bool IvBox::hasValidHiddenPower()
+{
+    if (poke().gen() > 6) {
+        int minPossible = 0;
+        int maxPossible = 0;
+        for (int i = 0; i < 6; i++) {
+            //Speed comes before sp.atk and sp.def
+            int b = i == 5 ? 3 : (i > 2 ? i+1 : i);
+
+            minPossible += poke().DV(i) == 31 ? 0 : (poke().DV(i) % 2) << b;
+            maxPossible += poke().DV(i) == 31 ? 1 << b : (poke().DV(i) % 2) << b;
+        }
+        minPossible = (minPossible*15)/63 + 1;
+        maxPossible = (maxPossible*15)/63 + 1;
+        if (maxPossible < poke().hiddenPower() || poke().hiddenPower() < minPossible) {
+            return false;
+        }
+    }
+    return true;
+}

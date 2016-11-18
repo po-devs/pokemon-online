@@ -408,6 +408,11 @@ void PokePersonal::setDV(int stat, quint8 val)
     }
 }
 
+void PokePersonal::setHiddenPower(int type)
+{
+    hiddenPower() = type;
+}
+
 void PokePersonal::controlShininess()
 {
     shiny() = DV(Defense) == 10 && DV(Speed) == 10 && DV(SpAttack) == 10 && DV(Attack) % 4 >= 2;
@@ -463,6 +468,7 @@ void PokePersonal::reset()
     ability() = 0;
     nickname() = "";
     nature() = 0;
+    hiddenPower() = Type::Dark;
     item() = 0;
     illegal() = false;
 
