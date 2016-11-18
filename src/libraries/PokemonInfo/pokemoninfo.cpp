@@ -2319,6 +2319,11 @@ bool MoveInfo::isUniqueZMove(int movenum)
     return movenum >= 691 && movenum <= 701;
 }
 
+bool MoveInfo::isZMove(int movenum)
+{
+    return movenum >= 673 && movenum <= 701;
+}
+
 #undef move_find
 #undef move_find2
 

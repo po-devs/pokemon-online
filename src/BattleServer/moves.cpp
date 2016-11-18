@@ -637,8 +637,24 @@ struct MMDestinyBond : public MM
 
     static void daf(int, int, BS &b) {
         if (b.gen() >= 7) {
-            //Unconfirmed: There needs to be a fail rate. No idea if its the same as protect?
+            if (poke(b,s).contains("DestinyBondTurn") && poke(b,s)["DestinyBondTurn"].toInt() == b.turn() - 1) {
+                if (!testSuccess(poke(b,s)["DestinyBondCount"].toInt(), b)) {
+                    fturn(b,s).add(TM::Failed);
+                } else {
+                    poke(b,s)["DestinyBondTurn"] = b.turn();
+                    inc(poke(b,s)["DestinyBondCount"]);
+                }
+            } else {
+                poke(b,s)["DestinyBondTurn"] = b.turn();
+                poke(b,s)["DestinyBondCount"] = 1;
+            }
         }
+    }
+
+    static bool testSuccess(int destinyCount, BS &b) {
+        //Unconfirmed: just copying protect's rate for now
+        double x = 100.0 / (pow(3.0, std::min(destinyCount, 6)));
+        return b.coinflip(x, 100.0);
     }
 
     static void uas(int s, int, BS &b) {
@@ -5415,6 +5431,8 @@ struct MMNaturePower : public MM
             move = Moonblast;
         } else if (b.terrain == BS::ElectricTerrain) {
             move = Thunderbolt;
+        } else if (b.terrain == BS::PsychicTerrain) {
+            move = Psychic;
         } else {
             if (b.gen().num == 3) {
                 move = Swift;
@@ -5506,8 +5524,12 @@ struct MMSecretPower : public MM {
                     tmove(b,s).rateOfStat = 30 << 16;
                     tmove(b,s).statAffected = SpAttack << 16;
                     tmove(b,s).boostOfStat = uchar(-1) << 16;
+                } else if (type == BS::PsychicTerrain) {
+                    tmove(b,s).classification = Move::StatChangingMove;
+                    tmove(b,s).rateOfStat = 100 << 16;
+                    tmove(b,s).statAffected = SpAttack << 16;
+                    tmove(b,s).boostOfStat = uchar(-1) << 16;
                 }
-                //UNCONFIRMED: Psychic terrain anything?
             } else {
                 tmove(b,s).classification = Move::OffensiveStatusInducingMove;
                 tmove(b,s).status = Pokemon::Paralysed;
@@ -7768,14 +7790,22 @@ struct MMStrengthSap : public MM
 {
     MMStrengthSap() {
         functions["UponAttackSuccessful"] = &uas;
+        functions["DetermineAttackFailure"] = &daf;
+    }
+
+    static void daf(int s, int t, BS &b) {
+        if (b.hasMinimalStatMod(t, Attack)) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int t, BS &b) {
+        int amount = b.getStat(t, Attack); //dumb gamefreak implementation
+        b.inflictStatMod(t, Attack, -1, s);
         if (b.canHeal(s, BS::HealByMove, StrengthSap)) {
-            b.healLife(s, b.getStat(t, Attack));
+            b.healLife(s, amount);
         }
         b.sendMoveMessage(229, 0, s, type(b,s), t);
-        b.inflictStatMod(t, Attack, -1, s);
     }
 };
 
@@ -7933,9 +7963,8 @@ struct MMInstruct : public MM
         functions["DetermineAttackFailure"] = &daf;
     }
 
-    static void daf(int s, int t, BS &b) {
-        //The pokemon has to have used a move in the same turn as Instruct
-        if (poke(b,t).value("LastMoveUsedTurn") != b.turn()) {
+    static void daf(int s, int, BS &b) {
+        if (false) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -8108,6 +8137,22 @@ struct MMZHealSwitch : public MM
     static void asi(int s, int, BS &b) {
         b.sendMoveMessage(1003,0,s);
         b.healLife(s,b.poke(s).totalLifePoints());
+    }
+};
+
+struct MMZSupernova : public MM
+{
+    MMZSupernova() {
+        functions["AfterAttackFinished"] = &zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        //if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+        if(b.terrain != BS::PsychicTerrain) {
+            //No terrain extender cause you can only hold 1 item!
+            b.coverField(BS::PsychicTerrain, 5);
+        }
+        //}
     }
 };
 
@@ -8396,6 +8441,7 @@ void MoveEffect::init()
     REGISTER_MOVE(1004, ZHealSwitch);
     REGISTER_MOVE(1005, ZAttention);
     REGISTER_MOVE(1006, ZCurse);
+    REGISTER_MOVE(1007, ZSupernova);
 
     //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
     //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate

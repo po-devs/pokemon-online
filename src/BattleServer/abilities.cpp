@@ -2394,6 +2394,11 @@ struct AMProtean : public AM {
     }
 
     static void aaf (int s, int, BS &b) {
+        //Hard coded not to affect Silvally...
+        if (b.poke(s).num() == Pokemon::Silvally) {
+            return;
+        }
+
         int mc = b.turnMemory(s)["MoveChosen"].toInt();
         if (type(b,s) != Pokemon::Curse && mc != 0 && !b.battleMemory().contains("CoatingAttackNow")) {
             //Protean doesn't change on moves that are calling other moves. Mirror move doesn't change type, but Snatch does.
@@ -2749,7 +2754,7 @@ struct AMTriage : public AM
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).category & Move::HealingMove) {
+        if (tmove(b,s).category & Move::HealingMove || tmove(b,s).classification == Move::AbsorbingMove) {
             tmove(b,s).priority = 3;
         }
     }

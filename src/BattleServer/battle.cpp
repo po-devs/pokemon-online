@@ -1274,7 +1274,11 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     }
 
     if (MoveInfo::isOHKO(move, gen())) {
-        bool ret = coinflip(unsigned(30 + poke(player).level() - poke(target).level()), 100);
+        int coin = unsigned(30 + poke(player).level() - poke(target).level());
+        if (gen() >= 7 && !hasType(player, Pokemon::Ice)) {
+            coin -= 0; //UNCONFIRMED: How much of a decrease
+        }
+        bool ret = coinflip(coin, 100);
         if (!ret && !silent) {
             notifyMiss(multiTar, player, target);
         }
@@ -2737,8 +2741,6 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         if (hasWorkingAbility(target, Ability::Immunity)) {
             return false;
         }
-        //Unconfirmed: As far as we know, Corrosion only allows poisoning Steels and Poison types. Should it bypass other abilities too? (Immunity, etc.)
-        //If so, add "&& status == Pokemon::Poisoned" to the conditional and move it to the correct placing (aka, the top if it bypasses everything)
         if (inflicter != target && hasWorkingAbility(inflicter, Ability::Corrosion)) {
             return true;
         }
@@ -4088,8 +4090,8 @@ end:
                 if (!sub) {
                     callieffects(player, source, "UponPhysicalAssault");
                     callaeffects(player,source,"UponPhysicalAssault");
-                    if (pokeMemory(source).value("HotBeak").toBool()) {
-                        inflictStatus(player, Pokemon::Burnt, source);
+                    if (pokeMemory(player).value("HotBeak").toBool()) {
+                        inflictStatus(source, Pokemon::Burnt, player);
                     }
                 }
                 callaeffects(source,player,"OnPhysicalAssault");
@@ -4291,6 +4293,9 @@ bool BattleSituation::canLoseItem(int player, int attacker)
     }
     //primalstones using MegaStoneForme function because lazy
     if ((ItemInfo::isMegaStone(item) || ItemInfo::isPrimalStone(item)) && ItemInfo::MegaStoneForme(item).original() == poke.num().original()) {
+        return false;
+    }
+    if (ItemInfo::isZCrystal(item)) {
         return false;
     }
     /* Knock off */
@@ -5018,7 +5023,7 @@ bool BattleSituation::canUseZMove (int slot)
         //If its not a special case then a Pokemon must have a move of equal type to the Z Crystal in order to use.
         int ztype = ItemInfo::ZCrystalType(item);
         for (int i = 0; i < 4; i++) {
-            if (MoveInfo::Type(move(slot, i), gen()) == ztype) {
+            if (MoveInfo::Type(move(slot, i), gen()) == ztype && !MoveInfo::isZMove(move(slot, i))) {
                 return true;
             }
         }
