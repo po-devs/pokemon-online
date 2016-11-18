@@ -1453,6 +1453,7 @@ bool BattleSituation::testStatus(int player)
             int coin = gen() > 6 ? 3 : 2; //gen 7 confuse is 1/3
             if (coinflip(1, coin)) {
                 if (isDisguised(player)) {
+                    notify(All, StatusMessage, player, qint8(HurtConfusion));
                     callaeffects(player, player, "Disguise");
                 } else {
                     inflictConfusedDamage(player);
@@ -2007,7 +2008,9 @@ ppfunction:
                     }
                     testCritical(player, target);
                     int damage = calculateDamage(player, target);
-                    inflictDamage(target, damage, player, true);
+                    if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
+                        inflictDamage(target, damage, player, true);
+                    }
                     hitcount += 1;
                     hitting = true;
                 } else {
@@ -2017,7 +2020,9 @@ ppfunction:
 
                     if (turnMemory(player).contains("CustomDamage")) {
                         int damage = turnMemory(player).value("CustomDamage").toInt();
-                        inflictDamage(target, damage, player, true);
+                        if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
+                            inflictDamage(target, damage, player, true);
+                        }
                         hitcount += 1;
                         hitting = true;
                     }
@@ -2659,7 +2664,9 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         return false;
     }
     if (hasWorkingAbility(target, Ability::Comatose)) {
-        sendAbMessage(148,0,target);
+        return false;
+    }
+    if (hasWorkingAbility(target, Ability::ShieldsDown) && poke(target).num() == Pokemon::Minior) {
         return false;
     }
 
@@ -4074,7 +4081,9 @@ end:
                 if (!sub) {
                     callieffects(player, source, "UponPhysicalAssault");
                     callaeffects(player,source,"UponPhysicalAssault");
-                    calleffects(player,source,"UponPhysicalAssault");
+                    if (pokeMemory(source).value("HotBeak").toBool()) {
+                        inflictStatus(player, Pokemon::Burnt, source);
+                    }
                 }
                 callaeffects(source,player,"OnPhysicalAssault");
             }
@@ -4106,6 +4115,7 @@ end:
         }
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
+            callaeffects(player, source, "UponOffensiveDamageReceived");
         }
     }
 

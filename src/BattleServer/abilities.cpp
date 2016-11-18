@@ -2788,6 +2788,7 @@ struct AMPinch : public AM
 };
 
 //UNTESTED: Weather/status shouldnt trigger
+//BROKEN
 struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 {
     AMBerserk() {
@@ -2795,15 +2796,28 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
         functions["AfterStatChange"] = &tp;
+        functions["UponOffensiveDamageReceived"] = &uodr;
     }
 
     static void ahpc(int s, int, BS &b) {
+        //Remove the flag so next HP change if they drop below 50% then it can activate again
+        if (poke(b,s).contains("Berserked") && b.poke(s).lifePoints() >= b.poke(s).totalLifePoints() / 2) {
+            poke(b,s).remove("Berserked");
+            return;
+        }
+    }
+
+    static void uodr(int s, int, BS &b) {
         /* The ability doesn't activate immediately when attacked by offensive moves,
            but only after side effects applied. At that time, the battle thread will call
            the effect "TestPinch"
         */
         if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
+
+        if (poke(b,s).value("Berserked").toBool()) {
+            return;
+        }
         tp(s, 0, b);
     }
 
@@ -2816,8 +2830,8 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 
         if (b.isOut(s)) {
             if (!b.hasMaximalStatMod(s, arg)) {
-                b.sendAbMessage(130,0, s);
                 b.inflictStatMod(s, arg, 1, s, false);
+                poke(b,s)["Berserked"] = true;
             }
         }
     }
@@ -2909,32 +2923,31 @@ struct AMDisguise : AM
     }
 
     static void us(int s, int, BS &b) {
-        //[Tested] disguise is only once per battle
         if (b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             b.changeAForme(s, 1);
         }
     }
 
     static void btd(int s, int t, BS &b) {
-        //[Tested] prevent damage once + change form.
         Pokemon::uniqueId num = b.poke(s).num();
         if (PokemonInfo::OriginalForme(num) != Pokemon::Mimikyu || b.preTransPoke(s, Pokemon::Mimikyu))
             return;
 
+        if (b.hasSubstitute(s)) {
+            return;
+        }
 
-        //[Untested] It should also block self inflicted confuse damage once
         //[Untested] Can stil be affected by secondary effects (Flinch from Fakeout, Paralyze from Zap Cannon)
-        //[Untested] fully blocks z moves!
-        //[Untested] Substitute takes priority
+        //Unknown: Rocky Helmet? Recoil damage?
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
-                turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+                turn(b,s)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
                 disguise(s,t,b);
             }
         }
     }
 
-    static void disguise (int s, int t, BS &b) {
+    static void disguise (int s, int, BS &b) {
         b.sendAbMessage(138, 0, s);
         b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
         b.changeAForme(s, 1);
@@ -2961,7 +2974,6 @@ struct AMInnardsOut : AM
     }
 };
 
-//Unconfirmed stuff aplenty below
 struct AMDancer : AM
 {
     AMDancer() {
@@ -3141,7 +3153,6 @@ struct AMSchooling : public AM {
     }
 };
 
-//UNTESTED
 struct AMShieldsDown : public AM {
     AMShieldsDown() {
         functions["EndTurn29.0"] = &et;
@@ -3162,7 +3173,7 @@ struct AMShieldsDown : public AM {
         if (num.subnum == 0 && shield) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Minior_Red, true);
             b.sendAbMessage(149, 0, s);
-        } else if (num.subnum > 1 && !shield) {
+        } else if (num.subnum >= 1 && !shield) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Minior, true);
             b.sendAbMessage(149, 1, s);
         }
@@ -3186,9 +3197,9 @@ struct AMPowerConstruct : public AM {
             return;
 
 
-        num = fpoke(b,s).id;
+        //num = fpoke(b,s).id;
         bool complete = b.poke(s).lifePoints() * 2 <= b.poke(s).totalLifePoints();
-        if ((num == Pokemon::Zygarde_10_Incomplete || num == Pokemon::Zygarde_50_Incomplete) && complete) {
+        if (complete) {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Zygarde_Complete, true);
             b.sendAbMessage(148, 0, s);
         }
@@ -3398,6 +3409,5 @@ void AbilityEffect::init()
     REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
     REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
 
-    //UNTESTED: Comatose
-    //ALMOST DONE: Disguise, Dancer
+    //UNTESTED: Comatose (Snore, getting statused) (tested: wake up slap)
 }

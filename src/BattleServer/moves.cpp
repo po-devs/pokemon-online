@@ -4943,7 +4943,10 @@ struct MMSleepingUser : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.poke(s).status() != Pokemon::Asleep || !b.hasWorkingAbility(s, Ability::Comatose)) {
+        if (b.hasWorkingAbility(s, Ability::Comatose)) {
+            return;
+        }
+        if (b.poke(s).status() != Pokemon::Asleep) {
             b.poke(s).advSleepCount() = 0;
             fturn(b,s).add(TM::Failed);
         }
@@ -7828,15 +7831,16 @@ struct MMBeakBlast : public MM
 {
     MMBeakBlast() {
         functions["OnSetup"] = &os;
-        functions["UponPhysicalAssault"] = &uas;
+        functions["AfterAttackFinished"] = &aaf;
     }
 
-    static void uas(int s, int t, BS &b) {
-        b.inflictStatus(t, Pokemon::Burnt, s);
+    static void aaf(int s, int t, BS &b) {
+        poke(b,s).remove("HotBeak");
     }
 
     static void os(int s, int, BS &b) {
         b.sendMoveMessage(235,0,s,Pokemon::Flying);
+        poke(b,s)["HotBeak"] = true;
     }
 };
 
