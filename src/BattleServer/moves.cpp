@@ -7937,7 +7937,7 @@ struct MMInstruct : public MM
         }
     }
 
-    static void uas(int s, int t, BS &b) {
+    static void uas(int, int, BS) {
 
     }
 };
@@ -7989,6 +7989,125 @@ struct MMSpeedSwap : public MM
         b.sendMoveMessage(239,0,s,type(b,s),t);
     }
 };
+
+struct MMZBoost : public MM
+{
+    MMZBoost() {
+        functions["ZMove"] =&zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        QStringList args = turn(b,s)["ZBoost_Arg"].toString().split('_');
+        int stat = args[0].toInt();
+        int rate = args[1].toInt();
+        if (stat == AllStats) {
+            for (int i = Attack; i <= Speed; i++) {
+                b.inflictStatMod(s, i, rate, s);
+            }
+
+        } else {
+            b.inflictStatMod(s, stat, rate, s);
+        }
+    }
+};
+
+struct MMZCrit : public MM
+{
+    MMZCrit() {
+        functions["ZMove"] =&zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        poke(b,s)["ZCrit"] = true;
+        b.sendMoveMessage(1001,0,s);
+    }
+};
+
+struct MMZUnDebuff : public MM
+{
+    MMZUnDebuff() {
+        functions["ZMove"] = &zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        for (int i = 1; i <= 7; i++) {
+            if (fpoke(b,s).boosts[i] < 0) {
+                fpoke(b,s).boosts[i] = 0;
+            }
+        }
+        b.sendMoveMessage(1002,0,s);
+    }
+};
+
+struct MMZRecovery : public MM
+{
+    MMZRecovery() {
+        functions["ZMove"] = &zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        b.healLife(s, b.poke(s).totalLifePoints());
+        b.sendMoveMessage(1003,0,s);
+    }
+};
+
+struct MMZCurse : public MM
+{
+    MMZCurse() {
+        functions["ZMove"] = &zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        if (b.hasType(s,Pokemon::Ghost)) {
+            MMZRecovery::zm(s,s,b);
+        } else {
+            MMZBoost::zm(s,s,b);
+        }
+    }
+};
+
+struct MMZAttention : public MM
+{
+    MMZAttention() {
+        functions["ZMove"] = &zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        /*Copied from FollowMe*/
+        b.sendMoveMessage(48,0,s);
+
+        int source = b.player(s);
+
+        team(b, source)["FollowMeTurn"] = b.turn();
+        team(b, source)["FollowMePlayer"] = s;
+        /* Imagine one foe used assist + roar, then follow me wouldn't work anymore. That's
+            why we need a switch count, or that */
+        poke(b,s)["FollowMe"] = true;
+
+        addFunction(b.battleMemory(), "GeneralTargetChange", "ZAttention", &gtc);
+    }
+
+    static void gtc(int s, int, BS &b) {
+        MMFollowMe::gtc(s,s,b);
+    }
+};
+
+struct MMZHealSwitch : public MM
+{
+    MMZHealSwitch() {
+        functions["ZMove"] = &zm;
+    }
+
+    static void zm(int s, int, BS &b) {
+        addFunction(turn(b,s), "UponSwitchIn", "ZHealSwitch", &asi);
+    }
+
+    static void asi(int s, int, BS &b) {
+        b.sendMoveMessage(1003,0,s);
+        b.healLife(s,b.poke(s).totalLifePoints());
+    }
+};
+
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -8265,6 +8384,15 @@ void MoveEffect::init()
     REGISTER_MOVE(238, DarkVoid);
     REGISTER_MOVE(239, SpeedSwap);
     REGISTER_MOVE(240, Terrain);
+    //REGISTER_MOVE(241, Spotlight);
+
+    REGISTER_MOVE(1000, ZBoost);
+    REGISTER_MOVE(1001, ZCrit);
+    REGISTER_MOVE(1002, ZUnDebuff);
+    REGISTER_MOVE(1003, ZRecovery);
+    REGISTER_MOVE(1004, ZHealSwitch);
+    REGISTER_MOVE(1005, ZAttention);
+    REGISTER_MOVE(1006, ZCurse);
 
     //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
     //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate

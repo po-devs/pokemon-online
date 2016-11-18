@@ -71,7 +71,7 @@
 171 31|92#nightmare
 172 153#flame wheel
 173 115#snore
-174 25#curse
+174 25|1006#curse
 175 44#flail
 176 20#conversion2
 178 198#Cotton Spore
@@ -80,7 +80,7 @@
 182 27#Protect
 187 8-50#belly drum
 191 121#spikes
-193 84-7#7 is ghost -- fore sight
+193 84-7|1001#7 is ghost -- fore sight
 194 26#destiny bond
 195 95#perish song
 197 27#detect
@@ -92,7 +92,7 @@
 205 66#rollout
 206 41#false swipe
 207 196#Swagger
-208 #60#healing - milk drink
+208 1003#healing - milk drink
 210 50#fury cutter
 212 12#mean look
 213 58#attract
@@ -152,7 +152,7 @@
 285 112#skill swap
 286 67#imprison
 287 164#Refresh
-288 54#grudge
+288 54|1005#grudge
 289 118#snatch
 290 110#secret power
 291 13-2_57*8192_248_353#dive
@@ -169,6 +169,7 @@
 328 10#sand tomb
 329 43#sheer cold
 335 12#block, aka mean look
+336 1000-1_1#Howl
 338 11#frenzy plant
 340 13-0_16*8192_239*8192_327_87*8192_542*8192_479*8192_616*8192_248_353#bounce
 343 23#covet
@@ -303,14 +304,14 @@
 597 216-2_4#Magnetic Flux
 598 207#Mat Block
 599 240-3#Misty Terrain
-600 140#Parting Shot
+600 140|1004#Parting Shot
 601 215#Powder
 603 214#Rototiller
 604 209#Spiky Shield
 605 210#Sticky Web
 606 211#Topsy Turvy
 607 212#Venom Drench
-609 218#Celebrate
+609 218|1000-8_1#Celebrate
 610 41#Hold Back
 614 42#Hyperspace hole-- breaks protect
 616 175#Thousand Arrows

@@ -1352,6 +1352,10 @@ void BattleSituation::testCritical(int player, int target)
     if (hasWorkingAbility(player, Ability::SuperLuck)) { /* Super Luck */
         craise += 1;
     }
+    if (pokeMemory(player).value("ZCrit").toBool()) {
+        craise += 1;
+        pokeMemory(player).remove("ZCrit");
+    }
 
     if (gen() < 6) {
         switch(craise) {
@@ -1536,7 +1540,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     int oldAttacker = attacker();
     int oldAttacked = attacked();
     /* For Sleep Talk */
-    bool special = specialOccurence;
+    bool special = specialOccurence;    
+    bool zmoving = pokeMemory(player).value("ZMoveTurn") == turn();
+    bool zmovenotify = false;
 
     heatOfAttack() = true;
 
@@ -1604,10 +1610,18 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     turnMem(player).add(TM::HasPassedStatus);
 
     //Down here so it doesnt get overridden but still defines it before the announcement
-    if (pokeMemory(player).value("ZMoveTurn") == turn()) {
+    if (zmoving) {
         sendItemMessage(68, player);
-        attack = ItemInfo::ZCrystalMove(poke(player).item());
-        callieffects(player, player, "MoveSettings"); //Z Moves
+        if (tmove(player).power > 0) {
+            notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, special);
+            callieffects(player, player, "MoveSettings"); //Z Moves
+            zmovenotify = true;
+        } else {
+            sendItemMessage(68, player, 2, 0, 0, attack);
+            //TODO: Prepend "Z-" to the attack name
+            //notify(All, UseAttack, player, qint16(attack), false, special);
+            calleffects(player, player, "ZMove"); //Z Moves
+        }
     }
 
     turnMemory(player)["MoveChosen"] = attack;
@@ -1681,8 +1695,9 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (turnMemory(player).contains("SleepTalkedMove")) {
         special = false;
     }
-    notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")), special);
-
+    if (!zmovenotify) {
+        notify(All, UseAttack, player, qint16(attack), !(tellPlayers && !turnMemory(player).contains("TellPlayers")), special);
+    }
     calleffects(player, player, "AfterTellingPlayers");
 
     if (!specialOccurence) {

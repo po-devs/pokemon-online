@@ -1801,15 +1801,25 @@ struct AMImposter : public AM
     }
 };
 
+//UNTESTED
 struct AMPrankster : public AM
 {
     AMPrankster() {
         functions["PriorityChoice"] = &pc;
+        functions["OpponentBlock"] = &btl;
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).power == 0)
+        if (tmove(b,s).power == 0) {
             tmove(b,s).priority += 1;
+            poke(b,s)["PlayingAPrank"] = true;
+        }
+    }
+
+    static void btl(int s, int t, BS&b) {
+        if (b.gen() >= 7 && b.hasType(t, Pokemon::Dark) && poke(b,s).value("PlayingAPrank").toBool() && !b.arePartners(s,t)) {
+            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
+        }
     }
 };
 
@@ -3088,10 +3098,9 @@ struct AMBeastBoost : public AM {
         if (b.koed(s))
             return;
 
-        int bestStat = 1;
-        // 1 = Attack, 2 = Defense, 3 = Sp.Atk, 4 = Sp.Def, 5 = Speed
-        //Start at 2 because Attack is already "best stat" at this point
-        for (int i = 2; i < 6; i++) {
+        int bestStat = Attack;
+        //Start at Defense because Attack is already "best stat" at this point
+        for (int i = Defense; i <= Speed; i++) {
             if (b.getStat(s, i) > b.getStat(s, bestStat)) {
                 bestStat = i;
             }

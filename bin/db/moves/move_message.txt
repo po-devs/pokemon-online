@@ -147,3 +147,6 @@
 238 %s stole the target's boosted stats!
 239 %s switched Speed with its target!
 240 An electric current runs across the battlefield!|Grass grew to cover the battlefield!|Mist swirls around the battlefield!|The battlefield got weird!
+1001 %s's Critical Hit rate increased!
+1002 %s's negative stat changes were eliminated!
+1003 %s restored all their HP!
