@@ -7035,13 +7035,12 @@ struct MMFellStinger : public MM {
     static void uas(int s, int t, BS &b) {
         if (b.koed(t)) {
             tmove(b,s).statAffected = Attack << 16;
-            tmove(b,s).boostOfStat = 2 << 16;
+            tmove(b,s).boostOfStat = (b.gen() >= 7 ? 3 : 2) << 16;
             tmove(b,s).classification = Move::OffensiveSelfStatChangingMove;
         }
     }
 };
 
-//TODO: End Turn Healing
 /*struct MMGrassyTerrain : public MM {
     MMGrassyTerrain() {
         functions["UponAttackSuccessful"] = &uas;
