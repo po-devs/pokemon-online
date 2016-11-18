@@ -5038,5 +5038,5 @@ bool BattleSituation::makesContact(int s)
 
 bool BattleSituation::isDisguised(int s)
 {
-    return hasWorkingAbility(s, Ability::Disguise) && !battleMemory().value(QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))).toBool();
+    return hasWorkingAbility(s, Ability::Disguise) && !battleMemory().value(QString("DisguiseBusted%1%2").arg(player(s)).arg(currentInternalId(s))).toBool();
 }
