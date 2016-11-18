@@ -2787,8 +2787,6 @@ struct AMPinch : public AM
     }
 };
 
-//UNTESTED: Weather/status shouldnt trigger
-//BROKEN
 struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 {
     AMBerserk() {
@@ -2797,6 +2795,14 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         functions["TestPinch"] = &tp;
         functions["AfterStatChange"] = &tp;
         functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["BeforeTakingDamage"] = &btd;
+    }
+
+    static void btd(int s, int, BS &b) {
+        //If the HP of the pokemon is below 50% already from indirect damage, we can't trigger Berserk
+        if (b.poke(s).lifePoints() < b.poke(s).totalLifePoints() / 2) {
+            poke(b,s)["Berserked"] = true;
+        }
     }
 
     static void ahpc(int s, int, BS &b) {
@@ -2814,15 +2820,14 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
         */
         if (b.attacked() == s && tmove(b,b.attacker()).power > 0)
             return;
-
-        if (poke(b,s).value("Berserked").toBool()) {
-            return;
-        }
         tp(s, 0, b);
     }
 
     //If a pokemon couldn't boost when Pinched but they can at a later point and still are within the threshold it will activate
     static void tp(int s, int, BS &b) {
+        if (poke(b,s).value("Berserked").toBool()) {
+            return;
+        }
         int arg = poke(b,s)["AbilityArg"].toInt();
 
         if (!testpinch(s, b, 2))
@@ -2913,7 +2918,6 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
     }
 };
 
-//UNTESTED/NOT COMPLETE
 struct AMDisguise : AM
 {
     AMDisguise() {
@@ -2937,8 +2941,7 @@ struct AMDisguise : AM
             return;
         }
 
-        //[Untested] Can stil be affected by secondary effects (Flinch from Fakeout, Paralyze from Zap Cannon)
-        //Unknown: Rocky Helmet? Recoil damage?
+        //Unconfirmed: Rocky Helmet? Recoil damage?
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
                 turn(b,s)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
@@ -2981,8 +2984,7 @@ struct AMDancer : AM
     }
 
     static void aaf(int s, int, BS &b) {
-        //[Tested] Don't double dance or dance off someone else's repeated dance
-        //[Untested] Unconfirmed: Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
+        //Unconfirmed: Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
         if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep) {
             return;
         }
@@ -2997,7 +2999,6 @@ struct AMDancer : AM
         }
 
         //Copied off Magic Bounce :)
-        //[Tested] The ability works so far (Fiery/Lunar/Dragon/Quiver tested)
         if (MoveInfo::Flags(mv, b.gen()) & Move::DanceFlag) {
             BS::context ctx = turn(b,s);
             BS::BasicMoveInfo info = tmove(b,s);
@@ -3205,6 +3206,17 @@ struct AMPowerConstruct : public AM {
         }
     }
 };
+
+struct AMComatose : public AM {
+    AMComatose() {
+        functions["UponSetup"] = &us;
+    }
+
+    static void us (int s, int, BS &b) {
+        b.sendAbMessage(127,0,s);
+    }
+};
+
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
@@ -3385,7 +3397,7 @@ void AbilityEffect::init()
     REGISTER_AB(126, StrongWeather);
 
     // gen 7    
-    //127 comatose message
+    REGISTER_AB(127, Comatose);
     REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/ //how long does the terrain last?
     REGISTER_AB(129, Dazzling); /*Queenly Majesty*/
     REGISTER_AB(130, Berserk);
@@ -3408,6 +3420,4 @@ void AbilityEffect::init()
     REGISTER_AB(147, Schooling);  //Unconfirmed: Needs ability flags
     REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
     REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
-
-    //UNTESTED: Comatose (Snore, getting statused) (tested: wake up slap)
 }

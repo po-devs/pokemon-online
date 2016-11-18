@@ -7834,7 +7834,7 @@ struct MMBeakBlast : public MM
         functions["AfterAttackFinished"] = &aaf;
     }
 
-    static void aaf(int s, int t, BS &b) {
+    static void aaf(int s, int, BS &b) {
         poke(b,s).remove("HotBeak");
     }
 

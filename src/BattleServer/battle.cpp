@@ -940,6 +940,7 @@ void BattleSituation::megaEvolve(int slot)
 
 void BattleSituation::useZMove(int slot)
 {
+    //BUG: If a pokemon selects a zmove and dies before their turn, the player can no longer select a zmove
     if (choice(slot).zmove()) {
         if (canUseZMove(slot)) {
             zmoves[player(slot)] = true;
@@ -2127,6 +2128,12 @@ ppfunction:
                                    !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb) || hasWorkingAbility(target, Ability::MotorDrive))) {
                             fail = true;
                         }
+                    }
+                }
+                if (Move::StatusInducingMove && !fail) {
+                    if (hasWorkingAbility(target, Ability::Comatose) ||
+                            (hasWorkingAbility(target, Ability::ShieldsDown) && poke(target).num() == Pokemon::Minior)) {
+                        notify(All, Failed, player);
                     }
                 }
 
@@ -5003,8 +5010,9 @@ bool BattleSituation::canUseZMove (int slot)
                 return pk == Pokemon::Marshadow && hasMove(slot, Move::SpectralThief);
             break;
             case Move::_10_000_000VoltThunderBolt:
-                //UNTESTED: we dont have cap pikachu fully in yet
-                return false && hasMove(slot, Move::Thunderbolt);
+                return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
+                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
+                        && hasMove(slot, Move::Thunderbolt);
             break;
         }
         //If its not a special case then a Pokemon must have a move of equal type to the Z Crystal in order to use.

@@ -285,6 +285,7 @@ public:
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum, Pokemon::gen gen);
     static QSet<int> Moves(Pokemon::gen gen);
+    static bool isUniqueZMove(int movenum);
 private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;

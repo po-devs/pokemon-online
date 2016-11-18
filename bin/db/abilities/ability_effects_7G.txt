@@ -156,6 +156,7 @@
 190 126-6#Primordial Sea
 191 126-7#Delta Stream
 192 31-2#Full Metal Body
+194 127#comatose
 195 148#power construct
 196 143#SoulHeart
 198 128-1#Electric Surge

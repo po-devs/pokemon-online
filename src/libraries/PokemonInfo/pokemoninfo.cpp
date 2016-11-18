@@ -2314,6 +2314,11 @@ QString MoveInfo::path(const QString &file)
     return m_Directory+file;
 }
 
+bool MoveInfo::isUniqueZMove(int movenum)
+{
+    return movenum >= 691 && movenum <= 701;
+}
+
 #undef move_find
 #undef move_find2
 
