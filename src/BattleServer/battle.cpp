@@ -1301,31 +1301,16 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
         }
     }
 
-    if (true || gen() < 5) {
-        /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
-                due to the ever rounding down to make an int */
-        acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion)
-                * (20+turnMemory(player).value("Stat6ItemModifier").toInt())/20
-                * (20-turnMemory(target).value("Stat7ItemModifier").toInt())/20
-                * (20+turnMemory(player).value("Stat6AbilityModifier").toInt())/20
-                * (20+turnMemory(player).value("Stat6PartnerAbilityModifier").toInt())/20
-                * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20
-                * (20+pokeMemory(player).value("Stat6BerryModifier").toInt())/20;
-    } else {
-        //Unconfirmed: The precise chaining order. Assumed Ability > Item. This might need further tweaking if the information presents itself
-        //Unconfirmed: Bulbapedia claims only a total of 6 -ACC or +EVA are counted in gen 3+. This means a move with 100% accuracy can only go as low as 33% before applying additional mods
-        int accChain = 0x1000;
-            accChain = chainMod(accChain, turnMemory(player).value("Stat6AbilityModifier").toInt());
-            accChain = chainMod(accChain, turnMemory(player).value("Stat6PartnerAbilityModifier").toInt());
-            accChain = chainMod(accChain, turnMemory(player).value("Stat6ItemModifier").toInt());
-            accChain = chainMod(accChain, pokeMemory(player).value("Stat6BerryModifier").toInt());
+    /* no *=: remember, we're working with fractions & int, changing the order might screw up by 1 % or so
+            due to the ever rounding down to make an int */
+    acc = acc * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion)
+            * (20+turnMemory(player).value("Stat6ItemModifier").toInt())/20
+            * (20-turnMemory(target).value("Stat7ItemModifier").toInt())/20
+            * (20+turnMemory(player).value("Stat6AbilityModifier").toInt())/20
+            * (20+turnMemory(player).value("Stat6PartnerAbilityModifier").toInt())/20
+            * (20-turnMemory(target).value("Stat7AbilityModifier").toInt())/20
+            * (20+pokeMemory(player).value("Stat6BerryModifier").toInt())/20;
 
-        int evaChain = 0x1000;
-            evaChain = chainMod(evaChain, turnMemory(target).value("Stat7AbilityModifier").toInt());
-            evaChain = chainMod(evaChain, turnMemory(target).value("Stat7ItemModifier").toInt());
-
-        acc = applyMod(acc, accChain) * getStatBoost(player, Accuracy) * getStatBoost(target, Evasion) / applyMod(1, evaChain);
-    }
     if (coinflip(unsigned(acc), 100)) {
         return true;
     } else {
@@ -2714,7 +2699,7 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
         return true;
     }
     case Pokemon::Burnt: {
-        if (!hasType(target, Pokemon::Fire) || hasWorkingAbility(target, Ability::WaterVeil) || hasWorkingAbility(target, Ability::WaterBubble)) {
+        if (hasType(target, Pokemon::Fire) || hasWorkingAbility(target, Ability::WaterVeil) || hasWorkingAbility(target, Ability::WaterBubble)) {
             return false;
         }
         return true;

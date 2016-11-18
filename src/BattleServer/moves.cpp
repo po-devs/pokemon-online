@@ -635,7 +635,7 @@ struct MMDestinyBond : public MM
         functions["UponAttackSuccessful"] = &uas;
     }
 
-    static void daf(int, int, BS &b) {
+    static void daf(int s, int, BS &b) {
         if (b.gen() >= 7) {
             if (poke(b,s).contains("DestinyBondTurn") && poke(b,s)["DestinyBondTurn"].toInt() == b.turn() - 1) {
                 if (!testSuccess(poke(b,s)["DestinyBondCount"].toInt(), b)) {
@@ -5049,7 +5049,6 @@ struct MMSmellingSalt : public MM
     }
 
     static void bcd(int s, int t, BS &b) {
-        //Unconfirmed: Sparkling aria doesnt have increased damaged that we know of
         if ((b.hasSubstitute(t) && tmove(b,s).attack != Move::Hex) || tmove(b,s).attack == Move::SparklingAria)
             return;
 
@@ -5420,7 +5419,6 @@ struct MMNaturePower : public MM
         }
 
         int move;
-        //Unconfirmed: Psychic Terrain
         if (type == Type::Ground) {
             move = Earthquake;
         } else if (type == Type::Water) {
@@ -7854,8 +7852,6 @@ struct MMPurify : public MM
     }
 };
 
-//UNTESTED
-//Broken: Doesn't burn
 struct MMBeakBlast : public MM
 {
     MMBeakBlast() {
