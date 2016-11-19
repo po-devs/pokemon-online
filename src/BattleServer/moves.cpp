@@ -7933,10 +7933,9 @@ struct MMStompingTantrum : public MM
     }
 };
 
-//Unconfirmed: Does it steal if the move fails? like immunity
 struct MMSpectralThief : public MM {
     MMSpectralThief() {
-        functions["BeforeCalculatingDamage"] = &bh;
+        functions["BeforeHitting"] = &bh;
     }
 
     static void bh(int s, int t, BS &b) {

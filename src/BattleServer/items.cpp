@@ -1265,5 +1265,5 @@ void ItemEffect::init()
     REGISTER_ITEM(1999, SacredAsh);
     initBerries();
 
-    //NOT DONE: Seeds, Adrenaline Orb
+    //NOT DONE: Memories Fling power
 }

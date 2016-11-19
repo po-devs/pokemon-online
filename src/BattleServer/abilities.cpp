@@ -3395,26 +3395,26 @@ void AbilityEffect::init()
 
     // gen 7    
     REGISTER_AB(127, Comatose);
-    REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/ //how long does the terrain last?
+    REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/
     REGISTER_AB(129, Dazzling); /*Queenly Majesty*/
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
     REGISTER_AB(132, Fluffy);
     REGISTER_AB(133, Stamina);
-    REGISTER_AB(134, Triage); //what priority does this make it?
+    REGISTER_AB(134, Triage);
     REGISTER_AB(135, WimpOut); /* Emergency Exit*/ //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
     REGISTER_AB(136, SurgeSurfer);
     REGISTER_AB(137, WaterCompaction);
     REGISTER_AB(138, Disguise); //Unconfirmed: Needs ability flags
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer);
-    REGISTER_AB(141, BattleBond); //Unconfirmed: Needs ability flags; does boost to water shuriken get retained when switching out?
+    REGISTER_AB(141, BattleBond); //Unconfirmed: Needs ability flags
     REGISTER_AB(142, Receiver); /*Power of Alchemy*/ //Unconfirmed: Needs ability flags
     REGISTER_AB(143, SoulHeart);
     REGISTER_AB(144, BeastBoost);
     REGISTER_AB(145, LiquidVoice);
     REGISTER_AB(146, SteelWorker);
-    REGISTER_AB(147, Schooling);  //Unconfirmed: Needs ability flags
-    REGISTER_AB(148, PowerConstruct); //Unconfirmed: Needs ability flags
-    REGISTER_AB(149, ShieldsDown); //Unconfirmed: Needs ability flags
+    REGISTER_AB(147, Schooling);
+    REGISTER_AB(148, PowerConstruct);
+    REGISTER_AB(149, ShieldsDown);
 }
