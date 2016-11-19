@@ -1217,7 +1217,7 @@ struct MMAssist : public MM
             } else if (move == SolarBlade) {
                 return gen >= 7;
             } else {
-                return QSet<int>::contains(move);
+                return QSet<int>::contains(move) || !MoveInfo::isZMove(move);
             }
         }
     };
@@ -2520,7 +2520,7 @@ struct MMMetronome : public MM
             if (gen <= 4) {
                 return MMAssist::forbidden_moves.contains(move, gen);
             } else {
-                return QSet<int>::contains(move) || (gen >= 7 && move == Move::DarkVoid);
+                return QSet<int>::contains(move) || (gen >= 7 && move == Move::DarkVoid) || !MoveInfo::isZMove(move);
             }
         }
     };
