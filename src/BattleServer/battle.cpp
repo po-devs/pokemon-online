@@ -5095,7 +5095,7 @@ bool BattleSituation::canApplyKingsRock(int movenum)
     if (MoveInfo::Category(movenum, gen()) == Move::Other) {
         return false;
     }
-    if (MoveInfo::FlinchRate(move, gen()) != 0) {
+    if (MoveInfo::FlinchRate(movenum, gen()) != 0) {
         return false;
     }
     return true;

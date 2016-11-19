@@ -2484,12 +2484,11 @@ namespace Item
         BottleCap,
         GoldBottleCap,
         IceStone,
-        CometShard,
+        ShalourSable,
         PinkNectar,
         YellowNectar,
         RedNectar,
-        PurpleNectar,
-        ShalourSable
+        PurpleNectar
     };
 
     enum Target

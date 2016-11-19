@@ -372,12 +372,11 @@
 371 A beautiful bottle cap that gives off a silver gleam. Some people are happy to receive one.
 372 A beautiful bottle cap that gives off a golden gleam. Some people are happy to receive one.
 373 Evolves Alolan Vulpix into Alolan Ninetales and Alolan Sandshrew into Alolan Sandslash.
-374 A shard that fell to the ground when a comet approached. It can be sold at a high price to shops.
+374 Cures a Pokémon of any major status condition.
 375 Changes the form of Oricorio to Oricorio-Pa'u.
 376 Changes the form of Oricorio to Oricorio-Pom Pom.
 377 Changes the form of Oricorio to Oricorio-Baile.
 378 Changes the form of Oricorio to Oricorio-Sensu.
-379 Cures a Pokémon of any major status condition.
 1000 Increases power of Normal-type moves used by the holder by 10%.
 1001 Increases power of Normal-type moves used by the holder by 10%.
 2001 Enables Venusaur to Mega Evolve during battle.

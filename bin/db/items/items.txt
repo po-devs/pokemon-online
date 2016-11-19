@@ -372,12 +372,11 @@
 371 Bottle Cap
 372 Gold Bottle Cap
 373 Ice Stone
-374 Comet Shard
+374 Shalour Sable
 375 Pink Nectar
 376 Yellow Nectar
 377 Red Nectar
 378 Purple Nectar
-379 Shalour Sable
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite
