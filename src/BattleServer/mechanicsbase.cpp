@@ -64,5 +64,5 @@ void PureMechanicsBase::initMove(int num, Pokemon::gen gen, BattleBase::BasicMov
     data.statAffected = MoveInfo::StatAffected(num, gen);
     data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
     data.rateOfStat = MoveInfo::RateOfStat(num, gen);
-    data.kingRock = MoveInfo::FlinchByKingRock(num, gen);
+    //data.kingRock = MoveInfo::FlinchByKingRock(num, gen);
 }

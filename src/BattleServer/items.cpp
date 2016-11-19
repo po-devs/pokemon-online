@@ -1161,7 +1161,6 @@ struct IMZCrystal : public IM {
             tmove(b,s).critRaise = 0;
             tmove(b,s).flinchRate = 0;
             tmove(b,s).healing = 0;
-            tmove(b,s).kingRock = 0;
             tmove(b,s).priority = 0;
             tmove(b,s).maxTurns = 0;
             tmove(b,s).minTurns = 0;

@@ -267,7 +267,7 @@ public:
     static bool Exists(int movenum, Pokemon::gen gen);
     static bool isOHKO(int movenum, Pokemon::gen gen);
     static bool isHM(int movenum, Pokemon::gen gen);
-    static bool FlinchByKingRock(int movenum, Pokemon::gen gen);
+    //static bool FlinchByKingRock(int movenum);
     static int EffectRate(int movenum, Pokemon::gen gen);
     static quint32 StatAffected(int movenum, Pokemon::gen gen);
     static quint32 BoostOfStat(int movenum, Pokemon::gen gen);
@@ -334,7 +334,7 @@ private:
         QHash<int, signed char> recoil;
         //QHash<int, char> status;
         QHash<int, char> type;
-        QHash<int, bool> kingRock;
+        //QHash<int, bool> kingRock;
         QSet<int> HMs;
     };
 

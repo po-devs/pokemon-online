@@ -393,7 +393,7 @@ public:
         quint32 statAffected;
         quint32 boostOfStat;
         quint32 rateOfStat;
-        bool kingRock;
+        //bool kingRock;
 
         void reset();
     };

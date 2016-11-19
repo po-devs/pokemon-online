@@ -1812,7 +1812,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_int_char(recoil, path("recoil.txt"));
     //fill_int_char(status, path("status.txt"));
     fill_int_char(type, path("type.txt"));
-    fill_int_bool(kingRock, path("king_rock.txt"));
+    //fill_int_bool(kingRock, path("king_rock.txt"));
 
     /* Removing comments, aka anything starting from '#' */
     QMutableHashIterator<int,QString> it(specialEffect);
@@ -1979,10 +1979,10 @@ int MoveInfo::Classification(int movenum, Pokemon::gen g)
     move_find(category, movenum, g);
 }
 
-bool MoveInfo::FlinchByKingRock(int movenum, Pokemon::gen gen)
+/*bool MoveInfo::FlinchByKingRock(int movenum, Pokemon::gen gen)
 {
     move_find(kingRock, movenum, gen);
-}
+}*/
 
 int MoveInfo::Number(const QString &movename)
 {

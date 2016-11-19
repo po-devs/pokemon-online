@@ -1516,13 +1516,13 @@ void BattleSituation::testFlinch(int player, int target)
                 }
             }
         } else if (gen().num == 4 || gen().num == 3){
-            if (tmove(player).kingRock) {
+            if (canApplyKingsRock(tmove(player).attack)) {
                 if (coinflip(10, 100)) {
                     turnMem(target).add(TM::Flinched);
                 }
             }
         } else if (gen().num == 2){
-            if (tmove(player).kingRock) {
+            if (canApplyKingsRock(tmove(player).attack)) {
                 if (coinflip(30, 256)) {
                     turnMem(target).add(TM::Flinched);
                 }
@@ -5083,4 +5083,20 @@ bool BattleSituation::canBeZMove(int s, int mv)
 bool BattleSituation::zTurn(int s)
 {
     return pokeMemory(s).value("ZMoveTurn").toInt() == turn();
+}
+
+bool BattleSituation::canApplyKingsRock(int movenum)
+{
+    //Unconfirmed: Can a Z-Move get Flinch via Stench? Can hacked Z-Moves flinch?
+    //Blocking it for now
+    if (MoveInfo::isZMove(movenum)) {
+        return false;
+    }
+    if (MoveInfo::Category(movenum, gen()) == Move::Other) {
+        return false;
+    }
+    if (MoveInfo::FlinchRate(move, gen()) != 0) {
+        return false;
+    }
+    return true;
 }
