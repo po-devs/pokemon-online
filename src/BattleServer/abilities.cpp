@@ -569,7 +569,7 @@ struct AMForeCast : public AM {
         if (poke(b,s).contains("BurnedUp")) {
             poke(b,s).remove("BurnedUp");
         }
-        if (poke(b,s).contains("ForestTrick")) {
+        if (poke(b,s).contains("ForestTrick") || poke(b,s).contains("Soaked")) {
             fpoke(b,s).types = QVector<int> () << PokemonInfo::Type1(b.poke(s).num(), b.gen()) << PokemonInfo::Type2(b.poke(s).num(), b.gen());
         }
 

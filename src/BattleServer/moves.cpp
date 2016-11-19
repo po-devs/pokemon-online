@@ -6020,6 +6020,7 @@ struct MMSoak : public MM {
         if (move(b,s) == Move::Soak) {
             b.setType(t, type);
             b.sendMoveMessage(157, 0, t, type, t);
+            poke(b,t)["Soaked"] = true;
         } else {
             if (poke(b,t).contains("ForestTrick")) {
                 int oldtype = poke(b,t).value("ForestTrick").toInt();
