@@ -969,7 +969,8 @@ struct AMNormalize : public AM {
 
     static void btl(int s, int, BS &b) {
         //Unconfirmed: Do normally Normal types get buffed too?
-        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal && tmove(b,s).attack != Move::HiddenPower && tmove(b,s).attack != Move::WeatherBall) {
+        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal && tmove(b,s).attack != Move::HiddenPower && tmove(b,s).attack != Move::WeatherBall
+                && !(poke(b,s).value("ZMoveTurn").toInt() == b.turn())) {
             tmove(b,s).type = Type::Normal;
             turn(b,s)["Normalized"] = true;
         }
@@ -1305,7 +1306,6 @@ struct AMTrace : public AM {
             int i = b.randint(opps.size());
             int t = opps[i];
             int ab = b.ability(t);
-            //Multitype
             if (b.hasWorkingAbility(t, ab) && !(AbilityInfo::abFlags(ab) & Ability::TraceFlag)) {
                 b.sendAbMessage(66,0,s,t,0,ab);
                 b.loseAbility(s);
@@ -2268,7 +2268,7 @@ struct AMAerilate : public AM {
     }
 
     static void baf(int s, int, BS &b) {
-        if (type(b,s) == Type::Normal) {
+        if (type(b,s) == Type::Normal && !(poke(b,s).value("ZMoveTurn").toInt() == b.turn())) {
             turn(b,s)["Aerilated"] = true;
             tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
         }
@@ -2717,7 +2717,7 @@ struct AMWaterCompaction : public AM {
         }
 
         if (type(b, t) == Type::Water && !b.hasMaximalStatMod(s, Defense)) {
-            b.inflictStatMod(s, Defense, 2, s, false);
+            b.inflictStatMod(s, Defense, 2, s, true);
         }
     }
 };

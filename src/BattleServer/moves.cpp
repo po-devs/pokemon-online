@@ -1854,7 +1854,7 @@ struct MMEncore : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        if (!poke(b,t).contains("LastMoveUsedTurn")) {
+        if (!poke(b,t).contains("LastMoveUsedTurn") || poke(b,t).value("ZMoveTurn").toInt() == b.turn()) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -8142,13 +8142,22 @@ struct MMZSupernova : public MM
         functions["AfterAttackFinished"] = &zm;
     }
 
-    static void zm(int s, int, BS &b) {
-        //if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+    static void zm(int, int, BS &b) {
         if(b.terrain != BS::PsychicTerrain) {
             //No terrain extender cause you can only hold 1 item!
             b.coverField(BS::PsychicTerrain, 5);
         }
-        //}
+    }
+};
+
+struct MMZAlola : public MM
+{
+    MMZAlola() {
+        functions["CustomAttackingDamage"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()* 3 / 4;
     }
 };
 
@@ -8438,6 +8447,7 @@ void MoveEffect::init()
     REGISTER_MOVE(1005, ZAttention);
     REGISTER_MOVE(1006, ZCurse);
     REGISTER_MOVE(1007, ZSupernova);
+    REGISTER_MOVE(1008, ZAlola);
 
     //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
     //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate

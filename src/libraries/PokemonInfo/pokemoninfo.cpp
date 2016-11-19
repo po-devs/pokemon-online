@@ -2438,7 +2438,7 @@ void ItemInfo::loadNames()
 void ItemInfo::loadStoneFormes()
 {
     fill_uid_int(m_StoneFormes, path("item_for_forme.txt"));
-    fill_double(m_ZCrystalTypes, path("crystal_types.txt")); //no sense making another function to load 1 thing
+    fill_double(m_ZCrystalTypes, path("zcrystal_type.txt")); //no sense making another function to load 1 thing
 }
 
 void ItemInfo::loadMessages()

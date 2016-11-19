@@ -1276,7 +1276,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     if (MoveInfo::isOHKO(move, gen())) {
         int coin = unsigned(30 + poke(player).level() - poke(target).level());
         if (gen() >= 7 && !hasType(player, Pokemon::Ice)) {
-            coin -= 0; //UNCONFIRMED: How much of a decrease
+            coin -= 10; //UNCONFIRMED: How much of a decrease
         }
         bool ret = coinflip(coin, 100);
         if (!ret && !silent) {
@@ -1562,7 +1562,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         turnMemory(player)["SpecialMoveUsed"] = move;
     } else {
         //Quick claw, special case
-        if (gen() >= 4 && turnMemory(player).value("QuickClawed").toBool()) {
+        if (gen() >= 4 && turnMemory(player).value("QuickClawed").toBool() && gen() < 7) {
             //The message only shows up if it's not the last pokemon to move
             for (int i = 0; i < numberOfSlots(); i++) {
                 if (!hasMoved(i) && !koed(i) && i != player) {
@@ -1606,7 +1606,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     turnMem(player).add(TM::HasPassedStatus);
 
     //Down here so it doesnt get overridden but still defines it before the announcement
-    if (zmoving) {
+    if (zmoving && canBeZMove(player, attack)) {
         sendItemMessage(68, player);
         if (tmove(player).power > 0) {
             notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
@@ -4958,64 +4958,6 @@ bool BattleSituation::canMegaEvolve (int slot)
     return false;
 }
 
-bool BattleSituation::canUseZMove (int slot)
-{
-    if (zmoves[player(slot)]) {
-        return false;
-    }
-    int item = poke(slot).item();
-    if (ItemInfo::isZCrystal(item)) {
-        int zmove = ItemInfo::ZCrystalMove(item);
-        Pokemon::uniqueId pk = poke(slot).num();
-        switch(zmove) {
-            case Move::Catastropika:
-                return pk == Pokemon::Pikachu && hasMove(slot, Move::VoltTackle);
-            break;
-            case Move::StokedSparkSurfer:
-                return pk == Pokemon::Raichu_Alolan && hasMove(slot, Move::Thunderbolt);
-            break;
-            case Move::ExtremeEvoboost:
-                return pk == Pokemon::Eevee && hasMove(slot, Move::LastResort);
-            break;
-            case Move::PulversingPancake:
-                return pk == Pokemon::Snorlax && hasMove(slot, Move::GigaImpact);
-            break;
-            case Move::GenesisSupernova:
-                return pk == Pokemon::Mew && hasMove(slot, Move::Psychic);
-            break;
-            case Move::GuardianofAlola:
-                return (pk == Pokemon::Tapu_Bulu || pk == Pokemon::Tapu_Koko || pk == Pokemon::Tapu_Lele || pk == Pokemon::Tapu_Fini)
-                        && hasMove(slot, Move::NaturesMadness);
-            break;
-            case Move::SinisterArrowRaid:
-                return pk == Pokemon::Decidueye && hasMove(slot, Move::SpiritShackle);
-            break;
-            case Move::MaliciousMoonsault:
-                return pk == Pokemon::Incineroar && hasMove(slot, Move::DarkestLariat);
-            break;
-            case Move::OceanicOperetta:
-                return pk == Pokemon::Primarina && hasMove(slot, Move::SparklingAria);
-            break;
-            case Move::Soul_Stealing7_StarStrike:
-                return pk == Pokemon::Marshadow && hasMove(slot, Move::SpectralThief);
-            break;
-            case Move::_10_000_000VoltThunderBolt:
-                return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
-                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
-                        && hasMove(slot, Move::Thunderbolt);
-            break;
-        }
-        //If its not a special case then a Pokemon must have a move of equal type to the Z Crystal in order to use.
-        int ztype = ItemInfo::ZCrystalType(item);
-        for (int i = 0; i < 4; i++) {
-            if (MoveInfo::Type(move(slot, i), gen()) == ztype && !MoveInfo::isZMove(move(slot, i))) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
 {
     if (move(s, slot) == mv) {
@@ -5047,4 +4989,81 @@ bool BattleSituation::makesContact(int s)
 bool BattleSituation::isDisguised(int s)
 {
     return hasWorkingAbility(s, Ability::Disguise) && !battleMemory().value(QString("DisguiseBusted%1%2").arg(player(s)).arg(currentInternalId(s))).toBool();
+}
+
+bool BattleSituation::canUseZMove (int slot)
+{
+    if (zmoves[player(slot)]) {
+        return false;
+    }
+    int item = poke(slot).item();
+    if (ItemInfo::isZCrystal(item)) {
+        for (int i = 0; i < 4; i++) {
+            if (canBeZMove(slot, move(slot,i)) && PP(slot, i) > 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool BattleSituation::canBeZMove(int s, int mv)
+{
+    //Hackmons: Z moves can't be the base of a z move
+    if (MoveInfo::isZMove(mv)) {
+        return false;
+    }
+
+    int item = poke(s).item();
+    //Not really needed but better safe than sorry!
+    if (!ItemInfo::isZCrystal(item)) {
+        return false;
+    }
+    //Unique Z moves need to match pokemon as well
+    int zmove = ItemInfo::ZCrystalMove(item);
+    if (MoveInfo::isUniqueZMove(zmove)) {
+        Pokemon::uniqueId pk = poke(s).num();
+        switch(zmove) {
+            case Move::Catastropika:
+                return pk == Pokemon::Pikachu && mv == Move::VoltTackle;
+            break;
+            case Move::StokedSparkSurfer:
+                return pk == Pokemon::Raichu_Alolan && mv == Move::Thunderbolt;
+            break;
+            case Move::ExtremeEvoboost:
+                return pk == Pokemon::Eevee && mv == Move::LastResort;
+            break;
+            case Move::PulversingPancake:
+                return pk == Pokemon::Snorlax && mv ==  Move::GigaImpact;
+            break;
+            case Move::GenesisSupernova:
+                return pk == Pokemon::Mew && mv == Move::Psychic;
+            break;
+            case Move::GuardianofAlola:
+                return (pk == Pokemon::Tapu_Bulu || pk == Pokemon::Tapu_Koko || pk == Pokemon::Tapu_Lele || pk == Pokemon::Tapu_Fini)
+                        && mv == Move::NaturesMadness;
+            break;
+            case Move::SinisterArrowRaid:
+                return pk == Pokemon::Decidueye && mv == Move::SpiritShackle;
+            break;
+            case Move::MaliciousMoonsault:
+                return pk == Pokemon::Incineroar && mv == Move::DarkestLariat;
+            break;
+            case Move::OceanicOperetta:
+                return pk == Pokemon::Primarina && mv == Move::SparklingAria;
+            break;
+            case Move::Soul_Stealing7_StarStrike:
+                return pk == Pokemon::Marshadow && mv == Move::SpectralThief;
+            break;
+            case Move::_10_000_000VoltThunderBolt:
+                return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
+                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
+                        && mv == Move::Thunderbolt;
+            break;
+        }
+    }
+
+    int type = MoveInfo::Type(mv, gen());
+    int ztype = ItemInfo::ZCrystalType(item);
+    return type == ztype;
 }

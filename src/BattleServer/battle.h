@@ -87,6 +87,7 @@ public:
     bool preTransPoke(int s, Pokemon::uniqueId check);
     bool canMegaEvolve(int slot);
     bool canUseZMove(int slot);
+    bool canBeZMove(int s, int mv);
     bool makesContact(int s);
     bool isDisguised(int s);
     int intendedMoveSlot(int s, int slot, int mv);

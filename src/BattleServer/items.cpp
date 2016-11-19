@@ -525,6 +525,11 @@ struct IMQuickClaw : public IM
         if (b.coinflip(1, 5)) {
             turn(b,s)["TurnOrder"] = 2;
             turn(b,s)["QuickClawed"] = true;
+            if (b.gen() >= 7) {
+                //Message changed places in gen 7. It now shows at the start of the turn, even if it didnt do anything
+                //EX: Quick Claw + Water Gun versus Quick Attack. ORDER: Quick Claw Message -> Quick Attack -> Water Gun
+                b.sendItemMessage(17, s);
+            }
         }
     }
 };
@@ -1146,7 +1151,7 @@ struct IMZCrystal : public IM {
             if (MoveInfo::isUniqueZMove(zmove)) {
                 tmove(b,s).power = MoveInfo::Power(zmove, b.gen());
             }
-            b.debug(QString("Debug: Power = %1").arg(tmove(b,s).power));
+            //b.debug(QString("Debug: Power = %1").arg(tmove(b,s).power));
 
             /* Sigh... only way to get it working properly... */
             tmove(b,s).accuracy = 100;
