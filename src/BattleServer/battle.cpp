@@ -4622,7 +4622,11 @@ int BattleSituation::getBoostedStat(int player, int stat)
             givenStat = 6 - givenStat;
         }
         if (gen() > 2) {
-            return fpoke(player).stats[givenStat] * getStatBoost(player, stat);
+            if (pokeMemory(player).contains("CustomSpeedStat") && stat == Speed) {
+                return pokeMemory(player).value("CustomSpeedStat").toInt() * getStatBoost(player, stat);
+            } else {
+                return fpoke(player).stats[givenStat] * getStatBoost(player, stat);
+            }
         } else {
             //Gen 2 returns same calculated stat as Gen 1
             return fpoke(player).stats[givenStat] * (floor(100*getStatBoost(player, stat))/100);

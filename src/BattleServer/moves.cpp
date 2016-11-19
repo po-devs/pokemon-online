@@ -8009,7 +8009,6 @@ struct MMAbilityIgnore : public MM
     }
 };
 
-//UNTESTED
 struct MMSpeedSwap : public MM
 {
     MMSpeedSwap() {
@@ -8017,7 +8016,18 @@ struct MMSpeedSwap : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        //swaps raw speed stat with opponent
+        int sspd = fpoke(b,s).stats[Speed];
+        int tspd = fpoke(b,t).stats[Speed];
+        //For double swapping or chain swapping
+        if (poke(b,s).contains("CustomSpeedStat")) {
+            sspd = poke(b,s).value("CustomSpeedStat").toInt();
+        }
+        if (poke(b,t).contains("CustomSpeedStat")) {
+            tspd = poke(b,t).value("CustomSpeedStat").toInt();
+        }
+
+        poke(b,s)["CustomSpeedStat"] = tspd;
+        poke(b,t)["CustomSpeedStat"] = sspd;
         b.sendMoveMessage(239,0,s,type(b,s),t);
     }
 };
@@ -8162,6 +8172,9 @@ struct MMZAlola : public MM
 
     static void uas(int s, int t, BS &b) {
         turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()* 3 / 4;
+        if (turn(b,t).value("ZMoveProtected").toBool()) {
+            turn(b,s)["CustomDamage"] = turn(b,s)["CustomDamage"].toInt() * 3 / 4;
+        }
     }
 };
 
@@ -8466,5 +8479,5 @@ void MoveEffect::init()
     REGISTER_MOVE(1007, ZSupernova);
     REGISTER_MOVE(1008, ZAlola);
 
-    //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
+    //NOT DONE: Instruct, Pollen Puff, Spotlight
 }
