@@ -766,7 +766,7 @@ struct MMDetect : public MM
             return;
         }
 
-        if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+        if (b.zTurn(s)) {
             turn(b,s)["ZMoveProtected"] = true;
             b.sendItemMessage(68, t, 1);
             return;
@@ -1854,7 +1854,7 @@ struct MMEncore : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        if (!poke(b,t).contains("LastMoveUsedTurn") || poke(b,t).value("ZMoveTurn").toInt() == b.turn()) {
+        if (!poke(b,t).contains("LastMoveUsedTurn") || b.zTurn(t)) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -2669,6 +2669,9 @@ struct MMHiddenPower : public MM
     }
 
     static void ms(int s, int, BS &b) {
+        if (b.zTurn(s)) {
+            return;
+        }
         quint8 *dvs = fpoke(b,s).dvs;
 
         int type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
@@ -7135,7 +7138,7 @@ struct MMKingsShield: public MM
             return;
         }
 
-        if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+        if (b.zTurn(s)) {
             turn(b,s)["ZMoveProtected"] = true;
             b.sendItemMessage(68, t, 1);
             return;
@@ -7749,7 +7752,7 @@ struct MMBanefulBunker: public MM
             return;
         }
 
-        if (poke(b,s).value("ZMoveTurn").toInt() == b.turn()) {
+        if (b.zTurn(s)) {
             turn(b,s)["ZMoveProtected"] = true;
             b.sendItemMessage(68, t, 1);
             return;

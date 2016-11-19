@@ -90,6 +90,7 @@ public:
     bool canBeZMove(int s, int mv);
     bool makesContact(int s);
     bool isDisguised(int s);
+    bool zTurn(int s);
     int intendedMoveSlot(int s, int slot, int mv);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);

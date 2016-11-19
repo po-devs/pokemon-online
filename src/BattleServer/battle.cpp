@@ -1914,6 +1914,15 @@ ppfunction:
                 continue;
             }
 
+            /* King's Shield*/
+            if (gen() >= 7 && turnMemory(target).value("KingsShieldUsed").toBool()) {
+                callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+                if (testFail(player)) {
+                    calleffects(player,target,"AttackSomehowFailed");
+                    continue;
+                }
+            }
+
             int typemod = turnMem(player).typeMod;
             if (typemod < -50) {
                 /* If it's ineffective we just say it */
@@ -1957,13 +1966,15 @@ ppfunction:
             //Moved after failure check to allow Sucker punch to work correctly.
             /* In gen 6, this check is after the "no effect" check. Since king's shield
              * on aegislash on a physical normal/fighting/poison attack doesn't reduce the opponent's
-             * attack by two stages. */
+             * attack by two stages. Gen 7 reverses this so we "reintroduce the bug" and move this block of code higher again*/
             //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
             /* Protect, ... */
-            callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-            if (testFail(player)) {
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
+            if (gen() < 7 || !turnMemory(target).value("KingsShieldUsed").toBool()) {
+                callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+                if (testFail(player)) {
+                    calleffects(player,target,"AttackSomehowFailed");
+                    continue;
+                }
             }
             int num = repeatNum(player);
             bool hit = num > 1;
@@ -5063,7 +5074,13 @@ bool BattleSituation::canBeZMove(int s, int mv)
         }
     }
 
+    //Hidden Power should always do Breakneck Blitz
     int type = MoveInfo::Type(mv, gen());
     int ztype = ItemInfo::ZCrystalType(item);
     return type == ztype;
+}
+
+bool BattleSituation::zTurn(int s)
+{
+    return pokeMemory(s).value("ZMoveTurn").toInt() == turn();
 }
