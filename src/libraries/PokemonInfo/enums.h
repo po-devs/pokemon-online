@@ -2477,7 +2477,19 @@ namespace Item
         ElectricSeed,
         PsychicSeed,
         MistySeed,
-        GrassySeed
+        GrassySeed,
+        BeastBall,
+        BigMalasada,
+        CommonStone,
+        BottleCap,
+        GoldBottleCap,
+        IceStone,
+        CometShard,
+        PinkNectar,
+        YellowNectar,
+        RedNectar,
+        PurpleNectar,
+        ShalourSable
     };
 
     enum Target
