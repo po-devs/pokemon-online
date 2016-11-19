@@ -566,6 +566,9 @@ struct AMForeCast : public AM {
         }
 
         //To allow the type reset every turn
+        if (poke(b,s).contains("BurnedUp")) {
+            poke(b,s).remove("BurnedUp");
+        }
         if (poke(b,s).contains("ForestTrick")) {
             fpoke(b,s).types = QVector<int> () << PokemonInfo::Type1(b.poke(s).num(), b.gen()) << PokemonInfo::Type2(b.poke(s).num(), b.gen());
         }
