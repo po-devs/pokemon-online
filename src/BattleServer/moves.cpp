@@ -8165,6 +8165,18 @@ struct MMZAlola : public MM
     }
 };
 
+struct MMWaterShuriken : public MM
+{
+    MMWaterShuriken() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int, BS &b) {
+        if (b.poke(s).num() == Pokemon::Ash_Greninja) {
+            b.chainBp(s, 0x1800);
+        }
+    }
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
@@ -8442,6 +8454,7 @@ void MoveEffect::init()
     REGISTER_MOVE(239, SpeedSwap);
     REGISTER_MOVE(240, Terrain);
     //REGISTER_MOVE(241, Spotlight);
+    REGISTER_MOVE(242, WaterShuriken);
 
     REGISTER_MOVE(1000, ZBoost);
     REGISTER_MOVE(1001, ZCrit);
@@ -8454,5 +8467,4 @@ void MoveEffect::init()
     REGISTER_MOVE(1008, ZAlola);
 
     //NOT DONE: Instruct, Pollen Puff, Spotlight, Speed Swap
-    //UNCONFIRMED: Shadow Bone statrate, Liquidation statrate
 }

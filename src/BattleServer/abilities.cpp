@@ -3033,7 +3033,6 @@ struct AMDancer : AM
 struct AMBattleBond : public AM {
     AMBattleBond() {
         functions["AfterKoing"] = &ak;
-        functions["BasePowerModifier"] = &bpm;
     }
 
     static void ak(int s, int, BS &b) {
@@ -3046,16 +3045,6 @@ struct AMBattleBond : public AM {
             b.sendAbMessage(141, 0, s);
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
             b.sendAbMessage(141, 1, s);
-        }
-    }
-
-    //if the boost stays despite switching, this is the code. otherwise you have to set poke(b,s)["BattleBonded"] = true; after the transform line above, then change below to look for "BattleBonded" instead of Ash_Greninja
-    static void bpm(int s, int, BS &b) {
-        if (b.poke(s).num() != Pokemon::Ash_Greninja)
-            return;
-
-        if (tmove(b,s).attack == Move::WaterShuriken) {
-            b.chainBp(s, 0x2000);
         }
     }
 };

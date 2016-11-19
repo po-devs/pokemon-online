@@ -352,6 +352,7 @@
 578 13-4_248_353#phantom force
 580 1000-2_1#PlayNice
 581 157-7|1000-8_1#Trick-or-Treat
+582 242#Water Shuriken
 583 1000-4_2#AromaticMist
 584 200#Belch
 585 1000-4_1#Confide
