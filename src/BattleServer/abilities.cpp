@@ -3219,7 +3219,7 @@ struct AMPowerConstruct : public AMPinch {
         //num = fpoke(b,s).id;
         bool complete = testpinch(s, b, 2);
         if (complete) {
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Zygarde_Complete, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Zygarde_Complete, false);
             b.sendAbMessage(148, 0, s);
         }
     }

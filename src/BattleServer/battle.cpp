@@ -4353,6 +4353,10 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
             p.ability() = AbilityInfo::Number(pokeMemory(slot).value("PreTransformAbility").toString());
         }
 
+        //UNTESTED: The base HP of Zygarde changes
+        if (p.ability() == Ability::PowerConstruct) {
+            //p.setLife(PokemonInfo::FullStat(newforme,gen(),p.nature(),Hp,p.level(),p.dvs()[Hp], p.evs()[Hp]));
+        }
         for (int i = 1; i < 6; i++)
             p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
     }
@@ -4373,7 +4377,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
 
             //UNTESTED: The base HP of Zygarde changes
             if (p.ability() == Ability::PowerConstruct) {
-                //fpoke(slot).stats[Hp] = p.normalStat(Hp);
+                //fpoke(slot).stats[Hp] = p.lifePoints();
             }
             for (int i = 1; i < 6; i++) {
                 fpoke(slot).stats[i] = p.normalStat(i);
