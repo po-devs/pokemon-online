@@ -1934,8 +1934,7 @@ ppfunction:
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
-                if (!isFlying(target) && terrain == PsychicTerrain && tmove(player).priority > 0) {
-                    sendMoveMessage(222,2,target,Type::Psychic,player,tmove(player).attack);
+                if (blockPriority(player, target)) {
                     calleffects(player,target,"AttackSomehowFailed");
                     continue;
                 }
@@ -2037,12 +2036,14 @@ ppfunction:
 
                 //heatOfAttack() = false;
                 if (hitting) {
+                    callieffects(target, player, "UponBeingHit");
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
                         callaeffects(player, target, "OnHitting");
                     }
                     callaeffects(target, player, "UponOffensiveDamageReceived");
-                    callieffects(target, player, "UponBeingHit");
+                    /*Absorb Bulb should be after abilities*/
+                    callieffects(target, player, "UponBeingHit2");
                     /*This allows Knock off to work*/
                     calleffects(player, target, "KnockOff");
                     callieffects(target, player, "AfterKnockOff");
@@ -2149,6 +2150,10 @@ ppfunction:
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
+                if (blockPriority(player, target)) {
+                    calleffects(player,target,"AttackSomehowFailed");
+                    continue;
+                }
             }
             if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
                 calleffects(player,target,"AttackSomehowFailed");
@@ -3952,7 +3957,8 @@ int BattleSituation::repeatNum(int player)
     }
 
     if (tmove(player).repeatMin == 0) {
-        if (targetList.size() == 1 && hasWorkingAbility(player, Ability::ParentalBond)) {
+        //Parental bond doesnt affect z-moves
+        if (targetList.size() == 1 && hasWorkingAbility(player, Ability::ParentalBond) && !zTurn(player)) {
             turnMemory(player)["ParentalBond"] = true;
             return 2;
         } else {
@@ -5103,4 +5109,19 @@ bool BattleSituation::canApplyKingsRock(int movenum)
         return false;
     }
     return true;
+}
+
+bool BattleSituation::blockPriority(int player, int target)
+{
+    if (tmove(player).priority > 0 || (hasWorkingAbility(player, Ability::Prankster) && turnMemory(player).contains("AssistMove"))) {
+        if (!isFlying(target) && terrain == PsychicTerrain) {
+            sendMoveMessage(222,2,target,Type::Psychic,player,tmove(player).attack);
+            return true;
+        }
+        if (!arePartners(player, target) && (hasWorkingTeamAbility(target, Ability::Dazzling) || hasWorkingTeamAbility(target, Ability::QueenlyMajesty))) {
+            sendAbMessage(129, 0, target, player, Type::Curse, tmove(player).attack);
+            return true;
+        }
+    }
+    return false;
 }

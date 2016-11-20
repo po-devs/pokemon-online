@@ -712,7 +712,7 @@ struct IMAirBalloon : public IM
 struct IMAbsorbBulb : public IM
 {
     IMAbsorbBulb() {
-        functions["UponBeingHit"] = &ubh;
+        functions["UponBeingHit2"] = &ubh;
     }
 
     static void ubh(int s, int t, BS &b) {
@@ -827,7 +827,7 @@ struct IMEscapeButton : public IM
 
     static void ubh(int s, int t, BS &b) {
         //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, during a switch where pursuit is used, or during Wimp Out
-        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool() || turn(b,s).value("WimpedOut").toBool())
+        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool())
             return;
         if (b.countAlive(b.player(s)) <= 1) // Button doesn't activate when target is the last pokemon
             return;
