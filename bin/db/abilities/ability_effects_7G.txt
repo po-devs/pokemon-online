@@ -163,6 +163,7 @@
 199 129#Dazzling
 200 130-3#Berserk
 201 131#Battery
+202 150#corrosion
 203 138#disguise
 204 132#Fluffy
 205 133#Stamina

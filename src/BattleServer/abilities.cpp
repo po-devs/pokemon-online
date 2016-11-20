@@ -3235,6 +3235,25 @@ struct AMComatose : public AM {
     }
 };
 
+struct AMCorrosion : public AM {
+    AMCorrosion() {
+        functions["MoveTypeModifier"] = &mtm;
+    }
+
+    static void mtm (int s, int t, BS &b) {
+        if (tmove(b,s).power == 0 || tmove(b,s).classification != Move::OffensiveStatusInducingMove) {
+            return;
+        }
+        //A pokemon with corrosion can poison a steel target with an offensive move but it does 0 damage
+        if (b.hasType(t, Pokemon::Steel) && tmove(b,s).type == Pokemon::Poison && tmove(b,s).status == Pokemon::Poisoned) {
+            //Hacky implementation to remove immunity and damage but keep the poison chance
+            tmove(b,s).type = Pokemon::Curse;
+            turn(b,t)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
+            b.sendMoveMessage(31,0,t); //It doesn't affect X...
+        }
+    }
+};
+
 //In case it is coded like Analytic instead of Tinted Lens. If so, remove from battle.cpp around L3656
 /*struct AMStakeout : AM
 {
@@ -3438,4 +3457,5 @@ void AbilityEffect::init()
     REGISTER_AB(147, Schooling);
     REGISTER_AB(148, PowerConstruct);
     REGISTER_AB(149, ShieldsDown);
+    REGISTER_AB(150, Corrosion);
 }

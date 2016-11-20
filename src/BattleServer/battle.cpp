@@ -1903,6 +1903,9 @@ ppfunction:
             continue;
         }
 
+        /* Corrosion */
+        callaeffects(player, target, "MoveTypeModifier");
+
         if (tmove(player).power > 0)
         {
             calculateTypeModStab();
