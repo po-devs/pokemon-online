@@ -3207,14 +3207,14 @@ struct AMPowerConstruct : public AMPinch {
     }
 
     static void et (int s, int, BS &b) {
-        /* Not using field pokemon since Ditto doesn't gain shields down.
+        /* Not using field pokemon since Ditto doesn't gain power construct.
          * So using b.poke(s) instead of fpoke(b,s). */
         Pokemon::uniqueId num = b.poke(s).num();
 
-        if (num != Pokemon::Zygarde_10_Incomplete || b.preTransPoke(s, Pokemon::Zygarde_10_Incomplete) ||
-                num != Pokemon::Zygarde_50_Incomplete || b.preTransPoke(s, Pokemon::Zygarde_50_Incomplete))
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Zygarde || b.preTransPoke(s, Pokemon::Zygarde_10) || b.preTransPoke(s, Pokemon::Zygarde))
             return;
-
+        if (num == Pokemon::Zygarde_Complete)
+            return;
 
         //num = fpoke(b,s).id;
         bool complete = testpinch(s, b, 2);
