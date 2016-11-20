@@ -2657,6 +2657,9 @@ struct MMUTurn : public MM
         if (turn(b,b.opponent(b.player(s))).value("EscapeButtonActivated").toBool()) {
             return;
         }
+        if (turn(b,b.opponent(b.player(s))).value("WimpedOut").toBool()) {
+            return;
+        }
 
         b.requestSwitch(s);
     }
