@@ -2765,12 +2765,14 @@ struct MMPerishSong : public MM
             if (poke(b,t).contains("PerishSongCount") || b.koed(t)) {
                 continue;
             }
-            if (b.hasWorkingAbility(t, Ability::Soundproof)) {
-                b.sendAbMessage(57,0,t);
+            //Soundproof, Liquid Voice + Storm Drain/Water Absorb, etc.
+            b.callaeffects(t, s, "OpponentBlock");
+            //Second check is for Prankster blocks (Dazzling, Prankster on Dark type, etc.). Inherently checks for gen 7 anyway
+            if (turn(b,t).contains(QString("Block%1").arg(b.attackCount())) || b.blockPriority(s, t)) {
                 continue;
             }
             b.addEndTurnEffect(BS::PokeEffect, bracket(b.gen()), t, "PerishSong", &et);
-            poke(b, t)["PerishSongCount"] = tmove(b,s).minTurns + b.randint(tmove(b,s).maxTurns+1-tmove(b,s).maxTurns) - 1;
+            poke(b, t)["PerishSongCount"] = 3;
             poke(b, t)["PerishSonger"] = s;
         }
         b.sendMoveMessage(95);

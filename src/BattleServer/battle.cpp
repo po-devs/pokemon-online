@@ -5125,6 +5125,11 @@ bool BattleSituation::canApplyKingsRock(int movenum)
 
 bool BattleSituation::blockPriority(int player, int target)
 {
+    //Never block on self, that's dumb
+    if (player == target) {
+        return false;
+    }
+
     if (tmove(player).priority > 0 || (hasWorkingAbility(player, Ability::Prankster) && turnMemory(player).contains("AssistMove"))) {
         if (!isFlying(target) && terrain == PsychicTerrain) {
             sendMoveMessage(222,2,target,Type::Psychic,player,tmove(player).attack);
