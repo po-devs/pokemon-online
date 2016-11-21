@@ -67,7 +67,7 @@ public:
     Q_PROPERTY(int ability READ ability STORED false NOTIFY abilityChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
     Q_PROPERTY(int lifePercent READ lifePercent STORED false NOTIFY lifeChanged)
-    Q_PROPERTY(int totalLife READ totalLife NOTIFY pokemonReset)
+    Q_PROPERTY(int totalLife READ totalLife NOTIFY totalLifeChanged)
     Q_PROPERTY(int happiness READ happiness NOTIFY pokemonReset)
     Q_PROPERTY(int item READ item NOTIFY itemChanged)
     Q_PROPERTY(int nature READ nature NOTIFY pokemonReset)
@@ -132,6 +132,7 @@ signals:
     void pokemonReset();
     void lifeChanged();
     void itemChanged();
+    void totalLifeChanged();
     void ko();
 private:
     bool hasOwnerShip;

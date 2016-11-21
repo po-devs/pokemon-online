@@ -4327,6 +4327,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
         return;
     }
     int slot = this->slot(player, poke);
+    int oldTotalLife = p.totalLife();
     if (temp && !pokeMemory(slot).contains("PreTransformPoke")) {
         pokeMemory(slot)["PreTransformPoke"] = PokemonInfo::Name(p.num());
         pokeMemory(slot)["PreTransformAbility"] = AbilityInfo::Name(p.ability());
@@ -4353,12 +4354,11 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
             p.ability() = AbilityInfo::Number(pokeMemory(slot).value("PreTransformAbility").toString());
         }
 
-        //UNTESTED: The base HP of Zygarde changes
-        if (p.ability() == Ability::PowerConstruct) {
-            //p.setLife(PokemonInfo::FullStat(newforme,gen(),p.nature(),Hp,p.level(),p.dvs()[Hp], p.evs()[Hp]));
-        }
-        for (int i = 1; i < 6; i++)
+        p.totalLifePoints() = PokemonInfo::FullStat(newforme,gen(),p.nature(),Hp,p.level(),p.dvs()[Hp], p.evs()[Hp]);
+
+        for (int i = 1; i < 6; i++) {
             p.setNormalStat(i,PokemonInfo::FullStat(newforme,gen(),p.nature(),i,p.level(),p.dvs()[i], p.evs()[i]));
+        }
     }
 
     if (isOut(player, poke)) {
@@ -4376,10 +4376,7 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
                 notify(player, ChangeTempPoke, player, quint8(TempAbility), quint8(poke), p.ability());
             }
 
-            //UNTESTED: The base HP of Zygarde changes
-            if (p.ability() == Ability::PowerConstruct) {
-                //fpoke(slot).stats[Hp] = p.lifePoints();
-            }
+            fpoke(slot).stats[Hp] = p.totalLife();
             for (int i = 1; i < 6; i++) {
                 fpoke(slot).stats[i] = p.normalStat(i);
             }
@@ -4391,6 +4388,10 @@ void BattleSituation::changeForme(int player, int poke, const Pokemon::uniqueId 
     }
 
     notify(All, ChangeTempPoke, player, quint8(DefiniteForme), quint8(poke), newforme);
+
+    if (p.totalLife() != oldTotalLife && !koed(slot)) {
+        changeHp(slot, std::max(p.lifePoints() + p.totalLife() - oldTotalLife, 1));
+    }
 }
 
 void BattleSituation::changePokeForme(int slot, const Pokemon::uniqueId &newforme)

@@ -12,7 +12,7 @@ public:
     typedef TeamProxy teamType;
     typedef FieldProxy fieldType;
 
-    ProxyDataContainer(const BattleConfiguration *conf=NULL);
+    ProxyDataContainer(const BattleConfiguration *conf = 0);
     ~ProxyDataContainer();
 
     Q_INVOKABLE TeamProxy *team(int player) {
@@ -27,7 +27,7 @@ public:
         return conf->avatar[player];
     }
 
-    Q_PROPERTY (FieldProxy *field READ field CONSTANT);
+    Q_PROPERTY (FieldProxy *field READ field CONSTANT)
 
     AuxPokeDataProxy &fieldPoke(int spot) {
         return *auxdata.poke(spot);

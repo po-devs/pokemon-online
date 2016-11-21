@@ -91,6 +91,10 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         in >> silent;
         in >> prevIndex;
         in >> *poke;
+
+        if (conf) {
+            poke->gen() = conf->gen;
+        }
         output<BattleEnum::SendOut>(spot, prevIndex, &poke, silent);
         break;
     }

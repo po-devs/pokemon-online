@@ -85,6 +85,7 @@ DataStream & operator << (DataStream &out, const BattleMove &mo)
 
 PokeBattle::PokeBattle()
 {
+    nonshallow() = false;
     num() = Pokemon::NoPoke;
     ability() = 0;
     item() = 0;
@@ -127,6 +128,8 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 
 void PokeBattle::init(PokePersonal &poke)
 {
+    nonshallow() = true;
+
     /* Checks num, ability, moves, item */
     poke.runCheck(poke.illegal());
     illegal() = poke.illegal();
@@ -140,7 +143,7 @@ void PokeBattle::init(PokePersonal &poke)
 
 
     PokeGeneral p;
-    p.gen() = poke.gen();
+    this->gen() = p.gen() = poke.gen();
     p.num() = poke.num();
     p.load();
 
@@ -259,11 +262,13 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    updateStats(p.gen().num);
+    updateStats(gen());
 }
 
 void PokeBattle::updateStats(Pokemon::gen gen)
 {
+    this->gen() = gen;
+
     totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen.num, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
     setLife(totalLifePoints());
 
@@ -272,8 +277,18 @@ void PokeBattle::updateStats(Pokemon::gen gen)
     }
 }
 
+void PokeBattle::setNum(Pokemon::uniqueId num)
+{
+    ShallowBattlePoke::setNum(num);
+    if (nonshallow()) {
+        updateStats(gen());
+    }
+}
+
 DataStream & operator >> (DataStream &in, PokeBattle &po)
 {
+    po.nonshallow() = true;
+
     in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability();
     if (in.version >= 3) {
         in >> po.nature();
@@ -350,6 +365,7 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     shiny() = poke.shiny();
     illegal() = poke.illegal();
     gender() = poke.gender();
+    gen() = poke.gen();
     setLifePercent( (poke.lifePoints() * 100) / poke.totalLifePoints() );
     if (lifePercent() == 0 && poke.lifePoints() > 0) {
         setLifePercent(1);
@@ -426,8 +442,8 @@ TeamBattle::TeamBattle(PersonalTeam &other)
     gen = other.gen();
     tier = other.defaultTier();
 
-    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
-        gen = GenInfo::GenMax();
+    if (!gen.isValid()) {
+        gen = Pokemon::gen();
     }
 
     int curs = 0;
@@ -447,8 +463,8 @@ TeamBattle::TeamBattle(Team &other)
     gen = other.gen();
     tier = other.defaultTier();
 
-    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
-        gen = GenInfo::GenMax();
+    if (!gen.isValid()) {
+        gen = Pokemon::gen();
     }
 
     int curs = 0;
@@ -457,6 +473,14 @@ TeamBattle::TeamBattle(Team &other)
         if (poke(curs).num() != 0) {
             ++curs;
         }
+    }
+}
+
+void TeamBattle::updateGen(const Pokemon::gen &gen)
+{
+    this->gen = gen;
+    for (int i = 0; i < 6; i++) {
+        poke(i).gen() = gen;
     }
 }
 
@@ -688,7 +712,10 @@ DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {
     in >> f.team->gen;
     in >> (*f.team);
 
-    assert(f.team->gen.isValid());
+    if (!f.team->gen.isValid()) {
+        f.team->gen = GenInfo::GenMax();
+    }
+    f.team->updateGen(f.team->gen);
 
     return in;
 }

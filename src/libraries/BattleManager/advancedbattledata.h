@@ -179,6 +179,17 @@ public:
         }
     }
 
+    void onDefiniteFormeChange(int player, int poke, int newPoke)
+    {
+        BattleDataInherit::onDefiniteFormeChange(player, poke, newPoke);
+
+        /* Use setNum to also update HP of temp poke, if there is cause to */
+        if (isPlayer(player)) {
+            tempPoke(spot(player, poke)).setNum(newPoke);
+            return;
+        }
+    }
+
     /* the temp poke code could be made generic */
     PokeProxy &tempPoke(int spot) {
         return *fieldPoke(spot).pokemon();

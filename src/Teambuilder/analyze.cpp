@@ -440,6 +440,7 @@ void Analyzer::commandReceived(const QByteArray &commandline)
                 in >> conf;
             }
             in >> team;
+            team.updateGen(conf.gen);
             if (network[1]) {
                 in >> team.items;
             }

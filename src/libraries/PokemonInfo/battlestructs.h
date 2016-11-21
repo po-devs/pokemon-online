@@ -45,6 +45,7 @@ class ShallowBattlePoke
     PROPERTY(quint16, ability)
     PROPERTY(quint16, item)
     PROPERTY(bool, illegal)
+    PROPERTY(Pokemon::gen, gen)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
@@ -64,7 +65,7 @@ public:
     virtual int totalLife() const { return 100; }
     virtual void setLife(int newLife) { mLifePercent = newLife;}
     virtual void setLifePercent(quint8 percent) {mLifePercent = percent;}
-    void setNum(Pokemon::uniqueId num) {this->num() = num;}
+    virtual void setNum(Pokemon::uniqueId num) {this->num() = num;}
     void setAbility(quint16 ability) {this->ability() = ability;}
     void setItem(quint16 item) {this->item() = item;}
 
@@ -100,6 +101,8 @@ class PokeBattle : public ShallowBattlePoke
     PROPERTY(qint8, oriStatusCount)
     /* ADV Sleep has some weird mechanics */
     PROPERTY(qint8, advSleepCount)
+    /* To know if it has real stats */
+    PROPERTY(bool, nonshallow)
 public:
     PokeBattle();
 
@@ -117,6 +120,7 @@ public:
     virtual void setLifePercent(quint8 percent) {mLifePoints = percent == 1 ? 1 :percent * totalLifePoints() / 100;}
     virtual int life() const { return mLifePoints; }
     virtual int totalLife() const { return m_prop_totalLifePoints;}
+    virtual void setNum(Pokemon::uniqueId num);
     quint16 lifePoints() const { return mLifePoints;}
     quint16 &lifePoints() { return mLifePoints;}
 
@@ -162,6 +166,8 @@ public:
             m_indexes[i] = indexes[i];
         }
     }
+
+    void updateGen(const Pokemon::gen &gen);
 
     void setItems(const QHash<quint16,quint16> &items) {
         this->items = items;
