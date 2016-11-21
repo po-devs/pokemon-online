@@ -2189,6 +2189,7 @@ struct MMBrickBreak : public MM
                 b.sendMoveMessage(14,0,s,type(b,s));
                 team(b,opp)["Barrier1Count"] = 0;
                 team(b,opp)["Barrier2Count"] = 0;
+                team(b,opp)["AuroraVeilCount"] = 0;
             }
         }
     }
