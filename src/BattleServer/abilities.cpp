@@ -3199,7 +3199,7 @@ struct AMShieldsDown : public AMPinch {
     }
 };
 
-//UNTESTED
+//UNTESTED: Doesn't change HP but otherwise works
 struct AMPowerConstruct : public AMPinch {
     AMPowerConstruct() {
         functions["EndTurn29.0"] = &et;
@@ -3337,7 +3337,7 @@ void AbilityEffect::init()
     REGISTER_AB(28, Hustle);
     REGISTER_AB(29, Hydration);
     REGISTER_AB(30, HyperCutter);
-    REGISTER_AB(31, ClearBody); /* FullMetalBody - need confirmation for Ability message*/
+    REGISTER_AB(31, ClearBody); /* FullMetalBody */
     REGISTER_AB(32, IceBody);
     REGISTER_AB(33, Insomnia);
     REGISTER_AB(34, Intimidate);
@@ -3442,7 +3442,7 @@ void AbilityEffect::init()
     REGISTER_AB(132, Fluffy);
     REGISTER_AB(133, Stamina);
     REGISTER_AB(134, Triage);
-    REGISTER_AB(135, WimpOut); /* Emergency Exit*/ //does player get a choice on switch in? does ability activate behind sub? eject button or ability first?
+    REGISTER_AB(135, WimpOut); /* Emergency Exit*/
     REGISTER_AB(136, SurgeSurfer);
     REGISTER_AB(137, WaterCompaction);
     REGISTER_AB(138, Disguise); //Unconfirmed: Needs ability flags

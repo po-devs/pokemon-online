@@ -1610,13 +1610,12 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         sendItemMessage(68, player);
         if (tmove(player).power > 0) {
             notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
-            //notify(All, UseAttack, player, qint16(attack), true, false); //to register it on move tracking?
+            //attack = ItemInfo::ZCrystalMove(poke(player).item());
             callieffects(player, player, "MoveSettings"); //Z Moves
             zmovenotify = true;
         } else {
             sendItemMessage(68, player, 2, 0, 0, attack);
-            //TODO: Prepend "Z-" to the attack name
-            //notify(All, UseAttack, player, qint16(attack), false, special);
+            //notify(All, UseAttack, player, qint16(attack), false, special); //TODO: Prepend "Z-" to the attack name
             calleffects(player, player, "ZMove"); //Z Moves
         }
     }
