@@ -1821,25 +1821,16 @@ struct AMImposter : public AM
     }
 };
 
-//UNTESTED
 struct AMPrankster : public AM
 {
     AMPrankster() {
         functions["PriorityChoice"] = &pc;
-        functions["OpponentBlock"] = &btl;
     }
 
     static void pc(int s, int, BS &b) {
         if (tmove(b,s).power == 0) {
             tmove(b,s).priority += 1;
-            poke(b,s)["PlayingAPrank"] = true;
-        }
-    }
-
-    static void btl(int s, int t, BS&b) {
-        if (b.gen() >= 7 && b.hasType(t, Pokemon::Dark) && poke(b,s).value("PlayingAPrank").toBool() && !b.arePartners(s,t)) {
-            turn(b,t)[QString("Block%1").arg(b.attackCount())] = true;
-            b.notify(BS::All, BattleCommands::Effective, s, quint8(0));
+            turn(b,s)["PlayingAPrank"] = true;
         }
     }
 };
@@ -2634,6 +2625,9 @@ struct AMSymbiosis : public AM
         if (!b.canPassMStone(s2, item))
             return;
 
+        if (turn(b,s2).value("SendingBack").toBool() && b.gen() >= 7)
+            return;
+
         b.sendAbMessage(124, 0, s, s2, Type::Fairy, item);
         b.loseItem(s);
         b.acqItem(s2, item);
@@ -2749,7 +2743,7 @@ struct AMBattery : public AM {
     }
 
     static void sm2(int, int t, BS &b) {
-        turn(b,t)["Stat3PartnerAbilityModifier"] = 0x1800;
+        turn(b,t)["Stat3PartnerAbilityModifier"] = 0x14CD;
     }
 };
 
@@ -3438,7 +3432,7 @@ void AbilityEffect::init()
     REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/
         //REGISTER_AB(129, Dazzling); /*Queenly Majesty*/
     REGISTER_AB(130, Berserk);
-    REGISTER_AB(131, Battery); // needs confirmation of how much it increases special damage of allies
+    REGISTER_AB(131, Battery);
     REGISTER_AB(132, Fluffy);
     REGISTER_AB(133, Stamina);
     REGISTER_AB(134, Triage);

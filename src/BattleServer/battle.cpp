@@ -2152,6 +2152,7 @@ ppfunction:
             if (target != player) {
                 callaeffects(target,player,"OpponentBlock");
                 callieffects(target,player,"OpponentBlock"); //Safety Goggles
+                //UNTESTED: Add a check here to block Magic Coat Prankster (most likely the right spot)
                 if (blockPriority(player, target)) {
                     calleffects(player,target,"AttackSomehowFailed");
                     continue;
@@ -5130,14 +5131,23 @@ bool BattleSituation::blockPriority(int player, int target)
         return false;
     }
 
-    if (tmove(player).priority > 0 || (hasWorkingAbility(player, Ability::Prankster) && turnMemory(player).contains("AssistMove"))) {
+    //Moves with negative priority that had priority increased will still be blocked (Like Roar)
+    bool prankster = turnMemory(player).contains("PlayingAPrank");
+    if (prankster && gen() >= 7 && hasType(target, Pokemon::Dark) && !arePartners(player, target)) {
+        notify(All, Effective, target, quint8(0));
+        return true;
+    }
+
+    if (tmove(player).priority > 0 || (prankster && turnMemory(player).contains("AssistMove"))) {
         if (!isFlying(target) && terrain == PsychicTerrain) {
             sendMoveMessage(222,2,target,Type::Psychic,player,tmove(player).attack);
             return true;
         }
-        if (!arePartners(player, target) && (hasWorkingTeamAbility(target, Ability::Dazzling) || hasWorkingTeamAbility(target, Ability::QueenlyMajesty))) {
-            sendAbMessage(129, 0, target, player, Type::Curse, tmove(player).attack);
-            return true;
+        if (!arePartners(player, target)) {
+            if (hasWorkingTeamAbility(target, Ability::Dazzling) || hasWorkingTeamAbility(target, Ability::QueenlyMajesty)) {
+                sendAbMessage(129, 0, target, player, Type::Curse, tmove(player).attack);
+                return true;
+            }
         }
     }
     return false;
