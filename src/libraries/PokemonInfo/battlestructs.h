@@ -92,6 +92,7 @@ class PokeBattle : public ShallowBattlePoke
     PROPERTY(quint16, totalLifePoints)
     PROPERTY(quint16, item)
     PROPERTY(quint8, nature)
+    PROPERTY(quint8, hiddenPower)
     PROPERTY(quint8, happiness)
     /* Below is only known by battle */
     PROPERTY(quint16, itemUsed)
@@ -123,7 +124,7 @@ public:
     void setNormalStat(int, quint16);
 
     bool operator == (const PokeBattle &other) const {
-        return ShallowBattlePoke::operator ==(other) && nature() == other.nature() && item() == other.item()
+        return ShallowBattlePoke::operator ==(other) && nature() == other.nature() && hiddenPower() == other.hiddenPower() && item() == other.item()
                 && ability() == other.ability() && happiness() == other.happiness() && totalLifePoints() == other.totalLifePoints()
                 && dvs() == other.dvs() && evs() == other.evs();
     }

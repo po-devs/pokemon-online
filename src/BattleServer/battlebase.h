@@ -342,6 +342,7 @@ public:
         QVector<int> types;
         int ability;
         int level;
+        quint8 hiddenPower;
         quint32 flags;
         quint16 substituteLife;
         quint16 lastMoveUsed;

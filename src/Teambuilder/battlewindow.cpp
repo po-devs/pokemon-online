@@ -1119,7 +1119,11 @@ void ImageAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p, Po
 
     int type = MoveInfo::Type(b.num(), gen);
     if (b.num() == Move::HiddenPower) {
-        type = HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]);
+        if (gen < 7) {
+            type = HiddenPowerInfo::Type(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]);
+        } else {
+            type = p.hiddenPower();
+        }
     } else if (b.num() == Move::Judgment && ItemInfo::isPlate(p.item())) {
         type = ItemInfo::PlateType(p.item());
     } else if (b.num() == Move::TechnoBlast && ItemInfo::isDrive(p.item())) {
