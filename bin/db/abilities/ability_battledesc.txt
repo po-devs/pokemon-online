@@ -190,8 +190,8 @@
 189 Summons the extremely harsh sunlight weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Fire moves by 50%, and causes Water moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning. Makes all Pokémon immune to being frozen.
 190 Summons the heavy rain weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Water moves by 50%, and causes Fire moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
 191 Summons the strong winds weather condition for as long as a Pokémon with this ability stays on the field. Causes moves of a type that is normally super-effective against Flying to only deal normal damage against Flying. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
-192 Prevents the stats of a Pokémon with this ability from being lowered by the opponent.
-193 Reduces the damage taken from an attack by a Pokémon with this ability if it has max HP.
+192 Prevents the stats of a Pokémon with this ability from being lowered by the opponent. Cannot be ignored by Mold Breaker, Teravolt, Turboblaze, Moongeist Beam, Sunsteel Strike, or Core Enforcer.
+193 Reduces the damage taken from an attack by a Pokémon with this ability if it has max HP. Cannot be ignored by Mold Breaker, Teravolt, Turboblaze, Moongeist Beam, Sunsteel Strike, or Core Enforcer.
 194 Prevents a Pokémon with this ability from becoming afflicted with a status condition other than Sleep.
 195 Changes Zygarde 10% or Zygarde 50% into Zygarde Complete when it falls under 1/2 max HP.
 196 Raises the Special Attack of a Pokémon with this ability by one stage every time a Pokémon on the field is knocked out.
@@ -222,12 +222,12 @@
 221 Doubles the Speed of a Pokémon with this ability in Hail.
 222 Switches out Pokémon with this ability when it drops below 1/2 max HP.
 223 All attacks used on a poisoned Pokémon become Critical Hits.
-224 <Halves?> the damage a Pokémon with this ability receives from Fire moves and prevents the Pokémon from being Burned.
-225 Increases the damage of Steel-type moves by <50%?>.
+224 Halves the damage a Pokémon with this ability receives from Fire moves and prevents the Pokémon from being Burned.
+225 Increases the damage of Steel-type moves by 50%.
 226 All moves used by a Pokémon with this ability do not make contact.
 227 All sound-based moves used by a Pokémon with this ability become Water-type moves.
 228 Changes all Normal-type moves used by a Pokémon with this Ability to Electric-type, and boosts their power by 30%.
 229 Lowers the Speed of the opponent every time it uses a contact move on a Pokémon with this ability.
 230 Copies the ability of a defeated partner Pokémon.
-231 <The Pokémon boosts its most proficient stat each time it knocks out a Pokémon.?>
-232 Lowers the damage a Pokémon with this ability takes from super-effective attacks by <25%?>.
+231 Raises the currently highest stat (Attack, Defense, Special Attack, Special Defense, or Speed) of a Pokémon with this ability by one stage every time it knocks out a Pokémon.
+232 Lowers the damage a Pokémon with this ability takes from super-effective attacks by 25%. Cannot be ignored by Mold Breaker, Teravolt, Turboblaze, Moongeist Beam, Sunsteel Strike, or Core Enforcer.

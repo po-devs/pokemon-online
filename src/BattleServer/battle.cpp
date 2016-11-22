@@ -5112,11 +5112,6 @@ bool BattleSituation::zTurn(int s)
 
 bool BattleSituation::canApplyKingsRock(int movenum)
 {
-    //Unconfirmed: Can a Z-Move get Flinch via Stench? Can hacked Z-Moves flinch?
-    //Blocking it for now
-    if (MoveInfo::isZMove(movenum)) {
-        return false;
-    }
     if (MoveInfo::Category(movenum, gen()) == Move::Other) {
         return false;
     }
