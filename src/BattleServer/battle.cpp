@@ -3840,7 +3840,7 @@ int BattleSituation::calculateDamage(int p, int t)
         damage = applyMod(damage, finalmod);
 
         //If a pokemon protects against a Z move, damage is reduced to 1/4
-        if (turnMemory(p).value("ZMoveProtected").toBool()) {
+        if (turnMemory(s).value("ZMoveProtected").toBool()) {
             damage /= 4;
         }
         if (gen() == 5) {
