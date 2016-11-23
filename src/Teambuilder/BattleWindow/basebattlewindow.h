@@ -2,7 +2,7 @@
 #define BASEBATTLEWINDOW_H
 
 #include <PokemonInfo/battlestructs.h>
-#include "client.h"
+#include "../client.h"
 
 #include "basebattlewindowinterface.h"
 #include <BattleManager/battledatatypes.h>

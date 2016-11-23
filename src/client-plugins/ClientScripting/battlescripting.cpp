@@ -5,7 +5,7 @@
 #include <BattleManager/pokemoninfoaccessor.h>
 #include <BattleManager/proxydatacontainer.h>
 #include <BattleManager/battleinput.h>
-#include "../Teambuilder/basebattlewindowinterface.h"
+#include "../Teambuilder/BattleWindow/basebattlewindowinterface.h"
 #include "battlescripting.h"
 
 Q_DECLARE_METATYPE(BattleChoice)

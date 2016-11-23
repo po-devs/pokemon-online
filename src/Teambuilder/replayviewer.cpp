@@ -9,7 +9,7 @@
 #include <TeambuilderLibrary/poketextedit.h>
 
 #include "replayviewer.h"
-#include "spectatorwindow.h"
+#include "BattleWindow/spectatorwindow.h"
 
 /* Format for raw:
 

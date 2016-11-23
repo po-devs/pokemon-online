@@ -46,7 +46,7 @@ private:
     PokeProxy *master() const;
 };
 
-class PokeProxy : public QObject
+class PokeProxy : public QObject, public PokeDataInterface
 {
     Q_OBJECT
 public:
@@ -125,6 +125,8 @@ public:
     void setOwnerShip(bool o) {hasOwnerShip = o;}
 
     ShallowBattlePoke *exposedData() { return d();}
+    /* Risky if not valid, so forced const */
+    const PokeBattle *pokeBattle() const { return dd();}
 signals:
     void numChanged();
     void abilityChanged();

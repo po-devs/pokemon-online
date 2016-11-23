@@ -238,9 +238,12 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
+    static QString ZName(int movenum, bool zmove = true);
     static QStringList Names();
     static QStringList Names(Pokemon::gen gen);
     static int Type(int movenum, Pokemon::gen gen);
+    /* For a more precise type depending on the situation */
+    static int Type(int movenum, Pokemon::gen gen, const PokeDataInterface &pokemon);
     static int Category(int movenum, Pokemon::gen gen);
     static int Classification(int movenum, Pokemon::gen gen);
     static int Number(const QString &movename);
@@ -253,6 +256,7 @@ public:
     static int ZPower(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum, Pokemon::gen gen);
+    static QString PowerToString(int powerValue);
     static int PP(int movenum, Pokemon::gen gen);
     static int Acc(int movenum, Pokemon::gen gen);
     /* gives the accuracy of a move in the form of a string */

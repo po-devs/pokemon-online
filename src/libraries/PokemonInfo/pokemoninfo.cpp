@@ -1913,6 +1913,17 @@ QString MoveInfo::Name(int movenum)
     return m_Names.value(movenum, m_Names.value(0));
 }
 
+QString MoveInfo::ZName(int movenum, bool zmove)
+{
+    QString ret = Name(movenum);
+
+    if (zmove && Category(movenum, Pokemon::gen()) == Move::Other) {
+        ret = QObject::tr("Z-%1", "Z-Move Renameing").arg(ret);
+    }
+
+    return ret;
+}
+
 QStringList MoveInfo::Names()
 {
     QStringList ret;
@@ -1956,6 +1967,36 @@ QStringList MoveInfo::Names(Pokemon::gen gen)
 int MoveInfo::Type(int mv, Pokemon::gen g)
 {
     move_find(type, mv, g);
+}
+
+int MoveInfo::Type(int num, Pokemon::gen gen, const PokeDataInterface &p)
+{
+    if (num == Move::HiddenPower) {
+        return HiddenPowerInfo::Type(gen, p.iv(0), p.iv(1), p.iv(2), p.iv(3), p.iv(4), p.iv(5));
+    }
+
+    if (num == Move::Judgment && ItemInfo::isPlate(p.item())) {
+        return ItemInfo::PlateType(p.item());
+    }
+
+    if (num == Move::TechnoBlast && ItemInfo::isDrive(p.item())) {
+        return ItemInfo::DriveType(p.item());
+    }
+
+    if (num == Move::NaturalGift && ItemInfo::isBerry(p.item())) {
+        return ItemInfo::BerryType(p.item());
+    }
+
+    if (num == Move::Multi_Attack && ItemInfo::isMemoryChip(p.item())) {
+        return ItemInfo::MemoryChipType(p.item());
+    }
+
+    if (num == Move::RevelationDance) {
+        //UNTESTED: If Burn Up is used, then type should be Curse
+        return PokemonInfo::Type1(p.num(), gen);
+    }
+
+    return MoveInfo::Type(num, gen);
 }
 
 int MoveInfo::ConvertFromOldMove(int oldmovenum)
@@ -2036,6 +2077,11 @@ QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
 {
     int p = Power(movenum, gen);
 
+    return PowerToString(p);
+}
+
+QString MoveInfo::PowerToString(int p)
+{
     if (p == 0)
         return "--";
     else if (p == 1)

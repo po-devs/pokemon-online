@@ -16,8 +16,8 @@
 #include <TeambuilderLibrary/theme.h>
 
 #include "basebattlewindow.h"
-#include "logmanager.h"
-#include "damagecalc.h"
+#include "../logmanager.h"
+#include "../damagecalc.h"
 
 using namespace BattleCommands;
 

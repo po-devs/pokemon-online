@@ -10,6 +10,7 @@
 #include <QToolButton>
 #endif
 
+#include "battlewindowattackbutton.h"
 
 class AttackZone;
 class PokeZone;
@@ -35,8 +36,9 @@ public:
     const PokeProxy &currentPoke(int spot) const;
     PokeProxy &currentPoke(int spot);
     PokeProxy &tempPoke(int spot);
+    PokeProxy &ownTempPoke(int slot);
 
-    int currentSlot;
+    int currentSpot;
     TeamBattle _myteam;
     TeamProxy &myteam();
     QHash<quint16, quint16>& myitems();
@@ -131,6 +133,7 @@ public:
 public slots:
     void switchClicked(int zone);
     void attackClicked(int zone);
+    void zmoveClicked(bool checked);
     void itemActivated(QListWidgetItem*);
     void onDisconnection();
     void sendMessage();
@@ -169,6 +172,8 @@ protected:
     void listItems();
 
     void updateAttacks(AttackZone *zone, PokeProxy *p);
+    void updateAttack(int spot, int moveSlot);
+    int currentChoiceIndex() const;
 
     QStackedWidget *mystack;
     QTabWidget *mytab;
@@ -203,36 +208,6 @@ signals:
 
 private:
     QSignalMapper *mymapper;
-};
-
-class AbstractAttackButton
-{
-public:
-    //AbstractAttackButton();
-    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen) = 0;
-
-    QAbstractButton *pointer() {
-        return dynamic_cast<QAbstractButton *> (this);
-    }
-
-    QLabel *name;
-    QLabel *pp;
-};
-
-class ImageAttackButton : public QImageButton, public AbstractAttackButton
-{
-    Q_OBJECT
-public:
-    ImageAttackButton(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
-    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
-};
-
-class OldAttackButton : public QPushButton, public AbstractAttackButton
-{
-    Q_OBJECT
-public:
-    OldAttackButton(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
-    virtual void updateAttack(const BattleMove& b, const PokeProxy &p, Pokemon::gen gen);
 };
 
 class BattlePokeButton;
