@@ -8170,14 +8170,13 @@ struct MMZHealSwitch : public MM
 
 struct MMZSupernova : public MM
 {
-    //TODO: Code Psychic terrain effect for Genesis Supernova
     MMZSupernova() {
         functions["AfterAttackFinished"] = &zm;
     }
 
     static void zm(int, int, BS &b) {
         if(b.terrain != BS::PsychicTerrain) {
-            //No terrain extender cause you can only hold 1 item!
+            //TODO: terrain extender because hackmons
             b.coverField(BS::PsychicTerrain, 5);
         }
     }

@@ -1609,8 +1609,6 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         sendItemMessage(68, player);
         if (tmove(player).power > 0) {
             notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
-            //attack = ItemInfo::ZCrystalMove(poke(player).item());
-            callieffects(player, player, "MoveSettings"); //Z Moves
             zmovenotify = true;
         } else {
             sendItemMessage(68, player, 2, 0, 0, attack);
