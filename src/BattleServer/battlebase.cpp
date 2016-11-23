@@ -2359,7 +2359,7 @@ bool BattleBase::canGetStatus(int player, int status)
 {
     switch (status) {
     case Pokemon::Burnt: return !hasType(player, Pokemon::Fire);
-    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison);
+    case Pokemon::Poisoned: return !hasType(player, Pokemon::Poison); // || hasWorkingAbility(player, Ability::Corrosion)
     case Pokemon::Frozen: return !hasType(player, Pokemon::Ice);
     default:
         return true;

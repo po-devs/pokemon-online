@@ -2545,6 +2545,9 @@ bool BattleSituation::canGetStatus(int target, int status) {
         //Rest, 2nd part of Yawn, Status Orbs, Effect Spore, Flame Body, Poison Point, Psycho Shift
         return false;
     }
+    if (hasWorkingAbility(target, Ability::Comatose) && status != Pokemon::Asleep) {
+        return false;
+    }
 
     //Veils
     for (int i_ = 0; i_ < numberPerSide(); i_++) {
@@ -3595,7 +3598,7 @@ int BattleSituation::calculateDamage(int p, int t)
         /* Final Mods section*/
         /* Correct Order:
          * 1. Moves:     Reflect, Light Screen
-         * 2. Abilities: Multiscale, Tinted Lens, Friend Guard, Sniper, Solid Rock, Filter
+         * 2. Abilities: Multiscale, Shadow Shield, Tinted Lens, Friend Guard, Sniper, Solid Rock, Filter
          * 3. Items:     Metronome, Expert Belt, Life Orb, Damage Reducing berry
          * 4. Combos:    Stomp+Minimize, Earthquake+Dig, Surf+Dive, Steamroller+Minimize
          */
@@ -3610,8 +3613,8 @@ int BattleSituation::calculateDamage(int p, int t)
             }
         }
         //*** 2 ***//
-        /* Multiscale */
-        if (this->poke(t).isFull() && hasWorkingAbility(t, Ability::MultiScale)) {
+        /* Multiscale, Shadow Shield */
+        if (this->poke(t).isFull() && (hasWorkingAbility(t, Ability::MultiScale) || hasWorkingAbility(t, Ability::ShadowShield))) {
             finalmod = chainMod(finalmod, 0x800);
         }
         /* Tinted Lens */
@@ -4153,6 +4156,16 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
         notifyKO(player);
     }
 
+    foreach(int i, sortedBySpeed()) {
+        if (koed(i)) {
+            return;
+        }
+        if (hasWorkingAbility(i,Ability::SoulHeart)) {
+            //b.sendAbMessage(blabla);
+            inflictStatMod(i, SpAttack, 1, i, false);
+            return;
+        }
+    }
     //useful for third gen
     turnMem(player).add(TM::WasKoed);
 

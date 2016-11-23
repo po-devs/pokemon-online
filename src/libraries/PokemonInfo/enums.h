@@ -17,7 +17,7 @@ enum {
     RubySapphire=3, Colosseum=3+(1<<8),FRLG=3+(2<<8),Emerald=3+(3<<8), XD=3+(4<<8),
     DiamondPearl=4, Platinum=4+(1<<8), HGSS=4+(2<<8),
     BlackWhite=5, BlackWhite2=5+(1<<8),
-    XY=6, ORAS=6+(1<<8)
+    XY=6, ORAS=6+(1<<8), SunMoon=7
 };
 
 }
@@ -32,7 +32,7 @@ namespace Version
     };
 
     enum {
-        NumberOfGens = 6
+        NumberOfGens = 7
     };
 
     static const int avatarSize[] = {
@@ -952,7 +952,8 @@ namespace Move
         BiteFlag = 16384,//Strong jaw moves
         PowderFlag = 32768, //Powder moves
         BallFlag = 65536, //Ball moves for Bulletproof
-        LaunchFlag = 131072 //Moves that get boosted by Mega Launcher
+        LaunchFlag = 131072, //Moves that get boosted by Mega Launcher
+        DanceFlag = 262144 // Dancing moves for ability Dancer
     };
 
     enum Target
@@ -1614,7 +1615,17 @@ namespace Move
         OriginPulse,
         PrecipiceBlades,
         DragonAscent,
-        HyperspaceFury
+        HyperspaceFury,
+        CoreEnforcer,
+        FleurCannon,
+        HighhorsePower,
+        Leafage,
+        MoongeistBeam,
+        NaturesMadness,
+        RevelationDance,
+        ShellTrap,
+        SolarBlade,
+        SunsteelStrike
     };
 }
 
@@ -1848,7 +1859,30 @@ namespace Ability
         Symbiosis,
         DesolateLand,
         PrimordialSea,
-        DeltaStream
+        DeltaStream,
+        
+        FullMetalBody,
+        ShadowShield,
+        Comatose,
+        PowerConstruct,
+        SoulHeart,
+        Stakeout,
+        ElectricSurge,
+        Dazzling,
+        Berserk,
+        Battery,
+        Corrosion,
+        Disguise,
+        Fluffy,
+        Stamina,
+        Triage,
+        WimpOut,
+        Dancer,
+        ShieldsDown,
+        InnardsOut,
+        Schooling,
+        SurgeSurfer,
+        WaterComposition
     };
 }
 

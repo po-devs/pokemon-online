@@ -2622,6 +2622,115 @@ struct AMStrongWeather : public AM
         }
     }
 };
+
+struct AMSurgeSurfer : public AM
+{
+    AMSurgeSurfer() {
+        functions["StatModifier"] = &sm;
+    }
+
+    static void sm(int s, int, BS &b) {
+        if (b.terrain == Type::Electric && b.terrainCount >= 0) {
+            turn(b,s)["Stat5AbilityModifier"] = 0x2000;
+        }
+    }
+};
+
+struct AMFluffy: public AM {
+    AMFluffy() {
+        functions["BasePowerFoeModifier"] = &bpfm;
+    }
+
+    static void bpfm(int , int t, BS &b) {
+        if (tmove(b,t).flags & Move::ContactFlag && type(b,t) != Pokemon::Fire) {
+            b.chainBp(t, 0x800);
+        } else if (type(b,t) == Pokemon::Fire) {
+            b.chainBp(t, 0x1800);
+        }
+    }
+};
+
+struct AMStamina : public AM {
+    AMStamina() {
+        functions["UponOffensiveDamageReceived"] = &uodr;
+    }
+
+    static void uodr(int s, int t, BS &b) {
+        if (!b.koed(s) && s != t) { // copied from ability Anger Point
+            b.inflictStatMod(s, Defense, 1, s);
+        }
+    }
+};
+
+struct AMWaterComposition : public AM {
+    AMWaterComposition() {
+        functions["UponBeingHit"] = &ubh;
+    }
+
+    static void ubh(int s, int t, BS &b) {
+        if (b.koed(s)) {
+            return;
+        }
+
+        if (type(b, t) == Type::Water && !b.hasMaximalStatMod(s, Defense)) {
+            b.sendAbMessage(97,0,s);
+            b.inflictStatMod(s, Defense, 2, s, false);
+        }
+    }
+};
+
+struct AMBattery : public AM {
+    AMBattery() {
+        functions["PartnerStatModifier"] = &sm2;
+    }
+
+    static void sm2(int, int t, BS &b) {
+            turn(b,t)["Stat3PartnerAbilityModifier"] = 0x1800;
+        }
+};
+
+struct AMElectricSurge : public AM
+{
+    AMElectricSurge() {
+        functions["UponSetup"] = &us;
+        functions["UponSwitchOut"] = &uso;
+        functions["UponKoed"] = &uso;
+        functions["OnLoss"] = &uso;
+    }
+
+    static void us (int s, int , BS &b) {
+        // b.sendAbMessage(blablalba);
+        b.terrain = Type::Electric;
+
+    }
+    static void uso (int s, int , BS &b) {
+        //we need to make sure there's no other pokemon with ElectricSurge
+        foreach(int i, b.sortedBySpeed()) {
+            if (i == s || b.koed(i)) {
+                continue;
+            }
+            if (b.hasWorkingAbility(i,Ability::ElectricSurge)) {
+                return;
+            }
+        }
+        b.terrain = 0;
+    }
+};
+
+struct AMTriage : public AM
+{
+    AMTriage() {
+        functions["PriorityChoice"] = &pc;
+    }
+
+    static void pc(int s, int, BS &b) {
+        if (tmove(b,s).category & Move::HealingMove) { // needs testing if every move is covered
+            tmove(b,s).priority = 6; // needs confirmation. Helping Hand has priority +5 and the descripion says that it gains the "highest priority"
+        }
+    }
+};
+
+
 /* Events:
     PriorityChoice
     EvenWhenCantMove
@@ -2685,7 +2794,7 @@ void AbilityEffect::init()
     REGISTER_AB(28, Hustle);
     REGISTER_AB(29, Hydration);
     REGISTER_AB(30, HyperCutter);
-    REGISTER_AB(31, ClearBody);
+    REGISTER_AB(31, ClearBody); /* FullMetalBody - need confirmation for Ability message*/
     REGISTER_AB(32, IceBody);
     REGISTER_AB(33, Insomnia);
     REGISTER_AB(34, Intimidate);
@@ -2735,7 +2844,7 @@ void AbilityEffect::init()
     REGISTER_AB(80, Defiant); /*Defiant, Competitive*/
     REGISTER_AB(81, Imposter);
     REGISTER_AB(82, Prankster);
-    //REGISTER_AB(83, MultiScale);
+    //REGISTER_AB(83, MultiScale); /*ShadowShield*/
     REGISTER_AB(84, FlareBoost);
     REGISTER_AB(85, Telepathy);
     REGISTER_AB(86, Regenerator);
@@ -2780,4 +2889,27 @@ void AbilityEffect::init()
     REGISTER_AB(124, Symbiosis);
     //125 Cheek pouch message
     REGISTER_AB(126, StrongWeather);
+    // gen 7
+    //127 FullMetalBody - done
+    //128 ShadowShield - done
+    //129 Comatose - done
+    //REGISTER_AB(130, PowerConstruct);
+    //131 SoulHeart - done in battle.cpp
+    //REGISTER_AB(132, Stakeout);
+    REGISTER_AB(133, ElectricSurge); // ability message missing
+    //REGISTER_AB(134, Dazzling);
+    //REGISTER_AB(135, Berserk);
+    REGISTER_AB(136, Battery); // needs confirmation of how much it increases special damage of allies
+    //137 Corrosion
+    //REGISTER_AB(138, Disguise);
+    REGISTER_AB(139, Fluffy); // done
+    REGISTER_AB(140, Stamina); // done
+    REGISTER_AB(141, Triage);
+    //REGISTER_AB(142, WimpOut);
+    //REGISTER_AB(143, Dancer);
+    //REGISTER_AB(144, ShieldsDown);
+    //REGISTER_AB(145, InnardsOut);
+    //REGISTER_AB(146, Schooling);
+    REGISTER_AB(147, SurgeSurfer); // done
+    REGISTER_AB(148, WaterComposition); // not sure whether water type moves still deal damage or not
 }
