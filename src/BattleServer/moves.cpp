@@ -627,7 +627,6 @@ struct MMCurse : public MM
     }
 };
 
-//UNTESTED
 struct MMDestinyBond : public MM
 {
     MMDestinyBond() {
@@ -1170,7 +1169,7 @@ struct MMCopycat : public MM
         /* First check if there's even 1 move available */
         int move = turn(b,s)["CopycatMove"].toInt();
         if (move == 0 || move == Copycat || move == Move::DragonTail || move == Move::CircleThrow || move == Move::Struggle || (b.gen() > 5 && (move == Roar || move == Whirlwind))
-                || move == Belch) {
+                || move == Belch || MoveInfo::isZMove(move)) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -1225,7 +1224,6 @@ struct MMAssist : public MM
 
     static void uas(int s, int, BS &b)
     {
-        //UNTESTED: Assist Dark Void on non-Darkrai
         removeFunction(turn(b,s), "UponAttackSuccessful", "Assist");
         removeFunction(turn(b,s), "DetermineAttackFailure", "Assist");
         int attack = turn(b,s)["AssistMove"].toInt();
@@ -7884,7 +7882,6 @@ struct MMBeakBlast : public MM
     }
 };
 
-//UNTESTED
 struct MMAuroraVeil : public MM
 {
     MMAuroraVeil() {
@@ -7965,22 +7962,25 @@ struct MMSpectralThief : public MM {
     }
 };
 
-//UNTESTED
 struct MMInstruct : public MM
 {
     MMInstruct() {
-        //functions["UponAttackSuccessful"] = &uas;
+        functions["UponAttackSuccessful"] = &uas;
         functions["DetermineAttackFailure"] = &daf;
     }
 
-    static void daf(int s, int, BS &b) {
-        if (false) {
+    static void daf(int s, int t, BS &b) {
+        //Check for LastMoveUsed instead if Instruct can work at the beginning of the turn
+        if (poke(b,t).value("LastMoveUsedTurn").toInt() != b.turn()) {
             fturn(b,s).add(TM::Failed);
         }
     }
 
-    static void uas(int, int, BS) {
-
+    static void uas(int s, int t, BS &b) {
+        int mv = poke(b,t).value("LastMoveUsed").toInt();
+        b.sendMoveMessage(225, 0, s, 0, t);
+        b.notify(BS::All, BattleCommands::UseAttack, t, qint16(mv), false, true);
+        b.useAttack(t, mv, true, false);
     }
 };
 
@@ -7988,9 +7988,16 @@ struct MMInstruct : public MM
 struct MMPollenPuff : public MM
 {
     MMPollenPuff() {
-
+        functions["MoveClassModifier"] = &bh;
     }
-    //Deals damage if enemy, heals if ally
+
+    static void bh(int s, int t, BS &b) {
+        if (b.arePartners(s, t)) {
+            tmove(b,s).classification = Move::HealingMove;
+            tmove(b,s).healing = 50;
+            tmove(b,s).power = 0;
+        }
+    }
 };
 
 struct MMDarkVoid : public MM
@@ -8460,14 +8467,14 @@ void MoveEffect::init()
         //REGISTER_MOVE(222, PsychicTerrain);
     REGISTER_MOVE(223, ThroatChop);
     REGISTER_MOVE(224, LaserFocus);
-    //REGISTER_MOVE(225, Instruct);
+    REGISTER_MOVE(225, Instruct);
     REGISTER_MOVE(226, ShoreUp);
     REGISTER_MOVE(227, BanefulBunker);
     REGISTER_MOVE(228, FloralHealing);
     REGISTER_MOVE(229, StrengthSap);
     REGISTER_MOVE(230, SpectralThief);
     REGISTER_MOVE(231, AbilityIgnore); /*Core Enforcer/Moongeist/Sunsteel*/
-    //REGISTER_MOVE(232, PollenPuff);
+    REGISTER_MOVE(232, PollenPuff);
     REGISTER_MOVE(233, BurnUp);
     REGISTER_MOVE(234, Purify);
     REGISTER_MOVE(235, BeakBlast);
@@ -8476,7 +8483,7 @@ void MoveEffect::init()
     REGISTER_MOVE(238, DarkVoid);
     REGISTER_MOVE(239, SpeedSwap);
     REGISTER_MOVE(240, Terrain);
-    //REGISTER_MOVE(241, Spotlight);
+    REGISTER_MOVE(241, Spotlight);
     REGISTER_MOVE(242, WaterShuriken);
 
     REGISTER_MOVE(1000, ZBoost);

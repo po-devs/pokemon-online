@@ -402,7 +402,7 @@
 647 227|1000-2_1#BanefulBunker
 649 228|1002#FloralHealing
 650 229|1000-2_1#StrengthSap
-651 1000-4_1#Spotlight
+651 241|1000-4_1#Spotlight
 652 1000-5_1#ToxicThread
 653 216-1_3|1000-3_1#GearUp
 654 232#Pollen Puff

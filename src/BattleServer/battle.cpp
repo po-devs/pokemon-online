@@ -1906,6 +1906,7 @@ ppfunction:
 
         /* Corrosion */
         callaeffects(player, target, "MoveTypeModifier");
+        calleffects(player, target, "MoveClassModifier");
 
         if (tmove(player).power > 0)
         {
