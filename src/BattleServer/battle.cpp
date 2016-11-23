@@ -4908,7 +4908,7 @@ void BattleSituation::storeChoice(const BattleChoice &b)
 void BattleSituation::setupMove(int i, int move, bool zmove)
 {
     //ZAttack should be a completely seperate move from the base attack
-    if (zmove && MoveInfo::Power(move, this->gen()) > 0 && !zmoves[player(i)]) {
+    if (zmove && MoveInfo::Power(move, this->gen()) > 0 && !zmoves[player(i)] && canBeZMove(i, move)) {
         int zmove = ItemInfo::ZCrystalMove(this->poke(i).item());
         int power = MoveInfo::ZPower(move, this->gen());;
         if (MoveInfo::isUniqueZMove(zmove)) {
