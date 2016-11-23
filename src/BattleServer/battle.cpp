@@ -580,6 +580,7 @@ void BattleSituation::endTurnPoison(int player)
             inflictDamage(player, poke(player).totalLifePoints() * (16 - poke(player).statusCount()) / 16, player);
             //poke(player).statusCount() = std::max(1, poke(player).statusCount() - 1); //Already being applied earlier.
         }
+        callaeffects(player, player, "AfterStatusDamage");
     }
     /* Toxic still increases under magic guard, poison heal */
     if (poke(player).statusCount() != 0)
@@ -605,6 +606,7 @@ void BattleSituation::endTurnBurn(int player)
         denom *= 2;
     }
     inflictDamage(player, poke(player).totalLifePoints() / denom, player);
+    callaeffects(player, player, "AfterStatusDamage");
 }
 
 BattleChoices BattleSituation::createChoice(int slot)
@@ -940,10 +942,8 @@ void BattleSituation::megaEvolve(int slot)
 
 void BattleSituation::useZMove(int slot)
 {
-    //BUG: If a pokemon selects a zmove and dies before their turn, the player can no longer select a zmove
     if (choice(slot).zmove()) {
         if (canUseZMove(slot)) {
-            zmoves[player(slot)] = true;
             pokeMemory(player(slot))["ZMoveTurn"] = turn();
         }
     }
@@ -1609,6 +1609,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     //Down here so it doesnt get overridden but still defines it before the announcement
     if (zmoving && canBeZMove(player, attack)) {
+        zmoves[this->player(player)] = true;
         sendItemMessage(68, player);
         if (tmove(player).power > 0) {
             notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
@@ -5072,7 +5073,7 @@ bool BattleSituation::canBeZMove(int s, int mv)
             case Move::ExtremeEvoboost:
                 return pk == Pokemon::Eevee && mv == Move::LastResort;
             break;
-            case Move::PulversingPancake:
+            case Move::PulverizingPancake:
                 return pk == Pokemon::Snorlax && mv ==  Move::GigaImpact;
             break;
             case Move::GenesisSupernova:

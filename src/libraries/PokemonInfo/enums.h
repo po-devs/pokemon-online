@@ -1805,7 +1805,7 @@ namespace Move
         Catastropika,
         StokedSparkSurfer,
         ExtremeEvoboost,
-        PulversingPancake,
+        PulverizingPancake,
         GenesisSupernova,
         GuardianofAlola,
         SinisterArrowRaid,
