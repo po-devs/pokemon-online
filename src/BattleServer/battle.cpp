@@ -1009,7 +1009,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
             type = ItemInfo::ZCrystalType(p.item());
         }
         if (type != Type::Normal) {
-            changeAForme(slot, type);
+            //changeAForme(slot, type);
+            changeForme(player, slotNum(slot), Pokemon::uniqueId(Pokemon::Arceus, type), false);
         }
     }
     //we need to check for RKSSystem in case Silvally doesn't have its ability
@@ -1017,7 +1018,8 @@ void BattleSituation::sendPoke(int slot, int pok, bool silent)
         int type = ItemInfo::MemoryChipType(p.item());
 
         if (type != Type::Normal) {
-            changeAForme(slot, type);
+            //changeAForme(slot, type);
+            changeForme(player, slotNum(slot), Pokemon::uniqueId(Pokemon::Silvally, type), false);
         }
     }
     if (p.num() == Pokemon::Genesect && ItemInfo::isDrive(p.item())) {
