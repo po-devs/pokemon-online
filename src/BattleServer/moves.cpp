@@ -5559,8 +5559,11 @@ struct MMOutrage : public MM
 
     static void uas(int s, int, BS &b) {
         // Asleep is for Sleep Talk
+        //UNTESTED: What does Comatose do here?
+        bool oneTurn = b.poke(s).status() == Pokemon::Asleep || b.battleMemory().contains("DancingNow");
+
         if ( (!turn(b,s)["OutrageBefore"].toBool() || poke(b,s).value("OutrageUntil").toInt() < b.turn())
-             && b.poke(s).status() != Pokemon::Asleep) {
+             && !oneTurn) {
             poke(b,s)["OutrageUntil"] = b.turn() +  1 + b.randint(2);
             addFunction(poke(b,s), "TurnSettings", "Outrage", &ts);
             addFunction(poke(b,s), "MoveSettings", "Outrage", &ms);
@@ -7831,9 +7834,11 @@ struct MMBurnUp : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        //NOT DONE: Fire Arceus with Multitype won't lose fire type
-        b.removeType(s, Pokemon::Fire);
-        poke(b,s)["BurnedUp"] = true;
+        //Fire Arceus with Multitype and flame plate won't lose the fire typing
+        if (!(b.poke(s).num().pokenum == Pokemon::Arceus && b.hasWorkingItem(s, Item::FlamePlate) && b.hasWorkingAbility(s, Ability::Multitype))) {
+            b.removeType(s, Pokemon::Fire);
+            poke(b,s)["BurnedUp"] = true;
+        }
         b.sendMoveMessage(233, 0, s);
     }
 };

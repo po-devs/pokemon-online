@@ -3000,6 +3000,7 @@ struct AMInnardsOut : AM
     }
 };
 
+//CRASH: Multiple dances in a single turn crash the client
 struct AMDancer : AM
 {
     AMDancer() {
@@ -3007,8 +3008,10 @@ struct AMDancer : AM
     }
 
     static void aaf(int s, int, BS &b) {
+        bool lockedIn = poke(b,s).contains("OutrageUntil") && b.turn() < poke(b,s)["OutrageUntil"].toInt();
         //Unconfirmed: Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
-        if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep) {
+        if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep
+                || lockedIn) {
             return;
         }
 
@@ -3034,7 +3037,12 @@ struct AMDancer : AM
 
             turn(b,s)["Target"] = target;
             b.battleMemory()["DancingNow"] = true;
-            b.useAttack(s,mv,true,true);
+            if (b.counters(s).hasCounter(BC::Taunt) && MoveInfo::Category(mv, b.gen()) == Move::Other) {
+                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(mv), false, true);
+                b.sendMoveMessage(134,0,s,Pokemon::Dark);
+            } else {
+                b.useAttack(s,mv,true,true);
+            }
             b.battleMemory().remove("DancingNow");
 
             turn(b,s) = ctx;
@@ -3193,7 +3201,6 @@ struct AMShieldsDown : public AMPinch {
     }
 };
 
-//UNTESTED: Doesn't change HP but otherwise works
 struct AMPowerConstruct : public AMPinch {
     AMPowerConstruct() {
         functions["EndTurn29.0"] = &et;
