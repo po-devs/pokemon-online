@@ -3008,7 +3008,7 @@ struct AMDancer : AM
     }
 
     static void aaf(int s, int, BS &b) {
-        bool lockedIn = poke(b,s).contains("OutrageUntil") && b.turn() < poke(b,s)["OutrageUntil"].toInt();
+        bool lockedIn = poke(b,s).contains("OutrageUntil");
         //Unconfirmed: Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
         if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep
                 || lockedIn) {
