@@ -1431,17 +1431,17 @@ struct MMBounce : public MM
             if (move(b,s) == SkyDrop) {
                 /* Sky drop can target allies, but the move fails */
                 if (b.arePartners(s, t)) {
-                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop));
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop), false, true);
                     fturn(b,s).add(TM::Failed);
                     return;
                 }
                 /* First part of the move */
                 if (b.hasSubstitute(t)) {
-                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop));
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop), false, true);
                     fturn(b,s).add(TM::Failed);
                 } else if (b.gen() >= 6  && b.weight(t) >= 2000) {
                     //Gen 6 puts limit on Sky drop at 200kg / 440.9 lbs. Remember floating point precision! 200.0 = 2000
-                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop));
+                    b.notify(BS::All, BattleCommands::UseAttack, s, qint16(SkyDrop), false, true);
                     b.fail(s, 13, 7, Pokemon::Flying, t);
                 }
             }
