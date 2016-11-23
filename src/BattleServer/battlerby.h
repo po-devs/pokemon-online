@@ -38,7 +38,7 @@ protected:
     virtual bool testStatus(int player);
 
     void personalEndTurn(int player);
-    void setupMove(int i, int move);
+    void setupMove(int i, int move, bool zmove = false);
 private:
     BattleChoice choices[2];
 

@@ -940,10 +940,8 @@ void BattleSituation::megaEvolve(int slot)
 
 void BattleSituation::useZMove(int slot)
 {
-    //BUG: If a pokemon selects a zmove and dies before their turn, the player can no longer select a zmove
     if (choice(slot).zmove()) {
         if (canUseZMove(slot)) {
-            zmoves[player(slot)] = true;
             pokeMemory(player(slot))["ZMoveTurn"] = turn();
         }
     }
@@ -1607,6 +1605,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     //Down here so it doesnt get overridden but still defines it before the announcement
     if (zmoving && canBeZMove(player, attack)) {
+        zmoves[this->player(player)] = true;
         sendItemMessage(68, player);
         if (tmove(player).power > 0) {
             notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
@@ -4908,9 +4907,20 @@ void BattleSituation::storeChoice(const BattleChoice &b)
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
-void BattleSituation::setupMove(int i, int move)
+void BattleSituation::setupMove(int i, int move, bool zmove)
 {
-    MoveEffect::setup(move,i,0,*this);
+    //ZAttack should be a completely seperate move from the base attack
+    if (zmove && MoveInfo::Power(move, this->gen()) > 0 && !zmoves[player(i)]) {
+        int zmove = ItemInfo::ZCrystalMove(this->poke(i).item());
+        int power = MoveInfo::ZPower(move, this->gen());;
+        if (MoveInfo::isUniqueZMove(zmove)) {
+            power = MoveInfo::Power(zmove, this->gen());
+        }
+        MoveEffect::setup(zmove,i,0,*this);
+        this->tmove(i).power = power;
+    } else {
+        MoveEffect::setup(move,i,0,*this);
+    }
 }
 
 bool BattleSituation::canHeal(int s, int part, int focus)

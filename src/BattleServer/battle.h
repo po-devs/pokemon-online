@@ -215,7 +215,7 @@ private:
     virtual void notifySituation(int dest);
 
     virtual void storeChoice(const BattleChoice &b);
-    void setupMove(int player, int move);
+    void setupMove(int player, int move, bool zmove = false);
 public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */

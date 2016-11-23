@@ -8037,6 +8037,19 @@ struct MMSpeedSwap : public MM
     }
 };
 
+struct MMWaterShuriken : public MM
+{
+    MMWaterShuriken() {
+        functions["BasePowerModifier"] = &bpm;
+    }
+
+    static void bpm(int s, int, BS &b) {
+        if (b.poke(s).num() == Pokemon::Ash_Greninja) {
+            b.chainBp(s, 0x1800);
+        }
+    }
+};
+
 struct MMZBoost : public MM
 {
     MMZBoost() {
@@ -8157,6 +8170,7 @@ struct MMZHealSwitch : public MM
 
 struct MMZSupernova : public MM
 {
+    //TODO: Code Psychic terrain effect for Genesis Supernova
     MMZSupernova() {
         functions["AfterAttackFinished"] = &zm;
     }
@@ -8171,6 +8185,7 @@ struct MMZSupernova : public MM
 
 struct MMZAlola : public MM
 {
+    //TODO: Test Evoboost + Guardian of Alola
     MMZAlola() {
         functions["CustomAttackingDamage"] = &uas;
     }
@@ -8179,19 +8194,6 @@ struct MMZAlola : public MM
         turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()* 3 / 4;
         if (turn(b,t).value("ZMoveProtected").toBool()) {
             turn(b,s)["CustomDamage"] = turn(b,s)["CustomDamage"].toInt() * 3 / 4;
-        }
-    }
-};
-
-struct MMWaterShuriken : public MM
-{
-    MMWaterShuriken() {
-        functions["BasePowerModifier"] = &bpm;
-    }
-
-    static void bpm(int s, int, BS &b) {
-        if (b.poke(s).num() == Pokemon::Ash_Greninja) {
-            b.chainBp(s, 0x1800);
         }
     }
 };
