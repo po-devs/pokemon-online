@@ -609,7 +609,7 @@
 608 Paga Extra
 609 Celebración
 610 Clemencia
-611 Acoso
+611 Torm. Diamantes
 612 Luz Aniquiladora
 613 Chorro de Vapor
 614 Paso Dimensional

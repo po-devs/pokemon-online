@@ -7984,7 +7984,6 @@ struct MMInstruct : public MM
     }
 };
 
-//UNTESTED
 struct MMSpotlight : public MM
 {
     MMSpotlight() {

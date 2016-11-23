@@ -2890,6 +2890,7 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
         functions["BeforeTakingDamage"] = &btd;
         functions["UponSetup"] = &btd;
         functions["AfterHPChange"] = &ahpc;
+        functions["AfterStatusDamage"] = &asd;
     }
 
     static void btd(int s, int, BS &b) {
@@ -2919,25 +2920,49 @@ struct AMWimpOut : public AMPinch /*Mostly copied from Eject Button */
         addFunction(turn(b,t), "AfterAttackFinished", "WimpOut", &aaf);
     }
 
+    static void asd(int s, int, BS &b) {
+        if (!testpinch(s, b, 2))
+            return;
+
+        turn(b,s)["WimpedOut"] = true;
+        turn(b,s)["WimpOutCount"] = slot(b,s)["SwitchCount"];
+        if (testSendback(s, b)) {
+            callSwitch(s, b);
+        }
+    }
+
     static void aaf(int, int, BS &b) {
         std::vector<int> speeds = b.sortedBySpeed();
 
         for (unsigned i = 0; i < speeds.size(); i++) {
             int p = speeds[i];
-            if (!turn(b,p).contains("WimpedOut"))
-                continue;
-            if (turn(b,p)["WimpOutCount"] != slot(b,p)["SwitchCount"])
-                continue;
-            //If the pokemon somehow heals before the end of the move (ex. Sitrus berry) then it doesnt activate
-            if (!testpinch(p, b, 2))
-                continue;
-            if (poke(b,p).value("CannotExit").toBool())
-                continue;
-
-            b.sendAbMessage(18, 0, p, p,Pokemon::Curse, b.ability(p));
-            turn(b,p)["SendingBack"] = true;
-            b.requestSwitch(p);
+            if (testSendback(p, b)) {
+                callSwitch(p, b);
+            }
         }
+    }
+
+    static void callSwitch(int p, BS &b) {
+        b.sendAbMessage(18, 0, p, p,Pokemon::Curse, b.ability(p));
+        turn(b,p)["SendingBack"] = true;
+        b.requestSwitch(p);
+    }
+
+    static bool testSendback(int p, BS &b) {
+        if (poke(b,p).value("CannotExit").toBool()) {
+            return false;
+        }
+        if (!turn(b,p).contains("WimpedOut")) {
+            return false;
+        }
+        if (turn(b,p)["WimpOutCount"] != slot(b,p)["SwitchCount"]) {
+            return false;
+        }
+        //If the pokemon somehow heals before the end of the move (ex. Sitrus berry) then it doesnt activate
+        if (!testpinch(p, b, 2)) {
+            return false;
+        }
+        return true;
     }
 };
 
