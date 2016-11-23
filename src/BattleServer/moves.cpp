@@ -7985,6 +7985,32 @@ struct MMInstruct : public MM
 };
 
 //UNTESTED
+struct MMSpotlight : public MM
+{
+    MMSpotlight() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    //Gives target Follow Me Status... So why not copy Follow Me's code? :)
+    static void uas(int, int t, BS &b) {
+        b.sendMoveMessage(48,0,t);
+
+        int source = b.player(t);
+
+        team(b, source)["FollowMeTurn"] = b.turn();
+        team(b, source)["FollowMePlayer"] = t;
+        /* Imagine one foe used assist + roar, then follow me wouldn't work anymore. That's
+            why we need a switch count, or that */
+        poke(b,t)["FollowMe"] = true;
+
+        addFunction(b.battleMemory(), "GeneralTargetChange", "Spotlight", &gtc);
+    }
+
+    static void gtc(int s, int, BS &b) {
+        MMFollowMe::gtc(s,s,b);
+    }
+};
+
 struct MMPollenPuff : public MM
 {
     MMPollenPuff() {
