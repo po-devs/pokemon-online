@@ -5078,7 +5078,7 @@ bool BattleSituation::canBeZMove(int s, int mv)
             case Move::Catastropika:
                 return pk == Pokemon::Pikachu && mv == Move::VoltTackle;
             break;
-            case Move::StokedSparkSurfer:
+            case Move::StokedSparksurfer:
                 return pk == Pokemon::Raichu_Alolan && mv == Move::Thunderbolt;
             break;
             case Move::ExtremeEvoboost:
