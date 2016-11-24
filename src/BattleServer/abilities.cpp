@@ -3025,7 +3025,6 @@ struct AMInnardsOut : AM
     }
 };
 
-//CRASH: Multiple dances that includes at least 1 status dance in a single turn crash the client
 struct AMDancer : AM
 {
     AMDancer() {
@@ -3042,7 +3041,7 @@ struct AMDancer : AM
 
             //Dancer activates but fails during multiturn moves
             if (poke(b,s).contains("OutrageUntil")) {
-                b.sendAbMessage(140, 0, s, type(b,s));
+                b.sendAbMessage(140, 0, s);
                 b.notify(BS::All, BattleCommands::UseAttack, s, qint16(mv), false, true);
                 b.notifyFail(s);
                 return;
@@ -3061,7 +3060,7 @@ struct AMDancer : AM
             }
 
             //Copied off Magic Bounce :)
-            b.sendAbMessage(140, 0, s, type(b,s));
+            b.sendAbMessage(140, 0, s);
             BS::context ctx = turn(b,s);
             BS::BasicMoveInfo info = tmove(b,s);
             BS::TurnMemory turnMem = fturn(b, s);
