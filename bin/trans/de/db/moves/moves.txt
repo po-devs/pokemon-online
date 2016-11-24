@@ -620,3 +620,83 @@
 619 Abgrundsklinge
 620 Zenitstürmer
 621 Dimensionswahn
+622 Sanktionskern
+623 Kanonenbouquet
+624 Pferdestärke
+625 Blattwerk
+626 Schattenstrahl
+627 Naturzorn
+628 Wecktanz
+629 Panzerfalle
+630 Solarklinge
+631 Stahlgestirn
+632 Turbofelsen
+633 Psychofeld
+634 Neck Strike
+635 Auroraschleier
+636 Konzentration
+637 Schuppenrasseln
+638 Multi-Angriff
+639 Tropenkick
+640 Drachenhammer
+641 Kommando
+642 Schattenfessel
+643 Dark Lariat
+644 Schaumserenade
+645 Sandsammler
+646 Überrumpler
+647 Bunker
+648 Eishammer
+649 Florakur
+650 Kraftabsorber
+651 Rampenlicht
+652 Giftfaden
+653 Hilfsmechanik
+654 Pollenknödel
+655 Ankerschuss
+656 Anfallen
+657 Feuerpeitsche
+658 Überheblichkeit
+659 Ausbrennen
+660 Initiativetausch
+661 Schmalhorn
+662 Läuterung
+663 Schnabelkanone
+664 Wirbler
+665 Psychobeißer
+666 Fruststampfer
+667 Schattenknochen
+668 Aquadurchstoß
+669 Prisma-Laser
+670 Diebesschatten
+671 Tränendrüse
+672 Elektropikser
+673 Hyper-Sprintangriff
+674 Fulminante Faustschläge
+675 Finaler Steilflug
+676 Vernichtender Säureregen
+677 Seismische Eruption
+678 Apokalyptische Steinpresse
+679 Wirbelnder Insektenhieb
+680 Ewige Nacht
+681 Turbo-Spiralkombo
+682 Dynamische Maxiflamme
+683 Super-Wassertornado
+684 Brillante Blütenpracht
+685 Gigavolt-Funkensalve
+686 Psycho-Schmetterschlag
+687 Tobender Geofrost
+688 Drastisches Drachendröhnen
+689 Schwarzes Loch des Grauens
+690 Entzückender Sternenstoß
+691 Perfektes Pika-Projektil
+692 Blitz-Wellenritt
+693 Macht der Neun
+694 Schluss mit lustig
+695 Supernova des Ursprungs
+696 Alolas Wächter
+697 Schatten-Pfeilregen
+698 Hyper Dark Crusher
+699 Grandiose Meeressymphonie
+700 Sternbild des Seelenraubes
+701 Tausendfacher Donnerblitz
