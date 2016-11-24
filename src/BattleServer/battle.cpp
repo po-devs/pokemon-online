@@ -774,8 +774,8 @@ void BattleSituation::shiftSpots(int spot1, int spot2, bool silent)
     }
 }
 
-std::vector<int> BattleSituation::sortedBySpeed() {
-    std::vector<int> ret = BattleBase::sortedBySpeed();
+std::vector<int> BattleSituation::sortedBySpeed(std::vector<std::pair<int,int>> speeds) {
+    std::vector<int> ret = BattleBase::sortedBySpeed(std::move(speeds));
 
     if (battleMemory().value("TrickRoomCount").toInt() > 0) {
         std::reverse(ret.begin(),ret.end());
@@ -803,15 +803,33 @@ void BattleSituation::analyzeChoices()
     std::vector<int> switches;
 
     std::vector<int> playersByOrder = sortedBySpeed();
+
     //Gen 7 mega evolution changes turn order now.
     if (gen() >= 7) {
+        auto speeds = calculateSpeeds();
+
         foreach(int i, playersByOrder) {
-            if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
-                int slot = i;
-                megaEvolve(slot);
+            if (!choice(i).attackingChoice() && ! choice(i).moveToCenterChoice()) {
+                continue;
+            }
+
+            int spot = i;
+
+            if (!megaEvolve(spot)) {
+                continue;
+            }
+
+            //update particular speed as it mega evolved
+            for (auto &pair : speeds) {
+                if (pair.first == spot) {
+                    pair.second = getStat(spot, Speed);
+                    break;
+                }
             }
         }
-        playersByOrder = sortedBySpeed();
+
+        /* In gen 7, recalculate turns after mega evos */
+        playersByOrder = sortedBySpeed(std::move(speeds));
     }
 
     foreach(int i, playersByOrder) {
@@ -919,7 +937,7 @@ void BattleSituation::analyzeChoices()
 
 /* Battle functions! Yeah! */
 
-void BattleSituation::megaEvolve(int slot)
+bool BattleSituation::megaEvolve(int slot)
 {
     //Split to allow Mega Evo to activate on Special Pursuit
     //Mega Evolution is not hindered by Embargo, etc.
@@ -935,9 +953,13 @@ void BattleSituation::megaEvolve(int slot)
                 changeForme(player(slot), slotNum(slot), forme, false, false, true);
                 megas[player(slot)] = true;
                 pokeMemory(player(slot))["MegaEvolveTurn"] = turn();
+
+                return true;
             }
         }
     }
+
+    return false;
 }
 
 void BattleSituation::useZMove(int slot)
@@ -2368,7 +2390,7 @@ void BattleSituation::makeTargetList(const QVector<int> &base)
     }
 }
 
-bool BattleSituation::hasWorkingAbility(int player, int ab)
+bool BattleSituation::hasWorkingAbility(int player, int ab) const
 {
     if (gen() <= 2)
         return false;
@@ -2426,7 +2448,7 @@ void BattleSituation::loseAbility(int slot)
     callaeffects(slot, slot, "OnLoss");
 }
 
-int BattleSituation::ability(int player) {
+int BattleSituation::ability(int player) const {
     return fpoke(player).ability;
 }
 
@@ -4787,7 +4809,7 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
     sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnMemory(player)["MoveChosen"].toInt());
 }
 
-PokeFraction BattleSituation::getStatBoost(int player, int stat)
+PokeFraction BattleSituation::getStatBoost(int player, int stat) const
 {
     int boost = fpoke(player).boosts[stat];
 
