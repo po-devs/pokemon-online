@@ -252,6 +252,7 @@ public:
     static int FlinchRate(int movenum, Pokemon::gen gen);
     static int Recoil(int movenum, Pokemon::gen gen);
     static QString Description(int movenum, Pokemon::gen gen);
+    static QString ZDescription(int movenum, Pokemon::gen gen);
     static int Power(int movenum, Pokemon::gen gen);
     static int ZPower(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
@@ -319,6 +320,7 @@ private:
         QHash<int, char> critRate;
         QHash<int, char> damageClass;
         QHash<int, QString> effect;
+        QHash<int, QString> zeffect;
         QHash<int, QString> specialEffect;
         QHash<int, char> effectChance;
         QHash<int, int> flags;

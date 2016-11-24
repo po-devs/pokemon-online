@@ -80,11 +80,16 @@ void AbstractAttackButton::updateGui()
 QString AbstractAttackButton::tooltip() const
 {
     int num = this->num();
+    QString zeffect;
+    if (gen >= 7 && MoveInfo::ZDescription(num, gen).length() > 0) {
+        zeffect = QString("\nZ-Effect: %1").arg(MoveInfo::ZDescription(num, gen));
+    }
 
     QString moveCategory = CategoryInfo::Name(MoveInfo::Category(num, gen));
-    return QObject::tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\nRange: %6\n\nDescription: %5").arg(moveName(), power(),
-                                                                                                MoveInfo::AccS(num, gen), moveCategory,
-                                                                                                MoveInfo::Description(num, gen), MoveInfo::TargetS(num, gen));
+    return QObject::tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\nRange: %6\nFlags: %7\n\nDescription: %5%8")
+            .arg(moveName(), power(), MoveInfo::AccS(num, gen), moveCategory,
+                 MoveInfo::Description(num, gen), MoveInfo::TargetS(num, gen),
+                 MoveInfo::FlagsS(num, gen), zeffect);
 }
 
 OldAttackButton::OldAttackButton(const BattleMove &b, const PokeProxy &p, Pokemon::gen gen)

@@ -7814,7 +7814,7 @@ struct MMStrengthSap : public MM
         if (b.canHeal(s, BS::HealByMove, StrengthSap)) {
             //Big Root applies to strength sap
             if (b.hasWorkingItem(s, Item::BigRoot)) {
-                amount = amout * 13 / 10;
+                amount = amount * 13 / 10;
             }
             b.healLife(s, amount);
         }

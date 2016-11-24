@@ -1793,6 +1793,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_int_char(critRate, path("crit_rate.txt"));
     fill_int_char(damageClass, path("damage_class.txt"));
     fill_int_str(effect, path("effect.txt"), true);
+    fill_int_str(zeffect, path("zeffect.txt"), true);
     fill_int_str(specialEffect, path("special_effect.txt"));
     fill_int_char(effectChance, path("effect_chance.txt"));
     fill_double(flags, path("flags.txt"));
@@ -1846,6 +1847,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
 void MoveInfo::Gen::retranslate()
 {
     fill_int_str(effect, path("effect.txt"), true);
+    fill_int_str(zeffect, path("effect.txt"), true);
 }
 
 QString MoveInfo::Gen::path(const QString &fileName)
@@ -2059,8 +2061,16 @@ QString MoveInfo::Description(int movenum, Pokemon::gen g)
     } else {
         r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
     }
-
+    //If a move doesn't have an effect default it to Pound's effect (Deals normal damage)
+    if (r.length() == 0) {
+        r = move_find2(QString, r, effect, 1, g);
+    }
     return r;
+}
+
+QString MoveInfo::ZDescription(int movenum, Pokemon::gen g)
+{
+    move_find(zeffect, movenum, g);
 }
 
 int MoveInfo::Power(int movenum, Pokemon::gen gen)
