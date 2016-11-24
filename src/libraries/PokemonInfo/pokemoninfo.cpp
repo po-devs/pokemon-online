@@ -1917,7 +1917,7 @@ QString MoveInfo::ZName(int movenum, bool zmove)
 {
     QString ret = Name(movenum);
 
-    if (zmove && Category(movenum, Pokemon::gen()) == Move::Other) {
+    if (zmove && Power(movenum, Pokemon::gen()) == 0) {
         ret = QObject::tr("Z-%1", "Z-Move Renameing").arg(ret);
     }
 

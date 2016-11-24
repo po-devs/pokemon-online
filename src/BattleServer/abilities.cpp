@@ -3270,8 +3270,8 @@ struct AMCorrosion : public AM {
         if (tmove(b,s).power == 0 || tmove(b,s).classification != Move::OffensiveStatusInducingMove) {
             return;
         }
-        //A pokemon with corrosion can poison a steel target with an offensive move but it does 0 damage
-        if (b.hasType(t, Pokemon::Steel) && tmove(b,s).type == Pokemon::Poison && tmove(b,s).status == Pokemon::Poisoned) {
+        //A pokemon with corrosion can poison a steel or poison target with an offensive move but it does 0 damage
+        if ((b.hasType(t, Pokemon::Steel) || b.hasType(t, Pokemon::Poison)) && tmove(b,s).type == Pokemon::Poison && tmove(b,s).status == Pokemon::Poisoned) {
             //Hacky implementation to remove immunity and damage but keep the poison chance
             tmove(b,s).type = Pokemon::Curse;
             turn(b,t)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
