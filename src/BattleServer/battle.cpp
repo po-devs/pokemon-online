@@ -2225,9 +2225,11 @@ trueend:
         callaeffects(target, target, "AfterAttackFinished"); //Immunity & such
         turnMemory(target)["HadSubstitute"] = false;
     }
-    foreach(int target, sortedBySpeed()) {
-        if (target != player) {
-            callaeffects(target, target, "DanceInvite");
+    if (!special) {
+        foreach(int target, sortedBySpeed()) {
+            if (target != player) {
+                callaeffects(target, target, "DanceInvite");
+            }
         }
     }
 }

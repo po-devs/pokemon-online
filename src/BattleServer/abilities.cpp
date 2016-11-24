@@ -3025,7 +3025,7 @@ struct AMInnardsOut : AM
     }
 };
 
-//CRASH: Multiple dances in a single turn crash the client
+//CRASH: Multiple dances that includes at least 1 status dance in a single turn crash the client
 struct AMDancer : AM
 {
     AMDancer() {
@@ -3033,24 +3033,34 @@ struct AMDancer : AM
     }
 
     static void aaf(int s, int, BS &b) {
-        bool lockedIn = poke(b,s).contains("OutrageUntil");
-        //Unconfirmed: Likely won't dance if frozen or sleeping. not sure about paralyze/burn/poison
-        if (b.battleMemory().contains("DancingNow") || b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep
-                || lockedIn) {
-            return;
-        }
-
-        int target = -1;
         int mv = b.battleMemory().value("AnyLastMoveUsed").toInt();
-        if (MoveInfo::Classification(mv, b.gen()) == Move::User) {
-            target = s;
-        } else {
-            //Unconfirmed: dunno. but i need something for now
-            target = b.randomOpponent(s);
-        }
-
-        //Copied off Magic Bounce :)
         if (MoveInfo::Flags(mv, b.gen()) & Move::DanceFlag) {
+            //Don't dance off someone else's dance or while flying/digging
+            if (b.battleMemory().contains("DancingNow") || poke(b,s).value("Invulnerable").toBool()) {
+                return;
+            }
+
+            //Dancer activates but fails during multiturn moves
+            if (poke(b,s).contains("OutrageUntil")) {
+                b.sendAbMessage(140, 0, s, type(b,s));
+                b.notify(BS::All, BattleCommands::UseAttack, s, qint16(mv), false, true);
+                b.notifyFail(s);
+                return;
+            }
+            //Unconfirmed: Don't dance if frozen or sleeping. not sure about paralyze/burn/poison
+            if (b.poke(s).status() == Pokemon::Frozen || b.poke(s).status() == Pokemon::Asleep) {
+                return;
+            }
+
+            int target = -1;
+            if (MoveInfo::Target(mv, b.gen()) == Move::User) {
+                target = s;
+            } else {
+                //Unconfirmed: dunno. but i need something for now. only matters for doubles
+                target = b.randomOpponent(s);
+            }
+
+            //Copied off Magic Bounce :)
             b.sendAbMessage(140, 0, s, type(b,s));
             BS::context ctx = turn(b,s);
             BS::BasicMoveInfo info = tmove(b,s);

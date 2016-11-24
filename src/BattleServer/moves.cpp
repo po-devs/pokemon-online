@@ -7970,8 +7970,7 @@ struct MMInstruct : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        //Check for LastMoveUsed instead if Instruct can work at the beginning of the turn
-        if (poke(b,t).value("LastMoveUsedTurn").toInt() != b.turn()) {
+        if (!poke(b,t).contains("LastMoveUsed")) {
             fturn(b,s).add(TM::Failed);
         }
     }
@@ -7979,8 +7978,20 @@ struct MMInstruct : public MM
     static void uas(int s, int t, BS &b) {
         int mv = poke(b,t).value("LastMoveUsed").toInt();
         b.sendMoveMessage(225, 0, s, 0, t);
+
+        BS::context ctx = turn(b,t);
+        BS::BasicMoveInfo info = tmove(b,t);
+        BS::TurnMemory turnMem = fturn(b, t);
+        int lastMove = fpoke(b,t).lastMoveUsed;
+
+        MoveEffect::setup(mv,t,s,b);
         b.notify(BS::All, BattleCommands::UseAttack, t, qint16(mv), false, true);
         b.useAttack(t, mv, true, false);
+
+        turn(b,t) = ctx;
+        tmove(b,t) = info;
+        fturn(b,t) = turnMem;
+        fpoke(b,t).lastMoveUsed = lastMove;
     }
 };
 
@@ -8522,6 +8533,4 @@ void MoveEffect::init()
     REGISTER_MOVE(1006, ZCurse);
     REGISTER_MOVE(1007, ZSupernova);
     REGISTER_MOVE(1008, ZAlola);
-
-    //NOT DONE: Instruct, Pollen Puff, Spotlight
 }

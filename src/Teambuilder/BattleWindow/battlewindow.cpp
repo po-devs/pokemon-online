@@ -1061,7 +1061,7 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     zmove = new QPushButton(this);
     zmove->setText(tr("Z Move"));
     zmove->setCheckable(true);
-    zmove->setObjectName("MegaEvo");
+    zmove->setObjectName("ZMove");
     l->addWidget(zmove, 3, 0, 1, 2);
     zmove->setVisible(false);
 
