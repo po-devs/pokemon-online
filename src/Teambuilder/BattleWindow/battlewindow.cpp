@@ -142,6 +142,7 @@ BattleWindow::BattleWindow(int battleId, const PlayerInfo &me, const PlayerInfo 
             mybgroups.value(i)->addButton(myazones[i]->attacks[j],j);
         }
         connect(myazones[i], SIGNAL(clicked(int)), SLOT(attackClicked(int)));
+        connect(myazones[i], SIGNAL(zmoveClicked(bool)), SLOT(zmoveClicked(bool)));
     }
 
     if (data().multiples()) {
@@ -547,6 +548,8 @@ void BattleWindow::goToNextChoice()
                     mystack->setCurrentWidget(azone);
                 }
             }
+
+            updateAttacks(azone, &info().ownTempPoke(slot));
         }
         /* Then pokemon */
         if (choices.switchAllowed == false) {
@@ -1065,7 +1068,7 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
     l->addWidget(zmove, 3, 0, 1, 2);
     zmove->setVisible(false);
 
-    connect(zmove, SIGNAL(clicked(bool)), SLOT(zmoveClicked(bool)));
+    connect(zmove, SIGNAL(toggled(bool)), SIGNAL(zmoveClicked(bool)));
     connect(mymapper, SIGNAL(mapped(int)), SIGNAL(clicked(int)));
 }
 

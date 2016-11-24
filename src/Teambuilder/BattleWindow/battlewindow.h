@@ -205,6 +205,7 @@ public:
     QPushButton *zmove;
 signals:
     void clicked(int attack);
+    void zmoveClicked(bool checked);
 
 private:
     QSignalMapper *mymapper;
