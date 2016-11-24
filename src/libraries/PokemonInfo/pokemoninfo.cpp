@@ -2062,8 +2062,8 @@ QString MoveInfo::Description(int movenum, Pokemon::gen g)
         r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
     }
     //If a move doesn't have an effect default it to Pound's effect (Deals normal damage)
-    if (r.length() == 0) {
-        r = move_find2(QString, r, effect, 1, g);
+    if (r.length() == 0 && movenum != 1) {
+        return MoveInfo::Description(1, g);
     }
     return r;
 }
