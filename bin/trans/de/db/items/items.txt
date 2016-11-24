@@ -342,6 +342,41 @@
 341 Sahnehäubchen
 342 Rote Kugel
 343 Blaue Kugel
+344 Kampf-Disc
+345 Flug-Disc
+346 Gift-Disc
+347 Boden-Disc
+348 Gesteins-Disc
+349 Käfer-Disc
+350 Geister-Disc
+351 Stahl-Disc
+352 Feuer-Disc
+353 Wasser-Disc
+354 Pflanzen-Disc
+355 Elektro-Disc
+356 Psycho-Disc
+357 Eis-Disc
+358 Drachen-Disc
+359 Unlicht-Disc
+360 Feen-Disc
+361 Zitterorb
+362 Feldbeschichtung
+363 Schutzpolster
+364 Elektro-Samen
+365 Psycho-Samen
+366 Nebel-Samen
+367 Gras-Samen
+368 Ultraball
+369 Maxi-Malasada
+370 Normaler Stein
+371 Silberkronkorken
+372 Goldkronkorken
+373 Eisstein
+374 Yantara-Sablé
+375 Rosa Nektar
+376 Gelber Nektar
+377 Roter Nektar
+378 Purpurner Nektar
 1000 Rosa Band
 1001 Punkt-Band
 2001 Bisaflornit
@@ -391,3 +426,32 @@
 2045 Diancienit
 2046 Latiasnit
 2047 Latiosnit
+3000 Normium Z
+3001 Battalium Z
+3002 Aerium Z
+3003 Toxium Z
+3004 Terrium Z
+3005 Petrium Z
+3006 Insectium Z
+3007 Phantomium Z
+3008 Metallium Z
+3009 Pyrium Z
+3010 Aquium Z
+3011 Botanium Z
+3012 Voltium Z
+3013 Psium Z
+3014 Glacium Z
+3015 Dracium Z
+3016 Noctium Z
+3017 Sylphium Z
+3018 Pikachium Z
+3019 A-Raichunium Z
+3020 Evolium Z
+3021 Relaxonium Z
+3022 Mewnium Z
+3023 Kapium Z
+3024 Silvarronium Z
+3025 Fuegronium Z
+3026 Primarenium Z
+3027 Marshadium Z
+3028 Ash-Pikachium Z
