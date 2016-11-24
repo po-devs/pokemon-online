@@ -2486,7 +2486,8 @@ namespace Item
         PinkNectar,
         YellowNectar,
         RedNectar,
-        PurpleNectar
+        PurpleNectar,
+        FiriumZ = 3009 //for Arceus + Burnup
     };
 
     enum Target

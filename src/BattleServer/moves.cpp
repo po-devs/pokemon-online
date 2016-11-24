@@ -7833,7 +7833,7 @@ struct MMBurnUp : public MM
 
     static void uas(int s, int, BS &b) {
         //Fire Arceus with Multitype and flame plate won't lose the fire typing
-        if (!(b.poke(s).num().pokenum == Pokemon::Arceus && b.hasWorkingItem(s, Item::FlamePlate) && b.hasWorkingAbility(s, Ability::Multitype))) {
+        if (!(b.poke(s).num().pokenum == Pokemon::Arceus && (b.hasWorkingItem(s, Item::FlamePlate) || b.hasWorkingItem(s, Item::FiriumZ)) && b.hasWorkingAbility(s, Ability::Multitype))) {
             b.removeType(s, Pokemon::Fire);
             poke(b,s)["BurnedUp"] = true;
         }
