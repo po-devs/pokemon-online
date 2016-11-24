@@ -1138,53 +1138,6 @@ struct IMPrimalOrb : public IM {
     }
 };
 
-struct IMZCrystal : public IM {
-    IMZCrystal() {
-        functions["MoveSettings"] = &ms;
-    }
-
-    static void ms (int s, int, BS &b) {
-        if (tmove(b,s).power > 0) {
-            tmove(b,s).power = tmove(b,s).zpower;
-
-            int zmove = ItemInfo::ZCrystalMove(b.poke(s).item());
-            if (MoveInfo::isUniqueZMove(zmove)) {
-                tmove(b,s).power = MoveInfo::Power(zmove, b.gen());
-            }
-            //b.debug(QString("Debug: Power = %1").arg(tmove(b,s).power));
-
-            /* Sigh... only way to get it working properly... */
-            tmove(b,s).accuracy = 100;
-            tmove(b,s).flags = MoveInfo::Flags(zmove, b.gen());
-            tmove(b,s).classification = Move::StandardMove;
-            tmove(b,s).boostOfStat = 0;
-            tmove(b,s).critRaise = 0;
-            tmove(b,s).flinchRate = 0;
-            tmove(b,s).healing = 0;
-            tmove(b,s).priority = 0;
-            tmove(b,s).maxTurns = 0;
-            tmove(b,s).minTurns = 0;
-            tmove(b,s).rate = 0;
-            tmove(b,s).recoil = 0;
-            tmove(b,s).repeatMax = 0;
-            tmove(b,s).repeatMin = 0;
-            tmove(b,s).status = 0;
-            tmove(b,s).statAffected = 0;
-            tmove(b,s).rateOfStat = 0;
-
-            if (zmove == Move::StokedSparkSurfer) {
-                tmove(b,s).classification = Move::OffensiveStatusInducingMove;
-                tmove(b,s).status = MoveInfo::Status(zmove, b.gen());
-                tmove(b,s).rate = MoveInfo::EffectRate(zmove, b.gen());
-            } else if (zmove == Move::_10_000_000VoltThunderBolt) {
-                tmove(b,s).critRaise = MoveInfo::CriticalRaise(zmove, b.gen());
-            }
-            //TODO: Test Evoboost + Guardian of Alola
-            //TODO: Code Psychic terrain effect for Genesis Supernova
-        }
-    }
-};
-
 struct IMSeeds : public IM {
     IMSeeds() {
         functions["UponSetup"] = &us;
@@ -1251,7 +1204,7 @@ void ItemEffect::init()
     //66 Mega stones
     REGISTER_ITEM(67, PrimalOrb);
     REGISTER_ITEM(68, MemoryChip);
-    REGISTER_ITEM(69, ZCrystal);
+    //REGISTER_ITEM(69, ZCrystal);
     REGISTER_ITEM(70, Seeds);
     //71 Adrenaline orb message
     //72 Protective pads message

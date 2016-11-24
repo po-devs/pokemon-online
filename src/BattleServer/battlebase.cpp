@@ -1607,7 +1607,7 @@ void BattleBase::setupChoices()
     for (int i = 0; i < numberOfSlots(); i++) {
         if (!koed(i) && !turnMem(i).contains(TurnMemory::NoChoice) && !turnMem(i).contains(TurnMemory::KeepAttack) && choice(i).attackingChoice()) {
             if (!options[i].struggle())
-                setupMove(i, move(i,choice(i).pokeSlot()));
+                setupMove(i, move(i,choice(i).pokeSlot()), choice(i).zmove());
             else
                 setupMove(i, Move::Struggle);
         }

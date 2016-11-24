@@ -8214,7 +8214,7 @@ struct MMZSupernova : public MM
 
     static void zm(int, int, BS &b) {
         if(b.terrain != BS::PsychicTerrain) {
-            //No terrain extender cause you can only hold 1 item!
+            //TODO: terrain extender because hackmons
             b.coverField(BS::PsychicTerrain, 5);
         }
     }
@@ -8222,6 +8222,7 @@ struct MMZSupernova : public MM
 
 struct MMZAlola : public MM
 {
+    //TODO: Test Evoboost + Guardian of Alola
     MMZAlola() {
         functions["CustomAttackingDamage"] = &uas;
     }

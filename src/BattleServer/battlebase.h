@@ -297,7 +297,7 @@ protected:
     virtual BattleChoices createChoice(int slot) = 0;
 
     void setupChoices() ;
-    virtual void setupMove(int i, int move) = 0;
+    virtual void setupMove(int i, int move, bool zmove = false) = 0;
 
     virtual void analyzeChoices() = 0;
 
