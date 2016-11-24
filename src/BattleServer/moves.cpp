@@ -5557,7 +5557,7 @@ struct MMOutrage : public MM
 
     static void uas(int s, int, BS &b) {
         // Asleep is for Sleep Talk
-        //UNTESTED: What does Comatose do here?
+        //Comatose locks the user into the move if called with sleep talk, so no code needed for this
         bool oneTurn = b.poke(s).status() == Pokemon::Asleep || b.battleMemory().contains("DancingNow");
 
         if ( (!turn(b,s)["OutrageBefore"].toBool() || poke(b,s).value("OutrageUntil").toInt() < b.turn())
@@ -7812,6 +7812,10 @@ struct MMStrengthSap : public MM
         int amount = b.getStat(t, Attack); //dumb gamefreak implementation
         b.inflictStatMod(t, Attack, -1, s);
         if (b.canHeal(s, BS::HealByMove, StrengthSap)) {
+            //Big Root applies to strength sap
+            if (b.hasWorkingItem(s, Item::BigRoot)) {
+                amount = amout * 13 / 10;
+            }
             b.healLife(s, amount);
         }
         b.sendMoveMessage(229, 0, s, type(b,s), t);
