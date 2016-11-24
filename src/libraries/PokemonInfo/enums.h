@@ -1803,7 +1803,7 @@ namespace Move
         BlackHoleEclipse,
         TwinkleTackle,
         Catastropika,
-        StokedSparkSurfer,
+        StokedSparksurfer,
         ExtremeEvoboost,
         PulverizingPancake,
         GenesisSupernova,
