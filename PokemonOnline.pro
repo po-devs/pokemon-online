@@ -59,15 +59,17 @@ CONFIG(po_registry) {
 
 TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_es.ts \
-    src/trans/translation_fi.ts \
     src/trans/translation_fr.ts \
-    src/trans/translation_he.ts \
     src/trans/translation_it.ts \
-    src/trans/translation_jp.ts \
-    src/trans/translation_ko.ts \
-    src/trans/translation_nl.ts \
-    src/trans/translation_pt-br.ts \
-    src/trans/translation_zh-cn.ts
+    src/trans/translation_zh-cn.ts \
+#The following languages were once supported but haven't been updated in awhile
+#They are massively out of date and some didn't have anything translated for them!
+    #src/trans/outdated/translation_fi.ts \
+    #src/trans/outdated/translation_he.ts \
+    #src/trans/outdated/translation_jp.ts \
+    #src/trans/outdated/translation_ko.ts \
+    #src/trans/outdated/translation_nl.ts \
+    #src/trans/outdated/translation_pt-br.ts
 
 CONFIG(test) {
     SUBDIRS += \

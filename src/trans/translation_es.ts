@@ -1075,7 +1075,7 @@ Movimientos:
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="118"/>
-        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="513"/>
+        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="519"/>
         <source>&amp;Switch Pokemon</source>
         <oldsource>&amp;Switch PokÃ©mon</oldsource>
         <translation>&amp;Cambiar de Pokémon</translation>
@@ -1123,18 +1123,18 @@ Movimientos:
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="238"/>
-        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="335"/>
+        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="352"/>
         <source>Losing your battle</source>
         <translation>Estás a punto de rendirte</translation>
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="238"/>
-        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="335"/>
+        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="352"/>
         <source>Do you mean to forfeit?</source>
         <translation>¿Estás seguro de que quieres huir?</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="519"/>
+        <location filename="../Teambuilder/BattleWindow/battlewindow.cpp" line="525"/>
         <source>&amp;Shift to centre</source>
         <translation>&amp;Mover al centro</translation>
     </message>
@@ -4417,22 +4417,22 @@ Movimiento 4</translation>
         <translation>%1 no puede aprender a la vez la combinación: %2.</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3092"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3154"/>
         <source>hailstorm</source>
         <translation>granizo</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3093"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3155"/>
         <source>rain</source>
         <translation>lluvia</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3094"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3156"/>
         <source>sandstorm</source>
         <translation>tormenta de arena</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3095"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3157"/>
         <source>sunny</source>
         <translation>día soleado</translation>
     </message>
@@ -4443,238 +4443,238 @@ Movimiento 4</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2186"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2188"/>
         <source>Protect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2189"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2191"/>
         <source>Substitute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2192"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2194"/>
         <source>Bypasses %0 &amp; %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2193"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2195"/>
         <source>Bypasses %0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2198"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2200"/>
         <source>Contact</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2201"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2203"/>
         <source>Thaws User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2206"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2208"/>
         <source>Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2209"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2211"/>
         <source>Snatchable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2214"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2216"/>
         <source>Punch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2217"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2219"/>
         <source>Healing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2222"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2224"/>
         <source>Powder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2225"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2227"/>
         <source>Bullet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2228"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2230"/>
         <source>Launching</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2231"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2233"/>
         <source>Bite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2236"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2238"/>
         <source>Dance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2293"/>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2299"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2295"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2301"/>
         <source>Single Target</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2295"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2297"/>
         <source>Self or Ally</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2297"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2299"/>
         <source>Single Ally</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2301"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2303"/>
         <source>All But Self</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2303"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2305"/>
         <source>Adjacent Foes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2305"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2307"/>
         <source>User&apos;s Team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2307"/>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2319"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2309"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2321"/>
         <source>Self</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2309"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2311"/>
         <source>All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2311"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2313"/>
         <source>Random</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2313"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2315"/>
         <source>Field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2315"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2317"/>
         <source>All Foes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2317"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2319"/>
         <source>All Allies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3096"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3158"/>
         <source>intense Sun</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3097"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3159"/>
         <source>heavy Rain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3098"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3160"/>
         <source>strong Winds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3099"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3161"/>
         <source>normal</source>
         <comment>weather</comment>
         <translation>normal</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3107"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3169"/>
         <source>electric Terrain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3108"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3170"/>
         <source>grassy Terrain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3109"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3171"/>
         <source>misty Terrain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3110"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3172"/>
         <source>psychic Terrain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3111"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3173"/>
         <source>normal</source>
         <comment>terrain</comment>
         <translation type="unfinished">normal</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3606"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3668"/>
         <source>Special</source>
         <comment>Stat</comment>
         <translation>Especial</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3617"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3679"/>
         <source>koed</source>
         <translation>KO</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3625"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3687"/>
         <source>Ko</source>
         <comment>Short Status</comment>
         <translation>Deb</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3627"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3689"/>
         <source>Par</source>
         <comment>Short Status</comment>
         <translation></translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3628"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3690"/>
         <source>Slp</source>
         <comment>Short Status</comment>
         <translation>Dor</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3629"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3691"/>
         <source>Frz</source>
         <comment>Short Status</comment>
         <translation>Con</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3630"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3692"/>
         <source>Brn</source>
         <comment>Short Status</comment>
         <translation>Que</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3631"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3693"/>
         <source>Psn</source>
         <comment>Short Status</comment>
         <translation>Env</translation>
     </message>
     <message>
-        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3632"/>
+        <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3694"/>
         <source>Cfs</source>
         <comment>Short Status</comment>
         <translation>Cnf</translation>
@@ -4865,12 +4865,12 @@ Movimiento 4</translation>
         <translation>Zip (*.zip)</translation>
     </message>
     <message>
-        <location filename="../Teambuilder/BattleWindow/battlewindowattackbutton.cpp" line="75"/>
+        <location filename="../Teambuilder/BattleWindow/battlewindowattackbutton.cpp" line="76"/>
         <source>PP %1/%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Teambuilder/BattleWindow/battlewindowattackbutton.cpp" line="89"/>
+        <location filename="../Teambuilder/BattleWindow/battlewindowattackbutton.cpp" line="90"/>
         <source>%1
 
 Power: %2
