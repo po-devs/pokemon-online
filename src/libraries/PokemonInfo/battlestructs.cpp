@@ -852,6 +852,8 @@ bool FullBattleConfiguration::acceptSpectator(int player, bool authed) const
 
 DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {
+    c.protocolVersion = in.version;
+
     VersionControl v;
     in >> v;
 

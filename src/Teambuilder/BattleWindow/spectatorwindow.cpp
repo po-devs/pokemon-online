@@ -41,7 +41,7 @@ void SpectatorWindow::init(const FullBattleConfiguration &conf)
     bool usePokemonNames = s.value("Battle/NoNicknames").toBool();
 
     log = new BattleClientLog(mData, Theme::getBattleTheme(), !usePokemonNames);
-    input = new BattleInput(&conf);
+    input = new BattleInput(&conf, conf.protocolVersion);
 
     logWidget = new PokeTextEdit();
     QObject::connect(log, SIGNAL(lineToBePrinted(QString)), logWidget, SLOT(insertHtml(QString)));

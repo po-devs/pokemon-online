@@ -1,6 +1,7 @@
 #ifndef BATTLEINPUT_H
 #define BATTLEINPUT_H
 
+#include <Shared/config.h>
 #include "battlecommandmanager.h"
 #include <vector>
 
@@ -10,7 +11,7 @@ class DataStream;
 class BattleInput : public BattleCommandManager<BattleInput>
 {
 public:
-    BattleInput(const BattleConfiguration *conf=0);
+    BattleInput(const BattleConfiguration *conf=0, int version = PROTOCOL_VERSION);
 
     void receiveData(QByteArray data);
     void dealWithCommandInfo(DataStream&, uchar command,int spot);
@@ -43,6 +44,7 @@ public:
         return false;
     }
 
+    int majorProtocolVersion = PROTOCOL_VERSION;
 protected:
     int delayCount;
     std::vector<QByteArray> delayedCommands;

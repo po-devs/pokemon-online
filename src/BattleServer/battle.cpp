@@ -647,7 +647,7 @@ BattleChoices BattleSituation::createChoice(int spot)
              * normal moves but not zmoves. Maybe isZMovePossible should just check the pokemon is not locked into another
              * move?
              */
-            ret.zmoveAllowed[i] = canBeZMove(spot, i) && ret.attackAllowed[i];
+            ret.zmoveAllowed[i] = canBeZMove(spot, move(spot, i)) && ret.attackAllowed[i];
         }
     }
 
@@ -5078,15 +5078,15 @@ bool BattleSituation::isDisguised(int s)
     return hasWorkingAbility(s, Ability::Disguise) && !battleMemory().value(QString("DisguiseBusted%1%2").arg(player(s)).arg(currentInternalId(s))).toBool();
 }
 
-bool BattleSituation::canUseZMove (int slot)
+bool BattleSituation::canUseZMove (int spot)
 {
-    if (zmoves[player(slot)]) {
+    if (zmoves[player(spot)]) {
         return false;
     }
-    int item = poke(slot).item();
+    int item = poke(spot).item();
     if (ItemInfo::isZCrystal(item)) {
         for (int i = 0; i < 4; i++) {
-            if (canBeZMove(slot, move(slot,i)) && PP(slot, i) > 0) {
+            if (canBeZMove(spot, move(spot,i)) && PP(spot, i) > 0) {
                 return true;
             }
         }

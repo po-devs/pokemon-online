@@ -725,6 +725,7 @@ struct FullBattleConfiguration : public BattleConfiguration
 public:
     QString name[2];
     QSet<int> spectators;
+    int protocolVersion;
 
     const QString getName(int player) const {return receivingMode[player] == Spectator ? name[player] : teams[player]->name;}
 
