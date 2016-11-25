@@ -94,9 +94,9 @@ struct AMAftermath : public AM {
             if (!b.hasWorkingAbility(t,Ability::Damp) && !b.hasWorkingAbility(t,Ability::MagicGuard)){
                 b.sendAbMessage(2,0,s,t);
                 b.inflictPercentDamage(t,25,s,false);
-            }
-            else
+            } else {
                 b.sendAbMessage(2,1,s,t);
+            }
         }
     }
 };
@@ -1084,7 +1084,7 @@ struct AMRoughSkin : public AM {
             b.inflictDamage(t,b.poke(t).totalLifePoints()/(b.gen().num == 3 ? 16 : 8),s,false);
 
             /* In VGC 2011, the one with the rugged helmet wins */
-            if (b.koed(t)) {
+            if (b.koed(t) && b.gen() < 7) {
                 b.selfKoer() = t;
             }
         }

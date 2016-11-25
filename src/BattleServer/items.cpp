@@ -683,7 +683,7 @@ struct IMRockyHelmet : public IM
             b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
 
             /* In VGC 2011, the one with the rugged helmet wins */
-            if (b.koed(t)) {
+            if (b.koed(t) && b.gen() < 7) {
                 b.selfKoer() = t;
             }
         }
