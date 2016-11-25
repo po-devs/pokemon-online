@@ -2488,6 +2488,7 @@ namespace Item
         YellowNectar,
         RedNectar,
         PurpleNectar,
+        NormaliumZ = 3000,
         FiriumZ = 3009 //for Arceus + Burnup
     };
 
