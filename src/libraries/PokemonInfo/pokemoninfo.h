@@ -292,6 +292,7 @@ public:
     static QSet<int> Moves(Pokemon::gen gen);
     static bool isUniqueZMove(int movenum);
     static bool isZMove(int movenum);
+    static bool canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen);
 private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
