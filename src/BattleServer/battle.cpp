@@ -170,7 +170,7 @@ void BattleSituation::initializeEndTurnFunctions()
         13.0 Bind, Wrap, Fire Spin, Clamp, Whirlpool, Sand Tomb, Magma Storm
 
         14.0 Taunt ends
-        14.1 Throat Chop ends //Unconfirmed
+        14.1 Throat Chop ends
 
         15.0 Encore ends
 
@@ -198,7 +198,7 @@ void BattleSituation::initializeEndTurnFunctions()
 
         24.0 Gravity ends
 
-        25.0 Terrains end or something, unconfirmed
+        25.0 Terrains end
 
         26.0 Trick Room ends
         26.1 Wonder Room ends
@@ -637,7 +637,7 @@ BattleChoices BattleSituation::createChoice(int slot)
             ret.mega = true;
         }
     }
-    //Assuming same for ZMove, unconfirmed
+    //Nor are Z Moves
     if (canUseZMove(slot)) {
         ret.zmove = true;
     }
