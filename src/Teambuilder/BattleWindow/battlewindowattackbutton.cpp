@@ -25,7 +25,7 @@ QString AbstractAttackButton::power() const
     } else if (num() == Move::HiddenPower && gen <= 5) {
         return QString("%1").arg(HiddenPowerInfo::Power(gen, p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5]));
     } else {
-        return (zmove && validZmove) ? MoveInfo::PowerToString(MoveInfo::ZPower(num(), gen)) : MoveInfo::PowerS(num(), gen);
+        return (zmove && validZmove) ? MoveInfo::PowerToString(MoveInfo::ZPower(b->num(), gen)) : MoveInfo::PowerS(num(), gen);
     }
 }
 
@@ -39,7 +39,11 @@ int AbstractAttackButton::num() const
 
 int AbstractAttackButton::type() const
 {
-    return MoveInfo::Type(b->num(), gen, *p);
+    if (b->num() == Move::HiddenPower && validZmove) {
+        return Type::Normal;
+    } else {
+        return MoveInfo::Type(b->num(), gen, *p);
+    }
 }
 
 QString AbstractAttackButton::moveName() const
@@ -56,9 +60,7 @@ void AbstractAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p,
     validZmove = false;
 
     if (zmove) {
-        int ztype = ItemInfo::ZCrystalType(p.item());
-
-        if (ztype != MoveInfo::Type(b.num(), gen, p)) {
+        if (!MoveInfo::canBeZMove(p.num(), p.item(), b.num(), gen)) {
             pointer()->setDisabled(true);
             return;
         } else {

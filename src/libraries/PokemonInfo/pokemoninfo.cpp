@@ -1926,6 +1926,8 @@ QString MoveInfo::ZName(int movenum, bool zmove)
     return ret;
 }
 
+
+
 QStringList MoveInfo::Names()
 {
     QStringList ret;
@@ -2378,6 +2380,66 @@ bool MoveInfo::isUniqueZMove(int movenum)
 bool MoveInfo::isZMove(int movenum)
 {
     return movenum >= 673 && movenum <= 701;
+}
+
+bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen)
+{
+    //Hackmons: Z moves can't be the base of a z move
+    if (MoveInfo::isZMove(mv)) {
+        return false;
+    }
+
+    //Not really needed but better safe than sorry!
+    if (!ItemInfo::isZCrystal(item)) {
+        return false;
+    }
+    //Unique Z moves need to match pokemon as well
+    int zmove = ItemInfo::ZCrystalMove(item);
+    if (MoveInfo::isUniqueZMove(zmove)) {
+        switch(zmove) {
+            case Move::Catastropika:
+                return pk == Pokemon::Pikachu && mv == Move::VoltTackle;
+            break;
+            case Move::StokedSparksurfer:
+                return pk == Pokemon::Raichu_Alolan && mv == Move::Thunderbolt;
+            break;
+            case Move::ExtremeEvoboost:
+                return pk == Pokemon::Eevee && mv == Move::LastResort;
+            break;
+            case Move::PulverizingPancake:
+                return pk == Pokemon::Snorlax && mv ==  Move::GigaImpact;
+            break;
+            case Move::GenesisSupernova:
+                return pk == Pokemon::Mew && mv == Move::Psychic;
+            break;
+            case Move::GuardianofAlola:
+                return (pk == Pokemon::Tapu_Bulu || pk == Pokemon::Tapu_Koko || pk == Pokemon::Tapu_Lele || pk == Pokemon::Tapu_Fini)
+                        && mv == Move::NaturesMadness;
+            break;
+            case Move::SinisterArrowRaid:
+                return pk == Pokemon::Decidueye && mv == Move::SpiritShackle;
+            break;
+            case Move::MaliciousMoonsault:
+                return pk == Pokemon::Incineroar && mv == Move::DarkestLariat;
+            break;
+            case Move::OceanicOperetta:
+                return pk == Pokemon::Primarina && mv == Move::SparklingAria;
+            break;
+            case Move::Soul_Stealing7_StarStrike:
+                return pk == Pokemon::Marshadow && mv == Move::SpectralThief;
+            break;
+            case Move::_10_000_000VoltThunderBolt:
+                return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
+                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
+                        && mv == Move::Thunderbolt;
+            break;
+        }
+    }
+
+    //Hidden Power should always do Breakneck Blitz
+    int type = MoveInfo::Type(mv, gen);
+    int ztype = ItemInfo::ZCrystalType(item);
+    return type == ztype;
 }
 
 #undef move_find
