@@ -2006,10 +2006,13 @@ ppfunction:
 
             int hitcount = 0;
             bool hitting = false;
+            bool noDamage = false;
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 clearAtk();
                 clearBp();
                 //heatOfAttack() = true;
+                noDamage = turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()));
+
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
                 bool sub = hasSubstitute(target);
                 if (sub) {
@@ -2019,7 +2022,9 @@ ppfunction:
                 /*Gyro Ball needs a special exclusion here to display tooltips correctly because BP is still registered as "1" through the next 2 checks.
                  * The actual BP isn't calculated until after a crit is determined otherwise the incorrect speed stat and modifiers are used.*/
                 if ((tmove(player).power > 1  || tmove(player).attack == Move::GyroBall) && repeatCount() == 0) {
-                    notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
+                    if (!noDamage) { /*Don't send effectiveness message if no damage is being done! */
+                        notify(All, Effective, target, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
+                    }
                 }
 
                 if (zmoving && isDisguised(target)) {
@@ -2032,9 +2037,9 @@ ppfunction:
                         turnMemory(player).remove("HitCancelled");
                         continue;
                     }
-                    testCritical(player, target);
-                    int damage = calculateDamage(player, target);
-                    if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
+                    if (!noDamage) {
+                        testCritical(player, target);
+                        int damage = calculateDamage(player, target);
                         inflictDamage(target, damage, player, true);
                     }
                     hitcount += 1;
@@ -2045,8 +2050,8 @@ ppfunction:
                     calleffects(player, target, "CustomAttackingDamage");
 
                     if (turnMemory(player).contains("CustomDamage")) {
-                        int damage = turnMemory(player).value("CustomDamage").toInt();
-                        if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
+                        if (!noDamage) {
+                            int damage = turnMemory(player).value("CustomDamage").toInt();
                             inflictDamage(target, damage, player, true);
                         }
                         hitcount += 1;
