@@ -61,7 +61,7 @@ TRANSLATIONS = src/trans/translation_de.ts \
     src/trans/translation_es.ts \
     src/trans/translation_fr.ts \
     src/trans/translation_it.ts \
-    src/trans/translation_zh-cn.ts \
+    src/trans/translation_zh-cn.ts
 #The following languages were once supported but haven't been updated in awhile
 #They are massively out of date and some didn't have anything translated for them!
     #src/trans/outdated/translation_fi.ts \
