@@ -257,6 +257,7 @@ struct BattleChoices
     quint8 numSlot;
     bool mega;
     bool zmove;
+    bool zmoveAllowed[4];
 
     bool struggle() const { return qFind(attackAllowed, attackAllowed+4, true) == attackAllowed+4; }
 

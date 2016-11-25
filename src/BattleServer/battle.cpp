@@ -609,46 +609,55 @@ void BattleSituation::endTurnBurn(int player)
     callaeffects(player, player, "AfterStatusDamage");
 }
 
-BattleChoices BattleSituation::createChoice(int slot)
+BattleChoices BattleSituation::createChoice(int spot)
 {
     /* First let's see for attacks... */
-    if (koed(slot)) {
-        return BattleChoices::SwitchOnly(slot);
+    if (koed(spot)) {
+        return BattleChoices::SwitchOnly(spot);
     }
 
     BattleChoices ret;
-    ret.numSlot = slot;
+    ret.numSlot = spot;
 
     /* attacks ok, lets see which ones then */
-    callpeffects(slot, slot, "MovesPossible");
-    callieffects(slot, slot, "MovesPossible");
-    callbeffects(slot, slot,"MovesPossible");
+    callpeffects(spot, spot, "MovesPossible");
+    callieffects(spot, spot, "MovesPossible");
+    callbeffects(spot, spot,"MovesPossible");
 
     for (int i = 0; i < 4; i++) {
-        if (!isMovePossible(slot,i)) {
+        if (!isMovePossible(spot,i)) {
             ret.attackAllowed[i] = false;
         }
     }
 
     //Mega Evolution is not hindered by Embargo, etc.
-    if (canMegaEvolve(slot)) {
-        Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
+    if (canMegaEvolve(spot)) {
+        Pokemon::uniqueId forme = poke(spot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(spot).item());
         if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
             ret.mega = true;
         }
     }
+
     //Nor are Z Moves
-    if (canUseZMove(slot)) {
+    if (canUseZMove(spot)) {
         ret.zmove = true;
+
+        for (int i = 0; i < 4; i++) {
+            /* TODO: Instead of ret.attackAllowed[i], use a function isZMovePossible(s,i) for things like Taunt that blocks
+             * normal moves but not zmoves. Maybe isZMovePossible should just check the pokemon is not locked into another
+             * move?
+             */
+            ret.zmoveAllowed[i] = canBeZMove(spot, i) && ret.attackAllowed[i];
+        }
     }
 
-    if (!hasWorkingItem(slot, Item::ShedShell) && (gen() < 6 || !hasType(slot, Type::Ghost))) {
+    if (!hasWorkingItem(spot, Item::ShedShell) && (gen() < 6 || !hasType(spot, Type::Ghost))) {
         /* Shed Shell */
-        if (linked(slot, "Blocked") || linked(slot, "Trapped")) {
+        if (linked(spot, "Blocked") || linked(spot, "Trapped")) {
             ret.switchAllowed = false;
         }
 
-        if (pokeMemory(slot).contains("Rooted")) {
+        if (pokeMemory(spot).contains("Rooted")) {
             ret.switchAllowed = false;
         }
 
@@ -656,17 +665,17 @@ BattleChoices BattleSituation::createChoice(int slot)
             ret.switchAllowed = false;
         }
 
-        QList<int> opps = revs(slot);
+        QList<int> opps = revs(spot);
         foreach(int opp, opps){
-            callaeffects(opp, slot, "IsItTrapped");
-            if (turnMemory(slot).value("Trapped").toBool()) {
+            callaeffects(opp, spot, "IsItTrapped");
+            if (turnMemory(spot).value("Trapped").toBool()) {
                 ret.switchAllowed = false;
                 break;
             }
         }
     }
 
-    if (linked(slot, "FreeFalled")) {
+    if (linked(spot, "FreeFalled")) {
         ret.switchAllowed = false;
     }
 

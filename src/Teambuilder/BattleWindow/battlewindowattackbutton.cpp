@@ -61,7 +61,6 @@ void AbstractAttackButton::updateAttack(const BattleMove &b, const PokeProxy &p,
 
     if (zmove) {
         if (!MoveInfo::canBeZMove(p.num(), p.item(), b.num(), gen)) {
-            pointer()->setDisabled(true);
             return;
         } else {
             validZmove = true;

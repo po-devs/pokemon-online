@@ -171,7 +171,8 @@ protected:
     void openRearrangeWindow(const ShallowShownTeam &t);
     void listItems();
 
-    void updateAttacks(AttackZone *zone, PokeProxy *p);
+    void updateAttacks(int spot);
+    void updateAttacks(AttackZone *zone, const PokeProxy *p);
     void updateAttack(int spot, int moveSlot);
     int currentChoiceIndex() const;
 

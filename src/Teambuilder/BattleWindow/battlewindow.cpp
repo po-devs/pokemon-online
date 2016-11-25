@@ -288,7 +288,7 @@ void BattleWindow::switchTo(int pokezone, int spot, bool forced)
     mystack->setCurrentIndex(snum);
     mytab->setCurrentIndex(MoveTab);
 
-    updateAttacks(myazones[snum], &info().tempPoke(spot));
+    updateAttacks(spot);
 }
 
 int BattleWindow::currentChoiceIndex() const
@@ -296,7 +296,24 @@ int BattleWindow::currentChoiceIndex() const
     return data().slotNum(info().currentSpot);
 }
 
-void BattleWindow::updateAttacks(AttackZone *zone, PokeProxy *p)
+void BattleWindow::updateAttacks(int spot)
+{
+    auto *zone = myazones[data().slotNum(spot)];
+    const PokeProxy &p = info().tempPoke(spot);
+
+    updateAttacks(zone, &p);
+
+    /* The other updateAttack function is used for example when using a trainer item on a move,
+     * for example in order to regain PP. As such there is no enabling / disabling moves there,
+     * only here */
+    bool zmove = zone->zmove->isChecked();
+    const auto &choice = info().choices[spot];
+    for (int i = 0; i < 4; i++) {
+        zone->attacks[i]->setEnabled(choice.attacksAllowed && (zmove ? choice.zmoveAllowed[i] : choice.attackAllowed[i]));
+    }
+}
+
+void BattleWindow::updateAttacks(AttackZone *zone, const PokeProxy *p)
 {
     for (int i = 0; i< 4; i++) {
         zone->tattacks[i]->updateAttack(p->move(i)->exposedData(), *p, gen(), zone->zmove->isChecked());
@@ -437,35 +454,26 @@ void BattleWindow::attackClicked(int zone)
     }
 }
 
-void BattleWindow::zmoveClicked(bool checked)
+void BattleWindow::zmoveClicked(bool)
 {
-    /* If checked is false, meaning user cancelled the zmove button, so we reset everything to normal in the attack zone.
-     *
-     * Otherwise, when the user previously pressed the zmove button, some attacks have become disabled as a result */
-    if (!checked) {
-        goToNextChoice();
-        return;
-    }
-
-    int n = currentChoiceIndex();
-
-    updateAttacks(myazones[n], &info().tempPoke(info().currentSpot));
+    updateAttacks(info().currentSpot);
 }
 
 void BattleWindow::switchClicked(int zone)
 {
-    int slot = info().currentSpot;
-    int snum = data().slotNum(slot);
+    int spot = info().currentSpot;
+    int slot = data().slotNum(spot);
+    BattleChoice &choice = info().choice[slot];
 
     if (!info().possible)
     {
         switchToPokeZone();
     } else {
         if (info().phase == BattleInfo::ItemPokeSelection) {
-            info().choice[snum].choice.item.target = data().spot(info().myself,zone);
-            int tar = ItemInfo::Target(info().choice[snum].item(), gen());
+            choice.choice.item.target = data().spot(info().myself,zone);
+            int tar = ItemInfo::Target(choice.item(), gen());
             if (tar == Item::TeamPokemon) {
-                info().done[snum] = true;
+                info().done[slot] = true;
                 goToNextChoice();
             } else {
                 info().phase = BattleInfo::ItemAttackSelection;
@@ -478,15 +486,13 @@ void BattleWindow::switchClicked(int zone)
                 switchToPokeZone(); // go to attack zone :)
             }
         } else {
-            if (!info().choices[snum].switchAllowed)
+            if (!info().choices[slot].switchAllowed)
                 return;
-            if (zone == snum) {
-                switchTo(snum, slot, false);
+            if (zone == slot) {
+                switchTo(slot, spot, false);
             } else {
-                BattleChoice &b = info().choice[snum];
-                b = BattleChoice(slot, SwitchChoice());
-                b.setPokeSlot(zone);
-                info().done[snum] = true;
+                choice = BattleChoice(spot, SwitchChoice{(qint8)zone});
+                info().done[slot] = true;
                 goToNextChoice();
             }
         }
@@ -511,7 +517,7 @@ void BattleWindow::goToNextChoice()
         const auto &choices = info().choices[slot];
 
         myswitch->setText(tr("&Switch Pokemon"));
-        if (choices.attacksAllowed == false && info().choices[slot].switchAllowed == true)
+        if (choices.attacksAllowed == false && choices.switchAllowed == true)
             mytab->setCurrentIndex(PokeTab);
         else {
             switchTo(slot, spot, false);
@@ -524,32 +530,26 @@ void BattleWindow::goToNextChoice()
         if (!data().isKoed(spot))
         {
             auto azone = myazones[slot];
-            azone->megaevo->setVisible(info().choices[slot].mega);
+            azone->megaevo->setVisible(choices.mega);
             azone->megaevo->setChecked(false);
-            azone->zmove->setVisible(info().choices[slot].zmove);
+            azone->zmove->setVisible(choices.zmove);
             azone->zmove->setChecked(false);
-            if (info().choices[slot].attacksAllowed == false) {
+            if (choices.attacksAllowed == false) {
                 myattack->setEnabled(false);
-                for (int i = 0; i < 4; i ++) {
-                    azone->attacks[i]->setEnabled(false);
-                }
                 if (myitems) {
                     myitems->setEnabled(false);
                 }
             } else {
                 myattack->setEnabled(true);
-                for (int i = 0; i < 4; i ++) {
-                    azone->attacks[i]->setEnabled(choices.attackAllowed[i]);
-                }
 
-                if (info().choices[slot].struggle()) {
+                if (choices.struggle()) {
                     mystack->setCurrentWidget(szone);
                 } else {
                     mystack->setCurrentWidget(azone);
                 }
             }
 
-            updateAttacks(azone, &info().ownTempPoke(slot));
+            updateAttacks(spot);
         }
         /* Then pokemon */
         if (choices.switchAllowed == false) {
@@ -770,8 +770,8 @@ void BattleWindow::onPPChange(int spot, int move, int)
 
 void BattleWindow::onItemChange(int spot, int, int)
 {
-    if (data().isOut(spot)) {
-        updateAttacks(myazones[data().slotNum(spot)], &info().tempPoke(spot));
+    if (data().isOut(spot) && data().player(spot) == info().myself) {
+        updateAttacks(spot);
     }
     mypzone->pokes[data().slotNum(spot)]->updateToolTip();
 }

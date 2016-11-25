@@ -915,6 +915,7 @@ BattleChoices::BattleChoices()
     switchAllowed = true;
     attacksAllowed = true;
     std::fill(attackAllowed, attackAllowed+4, true);
+    std::fill(zmoveAllowed, zmoveAllowed+4, false);
 }
 
 void BattleChoices::disableSwitch()
@@ -945,12 +946,26 @@ BattleChoices BattleChoices::SwitchOnly(quint8 slot)
 DataStream & operator >> (DataStream &in, BattleChoices &po)
 {
     in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3] >> po.mega >> po.zmove;
+
+    if (po.zmove) {
+        for (int i = 0; i < 4; i++) {
+            in >> po.zmoveAllowed[i];
+        }
+    }
+
     return in;
 }
 
 DataStream & operator << (DataStream &out, const BattleChoices &po)
 {
     out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3] << po.mega << po.zmove;
+
+    if (po.zmove) {
+        for (int i = 0; i < 4; i++) {
+            out << po.zmoveAllowed[i];
+        }
+    }
+
     return out;
 }
 
