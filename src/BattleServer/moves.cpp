@@ -1179,10 +1179,25 @@ struct MMCopycat : public MM
         removeFunction(turn(b,s), "DetermineAttackFailure", "Copycat");
         int attack = turn(b,s)["CopycatMove"].toInt();
         BS::BasicMoveInfo info = tmove(b,s);
-        MoveEffect::setup(attack, s, t, b);
-        turn(b,s)["Target"] = b.randomValidOpponent(s);
-        b.useAttack(s, attack, true);
-        MoveEffect::unsetup(attack, s, b);
+        if (b.zTurn(s) && MoveInfo::Power(attack, b.gen()) > 0) {
+            int type = MoveInfo::Type(attack, b.gen());
+            if (attack == Move::HiddenPower) {
+                type = Type::Normal;
+            }
+            int zmove = ItemInfo::ZCrystalMove(type + Item::NormaliumZ);
+            int moveCategory = MoveInfo::Category(attack, b.gen());
+            MoveEffect::setup(zmove, s, t, b);
+            tmove(b,s).power = MoveInfo::ZPower(attack, b.gen());
+            tmove(b,s).category = moveCategory;
+            turn(b,s)["Target"] = b.randomValidOpponent(s);
+            b.useAttack(s, zmove, true);
+            MoveEffect::unsetup(zmove, s, b);
+        } else {
+            MoveEffect::setup(attack, s, t, b);
+            turn(b,s)["Target"] = b.randomValidOpponent(s);
+            b.useAttack(s, attack, true);
+            MoveEffect::unsetup(attack, s, b);
+        }
         tmove(b,s) = info;
     }
 };
@@ -4424,13 +4439,33 @@ struct MMMeFirst : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "MeFirst");
         removeFunction(turn(b,s), "MoveSettings", "MeFirst");
         int move = turn(b,s)["MeFirstAttack"].toInt();
-        MoveEffect::setup(move,s,t,b);
-        if (b.gen() >= 5) { // gen 3+4 done inline in calculateDamage
-            b.chainBp(s, 0x1800);
+        if (b.zTurn(s) && MoveInfo::Power(move, b.gen()) > 0) {
+            //This still needs fixed, the zmove gets chosen but not used
+            int type = MoveInfo::Type(move, b.gen());
+            if (move == Move::HiddenPower) {
+                type = Type::Normal;
+            }
+            int zmove = ItemInfo::ZCrystalMove(type + Item::NormaliumZ);
+            int moveCategory = MoveInfo::Category(move, b.gen());
+            MoveEffect::setup(zmove, s, t, b);
+            tmove(b,s).power = MoveInfo::ZPower(move, b.gen());
+            tmove(b,s).category = moveCategory;
+            //CONFIRM: Does the resulting zmove get boosted?
+            /*if (b.gen() >= 5) {
+                b.chainBp(s, 0x1800);
+            }*/
+            turn(b,s)["Target"] = b.randomValidOpponent(s);
+            b.useAttack(s, zmove, true, true);
+            MoveEffect::unsetup(zmove, s, b);
+        } else {
+            MoveEffect::setup(move, s, t, b);
+            if (b.gen() >= 5) { // gen 3+4 done inline in calculateDamage
+                b.chainBp(s, 0x1800);
+            }
+            turn(b,s)["Target"] = b.randomValidOpponent(s);
+            b.useAttack(s, move, true, true);
+            MoveEffect::unsetup(move, s, b);
         }
-        turn(b,s)["Target"] = b.randomValidOpponent(s);
-        b.useAttack(s,move,true,true);
-        MoveEffect::unsetup(move,s,b);
     }
 };
 
@@ -4542,10 +4577,25 @@ struct MMMirrorMove : public MM
 
         int move = poke(b,s)["MirrorMoveMemory"].toInt();
         BS::BasicMoveInfo info = tmove(b,s);
-        MoveEffect::setup(move,s,s,b);
-        turn(b,s)["Target"] = b.randomValidOpponent(s);
-        b.useAttack(s,move,true,true);
-        MoveEffect::unsetup(move,s,b);
+        if (b.zTurn(s) && MoveInfo::Power(move, b.gen()) > 0) {
+            int type = MoveInfo::Type(move, b.gen());
+            if (move == Move::HiddenPower) {
+                type = Type::Normal;
+            }
+            int zmove = ItemInfo::ZCrystalMove(type + Item::NormaliumZ);
+            int moveCategory = MoveInfo::Category(move, b.gen());
+            MoveEffect::setup(zmove, s, s, b);
+            tmove(b,s).power = MoveInfo::ZPower(move, b.gen());
+            tmove(b,s).category = moveCategory;
+            turn(b,s)["Target"] = b.randomValidOpponent(s);
+            b.useAttack(s, zmove, true, true);
+            MoveEffect::unsetup(zmove, s, b);
+        } else {
+            MoveEffect::setup(move, s, s, b);
+            turn(b,s)["Target"] = b.randomValidOpponent(s);
+            b.useAttack(s, move, true, true);
+            MoveEffect::unsetup(move, s, b);
+        }
         tmove(b,s) = info;
     }
 };

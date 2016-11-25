@@ -4953,12 +4953,14 @@ void BattleSituation::setupMove(int i, int move, bool zmove)
     //ZAttack should be a completely seperate move from the base attack
     if (zmove && MoveInfo::Power(move, this->gen()) > 0 && !zmoves[player(i)] && canBeZMove(i, move)) {
         int zmove = ItemInfo::ZCrystalMove(this->poke(i).item());
-        int power = MoveInfo::ZPower(move, this->gen());;
+        int power = MoveInfo::ZPower(move, this->gen());
+        int moveCategory = MoveInfo::Category(move, this->gen());
         if (MoveInfo::isUniqueZMove(zmove)) {
             power = MoveInfo::Power(zmove, this->gen());
         }
         MoveEffect::setup(zmove,i,0,*this);
         this->tmove(i).power = power;
+        this->tmove(i).category = moveCategory;
     } else {
         MoveEffect::setup(move,i,0,*this);
     }
