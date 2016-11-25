@@ -373,7 +373,7 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
             output<BattleEnum::EndTerrain>(terrain);
             break;
         }
-    }
+    } break;
     case BC::StraightDamage:
     {
         qint16 damage;

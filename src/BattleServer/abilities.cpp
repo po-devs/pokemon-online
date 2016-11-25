@@ -2975,8 +2975,15 @@ struct AMDisguise : AM
     }
 
     static void us(int s, int, BS &b) {
+        Pokemon::uniqueId num = b.poke(s).num();
+        if (PokemonInfo::OriginalForme(num) != Pokemon::Mimikyu || b.preTransPoke(s, Pokemon::Mimikyu))
+            return;
+
+        //No faking your form!!
         if (b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
-            b.changeAForme(s, 1);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Mimikyu_Busted);
+        } else {
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Mimikyu);
         }
     }
 
@@ -2989,7 +2996,7 @@ struct AMDisguise : AM
             return;
         }
 
-        //Unconfirmed: Rocky Helmet? Recoil damage?
+        //UNTESTED: Pokemon shouldn't take Recoil damage but should take Rocky Helmet
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
                 turn(b,s)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
@@ -3001,7 +3008,7 @@ struct AMDisguise : AM
     static void disguise (int s, int, BS &b) {
         b.sendAbMessage(138, 0, s);
         b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
-        b.changeAForme(s, 1);
+        b.changeForme(b.player(s), b.slotNum(s), Pokemon::Mimikyu_Busted);
     }
 };
 
@@ -3480,7 +3487,7 @@ void AbilityEffect::init()
     REGISTER_AB(135, WimpOut); /* Emergency Exit*/
     REGISTER_AB(136, SurgeSurfer);
     REGISTER_AB(137, WaterCompaction);
-    REGISTER_AB(138, Disguise); //Unconfirmed: Needs ability flags
+    REGISTER_AB(138, Disguise);
     REGISTER_AB(139, InnardsOut);
     REGISTER_AB(140, Dancer);
     REGISTER_AB(141, BattleBond); //Unconfirmed: Needs ability flags

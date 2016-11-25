@@ -1037,7 +1037,8 @@ namespace Pokemon
         Pikachu_Fourth_Hat = Pikachu + (10 << 16),
         Pikachu_Fifth_Hat = Pikachu + (11 << 16),
         Pikachu_Sixth_Hat = Pikachu + (12 << 16),
-        Minior_Red = Minior + (1 << 16)
+        Minior_Red = Minior + (1 << 16),
+        Mimikyu_Busted = Mimikyu + (1 << 16)
     };
 }
 

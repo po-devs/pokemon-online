@@ -831,7 +831,7 @@ struct MMDreamingTarget : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(t).status() != Pokemon::Asleep || (tmove(b,s).power == 0 && b.hasSubstitute(t))) {
+        if (b.poke(t).status() != Pokemon::Asleep || (tmove(b,s).power == 0 && b.hasSubstitute(t)) || !b.hasWorkingAbility(t, Ability::Comatose)) {
             b.fail(s, 31, 0, type(b,s), t);
         }
     }
@@ -6990,7 +6990,6 @@ struct MMBelch :  public MM
     }
 };
 
-//UNTESTED: Message when Terrain ends is incorrect. Terrain ends properly though
 struct MMTerrain : public MM {
     MMTerrain() {
         functions["UponAttackSuccessful"] = &uas;
