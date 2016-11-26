@@ -1950,10 +1950,16 @@ ppfunction:
             }
 
             /* King's Shield*/
-            if (gen() >= 7 && turnMemory(target).value("KingsShieldUsed").toBool()) {
-                callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-                if (testFail(player)) {
-                    calleffects(player,target,"AttackSomehowFailed");
+            /* also abilities are called before type mods */
+            if (gen() >= 7) {
+                if (turnMemory(target).value("KingsShieldUsed").toBool()) {
+                    callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+                    if (testFail(player)) {
+                        calleffects(player,target,"AttackSomehowFailed");
+                        continue;
+                    }
+                }
+                if (oppBlockFailure(target, player)) {
                     continue;
                 }
             }
@@ -1966,16 +1972,7 @@ ppfunction:
                 continue;
             }
 
-            if (target != player) {
-                callaeffects(target,player,"OpponentBlock");
-                callieffects(target,player,"OpponentBlock"); //Safety Goggles
-                if (blockPriority(player, target)) {
-                    calleffects(player,target,"AttackSomehowFailed");
-                    continue;
-                }
-            }
-            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
-                calleffects(player,target,"AttackSomehowFailed");
+            if (gen() < 7 && oppBlockFailure(target, player)) {
                 continue;
             }
 
@@ -2148,6 +2145,11 @@ ppfunction:
                 continue;
             }
 
+            /* Abilities have priority over type mods in gen 7 */
+            if (gen() >= 7 && oppBlockFailure(target, player)) {
+                continue;
+            }
+
             /* Needs to be called before opponentblock because lightning rod / twave */
             int type = tmove(player).type; /* move type */
             if (target != player) {
@@ -2187,17 +2189,7 @@ ppfunction:
 
             /* Needs to be called before DetermineAttackFailure because
               of SapSipper/Leech Seed */
-            if (target != player) {
-                callaeffects(target,player,"OpponentBlock");
-                callieffects(target,player,"OpponentBlock"); //Safety Goggles
-                //UNTESTED: Add a check here to block Magic Coat Prankster (most likely the right spot)
-                if (blockPriority(player, target)) {
-                    calleffects(player,target,"AttackSomehowFailed");
-                    continue;
-                }
-            }
-            if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
-                calleffects(player,target,"AttackSomehowFailed");
+            if (gen() < 7 && oppBlockFailure(target, player)) {
                 continue;
             }
             if ( target != player && (tmove(player).flags & Move::PowderFlag) && hasType(target, Type::Grass) && !pokeMemory(target).value(QString("%1Sleuthed").arg(Type::Grass)).toBool()) {
@@ -4012,7 +4004,7 @@ int BattleSituation::repeatNum(int player)
     int min = tmove(player).repeatMin;
     int max = tmove(player).repeatMax;
 
-    if (max == 3) {
+    if (tmove(player).attack == Move::TripleKick) {
         //Triple kick, done differently...
         return 1;
     }
@@ -5141,6 +5133,24 @@ bool BattleSituation::blockPriority(int player, int target)
                 sendAbMessage(129, 0, target, player, Type::Curse, tmove(player).attack);
                 return true;
             }
+        }
+    }
+    return false;
+}
+
+bool BattleSituation::oppBlockFailure (int target, int player)
+{
+    if (target != player) {
+        callaeffects(target,player,"OpponentBlock");
+        callieffects(target,player,"OpponentBlock"); //Safety Goggles
+
+        if (blockPriority(player, target)) {
+            calleffects(player,target,"AttackSomehowFailed");
+            return true;
+        }
+        if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
+            calleffects(player,target,"AttackSomehowFailed");
+            return true;
         }
     }
     return false;

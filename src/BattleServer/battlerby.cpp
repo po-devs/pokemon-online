@@ -758,7 +758,7 @@ void BattleRBY::calleffects(int source, int target, const QString &name)
     }
 }
 
-void BattleRBY::setupMove(int i, int move, bool zmove)
+void BattleRBY::setupMove(int i, int move, bool)
 {
     RBYMoveEffect::setup(move,i,0,*this);
 }

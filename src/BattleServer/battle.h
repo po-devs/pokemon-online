@@ -168,6 +168,8 @@ public:
     BattleStats constructStats(int player);
     BattleDynamicInfo constructInfo(int player);
 
+    bool oppBlockFailure(int target, int player);
+
     void changeDefMove(int player, int slot, int move);
 
     enum WeatherM
