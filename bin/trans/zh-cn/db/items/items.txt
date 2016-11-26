@@ -342,6 +342,41 @@
 341 搅好的奶油
 342 红色宝珠
 343 蓝色宝珠
+344 Fighting Memory
+345 Flying Memory
+346 Poison Memory
+347 Ground Memory
+348 Rock Memory
+349 Bug Memory
+350 Ghost Memory
+351 Steel Memory
+352 Fire Memory
+353 Water Memory
+354 Grass Memory
+355 Electric Memory
+356 Psychic Memory
+357 Ice Memory
+358 Dragon Memory
+359 Dark Memory
+360 Fairy Memory
+361 Adrenaline Orb
+362 Terrain Extender
+363 Protective Pads
+364 Electric Seed
+365 Psychic Seed
+366 Misty Seed
+367 Grassy Seed
+368 Beast Ball
+369 Big Malasada
+370 Common Stone
+371 Bottle Cap
+372 Gold Bottle Cap
+373 Ice Stone
+374 Shalour Sable
+375 Pink Nectar
+376 Yellow Nectar
+377 Red Nectar
+378 Purple Nectar
 1000 粉红缎带
 1001 圆点缎带
 2001 M妙蛙花石
@@ -391,3 +426,32 @@
 2045 M蒂安希石
 2046 M拉提亚斯石
 2047 M拉提欧斯石
+3000 Normalium Z
+3001 Fightinium Z
+3002 Flyinium Z
+3003 Poisonium Z
+3004 Groundium Z
+3005 Rockium Z
+3006 Buginium Z
+3007 Ghostium Z
+3008 Steelium Z
+3009 Firium Z
+3010 Waterium Z
+3011 Grassium Z
+3012 Electrium Z
+3013 Psychium Z
+3014 Icium Z
+3015 Dragonium Z
+3016 Darkinium Z
+3017 Fairium Z
+3018 Pikanium Z
+3019 Aloraichium Z
+3020 Eevium Z
+3021 Snorlium Z
+3022 Mewnium Z
+3023 Tapunium Z
+3024 Decidium Z
+3025 Incinium Z
+3026 Primarium Z
+3027 Marshadium Z
+3028 Pikashunium Z

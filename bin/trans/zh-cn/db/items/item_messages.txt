@@ -24,5 +24,8 @@
 43 %s使用了弱点政策！
 66 %sMega进化为%p!
 67 %s原始回归！变为了原始形态！
+68 %s surrounded itself with its Z-Power!|%f couldn't fully protect itself and got hurt!|%s used Z-%m!
+71 The Adrenaline Orb raised %s's Speed!
+72 %s protected itself with the Protective Pads!
 1007 %s恢复了健康！
 1999 %s恢复了健康！

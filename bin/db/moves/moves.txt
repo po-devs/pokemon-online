@@ -625,7 +625,7 @@
 624 High Horsepower
 625 Leafage
 626 Moongeist Beam
-627 Nature’s Madness
+627 Nature's Madness
 628 Revelation Dance
 629 Shell Trap
 630 Solar Blade
@@ -672,12 +672,12 @@
 671 Tearful Look
 672 Zing Zap
 673 Breakneck Blitz
-674 All-Out Pummelling
+674 All-Out Pummeling
 675 Supersonic Skystrike
 676 Acid Downpour
 677 Tectonic Rage
 678 Continental Crush
-679 Savage Spinout
+679 Savage Spin-out
 680 Never-Ending Nightmare
 681 Corkscrew Crash
 682 Inferno Overdrive
