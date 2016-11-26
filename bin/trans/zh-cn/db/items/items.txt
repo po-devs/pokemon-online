@@ -342,41 +342,41 @@
 341 搅好的奶油
 342 红色宝珠
 343 蓝色宝珠
-344 Fighting Memory
-345 Flying Memory
-346 Poison Memory
-347 Ground Memory
-348 Rock Memory
-349 Bug Memory
-350 Ghost Memory
-351 Steel Memory
-352 Fire Memory
-353 Water Memory
-354 Grass Memory
-355 Electric Memory
-356 Psychic Memory
-357 Ice Memory
-358 Dragon Memory
-359 Dark Memory
-360 Fairy Memory
-361 Adrenaline Orb
-362 Terrain Extender
-363 Protective Pads
-364 Electric Seed
-365 Psychic Seed
-366 Misty Seed
-367 Grassy Seed
-368 Beast Ball
-369 Big Malasada
-370 Common Stone
-371 Bottle Cap
-372 Gold Bottle Cap
-373 Ice Stone
-374 Shalour Sable
-375 Pink Nectar
-376 Yellow Nectar
-377 Red Nectar
-378 Purple Nectar
+344 格斗存储碟
+345 飞行存储碟
+346 毒存储碟
+347 大地存储碟
+348 岩石存储碟
+349 虫存储碟
+350 鬼存储碟
+351 钢存储碟
+352  存储碟
+353 水存储碟
+354 草存储碟
+355 电存储碟
+356 超能存储碟
+357 冰存储碟
+358 龙存储碟
+359 黑暗存储碟
+360 妖精存储碟
+361 胆怯球
+362 大地膜
+363 部位护具
+364 电气种子
+365 精神种子
+366 薄雾种子
+367 青草种子
+368 究极球
+369 大马拉萨达
+370 常见石
+371 银色王冠
+372 金色王冠
+373 冰之石
+374 娑罗沙布蕾
+375 桃粉色花蜜
+376 金黄色花蜜
+377 朱红色花蜜
+378 兰紫色花蜜
 1000 粉红缎带
 1001 圆点缎带
 2001 M妙蛙花石
@@ -426,32 +426,32 @@
 2045 M蒂安希石
 2046 M拉提亚斯石
 2047 M拉提欧斯石
-3000 Normalium Z
-3001 Fightinium Z
-3002 Flyinium Z
-3003 Poisonium Z
-3004 Groundium Z
-3005 Rockium Z
-3006 Buginium Z
-3007 Ghostium Z
-3008 Steelium Z
-3009 Firium Z
-3010 Waterium Z
-3011 Grassium Z
-3012 Electrium Z
-3013 Psychium Z
-3014 Icium Z
-3015 Dragonium Z
-3016 Darkinium Z
-3017 Fairium Z
-3018 Pikanium Z
-3019 Aloraichium Z
-3020 Eevium Z
-3021 Snorlium Z
-3022 Mewnium Z
-3023 Tapunium Z
-3024 Decidium Z
-3025 Incinium Z
-3026 Primarium Z
-3027 Marshadium Z
-3028 Pikashunium Z
+3000 一般Z纯晶
+3001 格斗Z纯晶
+3002 飞行 Z纯晶
+3003 毒Z纯晶
+3004 地面 Z纯晶
+3005 岩石Z纯晶
+3006 虫Z纯晶
+3007 鬼Z纯晶
+3008 钢Z纯晶
+3009 火Z纯晶
+3010 水Z纯晶
+3011 草Z纯晶
+3012 电Z纯晶
+3013 超能Z纯晶
+3014 冰Z纯晶
+3015 龙Z纯晶
+3016 恶Z纯晶
+3017 仙Z纯晶
+3018 皮卡丘Z纯晶
+3019 阿罗雷Z纯晶
+3020 伊布Z纯晶
+3021 卡比兽Z纯晶
+3022 梦幻Z纯晶
+3023 卡璞Z纯晶
+3024 狙射树枭Z纯晶
+3025 炽焰咆哮虎Z纯晶
+3026 西狮海壬Z纯晶
+3027 玛夏多Z纯晶
+3028 小智皮卡丘Z纯晶
