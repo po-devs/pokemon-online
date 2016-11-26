@@ -119,7 +119,7 @@ BattleLogsPlugin::BattleLogsPlugin(BattleInterface *b, bool raw, bool plain, con
     conf = b->configuration();
 
     if (text) {
-        input = new BattleInput(&conf);
+        input = new BattleInput(&conf, conf.protocolVersion);
         data = new battledata_basic(&conf);
         log = new BattleServerLog(data, &theme);
         input->addOutput(data);

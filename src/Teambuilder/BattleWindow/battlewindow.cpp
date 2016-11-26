@@ -298,7 +298,8 @@ int BattleWindow::currentChoiceIndex() const
 
 void BattleWindow::updateAttacks(int spot)
 {
-    auto *zone = myazones[data().slotNum(spot)];
+    int slot = data().slotNum(spot);
+    auto *zone = myazones[slot];
     const PokeProxy &p = info().tempPoke(spot);
 
     updateAttacks(zone, &p);
@@ -307,7 +308,7 @@ void BattleWindow::updateAttacks(int spot)
      * for example in order to regain PP. As such there is no enabling / disabling moves there,
      * only here */
     bool zmove = zone->zmove->isChecked();
-    const auto &choice = info().choices[spot];
+    const auto &choice = info().choices[slot];
     for (int i = 0; i < 4; i++) {
         zone->attacks[i]->setEnabled(choice.attacksAllowed && (zmove ? choice.zmoveAllowed[i] : choice.attackAllowed[i]));
     }

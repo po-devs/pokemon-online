@@ -503,6 +503,7 @@ void DualWielder::readSocket(const QByteArray &commandline)
 //        }
 
         this->version = server;
+        input.majorProtocolVersion = server.version;
 
         break;
     }
