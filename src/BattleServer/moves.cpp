@@ -8107,15 +8107,17 @@ struct MMSpeedSwap : public MM
     }
 };
 
+//Untested
 struct MMWaterShuriken : public MM
 {
     MMWaterShuriken() {
-        functions["BasePowerModifier"] = &bpm;
+        functions["BeforeCalculatingDamage"] = &bpm;
     }
 
     static void bpm(int s, int, BS &b) {
         if (b.poke(s).num() == Pokemon::Ash_Greninja) {
-            b.chainBp(s, 0x1800);
+            tmove(b,s).power = 20;
+            turn(b,s)["RepeatCount"] = 3;
         }
     }
 };
