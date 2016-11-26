@@ -1,4 +1,4 @@
-﻿0 
+﻿0
 1 %f的体力被吸收了！|%s吞食了%f的梦！|%s吸收了%f的毒液！
 2 %s用液体圈包住了自己！|液体圈回复了%s的HP！
 3 芳香飘荡在空中！|铃铛响了！
@@ -131,19 +131,19 @@
 215 %f被粉尘覆盖了！|%s爆炸了！
 217 离子风暴正在肆虐！
 218 恭喜，%ts！
-219 But %s can't use the move!|But %s can't use it the way it is now!
-220 %s set a Shell Trap!|%s's Shell Trap didn't work!
-223 %s can't use %m after the Throat Chop!|The effects of Throat Chop prevent %f from using Sound-based moves!|<%s can speak again>
-224 %s concentrated intensely!
-225 %f used the move instructed by %s!
-229 %s sapped %t's strength to regain its own health!
-231 %t's ability was ignored!
-233 %s burned itself out!
-234 %t was cured of its status!|%s regained health!
-235 %s started heating up its beak!
-236 Aurora Veil made %ts's team stronger against physical and special moves!|%ts's Aurora Veil wore off
-238 %s stole the target's boosted stats!
-239 %s switched Speed with its target!
-1001 %s's Critical Hit rate increased!
-1002 %s's negative stat changes were eliminated!
-1003 %s restored all their HP!
+219 但是%s不能使用这个技能!|但是%s在这个状况下不能使用它!
+220 %s设置了一个陷阱甲壳!|%s的陷阱甲壳没起作用!
+223 %s在被地狱突刺击中后不能使用%m!|地狱突刺的效果让%f无法发动声音类技能!|<%s可以重新用声音类技能了>
+224 %s紧张地集中了精神!
+225 %f使用了%s号令其使用的技能!
+229 %s吸取了%t的力量来回复了自身的HP！
+231 %t的特性被无视了!
+233 %s将自己燃尽了!
+234 %t的异常状态被治愈了!|%s回复了体力!
+235 %s加热了自己的鸟嘴!
+236 极光幕使得%ts的队伍受到的物理和特殊伤害都减弱了!|%ts的极光幕消散了
+238 %s偷取了目标的能力提升!
+239 %s与对目标交换了速度!
+1001 %s的会心几率上升了!
+1002 %s的负面能力变化消失了!
+1003 %s回复了其全部的HP!
