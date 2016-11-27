@@ -2281,6 +2281,19 @@ QScriptValue ScriptEngine::teamPokeNature(int id, int team, int index)
     }
 }
 
+QScriptValue ScriptEngine::teamPokeHiddenPower(int id, int team, int index)
+{
+    if (!testPlayer("teamPokeHiddenPower(id, team, index)", id) || !testTeamCount("teamPokeHiddenPower(id, team, index)", id, team)) {
+        return myengine.undefinedValue();
+    }
+    // TODO: testRange
+    if (index < 0 || index >= 6) {
+        return myengine.undefinedValue();
+    } else {
+        return myserver->player(id)->team(team).poke(index).hiddenPower();
+    }
+}
+
 QScriptValue ScriptEngine::teamPokeEV(int id, int team, int index, int stat)
 {
     if (!testPlayer("teamPokeEV(id, team, index, stat)", id) || !testTeamCount("teamPokeEV(id, team, index, stat)", id, team)) {
@@ -2914,6 +2927,16 @@ void ScriptEngine::changePokeNature(int id, int team, int slot, int nature)
     Player *p = myserver->player(id);
     p->team(team).poke(slot).nature() = nature;
     p->team(team).poke(slot).updateStats(p->gen(team));
+}
+
+void ScriptEngine::changePokeHiddenPower(int id, int team, int slot, int hiddenPower)
+{
+    if (!testPlayer("changePokeHiddenPower(id, team, slot, hiddenPower)", id)
+            || !testRange("changePokeHiddenPower(id, team, slot, hiddenPower)", slot, 0, 5)
+            || !testRange("changePokeHiddenPower(id, team, slot, hiddenPower)", hiddenPower, 1, 16)
+            || !testTeamCount("changePokeHiddenPower(id, team, slot, hiddenPower)", id, team))
+        return;
+    myserver->player(id)->team(team).poke(slot).hiddenPower() = hiddenPower;
 }
 
 QScriptValue ScriptEngine::teamPokeGender(int id, int team, int slot)
