@@ -643,22 +643,22 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="418"/>
         <source>%1&apos;s Electric Surge causes an electric current to run across the battlefield!</source>
-        <translation>¡La Electrogénesis de %1, ha formado un campo de corriente eléctrica en el terreno de combate!</translation>
+        <translation>¡Se ha formado un campo de corriente eléctrica en el terreno de combate!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="419"/>
         <source>%1&apos;s Grassy Surge makes the grass grow to cover the battlefield!</source>
-        <translation>!La Herbogénesis de %1 ha cubierto de hierbas el terreno de combate!</translation>
+        <translation>!El terreno de combate se ha cubierto de hierba!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="420"/>
         <source>%1&apos;s Misty Surge causes mist to swirl around the battlefield!</source>
-        <translation>!La Nebulogénesis de %1 hace que niebla circule en el terreno de combate!</translation>
+        <translation>!La niebla ha envuelto el terreno de combate!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="421"/>
         <source>%1&apos;s Psychic Surge turns the battlefield weird!</source>
-        <translation>!La Psicogénesis de %1 hace que el terreno de combate se torne raro!</translation>
+        <translation>!El terreno de combate se ha vuelto muy extraño!</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="425"/>
@@ -762,12 +762,12 @@ Two different status/stats.txt files are needed; one of them would be used only 
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="474"/>
         <source>The grass disappeared from the battlefield!</source>
-        <translation>!La hierba desapareció del campo de batalla!</translation>
+        <translation>La hierba ha desaparecido.</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="475"/>
         <source>The mist disappeared from the battlefield!</source>
-        <translation>!La neblina desapareció del campo de batalla!</translation>
+        <translation>La Niebla se ha disipado.</translation>
     </message>
     <message>
         <location filename="../libraries/BattleManager/battleclientlog.cpp" line="476"/>
