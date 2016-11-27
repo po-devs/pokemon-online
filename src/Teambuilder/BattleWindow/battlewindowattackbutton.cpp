@@ -40,10 +40,13 @@ int AbstractAttackButton::num() const
 int AbstractAttackButton::type() const
 {
     if (b->num() == Move::HiddenPower && validZmove) {
-        return Type::Normal;
-    } else {
-        return MoveInfo::Type(b->num(), gen, *p);
+        if (validZmove) {
+            return Type::Normal;
+        } else if (gen >= 7) {
+            return p->hiddenPower();
+        }
     }
+    return MoveInfo::Type(b->num(), gen, *p);
 }
 
 QString AbstractAttackButton::moveName() const

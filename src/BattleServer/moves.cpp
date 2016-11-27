@@ -2703,11 +2703,10 @@ struct MMHiddenPower : public MM
             if (b.gen() < 6) {
                 tmove(b, s).power = HiddenPowerInfo::Power(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
             }
-        }
-
-        /* In 3rd gen, hidden powers can be physical! */
-        if (b.gen() <= 3) {
-            tmove(b, s).category = TypeInfo::Category(type);
+            /* In 3rd gen, hidden powers can be physical! */
+            if (b.gen() <= 3) {
+                tmove(b, s).category = TypeInfo::Category(type);
+            }
         }
     }
 };

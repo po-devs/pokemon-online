@@ -224,7 +224,7 @@ void PokeBattle::init(PokePersonal &poke)
     }
 
     dvs().clear();   
-    if(!illegal() && poke.gen().num == 6 && poke.num().pokenum >= Pokemon::Xerneas) {
+    if(!poke.illegal() && ((poke.num().pokenum >= Pokemon::Xerneas && poke.num().pokenum <= Pokemon::Volcanion) || (poke.num().pokenum >= Pokemon::Tapu_Koko && poke.num().pokenum <= Pokemon::Marshadow))) {
         int numFlawless = 6;
         for (int i = 0; i < 6; i++) {
             if(poke.DV(i) < 31) {
@@ -314,7 +314,9 @@ DataStream & operator >> (DataStream &in, PokeBattle &po)
     if (in.version >= 3) {
         in >> po.nature();
     }
-    in >> po.hiddenPower();
+    if (in.version >= 4) {
+        in >> po.hiddenPower();
+    }
     in >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
@@ -343,7 +345,9 @@ DataStream & operator << (DataStream &out, const PokeBattle &po)
     if (out.version >= 3) {
         out << po.nature();
     }
-    out << po.hiddenPower();
+    if (out.version >= 4) {
+        out << po.hiddenPower();
+    }
     out << po.happiness();
 
     for (int i = 0; i < 5; i++) {

@@ -129,7 +129,7 @@ void IvBox::changeIV(int newValue)
 {
     int stat = sender()->property("ivstat").toInt();
 
-    if(!poke().illegal() && poke().gen().num == 6 && poke().num().pokenum >= Pokemon::Xerneas) {
+    if(!poke().illegal() && ((poke().num().pokenum >= Pokemon::Xerneas && poke().num().pokenum <= Pokemon::Volcanion) || (poke().num().pokenum >= Pokemon::Tapu_Koko && poke().num().pokenum <= Pokemon::Marshadow))) {
         int numFlawless = 6;
         for (int i = 0; i < 6; i++) {
             if(i == stat) {
@@ -198,7 +198,7 @@ void IvBox::updateHiddenPowerSelection()
     foreach(QStringList s, possibilities) {
         int c = ui->hpchoice->rowCount();
         ui->hpchoice->insertRow(c);
-        if(!poke().illegal() && poke().gen().num == 6 && poke().num().pokenum >= Pokemon::Xerneas) {
+        if(!poke().illegal() && ((poke().num().pokenum >= Pokemon::Xerneas && poke().num().pokenum <= Pokemon::Volcanion) || (poke().num().pokenum >= Pokemon::Tapu_Koko && poke().num().pokenum <= Pokemon::Marshadow))) {
             int numFlawless = 0;
             for (int i = 0; i < 6; i++) {
                 if(s[i].toInt() == 31) {
@@ -248,7 +248,7 @@ void IvBox::changeHiddenPower(int newType)
     if (poke().gen() > 2) {
         QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(newType, poke().gen());
 
-        if(!poke().illegal() && poke().gen().num == 6 && poke().num().pokenum >= Pokemon::Xerneas) {
+        if(!poke().illegal() && ((poke().num().pokenum >= Pokemon::Xerneas && poke().num().pokenum <= Pokemon::Volcanion) || (poke().num().pokenum >= Pokemon::Tapu_Koko && poke().num().pokenum <= Pokemon::Marshadow))) {
             foreach(QStringList s, possibilities) {
                 int numFlawless = 0;
                 for (int i = 0; i < 6; i++) {
