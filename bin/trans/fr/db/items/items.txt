@@ -342,6 +342,41 @@
 341 Chantibonbon
 342 Orbe Rouge
 343 Orbe Bleu
+344 ROM Combat
+345 ROM Vol
+346 ROM Poison
+347 ROM Sol
+348 ROM Roche
+349 ROM Insecte
+350 ROM Spectre
+351 ROM Acier
+352 ROM Feu
+353 ROM Eau
+354 ROM Plante
+355 ROM Électrik
+356 ROM Psy
+357 ROM Glace
+358 ROM Dragon
+359 ROM Ténèbres
+360 ROM Fée
+361 Orbe Frousse
+362 Champ’Duit
+363 Pare-Effet
+364 Graine Électrik
+365 Graine Psychique
+366 Graine Brume
+367 Graine Herbe
+368 Ultra Ball
+369 Malasada Maxi
+370 Pierre Ordinaire
+371 Capsule d’Argent
+372 Capsule d’Or
+373 Pierre Glace
+374 Sablé Yantreizh
+375 Nectar Rose
+376 Nectar Jaune
+377 Nectar Rouge
+378 Nectar Mauve
 1000 Ruban Rose
 1001 Ruban à Pois
 2001 Florizarrite
@@ -391,3 +426,32 @@
 2045 Diancite
 2046 Latiasite
 2047 Latiosite
+3000 Normazélite
+3001 Combazélite
+3002 Aérozélite
+3003 Toxizélite
+3004 Terrazélite
+3005 Rocazélite
+3006 Insectozélite
+3007 Spectrozélite
+3008 Métalozélite
+3009 Pyrozélite
+3010 Aquazélite
+3011 Florazélite
+3012 Voltazélite
+3013 Psychézélite
+3014 Cryozélite
+3015 Dracozélite
+3016 Ténébrozélite
+3017 Nymphézélite
+3018 Pikazélite
+3019 Aloraïzélite
+3020 Évolizélite
+3021 Ronflézélite
+3022 Mewzélite
+3023 Tokozélite
+3024 Archézélite
+3025 Félinozélite
+3026 Oratozélite
+3027 Marshadium Z
+3028 Pikachazélite

@@ -342,6 +342,41 @@
 341 Dulce de Nata
 342 Prisma Rojo
 343 Prisma Azul
+344 Disco Lucha
+345 Disco Volador
+346 Disco Veneno
+347 Disco Tierra
+348 Disco Roca
+349 Disco Bicho
+350 Disco Fantasma
+351 Disco Acero
+352 Disco Fuego
+353 Disco Agua
+354 Disco Planta
+355 Disco Eléctrico
+356 Disco Psíquico
+357 Disco Hielo
+358 Disco Dragón
+359 Disco Siniestro
+360 Disco Hada
+361 Nerviosfera
+362 Cubresuelos
+363 Paracontacto
+364 Semilla Electro
+365 Semilla Psique
+366 Semilla Bruma
+367 Semilla Hierba
+368 Ente Ball
+369 Malasada Maxi
+370 Piedra Común
+371 Chapa Plateada
+372 Chapa Dorada
+373 Piedra Hielo
+374 Shalour Sable
+375 Néctar Rosa
+376 Néctar Amarillo
+377 Néctar Rojo
+378 Néctar Violeta
 1000 Lazo Rosa
 1001 Cinta Lunares
 2001 Venusaurita
@@ -391,3 +426,32 @@
 2045 Diancita
 2046 Latiasita
 2047 Latiosita
+3000 Normastal Z
+3001 Lizastal Z
+3002 Aerostal Z
+3003 Toxistal Z
+3004 Geostal Z
+3005 Litostal Z
+3006 Insectostal Z
+3007 Espectrostal Z
+3008 Metalostal Z
+3009 Pirostal Z
+3010 Hidrostal Z
+3011 Fitostal Z
+3012 Electrostal Z
+3013 Psicostal Z
+3014 Criostal Z
+3015 Dracostal Z
+3016 Nictostal Z
+3017 Feeristal Z
+3018 Pikastal Z
+3019 Alo-Raistal Z
+3020 Eeveestal Z
+3021 Snorlastal Z
+3022 Mewstal Z
+3023 Tapistal Z
+3024 Dueyestal Z
+3025 Incinostal Z
+3026 Primastal Z
+3027 Marshadium Z
+3028 Ash-Pikastal Z

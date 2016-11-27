@@ -190,3 +190,44 @@
 189 Terre Finale
 190 Mer Primaire
 191 Souffle Delta
+192 Métallo-Garde
+193 Spectro-Bouclier
+194 Hypersommeil
+195 Rassemblement
+196 Animacœur
+197 Filature
+198 Créa-Élec
+199 Corps Coloré
+200 Dracolère
+201 Batterie
+202 Corrosion
+203 Fantômasque
+204 Boule de Poils
+205 Endurance
+206 Prioguérison
+207 Escampette
+208 Danseuse
+209 Bouclier-Carcan
+210 Expuls'Organes
+211 Banc
+212 Surf Caudal
+213 Sable Humide
+214 Prestance Royale
+215 Synergie
+216 Receveur
+217 Système Alpha
+218 Créa-Psy
+219 Créa-Herbe
+220 Créa-Brume
+221 Chasse-Neige
+222 Repli Tactique
+223 Cruauté
+224 Aquabulle
+225 Expert Acier
+226 Longue Portée
+227 Hydrata-Son
+228 Peau Électrique
+229 Mèche Rebelle
+230 Osmose
+231 Boost Chimère
+232 Prisme-Armure
