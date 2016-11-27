@@ -5056,10 +5056,7 @@ struct MMSleepTalk : public MM
         int mv = turn(b,s)["SleepTalkedMove"].toInt();
         BS::BasicMoveInfo info = tmove(b,s);
         MoveEffect::unsetup(Move::SleepTalk, s, b);
-        MoveEffect::setup(mv,s,s,b);
-        turn(b,s)["Target"] = b.randomValidOpponent(s);
-        b.useAttack(s, mv, true);
-        MoveEffect::unsetup(mv,s,b);
+        MoveEffect::reuseMove(mv, s, s, b);
         MoveEffect::setup(Move::SleepTalk, s, s, b);
         poke(b,s).remove("SleepTalking");
         tmove(b,s) = info;
