@@ -9,10 +9,9 @@ namespace BC = BattleCommands;
 
 template <class T> std::shared_ptr<T> mk() { return std::shared_ptr<T>(new T()); }
 
-BattleInput::BattleInput(const BattleConfiguration *conf) {
+BattleInput::BattleInput(const BattleConfiguration *conf, int version) : conf(conf), majorProtocolVersion(version) {
     mCount = 0;
     delayCount = 0;
-    this->conf = conf;
 }
 
 void BattleInput::receiveData(QByteArray inf)
@@ -40,7 +39,7 @@ void BattleInput::receiveData(QByteArray inf)
         return;
     }
 
-    DataStream in (&inf, QIODevice::ReadOnly);
+    DataStream in (&inf, QIODevice::ReadOnly, majorProtocolVersion);
 
     uchar command;
     qint8 player;
@@ -91,6 +90,10 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         in >> silent;
         in >> prevIndex;
         in >> *poke;
+
+        if (conf) {
+            poke->gen() = conf->gen;
+        }
         output<BattleEnum::SendOut>(spot, prevIndex, &poke, silent);
         break;
     }
@@ -369,7 +372,7 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
             output<BattleEnum::EndTerrain>(terrain);
             break;
         }
-    }
+    } break;
     case BC::StraightDamage:
     {
         qint16 damage;

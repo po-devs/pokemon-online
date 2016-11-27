@@ -493,11 +493,13 @@ struct BMConfuseBerry : public BMPinch
         if (b.koed(s))
             return;
 
-        if (!testpinch(p, s, b, 4, true))
+        int ratio = b.gen() >= 7 ? 4 : 2;
+        if (!testpinch(p, s, b, ratio, true))
             return;
 
         b.sendBerryMessage(6,s,0);
-        b.healLife(s, b.poke(s).totalLifePoints()/8);
+        int rate = b.gen() >= 7 ? 2 : 8;
+        b.healLife(s, b.poke(s).totalLifePoints()/rate);
 
         //Berries inflict confusion based on the hindering stat of a non-neutral Nature
         int plus = NatureInfo::StatBoosted(b.poke(s).nature());

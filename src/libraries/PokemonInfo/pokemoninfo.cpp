@@ -1793,6 +1793,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_int_char(critRate, path("crit_rate.txt"));
     fill_int_char(damageClass, path("damage_class.txt"));
     fill_int_str(effect, path("effect.txt"), true);
+    fill_int_str(zeffect, path("zeffect.txt"), true);
     fill_int_str(specialEffect, path("special_effect.txt"));
     fill_int_char(effectChance, path("effect_chance.txt"));
     fill_double(flags, path("flags.txt"));
@@ -1812,7 +1813,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
     fill_int_char(recoil, path("recoil.txt"));
     //fill_int_char(status, path("status.txt"));
     fill_int_char(type, path("type.txt"));
-    fill_int_bool(kingRock, path("king_rock.txt"));
+    //fill_int_bool(kingRock, path("king_rock.txt"));
 
     /* Removing comments, aka anything starting from '#' */
     QMutableHashIterator<int,QString> it(specialEffect);
@@ -1846,6 +1847,7 @@ void MoveInfo::Gen::load(const QString &dir, Pokemon::gen gen)
 void MoveInfo::Gen::retranslate()
 {
     fill_int_str(effect, path("effect.txt"), true);
+    fill_int_str(zeffect, path("effect.txt"), true);
 }
 
 QString MoveInfo::Gen::path(const QString &fileName)
@@ -1913,6 +1915,19 @@ QString MoveInfo::Name(int movenum)
     return m_Names.value(movenum, m_Names.value(0));
 }
 
+QString MoveInfo::ZName(int movenum, bool zmove)
+{
+    QString ret = Name(movenum);
+
+    if (zmove && movenum != 0 && (Power(movenum, Pokemon::gen()) == 0 || movenum == Move::ExtremeEvoboost || movenum == Move::MeFirst)) {
+        ret = QObject::tr("Z-%1", "Z-Move Renameing").arg(ret);
+    }
+
+    return ret;
+}
+
+
+
 QStringList MoveInfo::Names()
 {
     QStringList ret;
@@ -1958,6 +1973,36 @@ int MoveInfo::Type(int mv, Pokemon::gen g)
     move_find(type, mv, g);
 }
 
+int MoveInfo::Type(int num, Pokemon::gen gen, const PokeDataInterface &p)
+{
+    if (num == Move::HiddenPower) {
+        return HiddenPowerInfo::Type(gen, p.iv(0), p.iv(1), p.iv(2), p.iv(3), p.iv(4), p.iv(5));
+    }
+
+    if (num == Move::Judgment && ItemInfo::isPlate(p.item())) {
+        return ItemInfo::PlateType(p.item());
+    }
+
+    if (num == Move::TechnoBlast && ItemInfo::isDrive(p.item())) {
+        return ItemInfo::DriveType(p.item());
+    }
+
+    if (num == Move::NaturalGift && ItemInfo::isBerry(p.item())) {
+        return ItemInfo::BerryType(p.item());
+    }
+
+    if (num == Move::Multi_Attack && ItemInfo::isMemoryChip(p.item())) {
+        return ItemInfo::MemoryChipType(p.item());
+    }
+
+    if (num == Move::RevelationDance) {
+        //UNTESTED: If Burn Up is used, then type should be Curse
+        return PokemonInfo::Type1(p.num(), gen);
+    }
+
+    return MoveInfo::Type(num, gen);
+}
+
 int MoveInfo::ConvertFromOldMove(int oldmovenum)
 {
     return m_OldMoves[oldmovenum];
@@ -1979,10 +2024,10 @@ int MoveInfo::Classification(int movenum, Pokemon::gen g)
     move_find(category, movenum, g);
 }
 
-bool MoveInfo::FlinchByKingRock(int movenum, Pokemon::gen gen)
+/*bool MoveInfo::FlinchByKingRock(int movenum, Pokemon::gen gen)
 {
     move_find(kingRock, movenum, gen);
-}
+}*/
 
 int MoveInfo::Number(const QString &movename)
 {
@@ -2018,8 +2063,16 @@ QString MoveInfo::Description(int movenum, Pokemon::gen g)
     } else {
         r.replace("$effect_chance", QString::number(EffectRate(movenum, g)));
     }
-
+    //If a move doesn't have an effect default it to Pound's effect (Deals normal damage)
+    if (r.length() == 0 && movenum != 1) {
+        return MoveInfo::Description(1, g);
+    }
     return r;
+}
+
+QString MoveInfo::ZDescription(int movenum, Pokemon::gen g)
+{
+    move_find(zeffect, movenum, g);
 }
 
 int MoveInfo::Power(int movenum, Pokemon::gen gen)
@@ -2036,6 +2089,11 @@ QString MoveInfo::PowerS(int movenum, Pokemon::gen gen)
 {
     int p = Power(movenum, gen);
 
+    return PowerToString(p);
+}
+
+QString MoveInfo::PowerToString(int p)
+{
     if (p == 0)
         return "--";
     else if (p == 1)
@@ -2314,6 +2372,76 @@ QString MoveInfo::path(const QString &file)
     return m_Directory+file;
 }
 
+bool MoveInfo::isUniqueZMove(int movenum)
+{
+    return movenum >= 691 && movenum <= 701;
+}
+
+bool MoveInfo::isZMove(int movenum)
+{
+    return movenum >= 673 && movenum <= 701;
+}
+
+bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen)
+{
+    //Hackmons: Z moves can't be the base of a z move
+    if (MoveInfo::isZMove(mv)) {
+        return false;
+    }
+
+    //Not really needed but better safe than sorry!
+    if (!ItemInfo::isZCrystal(item)) {
+        return false;
+    }
+    //Unique Z moves need to match pokemon as well
+    int zmove = ItemInfo::ZCrystalMove(item);
+    if (MoveInfo::isUniqueZMove(zmove)) {
+        switch(zmove) {
+            case Move::Catastropika:
+                return pk == Pokemon::Pikachu && mv == Move::VoltTackle;
+            break;
+            case Move::StokedSparksurfer:
+                return pk == Pokemon::Raichu_Alolan && mv == Move::Thunderbolt;
+            break;
+            case Move::ExtremeEvoboost:
+                return pk == Pokemon::Eevee && mv == Move::LastResort;
+            break;
+            case Move::PulverizingPancake:
+                return pk == Pokemon::Snorlax && mv ==  Move::GigaImpact;
+            break;
+            case Move::GenesisSupernova:
+                return pk == Pokemon::Mew && mv == Move::Psychic;
+            break;
+            case Move::GuardianofAlola:
+                return (pk == Pokemon::Tapu_Bulu || pk == Pokemon::Tapu_Koko || pk == Pokemon::Tapu_Lele || pk == Pokemon::Tapu_Fini)
+                        && mv == Move::NaturesMadness;
+            break;
+            case Move::SinisterArrowRaid:
+                return pk == Pokemon::Decidueye && mv == Move::SpiritShackle;
+            break;
+            case Move::MaliciousMoonsault:
+                return pk == Pokemon::Incineroar && mv == Move::DarkestLariat;
+            break;
+            case Move::OceanicOperetta:
+                return pk == Pokemon::Primarina && mv == Move::SparklingAria;
+            break;
+            case Move::Soul_Stealing7_StarStrike:
+                return pk == Pokemon::Marshadow && mv == Move::SpectralThief;
+            break;
+            case Move::_10_000_000VoltThunderBolt:
+                return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
+                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
+                        && mv == Move::Thunderbolt;
+            break;
+        }
+    }
+
+    //Hidden Power should always do Breakneck Blitz
+    int type = MoveInfo::Type(mv, gen);
+    int ztype = ItemInfo::ZCrystalType(item);
+    return type == ztype;
+}
+
 #undef move_find
 #undef move_find2
 
@@ -2428,7 +2556,7 @@ void ItemInfo::loadNames()
 void ItemInfo::loadStoneFormes()
 {
     fill_uid_int(m_StoneFormes, path("item_for_forme.txt"));
-    fill_double(m_ZCrystalTypes, path("crystal_types.txt")); //no sense making another function to load 1 thing
+    fill_double(m_ZCrystalTypes, path("zcrystal_type.txt")); //no sense making another function to load 1 thing
 }
 
 void ItemInfo::loadMessages()

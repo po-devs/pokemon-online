@@ -525,6 +525,11 @@ struct IMQuickClaw : public IM
         if (b.coinflip(1, 5)) {
             turn(b,s)["TurnOrder"] = 2;
             turn(b,s)["QuickClawed"] = true;
+            if (b.gen() >= 7) {
+                //Message changed places in gen 7. It now shows at the start of the turn, even if it didnt do anything
+                //EX: Quick Claw + Water Gun versus Quick Attack. ORDER: Quick Claw Message -> Quick Attack -> Water Gun
+                b.sendItemMessage(17, s);
+            }
         }
     }
 };
@@ -678,7 +683,7 @@ struct IMRockyHelmet : public IM
             b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
 
             /* In VGC 2011, the one with the rugged helmet wins */
-            if (b.koed(t)) {
+            if (b.koed(t) && b.gen() < 7) {
                 b.selfKoer() = t;
             }
         }
@@ -707,7 +712,7 @@ struct IMAirBalloon : public IM
 struct IMAbsorbBulb : public IM
 {
     IMAbsorbBulb() {
-        functions["UponBeingHit"] = &ubh;
+        functions["UponBeingHit2"] = &ubh;
     }
 
     static void ubh(int s, int t, BS &b) {
@@ -822,7 +827,7 @@ struct IMEscapeButton : public IM
 
     static void ubh(int s, int t, BS &b) {
         //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, during a switch where pursuit is used, or during Wimp Out
-        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool() || turn(b,s).value("WimpedOut").toBool())
+        if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool())
             return;
         if (b.countAlive(b.player(s)) <= 1) // Button doesn't activate when target is the last pokemon
             return;
@@ -1133,21 +1138,6 @@ struct IMPrimalOrb : public IM {
     }
 };
 
-struct IMZCrystal : public IM {
-    IMZCrystal() {
-        functions["MoveSettings"] = &ms;
-    }
-
-    static void ms (int s, int, BS &b) {
-        if (tmove(b,s).power > 0) {
-            tmove(b,s).power = tmove(b,s).zpower;
-        }
-        //UNTESTED: Protect's reduction
-        //UNFINISHED: Special effects for Other type moves
-    }
-};
-
-//UNTESTED
 struct IMSeeds : public IM {
     IMSeeds() {
         functions["UponSetup"] = &us;
@@ -1214,7 +1204,7 @@ void ItemEffect::init()
     //66 Mega stones
     REGISTER_ITEM(67, PrimalOrb);
     REGISTER_ITEM(68, MemoryChip);
-    REGISTER_ITEM(69, ZCrystal);
+    //REGISTER_ITEM(69, ZCrystal);
     REGISTER_ITEM(70, Seeds);
     //71 Adrenaline orb message
     //72 Protective pads message
@@ -1228,5 +1218,5 @@ void ItemEffect::init()
     REGISTER_ITEM(1999, SacredAsh);
     initBerries();
 
-    //NOT DONE: Seeds, Adrenaline Orb
+    //NOT DONE: Memories Fling power
 }

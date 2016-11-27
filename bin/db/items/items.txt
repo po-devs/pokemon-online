@@ -366,6 +366,17 @@
 365 Psychic Seed
 366 Misty Seed
 367 Grassy Seed
+368 Beast Ball
+369 Big Malasada
+370 Common Stone
+371 Bottle Cap
+372 Gold Bottle Cap
+373 Ice Stone
+374 Shalour Sable
+375 Pink Nectar
+376 Yellow Nectar
+377 Red Nectar
+378 Purple Nectar
 1000 Pink Bow
 1001 Polkadot Bow
 2001 Venusaurite

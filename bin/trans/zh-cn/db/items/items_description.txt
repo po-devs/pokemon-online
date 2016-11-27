@@ -238,5 +238,116 @@
 341 使棉球舔进化为泡芙舔。
 342 允许固拉多变为原始形态
 343 允许盖欧卡变为原始形态
+344 Changes Multi-Attack and Sivally with RKS System to the Fighting type.
+345 Changes Multi-Attack and Sivally with RKS System to the Flying type.
+346 Changes Multi-Attack and Sivally with RKS System to the Poison type.
+347 Changes Multi-Attack and Sivally with RKS System to the Ground type.
+348 Changes Multi-Attack and Sivally with RKS System to the Rock type.
+349 Changes Multi-Attack and Sivally with RKS System to the Bug type.
+350 Changes Multi-Attack and Sivally with RKS System to the Ghost type.
+351 Changes Multi-Attack and Sivally with RKS System to the Steel type.
+352 Changes Multi-Attack and Sivally with RKS System to the Fire type.
+353 Changes Multi-Attack and Sivally with RKS System to the Water type.
+354 Changes Multi-Attack and Sivally with RKS System to the Grass type.
+355 Changes Multi-Attack and Sivally with RKS System to the Electric type.
+356 Changes Multi-Attack and Sivally with RKS System to the Psychic type.
+357 Changes Multi-Attack and Sivally with RKS System to the Ice type.
+358 Changes Multi-Attack and Sivally with RKS System to the Dragon type.
+359 Changes Multi-Attack and Sivally with RKS System to the Dark type.
+360 Changes Multi-Attack and Sivally with RKS System to the Fairy type.
+361 Increases the holder's Speed by 1 stage when Intimidated. Consumed after use.
+362 When the holder uses Electric Terrain, Psychic Terrain, Misty Terrain, or Grassy Terrain, increases its duration from 5 turns to 8 turns.
+363 Protects the holder from side effects caused by using a Contact move against an opponent.
+364 Increases the holder's Defense by 1 stage while on Electric Terrain. Consumed after use.
+365 Increases the holder's Special Defense by 1 stage while on Psychic Terrain. Consumed after use.
+366 Increases the holder's Special Defense by 1 stage while on Misty Terrain. Consumed after use.
+367 Increases the holder's Defense by 1 stage while on Grassy Terrain. Consumed after use.
+368 Has an increased capture rate against Ultra Beasts.
+369 Cures a Pokémon of any major status condition.
+370 A perfectly normal stone that might appear to be valuable to some. It’s all in the eye of the beholder.
+371 A beautiful bottle cap that gives off a silver gleam. Some people are happy to receive one.
+372 A beautiful bottle cap that gives off a golden gleam. Some people are happy to receive one.
+373 Evolves Alolan Vulpix into Alolan Ninetales and Alolan Sandshrew into Alolan Sandslash.
+374 Cures a Pokémon of any major status condition.
+375 Changes the form of Oricorio to Oricorio-Pa'u.
+376 Changes the form of Oricorio to Oricorio-Pom Pom.
+377 Changes the form of Oricorio to Oricorio-Baile.
+378 Changes the form of Oricorio to Oricorio-Sensu.
 1000 增加10%普通系技能威力。
 1001 增加10%普通系技能威力。
+2001 Enables Venusaur to Mega Evolve during battle.
+2002 Enables Charizard to Mega Evolve during battle.
+2003 Enables Charizard to Mega Evolve during battle.
+2004 Enables Blastoise to Mega Evolve during battle.
+2005 Enables Alakazam to Mega Evolve during battle.
+2006 Enables Gengar to Mega Evolve during battle.
+2007 Enables Kangaskhan to Mega Evolve during battle.
+2008 Enables Pinsir to Mega Evolve during battle.
+2009 Enables Gyarados to Mega Evolve during battle.
+2010 Enables Aerodactyl to Mega Evolve during battle.
+2011 Enables Mewtwo to Mega Evolve during battle.
+2012 Enables Mewtwo to Mega Evolve during battle.
+2013 Enables Ampharos to Mega Evolve during battle.
+2014 Enables Scizor to Mega Evolve during battle.
+2015 Enables Heracross to Mega Evolve during battle.
+2016 Enables Houndoom to Mega Evolve during battle.
+2017 Enables Tyranitar to Mega Evolve during battle.
+2018 Enables Blaziken to Mega Evolve during battle.
+2019 Enables Gardevoir to Mega Evolve during battle.
+2020 Enables Mawile to Mega Evolve during battle.
+2021 Enables Aggron to Mega Evolve during battle.
+2022 Enables Medicham to Mega Evolve during battle.
+2023 Enables Manectric to Mega Evolve during battle.
+2024 Enables Banette to Mega Evolve during battle.
+2025 Enables Absol to Mega Evolve during battle.
+2026 Enables Garchomp to Mega Evolve during battle.
+2027 Enables Lucario to Mega Evolve during battle.
+2028 Enables Abomasnow to Mega Evolve during battle.
+2029 Enables Sceptile to Mega Evolve during battle.
+2030 Enables Swampert to Mega Evolve during battle.
+2031 Enables Beedrill to Mega Evolve during battle.
+2032 Enables Pidgeot to Mega Evolve during battle.
+2033 Enables Slowbro to Mega Evolve during battle.
+2034 Enables Steelix to Mega Evolve during battle.
+2035 Enables Sableye to Mega Evolve during battle.
+2036 Enables Sharpedo to Mega Evolve during battle.
+2037 Enables Camerupt to Mega Evolve during battle.
+2038 Enables Altaria to Mega Evolve during battle.
+2039 Enables Glalie to Mega Evolve during battle.
+2040 Enables Salamence to Mega Evolve during battle.
+2041 Enables Metagross to Mega Evolve during battle.
+2042 Enables Lopunny to Mega Evolve during battle.
+2043 Enables Gallade to Mega Evolve during battle.
+2044 Enables Audino to Mega Evolve during battle.
+2045 Enables Diancie to Mega Evolve during battle.
+2046 Enables Latias to Mega Evolve during battle.
+2047 Enables Latios to Mega Evolve during battle.
+3000 Enables a Pokémon to upgrade Normal-type moves to the Z Move: Breakneck Blitz
+3001 Enables a Pokémon to upgrade Fighting-type moves to the Z Move: All-Out Pummelling
+3002 Enables a Pokémon to upgrade Flying-type moves to the Z Move: Supersonic Skystrike
+3003 Enables a Pokémon to upgrade Poison-type moves to the Z Move: Acid Downpour
+3004 Enables a Pokémon to upgrade Ground-type moves to the Z Move: Tectonic Rage
+3005 Enables a Pokémon to upgrade Rock-type moves to the Z Move: Continental Crush
+3006 Enables a Pokémon to upgrade Bug-type moves to the Z Move: Savage Spinout
+3007 Enables a Pokémon to upgrade Ghost-type moves to the Z Move: Never-Ending Nightmare
+3008 Enables a Pokémon to upgrade Steel-type moves to the Z Move: Corkscrew Crash
+3009 Enables a Pokémon to upgrade Fire-type moves to the Z Move: Inferno Overdrive
+3010 Enables a Pokémon to upgrade Water-type moves to the Z Move: Hydro Vortex
+3011 Enables a Pokémon to upgrade Grass-type moves to the Z Move: Bloom Doom
+3012 Enables a Pokémon to upgrade Electric-type moves to the Z Move: Gigavolt Havoc
+3013 Enables a Pokémon to upgrade Psychic-type moves to the Z Move: Shattered Psyche
+3014 Enables a Pokémon to upgrade Ice-type moves to the Z Move: Subzero Slammer
+3015 Enables a Pokémon to upgrade Dragon-type moves to the Z Move: Devastating Drake
+3016 Enables a Pokémon to upgrade Dark-type moves to the Z Move: Black Hole Eclipse
+3017 Enables a Pokémon to upgrade Fairy-type moves to the Z Move: Twinkle Tackle
+3018 Enables Pikachu to upgrade Volt Tackle into the special Z Move: Catastropika
+3019 Enables Alolan Raichu to upgrade Thunderbolt into the special Z Move: Stoked SparkSurfer
+3020 Enables Eevee to upgrade Last Resort into the special Z Move: Extreme Evoboost
+3021 Enables Snorlax to upgrade Giga Impact into the special Z Move: Pulversing Pancake
+3022 Enables Mew to upgrade Psychic into the special Z Move: Genesis Supernova
+3023 Enables Tapu Koko, Tapu Lele, Tapu Bulu, and Tapu Fini to upgrade Nature's Madness into the special Z Move: Guardian of Alola
+3024 Enables Decidueye to upgrade Spirit Shackle into the special Z Move: Sinister Arrow Raid
+3025 Enables Incineroar to upgrade Darkest Lariat into the special Z Move: Malicious Moonsault
+3026 Enables Primarina to upgrade Sparkling Aria into the special Z Move: Oceanic Operetta
+3027 Enables Marshadow to upgrade Spectral Thief into the special Z Move: Soul-Stealing 7-Star Strike
+3028 Enables Pikachu in Cap to upgrade Thunderbolt into the special Z Move: 10,000,000 Volt Thunderbolt

@@ -216,7 +216,7 @@ public:
 //    virtual int linker(int linked, QString relationShip) = 0;
 //    virtual void notifySub(int player, bool sub) = 0;
 //    virtual int repeatNum(int player) = 0;
-//    virtual PokeFraction getStatBoost(int player, int stat) = 0;
+//    virtual PokeFraction getStatBoost(int player, int stat) = 0 const;
 //    /* "Pure" stat is without items */
 //    virtual int getStat(int player, int stat, int purityLevel = 0) = 0;
 //    virtual int getBoostedStat(int player, int stat) = 0;

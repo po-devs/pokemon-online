@@ -71,6 +71,10 @@ void TeamData::setItems(const QHash<quint16, quint16> &items)
 void TeamData::setGen(Pokemon::gen gen)
 {
     mGen = gen;
+
+    for (int i = 0; i < 6; i++) {
+        poke(i)->gen() = gen;
+    }
 }
 
 void TeamData::switchPokemons(int slot1, int slot2)

@@ -1323,20 +1323,17 @@ inline bool comparePair(const std::pair<int,int> & x, const std::pair<int,int> &
     return x.second>y.second;
 }
 
-std::vector<int> BattleBase::sortedBySpeed()
+std::vector<int> BattleBase::sortedBySpeed(std::vector<std::pair<int,int>> speeds)
 {
     std::vector<int> ret;
 
-    std::vector<std::pair<int, int> > speeds;
-
-    for (int i =0; i < numberOfSlots(); i++) {
-        if (!koed(i)) {
-            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed)));
-        }
+    if (speeds.empty()) {
+        speeds = calculateSpeeds();
     }
 
-    if (speeds.size() == 0)
-        return std::move(ret);
+    if (speeds.empty()) {
+        return ret;
+    }
 
     std::sort(speeds.begin(), speeds.end(), &comparePair);
 
@@ -1360,10 +1357,23 @@ std::vector<int> BattleBase::sortedBySpeed()
     for (unsigned i =0; i < speeds.size(); i++) {
         ret.push_back(speeds[i].first);
     }
-    return std::move(ret);
+    return ret;
 }
 
-bool BattleBase::attacking()
+std::vector<std::pair<int, int> > BattleBase::calculateSpeeds()
+{
+    std::vector<std::pair<int, int> > speeds;
+
+    for (int i =0; i < numberOfSlots(); i++) {
+        if (!koed(i)) {
+            speeds.push_back(std::pair<int, int>(i, getStat(i, Speed)));
+        }
+    }
+
+    return speeds;
+}
+
+bool BattleBase::attacking() const
 {
     return attacker() != -1;
 }
@@ -1481,7 +1491,7 @@ void BattleBase::BasicMoveInfo::reset()
     memset(this, 0, sizeof(*this));
 }
 
-bool BattleBase::hasSubstitute(int player)
+bool BattleBase::hasSubstitute(int player) const
 {
     return !koed(player) && (fpoke(player).substitute() || fpoke(player).is(BasicPokeInfo::HadSubstitute));
 }
@@ -1573,7 +1583,8 @@ int BattleBase::PP(int player, int slot) const
 }
 
 
-bool BattleBase::hasMove(int player, int move) {
+bool BattleBase::hasMove(int player, int move) const
+{
     for (int i = 0; i < 4; i++) {
         if (this->move(player, i) == move) {
             return true;
@@ -1582,7 +1593,7 @@ bool BattleBase::hasMove(int player, int move) {
     return false;
 }
 
-int BattleBase::move(int player, int slot)
+int BattleBase::move(int player, int slot) const
 {
     if (isOut(player)) {
         return fpoke(player).moves[slot];
@@ -1592,7 +1603,7 @@ int BattleBase::move(int player, int slot)
 }
 
 
-bool BattleBase::hasMoved(int p)
+bool BattleBase::hasMoved(int p) const
 {
     return turnMem(p).contains(TurnMemory::HasMoved) || turnMem(p).contains(TurnMemory::Incapacitated);
 }
@@ -1608,7 +1619,7 @@ void BattleBase::setupChoices()
     for (int i = 0; i < numberOfSlots(); i++) {
         if (!koed(i) && !turnMem(i).contains(TurnMemory::NoChoice) && !turnMem(i).contains(TurnMemory::KeepAttack) && choice(i).attackingChoice()) {
             if (!options[i].struggle())
-                setupMove(i, move(i,choice(i).pokeSlot()));
+                setupMove(i, move(i,choice(i).pokeSlot()), choice(i).zmove());
             else
                 setupMove(i, Move::Struggle);
         }
@@ -1975,7 +1986,7 @@ bool BattleBase::testFail(int player)
     return false;
 }
 
-PokeFraction BattleBase::getStatBoost(int player, int stat)
+PokeFraction BattleBase::getStatBoost(int player, int stat) const
 {
     int boost = fpoke(player).boosts[stat];
 
@@ -2447,7 +2458,8 @@ void BattleBase::changeTempMove(int player, int slot, int move, int pp)
     changePP(player,slot,pp);
 }
 
-Pokemon::uniqueId BattleBase::pokenum(int player) {
+Pokemon::uniqueId BattleBase::pokenum(int player) const
+{
     return fpoke(player).id;
 }
 

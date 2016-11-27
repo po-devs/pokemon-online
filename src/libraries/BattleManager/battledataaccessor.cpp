@@ -150,7 +150,7 @@ void PokeProxy::adaptTo(const PokeBattle *pokemon) {
 
 void PokeProxy::emitReset()
 {
-    emit numChanged(); emit statusChanged(); emit lifeChanged();
+    emit numChanged(); emit statusChanged(); emit lifeChanged(); emit totalLifeChanged();
     emit pokemonReset();
 }
 
@@ -186,8 +186,14 @@ void PokeProxy::setNum(Pokemon::uniqueId num){
     if (d()->num() == num) {
         return;
     }
-    d()->num() = num;
+    int oldTotal = d()->totalLife();
+    d()->setNum(num);
+    int newTotal = d()->totalLife();
     emit numChanged();
+
+    if (newTotal != oldTotal) {
+        emit totalLifeChanged();
+    }
 }
 
 void PokeProxy::setAbility(int newAbility)

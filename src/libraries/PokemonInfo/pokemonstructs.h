@@ -57,11 +57,19 @@ public:
     void setBaseStat(int stat, quint8 base);
 };
 
+
+class PokeDataInterface {
+public:
+    virtual int item() const = 0;
+    virtual int iv(int stat) const = 0;
+    virtual Pokemon::uniqueId num() const = 0;
+};
+
 /* Data that every pokemon of the same specy share. */
 class PokeGeneral
 {
-    PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(Pokemon::gen, gen);
+    PROPERTY(Pokemon::uniqueId, num)
+    PROPERTY(Pokemon::gen, gen)
 public:
     PokeGeneral();
     virtual ~PokeGeneral(){}

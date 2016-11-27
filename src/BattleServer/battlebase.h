@@ -87,12 +87,12 @@ public:
     bool koed(int player) const;
     bool isOut(int player, int poke) const;
     bool isOut(int poke) const;
-    bool hasSubstitute(int player);
+    bool hasSubstitute(int player) const;
     int PP(int player, int slot) const;
-    bool hasMove(int player, int move);
-    int move(int player, int slot);
-    bool hasMoved(int slot);
-    Pokemon::uniqueId pokenum(int player);
+    bool hasMove(int player, int move) const;
+    int move(int player, int slot) const;
+    bool hasMoved(int slot) const;
+    Pokemon::uniqueId pokenum(int player) const;
 
     int player(int slot) const;
     /* Returns -1 if none */
@@ -107,7 +107,7 @@ public:
     bool areAdjacent(int attacker, int defender) const;
     /* Returns true or false if an attack is going on or not */
 
-    bool attacking();
+    bool attacking() const;
     bool multiples() const {
         return mode() != ChallengeInfo::Singles && mode() != ChallengeInfo::Rotation;
     }
@@ -122,7 +122,8 @@ public:
         return clauses() & ChallengeInfo::SleepClause;
     }
 
-    virtual std::vector<int> sortedBySpeed();
+    virtual std::vector<int> sortedBySpeed(std::vector<std::pair<int,int>> speeds = std::vector<std::pair<int,int>>());
+    std::vector<std::pair<int,int>> calculateSpeeds();
 
     void notifyClause(int clause);
     void notifyMiss(bool multitar, int player, int target);
@@ -297,7 +298,7 @@ protected:
     virtual BattleChoices createChoice(int slot) = 0;
 
     void setupChoices() ;
-    virtual void setupMove(int i, int move) = 0;
+    virtual void setupMove(int i, int move, bool zmove = false) = 0;
 
     virtual void analyzeChoices() = 0;
 
@@ -366,7 +367,7 @@ public:
         inline bool substitute() const {return flags & Substitute;}
         inline void remove(Flag f) {flags &= ~f;}
         inline void add(Flag f) {flags |= f;}
-        inline bool is(Flag f) {return (flags & f) != 0;}
+        inline bool is(Flag f) const {return (flags & f) != 0;}
     };
 
     struct BasicMoveInfo {
@@ -394,7 +395,7 @@ public:
         quint32 statAffected;
         quint32 boostOfStat;
         quint32 rateOfStat;
-        bool kingRock;
+        //bool kingRock;
 
         void reset();
     };
@@ -485,7 +486,7 @@ public:
     bool testFail(int player);
     virtual bool testAccuracy(int player, int target, bool silent = false) = 0;
 
-    virtual PokeFraction getStatBoost(int player, int stat);
+    virtual PokeFraction getStatBoost(int player, int stat) const;
     virtual void calculateTypeModStab(int player=-1, int target=-1);
     int convertTypeEff(int typeeff);
     virtual int repeatNum(int player);

@@ -30,7 +30,7 @@ public:
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 
-    std::vector<int> sortedBySpeed();
+    std::vector<int> sortedBySpeed(std::vector<std::pair<int,int>> speeds = std::vector<std::pair<int,int>>());
 
     /* Commands for the battle situation */
     void engageBattle();
@@ -54,7 +54,7 @@ public:
     /* Sends a poke back to his pokeball (not koed) */
     void sendBack(int player, bool silent = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
-    void megaEvolve(int spot);
+    bool megaEvolve(int spot);
     void useZMove(int spot);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);
@@ -87,7 +87,12 @@ public:
     bool preTransPoke(int s, Pokemon::uniqueId check);
     bool canMegaEvolve(int slot);
     bool canUseZMove(int slot);
+    bool canBeZMove(int s, int attack);
     bool makesContact(int s);
+    bool isDisguised(int s);
+    bool zTurn(int s);
+    bool canApplyKingsRock(int movenum);
+    bool blockPriority(int player, int target);
     int intendedMoveSlot(int s, int slot, int mv);
     void inflictStatus(int player, int Status, int inflicter, int minturns = 0, int maxturns = 0);
     void inflictConfused(int player, int source, bool tell=true);
@@ -124,11 +129,11 @@ public:
     void testFlinch(int player, int target);
     bool testStatus(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
-    bool hasWorkingAbility(int play, int ability);
+    bool hasWorkingAbility(int play, int ability) const;
     bool hasWorkingTeamAbility(int play, int ability, int excludedSlot = -1);
     bool opponentsHaveWorkingAbility(int play, int ability);
     void acquireAbility(int play, int ability, bool firstTime=false);
-    int ability(int player);
+    int ability(int player) const;
     int weight(int player);
     bool hasWorkingItem(int player, int item);
     bool isWeatherWorking(int weather);
@@ -152,7 +157,7 @@ public:
     void link(int linker, int linked, QString relationShip);
     int linker(int linked, QString relationShip);
     int repeatNum(int player);
-    PokeFraction getStatBoost(int player, int stat);
+    PokeFraction getStatBoost(int player, int stat) const;
     /* "Pure" stat is without items */
     int getStat(int player, int stat) {return getStat(player, stat, 0);}
     int getStat(int player, int stat, int purityLevel);
@@ -162,6 +167,8 @@ public:
     ShallowBattlePoke opoke(int slot, int play, int i) const; /* aka 'opp poke', or what you need to know if it's your opponent's poke */
     BattleStats constructStats(int player);
     BattleDynamicInfo constructInfo(int player);
+
+    bool oppBlockFailure(int target, int player);
 
     void changeDefMove(int player, int slot, int move);
 
@@ -210,7 +217,7 @@ private:
     virtual void notifySituation(int dest);
 
     virtual void storeChoice(const BattleChoice &b);
-    void setupMove(int player, int move);
+    void setupMove(int player, int move, bool zmove = false);
 public:
     std::vector<int> targetList;
     /* Calls the effects of source reacting to name */

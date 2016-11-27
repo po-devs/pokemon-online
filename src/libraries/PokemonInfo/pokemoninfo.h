@@ -238,9 +238,12 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
+    static QString ZName(int movenum, bool zmove = true);
     static QStringList Names();
     static QStringList Names(Pokemon::gen gen);
     static int Type(int movenum, Pokemon::gen gen);
+    /* For a more precise type depending on the situation */
+    static int Type(int movenum, Pokemon::gen gen, const PokeDataInterface &pokemon);
     static int Category(int movenum, Pokemon::gen gen);
     static int Classification(int movenum, Pokemon::gen gen);
     static int Number(const QString &movename);
@@ -249,10 +252,12 @@ public:
     static int FlinchRate(int movenum, Pokemon::gen gen);
     static int Recoil(int movenum, Pokemon::gen gen);
     static QString Description(int movenum, Pokemon::gen gen);
+    static QString ZDescription(int movenum, Pokemon::gen gen);
     static int Power(int movenum, Pokemon::gen gen);
     static int ZPower(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum, Pokemon::gen gen);
+    static QString PowerToString(int powerValue);
     static int PP(int movenum, Pokemon::gen gen);
     static int Acc(int movenum, Pokemon::gen gen);
     /* gives the accuracy of a move in the form of a string */
@@ -267,7 +272,7 @@ public:
     static bool Exists(int movenum, Pokemon::gen gen);
     static bool isOHKO(int movenum, Pokemon::gen gen);
     static bool isHM(int movenum, Pokemon::gen gen);
-    static bool FlinchByKingRock(int movenum, Pokemon::gen gen);
+    //static bool FlinchByKingRock(int movenum);
     static int EffectRate(int movenum, Pokemon::gen gen);
     static quint32 StatAffected(int movenum, Pokemon::gen gen);
     static quint32 BoostOfStat(int movenum, Pokemon::gen gen);
@@ -285,6 +290,9 @@ public:
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum, Pokemon::gen gen);
     static QSet<int> Moves(Pokemon::gen gen);
+    static bool isUniqueZMove(int movenum);
+    static bool isZMove(int movenum);
+    static bool canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen);
 private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
@@ -313,6 +321,7 @@ private:
         QHash<int, char> critRate;
         QHash<int, char> damageClass;
         QHash<int, QString> effect;
+        QHash<int, QString> zeffect;
         QHash<int, QString> specialEffect;
         QHash<int, char> effectChance;
         QHash<int, int> flags;
@@ -332,7 +341,7 @@ private:
         QHash<int, signed char> recoil;
         //QHash<int, char> status;
         QHash<int, char> type;
-        QHash<int, bool> kingRock;
+        //QHash<int, bool> kingRock;
         QSet<int> HMs;
     };
 

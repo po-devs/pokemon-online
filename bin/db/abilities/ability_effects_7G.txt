@@ -156,17 +156,21 @@
 190 126-6#Primordial Sea
 191 126-7#Delta Stream
 192 31-2#Full Metal Body
+194 127#comatose
+195 148#power construct
 196 143#SoulHeart
 198 128-1#Electric Surge
 199 129#Dazzling
 200 130-3#Berserk
 201 131#Battery
+202 150#corrosion
 203 138#disguise
 204 132#Fluffy
 205 133#Stamina
 206 134#Triage
 207 135#Wimpout
 208 140#Dancer
+209 149#shields down
 210 139#Innards Out
 211 147#Schooling
 212 136#Surge Surfer

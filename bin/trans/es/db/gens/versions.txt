@@ -17,3 +17,4 @@
 5:1 Blanco/Negro 2
 6:0 X/Y
 6:1 Rubí Omega/Zafiro Alfa
+7:0 Sol/Luna

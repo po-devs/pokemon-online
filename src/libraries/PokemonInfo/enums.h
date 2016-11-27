@@ -1027,9 +1027,7 @@ namespace Pokemon
         Graveler_Alolan = Graveler + (1 << 16),
         Golem_Alolan = Golem + (1 << 16),
         Zygarde_10 = Zygarde + (1 << 16),
-        Zygarde_10_Incomplete = Zygarde + (2 << 16),
-        Zygarde_50_Incomplete = Zygarde + (3 << 16),
-        Zygarde_Complete = Zygarde + (4 << 16),
+        Zygarde_Complete = Zygarde + (2 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
         Ash_Greninja = Greninja + (2 << 16),
@@ -1039,7 +1037,8 @@ namespace Pokemon
         Pikachu_Fourth_Hat = Pikachu + (10 << 16),
         Pikachu_Fifth_Hat = Pikachu + (11 << 16),
         Pikachu_Sixth_Hat = Pikachu + (12 << 16),
-        Minior_Red = Minior + (1 << 16)
+        Minior_Red = Minior + (1 << 16),
+        Mimikyu_Busted = Mimikyu + (1 << 16)
     };
 }
 
@@ -1787,12 +1786,12 @@ namespace Move
         TearfulLook,
         ZingZap,
         BreakneckBlitz,
-        All_OutPummelling,
+        All_OutPummeling,
         SupersonicSkystrike,
         AcidDownpor,
         TectonicRage,
         ContinentalCrush,
-        SavageSpinout,
+        SavageSpin_out,
         Never_EndingNightmare,
         CorkscrewCrash,
         InfernoOverdrive,
@@ -1805,9 +1804,9 @@ namespace Move
         BlackHoleEclipse,
         TwinkleTackle,
         Catastropika,
-        StokedSparkSurfer,
+        StokedSparksurfer,
         ExtremeEvoboost,
-        PulversingPancake,
+        PulverizingPancake,
         GenesisSupernova,
         GuardianofAlola,
         SinisterArrowRaid,
@@ -2477,7 +2476,20 @@ namespace Item
         ElectricSeed,
         PsychicSeed,
         MistySeed,
-        GrassySeed
+        GrassySeed,
+        BeastBall,
+        BigMalasada,
+        CommonStone,
+        BottleCap,
+        GoldBottleCap,
+        IceStone,
+        ShalourSable,
+        PinkNectar,
+        YellowNectar,
+        RedNectar,
+        PurpleNectar,
+        NormaliumZ = 3000,
+        FiriumZ = 3009 //for Arceus + Burnup
     };
 
     enum Target
