@@ -5118,7 +5118,10 @@ bool BattleSituation::blockPriority(int player, int target)
 
     //Moves with negative priority that had priority increased will still be blocked (Like Roar)
     bool prankster = turnMemory(player).contains("PlayingAPrank");
-    if (prankster && gen() >= 7 && hasType(target, Pokemon::Dark) && !arePartners(player, target)) {
+    //If a Dark-type uses a status move into a Pokemon with Prankster using Magic Coat, the Dark-type Pokemon will be unaffected by the reflected move
+    bool bounced = battleMemory().contains("CoatingAttackNow") && hasWorkingAbility(player, Ability::Prankster);
+
+    if ((prankster || bounced) && gen() >= 7 && !arePartners(player, target) && hasType(target, Pokemon::Dark)) {
         notify(All, Effective, target, quint8(0));
         return true;
     }

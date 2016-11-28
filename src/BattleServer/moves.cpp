@@ -8107,7 +8107,6 @@ struct MMSpeedSwap : public MM
     }
 };
 
-//Untested
 struct MMWaterShuriken : public MM
 {
     MMWaterShuriken() {
