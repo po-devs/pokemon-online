@@ -439,7 +439,7 @@ void BattleWindow::attackClicked(int zone)
                 info().done[slot] = true;
                 goToNextChoice();
             } else {
-                int move = zone == -1 ? int(Move::Struggle) : info().tempPoke(spot).move(zone)->num();
+                int move = zone == -1 ? int(Move::Struggle) : myazones[slot]->tattacks[zone]->num();
                 int target = MoveInfo::Target(move, gen());
                 /* Triples still require to choose the target */
                 if (target == Move::ChosenTarget || target == Move::PartnerOrUser || target == Move::Partner || target == Move::MeFirstTarget || target == Move::IndeterminateTarget
