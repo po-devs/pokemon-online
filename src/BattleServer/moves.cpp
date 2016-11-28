@@ -7532,44 +7532,28 @@ struct MMHyperspaceFury : public MM {
     }
 };
 
-//UNTESTED?
 struct MMShellTrap : public MM {
     MMShellTrap() {
+        functions["OnSetup"] = &os;
         functions["DetermineAttackFailure"] = &daf;
-        functions["UponAttackSuccessful"] = &uas;
-        functions["CustomAttackingDamage"] = &cad;
+        functions["BeforeCalculatingDamage"] = &daf;
+        functions["UponPhysicalAssault"] = &upa;
+    }
+
+    static void os(int s, int, BS &b) {
+        b.sendMoveMessage(220, 0, s, Pokemon::Fire);
     }
 
     static void daf(int s, int, BS &b) {
-        // (probably) fails if all others already moved
-        bool fail = true;
-        for (int t = 0;  t < b.numberOfSlots() ; t++) {
-            if (!b.hasMoved(t) && !b.koed(t) && s!=t) {
-                fail = false;
-                break;
-            }
-        }
-
-        if (fail) {
-            b.fail(s, 220, 1);
+        if (turn(b,s)["ShellTrapTurn"] != b.turn()) {
+            turn(b,s)["LostFocus"] = true;
+            b.fail(s, 220, 1, Pokemon::Fire);
         }
     }
 
-    static void uas(int s, int, BS &b) {
-        poke(b,s)["ShellTrapTurn"] = b.turn();
-        b.sendMoveMessage(220, 1, s);
-    }
-
-    static void uodr(int s, int, BS &b) {
-        if (b.makesContact(s) && poke(b,s)["ShellTrapTurn"] == b.turn()) {
-            poke(b,s)["ShellTrapDamage"] = poke(b,s)["DamageTakenByAttack"].toInt() * 2; // needs confirmation
-        }
-    }
-
-    static void cad(int s, int, BS &b) {
-        if (poke(b,s)["ShellTrapDamage"].toInt() > 0) {
-            turn(b,s)["CustomDamage"] = poke(b,s)["ShellTrapDamage"];
-        }
+    static void upa(int s, int t, BS &b) {
+        turn(b,s)["ShellTrapTurn"] = b.turn();
+        // Change target to attacker?
     }
 };
 

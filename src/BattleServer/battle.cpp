@@ -1914,7 +1914,7 @@ ppfunction:
             calculateTypeModStab();
 
             calleffects(player, target, "BeforeCalculatingDamage");
-            /* For Focus Punch*/
+            /* For Focus Punch and Shell Trap*/
             if (turnMemory(player).contains("LostFocus")) {
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
@@ -4099,6 +4099,7 @@ end:
                 if (!sub) {
                     callieffects(player, source, "UponPhysicalAssault");
                     callaeffects(player,source,"UponPhysicalAssault");
+                    calleffects(player, source, "UponPhysicalAssault");
                     if (pokeMemory(player).value("HotBeak").toBool()) {
                         inflictStatus(source, Pokemon::Burnt, player);
                     }
