@@ -163,3 +163,72 @@
 162 Sube la Precisión de todo el equipo.
 163 Usa movimientos sin que importen las habilidades.
 164 Usa movimientos sin que importen las habilidades.
+165 Changes all Normal-type moves used by a Pokémon with this Ability to Flying-type, and boosts their power by 30%.
+166 Makes Dark Aura and Fairy Aura reduce by 1/4 the power of their respective type as long as a Pokémon with this ability is on the field.
+167 Restores the HP of a Pokémon with this ability by 1/3 when it eats a Berry.
+168 Boosts the power of all Dark-type moves used by any Pokémon on the field by 1/3.
+169 Boosts the power of all Fairy-type moves used by any Pokémon on the field by 1/3.
+170 Prevents the stats of Grass-type partners of a Pokémon with this ability from being lowered by the opponent.
+171 Halves the damage taken from physical moves by a Pokémon with this ability.
+172 Boosts the power of Aura Sphere, Dark Pulse, Dragon Pulse, Heal Pulse, Origin Pulse, and Water Pulse used by a Pokémon with this ability by 50%.
+173 Allows all attacking moves that strike a single target a single time used by a Pokémon with this ability to strike a second time with halved power.
+174 Changes all Normal-type moves used by a Pokémon with this Ability to Fairy-type, and boosts their power by 30%.
+175 Before a Pokémon with this ability uses any move, changes its type to match the move used.
+176 Changes all Normal-type moves used by a Pokémon with this Ability to Ice-type, and boosts their power by 30%.
+177 Changes Aegislash into Blade Forme when it uses any offensive move, and changes Aegislash into Shield Forme when it uses King's Shield.
+178 Boosts the power of Bite, Crunch, Fire Fang, Hyper Fang, Ice Fang, Poison Fang and Thunder Fang used by a Pokémon with this ability by 50%.
+179 Prevents any Pokémon on the side of a Pokémon with this ability from falling asleep.
+180 Boosts the power of contact moves used by a Pokémon with this ability by 1/3.
+181 Raises the Special Attack of a Pokémon with this ability by 2 stages every time the enemy lowers any of its stats.
+182 Raises priority of all Flying-type moves used by a Pokémon with this ability by 1.
+183 Lowers the Speed of the opponent every time it uses a contact move on a Pokémon with this ability.
+184 Prevents any Pokémon on the side of a Pokémon with this ability from being infatuated, or being under the effect of Disable, Encore, Heal Block, Taunt, and Torment.
+185 Makes a Pokémon with this ability immune to Acid Spray, Aura Sphere, Barrage, Bullet Seed, Egg Bomb, Electro Ball, Energy Ball, Focus Blast, Gyro Ball, Ice Ball, Magnet Bomb, Mist Ball, Mud Bomb, Octazooka, Rock Wrecker, Searing Shot, Seed Bomb, Shadow Ball, Sludge Bomb, Weather Ball, and Zap Cannon.
+186 Raises the Defense of a Pokémon with this ability by 50% while Grassy Terrain is in effect.
+187 When a Pokémon with this ability uses an attacking move and it is holding no item, steals the opponent's held item.
+188 When a partner of a Pokémon with this ability consumes an item in battle, transfers the item held by the Pokémon with this ability to it.
+189 Summons the extremely harsh sunlight weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Fire moves by 50%, and causes Water moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning. Makes all Pokémon immune to being frozen.
+190 Summons the heavy rain weather condition for as long as a Pokémon with this ability stays on the field. Boosts the power of Water moves by 50%, and causes Fire moves to fail. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
+191 Summons the strong winds weather condition for as long as a Pokémon with this ability stays on the field. Causes moves of a type that is normally super-effective against Flying to only deal normal damage against Flying. Prevents the weather from being changed by Rain Dance, Sunny Day, Sandstorm, Hail, Drizzle, Drought, Sand Stream, or Snow Warning.
+192 Inmunidad a las reducciones de stats que le pueda causar un Pokémon rival o aliado mediante movimientos o habilidades. Movimientos con efecto secundario sobre sí mismo aún funcionan.
+193 El Pokémon tiene sus PS al máximo, esta habilidad reduce el daño recibido del ataque rival a la mitad.
+194 Letargo perenne mantiene al poseedor en un estado somnoliento constante y evita que sufra otros cambios de estado que no sea sueño.
+195 Esta habilidad hace cambiar a Zygarde a su Forma Completa (con mayores estadísticas de PS y Ataque Especial y menor de Velocidad) cuando su PS restante sea inferior al 50% de su PS máximo.
+196 Aumenta un nivel el ataque especial del poseedor cada vez que otro Pokémon en el terreno de combate se debilita, incluyendo aliados.
+197 Esta habilidad duplica el daño causado por los ataques del Pokémon cuando el Pokémon objetivo acaba de salir al combate tras un intercambio..
+198 Genera un campo eléctrico cuando el poseedor de la habilidad entra al combate.
+199 Impide que los oponentes usen contra el poseedor movimientos que tienen alta prioridad.
+200 Cuando el Pokémon con esta habilidad tiene la mitad o menos de su PS máximo, aumenta un nivel su Ataque Especial.
+201 Aumenta la potencia de los movimientos de categoría especial de los Pokémon aliados en combates dobles y triples.
+202 El Pokémon con esta habilidad puede envenenar o intoxicar a cualquier Pokémon, incluyendo a Pokémon de tipo Acero o Veneno.
+203 Disfraz hace que el Pokémon poseedor de la habilidad no reciba ningún daño del primer ataque que recibe en un combate, tras lo cual cambia de aspecto. El disfraz también puede ser roto si el usuario se hiere a si mismo debido al estado de confusión. El disfraz permanece roto por el resto del combate.
+204 Reduce a la mitad el daño de los ataques de contacto y duplica el daño de los ataques de tipo Fuego que reciba el Pokémon (los ataques de contacto de tipo Fuego hacen un daño normal).
+205 Aumenta un nivel la Defensa del Pokémon cuando recibe un ataque de daño directo.
+206 Aumenta en 3 la prioridad de movimientos curativos en combate. Incluye aquellos que causen daño y recuperación, como Gigadrenado.
+207 Cuando el Pokémon con esta habilidad tiene la mitad o menos de su PS máximo, huye automáticamente de combates contra Pokémon salvajes o es intercambiado en combates contra Pokémon de otros entrenadores.
+208 Permite al poseedor copiar inmediatamente cualquier movimiento de danza usado por otro Pokémon que esté combatiendo.
+209 Escudo limitado genera una coraza que protege al poseedor de problemas de estado. Cuando su salud baja por debajo del 50% de sus PS máximos, la coraza se rompe y adquiere unas estadísticas más ofensivas
+210 Resta al Pokémon enemigo una cantidad de PS iguales a los que tenía el usuario antes de caer debilitado por el golpe de gracia.
+211 Esta habilidad mantiene al Pokémon en Forma Banco mientras su PS restante sea superior al 25% de su PS máximo, y le hace cambiar a su Forma Individual cuando su PS restante sea inferior al 25% de su PS máximo.
+212 La Velocidad del Pokémon se duplica en Campo Eléctrico. No se incluye el turno en el que se pone el campo.
+213 Aumenta dos niveles la Defensa del Pokémon cuando recibe un ataque de tipo Agua.
+214 Impide que los oponentes usen contra el poseedor movimientos que tienen alta prioridad.
+215 Esta habilidad hace que Greninja cambie a Greninja-Ash (con mayores estadísticas de Ataque y Ataque Especial) cuando debilita a un Pokémon del rival. El poder del ataque Shuriken de Agua durante la Forma Ash aumenta en un 50%.
+216 Hace que el poseedor adquiera la habilidad de un aliado que caiga debilitado durante el combate, a excepción de banco, cambio táctico, disfraz, escudo limitado, predicción y superguarda.
+217 Cambia el tipo elemental del poseedor al del disco que este lleve equipado.
+218 Genera un campo psíquico cuando el poseedor de la habilidad entra al combate.
+219 Genera un campo de hierba cuando el poseedor de la habilidad entra al combate.
+220 Genera un campo de niebla cuando el poseedor de la habilidad entra al combate.
+221 Duplica la velocidad del poseedor en tormentas de granizo. También evita que el poseedor sea dañado por la misma. No incluye el turno en que empieza a granizar.
+222 Cuando el Pokémon con esta habilidad tiene la mitad o menos de su PS máximo, huye automáticamente de combates contra Pokémon salvajes o es intercambiado en combates contra Pokémon de otros entrenadores.
+223 Los ataques del Pokémon con esta habilidad siempre serán Golpe crítico si el Pokémon objetivo está envenenado.
+224 Hace que el poseedor reciba la mitad de daño de ataques de tipo fuego y le impide ser quemado. Además esta habilidad también duplica la potencia de los ataques de tipo agua del poseedor.
+225 El poder de los ataques de tipo Acero del Pokémon con esta habilidad aumenta en un 50%.
+226 Los ataques del Pokémon con esta habilidad golpean al rival sin hacer contacto.
+227 Esta habilidad altera todos los movimientos que funcionan por sonido que use el Pokémon para que sean de tipo Agua
+228 Altera todos los movimientos de tipo Normal que use el Pokémon para que sean de tipo Eléctrico en su lugar, aumentando su poder en un 20% si son ofensivos.
+229 Baja en un nivel la velocidad del oponente que golpee al poseedor con un movimiento de contacto.
+230 Hace que el poseedor adquiera la habilidad de un aliado que caiga debilitado durante el combate, a excepción de banco, cambio táctico, disfraz, escudo limitado, predicción y superguarda.
+231 Sube la estadística más alta del poseedor un nivel al debilitar a un Pokémon mediante daño directo. En caso de empate de dos estádisticas en el primer puesto, aumentarán en el orden de ataque, defensa, ataque especial, defensa especial y velocidad.
+232 Reduce en 1/4 el daño recibido de los movimientos supereficaces usados contra el Pokémon poseedor de la habilidad.
+
