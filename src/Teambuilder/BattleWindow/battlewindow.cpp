@@ -231,7 +231,7 @@ void BattleWindow::changeAttackText(int i)
 void BattleWindow::closeEvent(QCloseEvent *event)
 {
     QSettings s;
-    if (battleEnded || canLeaveBattle || !s.value("Client/ShowExitWarning").toBool()) {
+    if (battleEnded || canLeaveBattle || !s.value("Battle/ShowForfeitWarning").toBool()) {
         checkAndSaveLog();
         forfeit();
     } else {
@@ -340,7 +340,7 @@ void BattleWindow::targetChosen(int i)
 void BattleWindow::clickClose()
 {
     QSettings s;
-    if (battleEnded || canLeaveBattle || !s.value("Client/ShowExitWarning").toBool()) {
+    if (battleEnded || canLeaveBattle || !s.value("Battle/ShowForfeitWarning").toBool()) {
         forfeit();
         return;
     }

@@ -339,6 +339,8 @@ public slots:
     /* exit warning */
     void changeExitWarning(bool show);
     void showExitWarning();
+    /* forfeit warning */
+    void toggleForfeitWarning(bool show);
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);
