@@ -1472,9 +1472,7 @@ bool BattleSituation::testStatus(int player)
             inc(pokeMemory(player)["ConfusedCount"], -1);
 
             notify(All, StatusMessage, player, qint8(FeelConfusion));
-
-            int coin = gen() > 6 ? 3 : 2; //gen 7 confuse is 1/3
-            if (coinflip(1, coin)) {
+            if (coinflip(1, 2)) {
                 if (isDisguised(player)) {
                     notify(All, StatusMessage, player, qint8(HurtConfusion));
                     callaeffects(player, player, "Disguise");
