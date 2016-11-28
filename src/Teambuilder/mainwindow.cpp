@@ -74,6 +74,7 @@ static void setDefaultValues()
     setDefaultValue(s, "Battle/AnimateHp", true);
     setDefaultValue(s, "Battle/OldWindow", true);
     setDefaultValue(s, "Battle/OldAttackButtons", true);
+    setDefaultValue(s, "Battle/ShowForfeitWarning", true);
     setDefaultValue(s, "Client/EnableLadder", true);
     setDefaultValue(s, "Client/SortPlayersByTier", false);
     setDefaultValue(s, "Client/SortChannelsByName", true);

@@ -1512,6 +1512,11 @@ QMenuBar * Client::createMenuBar(MainEngine *w)
     connect(dontUseNicknames, SIGNAL(triggered(bool)), SLOT(changeNicknames(bool)));
     dontUseNicknames->setChecked(globals.value("Battle/NoNicknames").toBool());
 
+    QAction *showForfeitWarning = battleMenu->addAction(tr("Show forfeit warning"));
+    showForfeitWarning->setCheckable(true);
+    connect(showForfeitWarning, SIGNAL(triggered(bool)), SLOT(toggleForfeitWarning(bool)));
+    showForfeitWarning->setChecked(globals.value("Battle/ShowForfeitWarning").toBool());
+
     w->addLanguageMenu(menuBar);
 
     QMenu *helpMenu = menuBar->addMenu(tr("&Help"));
@@ -1822,6 +1827,11 @@ void Client::saveBattleLogs(bool save)
 void Client::animateHpBar(bool save)
 {
     globals.setValue("Battle/AnimateHp", save);
+}
+
+void Client::toggleForfeitWarning(bool show)
+{
+    globals.setValue("Battle/ShowForfeitWarning", show);
 }
 
 void Client::spectatingBattleMessage(int battleId, const QByteArray &command)
