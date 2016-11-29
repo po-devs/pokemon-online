@@ -1266,9 +1266,7 @@ bool BattleSituation::testAccuracy(int player, int target, bool silent)
     callaeffects(player, target, "ActivateProtean");
     callpeffects(target, player, "TestEvasion"); /*dig bounce  ... */
 
-    if (pokeMemory(player).contains("LockedOn") && pokeMemory(player).value("LockedOnEnd").toInt() >= turn()
-            && pokeMemory(player).value("LockedOn") == target &&
-            pokeMemory(player).value("LockedOnCount").toInt() == slotMemory(target)["SwitchCount"].toInt()) {
+    if (locked(player, target)) {
         return true;
     }
 
@@ -1562,6 +1560,11 @@ void BattleSituation::testFlinch(int player, int target)
     }
 }
 
+#define checkAttackFailed() if (testFail(player)) { \
+        calleffects(player,target,"AttackSomehowFailed"); \
+        continue; \
+    }
+
 void BattleSituation::useAttack(int player, int move, bool specialOccurence, bool tellPlayers)
 {
     int oldAttacker = attacker();
@@ -1819,6 +1822,9 @@ ppfunction:
         callaeffects(player, target, "MoveTypeModifier");
         calleffects(player, target, "MoveClassModifier");
 
+        /* Aura abilities, Snatch */
+        callbeffects(player, target, "DetermineGeneralAttackFailure", true);
+        checkAttackFailed();
         if (tmove(player).power > 0)
         {
             calculateTypeModStab();
@@ -1833,13 +1839,8 @@ ppfunction:
             /* King's Shield*/
             /* also abilities are called before type mods */
             if (gen() >= 7) {
-                if (turnMemory(target).value("KingsShieldUsed").toBool()) {
-                    callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-                    if (testFail(player)) {
-                        calleffects(player,target,"AttackSomehowFailed");
-                        continue;
-                    }
-                }
+                calleffects(target, player, "DetermineProtectedAgainstAttackKS");
+                checkAttackFailed();
                 if (oppBlockFailure(target, player)) {
                     continue;
                 }
@@ -1865,29 +1866,24 @@ ppfunction:
             }
 
             callpeffects(player, target, "DetermineAttackFailure");
-            if (testFail(player)) {
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
-            }
+            checkAttackFailed();
             calleffects(player, target, "DetermineAttackFailure");
-            if (testFail(player)){
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
-            }
+            checkAttackFailed();
 
             //Moved after failure check to allow Sucker punch to work correctly.
             /* In gen 6, this check is after the "no effect" check. Since king's shield
              * on aegislash on a physical normal/fighting/poison attack doesn't reduce the opponent's
              * attack by two stages. Gen 7 reverses this so we "reintroduce the bug" and move this block of code higher again*/
-            //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
-            /* Protect, ... */
-            if (gen() < 7 || !turnMemory(target).value("KingsShieldUsed").toBool()) {
-                callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-                if (testFail(player)) {
-                    calleffects(player,target,"AttackSomehowFailed");
-                    continue;
-                }
+            if (gen() < 7) {
+                calleffects(target, player, "DetermineProtectedAgainstAttackKS");
+                checkAttackFailed();
             }
+            /* Protect, ... */
+            calleffects(target, player, "DetermineProtectedAgainstAttack");
+            checkAttackFailed();
+            callzeffects(target, player, "DetermineProtectedAgainstAttack");
+            checkAttackFailed();
+
             int num = repeatNum(player);
             bool hit = num > 1;
 
@@ -1999,8 +1995,7 @@ ppfunction:
                 callaeffects(target, player, "AfterBeingPlumetted");
             }
 
-            if (gen() <= 4 && koed(target))
-            {
+            if (gen() <= 4 && koed(target)) {
                 notifyKO(target);
             }
 
@@ -2011,20 +2006,17 @@ ppfunction:
 
             fpoke(target).remove(BasicPokeInfo::HadSubstitute);
         } else {
-            //fixme: try to get protect to work on a calleffects(target, player), and wide guard/priority guard on callteffects(this.player(target), player)
             /* Protect, ... */
-            callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-            if (testFail(player)) {
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
+            if (target != player) {
+                calleffects(target, player, "DetermineProtectedAgainstAttack");
+                checkAttackFailed();
+                callzeffects(target, player, "DetermineProtectedAgainstAttack");
+                checkAttackFailed();
             }
 
             /* Magic Coat, Magic Bounce */
             callbeffects(player, target, "DetermineGeneralAttackFailure2", true);
-            if (testFail(player)) {
-                calleffects(player,target,"AttackSomehowFailed");
-                continue;
-            }
+            checkAttackFailed();
 
             /* Abilities have priority over type mods in gen 7 */
             if (gen() >= 7 && oppBlockFailure(target, player)) {
@@ -2142,6 +2134,8 @@ trueend:
         }
     }
 }
+
+#undef checkAttackFailed
 
 void BattleSituation::determineTarget(int player, int attack)
 {
@@ -4606,7 +4600,13 @@ void BattleSituation::requestSwitch(int s, bool eeffects)
     }
 }
 
-bool BattleSituation::linked(int linked, QString relationShip)
+bool BattleSituation::locked(int s, int t) const
+{
+    return pokeMemory(s).contains("LockedOn") && pokeMemory(s).value("LockedOnEnd").toInt() >= turn() && pokeMemory(s).value("LockedOn").toInt() == t
+            && pokeMemory(s).value("LockedOnCount").toInt() == slotMemory(t)["SwitchCount"].toInt();
+}
+
+bool BattleSituation::linked(int linked, QString relationShip) const
 {
     if (!pokeMemory(linked).contains(relationShip + "By"))
         return false;
@@ -4622,7 +4622,7 @@ void BattleSituation::link(int linker, int linked, QString relationShip)
     pokeMemory(linked)[relationShip+"Count"] = slotMemory(linker)["SwitchCount"].toInt();
 }
 
-int BattleSituation::linker(int linked, QString relationShip)
+int BattleSituation::linker(int linked, QString relationShip) const
 {
     return fromInternalId(pokeMemory(linked)[relationShip + "By"].toInt());
 }

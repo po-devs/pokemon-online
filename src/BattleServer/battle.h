@@ -154,9 +154,10 @@ public:
     void requestSwitchIns();
     void requestEndOfTurnSwitchIns();
     void requestSwitch(int player, bool entryEffects=true);
-    bool linked(int linked, QString relationShip);
+    bool locked(int source, int target) const;
+    bool linked(int linked, QString relationShip) const;
     void link(int linker, int linked, QString relationShip);
-    int linker(int linked, QString relationShip);
+    int linker(int linked, QString relationShip) const;
     int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat) const;
     /* "Pure" stat is without items */
