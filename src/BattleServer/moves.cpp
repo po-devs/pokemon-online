@@ -771,15 +771,12 @@ struct MMDetect : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Detect", &dgaf);
+        addFunction(b.turnMemory(s), "DetermineProtectedAgainstAttack", "Detect", &dgaf);
         turn(b,s)["DetectUsed"] = true;
         b.sendMoveMessage(27, 0, s, Pokemon::Normal);
     }
 
-    static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
-        }
+    static void dgaf(int t, int s, BS &b) {
         if (!turn(b,t)["DetectUsed"].toBool()) {
             return;
         }
@@ -795,7 +792,7 @@ struct MMDetect : public MM
         }
 
         /* Mind Reader */
-        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+        if (b.locked(s, t))
             return;
         /* All other moves fail */
         if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
@@ -2556,15 +2553,12 @@ struct MMWideGuard : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "WideGuard", &dgaf);
+        addFunction(b.teamMemory(b.player(s)), "DetermineProtectedAgainstAttack", "WideGuard", &dgaf);
         team(b,b.player(s))["WideGuardUsed"] = b.turn();
         b.sendMoveMessage(169, 0, s, Pokemon::Normal);
     }
 
-    static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
-        }
+    static void dgaf(int t, int s, BS &b) {
         int target = b.player(t);
         if (!team(b,target).contains("WideGuardUsed") || team(b,target)["WideGuardUsed"].toInt() != b.turn()) {
             return;
@@ -2594,15 +2588,12 @@ struct MMQuickGuard : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "FastGuard", &dgaf);
+        addFunction(b.teamMemory(b.player(s)), "DetermineProtectedAgainstAttack", "FastGuard", &dgaf);
         team(b,b.player(s))["QuickGuardUsed"] = b.turn();
         b.sendMoveMessage(170, 0, s, Pokemon::Normal);
     }
 
-    static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
-        }
+    static void dgaf(int t, int s, BS &b) {
         int target = b.player(t);
         if (!team(b,target).contains("QuickGuardUsed") || team(b,target)["QuickGuardUsed"].toInt() != b.turn()) {
             return;
@@ -6962,15 +6953,12 @@ struct MMCraftyShield: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "CraftyShield", &dgaf);
+        addFunction(b.teamMemory(s), "DetermineProtectedAgainstAttack", "CraftyShield", &dgaf);
         team(b,b.player(s))["CraftyShieldUsed"] = b.turn();
         b.sendMoveMessage(199, 0, s, Pokemon::Fairy);
     }
 
-    static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
-        }
+    static void dgaf(int t, int s, BS &b) {
         int target = b.player(t);
         if (!team(b,target).contains("CraftyShieldUsed") || team(b,target)["CraftyShieldUsed"].toInt() != b.turn()) {
             return;
@@ -6983,7 +6971,7 @@ struct MMCraftyShield: public MM
         }
 
         /* Mind Reader */
-        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+        if (b.locked(s, t))
             return;
         /* All other moves fail */
         b.fail(s, 199, 0, Pokemon::Fairy, t);
@@ -7137,15 +7125,12 @@ struct MMKingsShield: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "KingsShield", &dgaf);
+        addFunction(b.turnMemory(s), "DetermineProtectedAgainstAttackKS", "KingsShield", &dgaf);
         turn(b,s)["KingsShieldUsed"] = true;
         b.sendMoveMessage(206, 0, s, type(b,s));
     }
 
-    static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
-        }
+    static void dgaf(int t, int s, BS &b) {
         if (!turn(b,t)["KingsShieldUsed"].toBool()) {
             return;
         }
@@ -7154,6 +7139,7 @@ struct MMKingsShield: public MM
             return;
         }
 
+        /* Shoud be removed if being kept separate from other protect moves - as then it's only called in attacking situations */
         if (tmove(b,s).category == Move::Other) {
             return;
         }
@@ -7165,7 +7151,7 @@ struct MMKingsShield: public MM
         }
 
         /* Mind Reader */
-        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+        if (b.locked(s, t))
             return;
 
         /* All other moves fail */
@@ -7195,15 +7181,12 @@ struct MMMatBlock : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "MatBlock", &dgaf);
+        addFunction(b.teamMemory(b.player(s)), "DetermineProtectedAgainstAttack", "MatBlock", &dgaf);
         team(b,b.player(s))["MatBlockUsed"] = b.turn();
         b.sendMoveMessage(207, 0, s, type(b,s));
     }
 
-    static void dgaf(int s, int t, BS &b) {
-        if (s == t || t == -1) {
-            return;
-        }
+    static void dgaf(int t, int s, BS &b) {
         int target = b.player(t);
         if (!team(b,target).contains("MatBlockUsed") || team(b,target)["MatBlockUsed"].toInt() != b.turn()) {
             return;
@@ -7218,7 +7201,7 @@ struct MMMatBlock : public MM
         }
 
         /* Mind Reader */
-        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+        if (b.locked(s, t))
             return;
         /* All other moves fail */
         b.fail(s, 207, 0, Pokemon::Fighting, t);
@@ -7273,12 +7256,12 @@ struct MMSpikyShield : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "SpikyShield", &dgaf);
+        addFunction(b.turnMemory(s), "", "SpikyShield", &dgaf);
         turn(b,s)["SpikyShieldUsed"] = true;
         b.sendMoveMessage(27, 0, s, Pokemon::Grass);
     }
 
-    static void dgaf(int s, int t, BS &b) {
+    static void dgaf(int t, int s, BS &b) {
         if (s == t || t == -1) {
             return;
         }
@@ -7291,7 +7274,7 @@ struct MMSpikyShield : public MM
         }
 
         /* Mind Reader */
-        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+        if (b.locked(s, t))
             return;
         /* All other moves fail */
         if (turn(b,s).contains("TellPlayers")) { /* if the move was secret and cancelled, disclose it (like free fall) */
@@ -7751,12 +7734,12 @@ struct MMBanefulBunker: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "BanefulBunker", &dgaf);
+        addFunction(b.turnMemory(s), "", "BanefulBunker", &dgaf);
         turn(b,s)["BanefulBunkerUsed"] = true;
         b.sendMoveMessage(27, 0, s, type(b,s));
     }
 
-    static void dgaf(int s, int t, BS &b) {
+    static void dgaf(int t, int s, BS &b) {
         if (s == t || t == -1) {
             return;
         }
@@ -7779,7 +7762,7 @@ struct MMBanefulBunker: public MM
         }
 
         /* Mind Reader */
-        if (poke(b,s).contains("LockedOn") && poke(b,t).value("LockedOnEnd").toInt() >= b.turn() && poke(b,s).value("LockedOn").toInt() == t )
+        if (b.locked(s, t))
             return;
 
         /* All other moves fail */
@@ -8267,6 +8250,7 @@ struct MMZAlola : public MM
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
     *DetermineGeneralAttackFailure -- battle: this is a battlefield effect, same as above
+    * -- For moves like Protect, Wide Guard, etc.
     *EndTurn -- poke, battle: Called at the end of the turn
     *UponOffensiveDamageReceived -- turn: when the player received damage (not the substitute) from an attack
     *OnSetup -- none: when the move is setup
