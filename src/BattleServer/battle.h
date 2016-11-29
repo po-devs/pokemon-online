@@ -82,7 +82,8 @@ public:
     void changeStatus(int player, int status, bool tell = true, int turns = 0);
     bool canGetStatus(int target, int status, int inflicter);
     bool canHeal(int s, int part, int focus);
-    bool canBypassSub(int t);
+    bool blockedBySub(int player, int target) const;
+    bool canBypassSub(int t) const;
     void symbiosisPass(int s);
     bool canPassMStone(int target, int item);
     bool preTransPoke(int s, Pokemon::uniqueId check);
@@ -130,6 +131,7 @@ public:
     void testFlinch(int player, int target);
     bool testStatus(int player);
     void fail(int player, int move, int part=0, int type=0, int trueSource = -1);
+    bool statusMoveFails(int player, int target);
     bool hasWorkingAbility(int play, int ability) const;
     bool hasWorkingTeamAbility(int play, int ability, int excludedSlot = -1);
     bool opponentsHaveWorkingAbility(int play, int ability);
@@ -148,6 +150,8 @@ public:
     PokeFraction effFraction(int typeeff);
     bool ineffective(int typeeff) {return typeeff < -50;}
     bool isFlying(int player, bool levi=true);
+    bool isSleeping(int player) const;
+    int status(int player) const;
     bool hasFlyingEffect(int player, bool levi=true); //returns true if has flying effect outside of flying type
     bool hasGroundingEffect(int player); //returns true for gravity, ingrain, ...
     bool isProtected(int slot, int target);
