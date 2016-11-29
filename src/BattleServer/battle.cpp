@@ -1795,7 +1795,7 @@ ppfunction:
     }
 
     /* Aura abilities, Snatch */
-    callbeffects(player, target, "BeforeTargetList", true);
+    callbeffects(player, player, "BeforeTargetList", true);
     if (turnMem(player).failed()) {
         goto trueend;
     }
@@ -1872,6 +1872,9 @@ ppfunction:
             calleffects(player, target, "DetermineAttackFailure");
             checkAttackFailed();
 
+            /* Protean is supposed to change type even if move is protected against -- bulbapedia */
+            callaeffects(player, target, "ActivateProtean");
+
             //Moved after failure check to allow Sucker punch to work correctly.
             /* In gen 6, this check is after the "no effect" check. Since king's shield
              * on aegislash on a physical normal/fighting/poison attack doesn't reduce the opponent's
@@ -1915,9 +1918,9 @@ ppfunction:
                 if (zmoving && isDisguised(target)) {
                     continue;
                 }
+
                 if (tmove(player).power > 1 || tmove(player).attack == Move::GyroBall) {
                     calleffects(player, target, "BeforeHitting");
-                    callaeffects(player, target, "ActivateProtean");
                     if (turnMemory(player).contains("HitCancelled")) {
                         turnMemory(player).remove("HitCancelled");
                         continue;
@@ -1930,7 +1933,6 @@ ppfunction:
                     hitcount += 1;
                     hitting = true;
                 } else {
-                    callaeffects(player, target, "ActivateProtean");
                     turnMemory(player).remove("CustomDamage");
                     calleffects(player, target, "CustomAttackingDamage");
 

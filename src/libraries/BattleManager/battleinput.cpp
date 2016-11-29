@@ -9,7 +9,7 @@ namespace BC = BattleCommands;
 
 template <class T> std::shared_ptr<T> mk() { return std::shared_ptr<T>(new T()); }
 
-BattleInput::BattleInput(const BattleConfiguration *conf, int version) : conf(conf), majorProtocolVersion(version) {
+BattleInput::BattleInput(const BattleConfiguration *conf, int version) :  majorProtocolVersion(version), conf(conf) {
     mCount = 0;
     delayCount = 0;
 }
