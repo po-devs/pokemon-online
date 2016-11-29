@@ -2018,7 +2018,7 @@ ppfunction:
                 noDamage = turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()));
 
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
-                bool sub = hasSubstitute(target);
+                bool sub = hasSubstitute(target) && !canBypassSub(player, target);
                 if (sub) {
                     fpoke(target).add(BasicPokeInfo::HadSubstitute);
                 }
@@ -2064,7 +2064,7 @@ ppfunction:
                 }
 
                 calleffects(player, target, "UponAttackSuccessful");
-                if (!hasSubstitute(target))
+                if (!sub)
                     calleffects(player, target, "OnFoeOnAttack");
 
                 healDamage(player, target);
@@ -2112,7 +2112,7 @@ ppfunction:
                 notifyHits(player, hitcount);
             }
 
-            if (gen() >= 5 && !koed(target) && !hasSubstitute(target)) {
+            if (gen() >= 5 && !koed(target) && !sub) {
                 callaeffects(target, player, "AfterBeingPlumetted");
             }
 
