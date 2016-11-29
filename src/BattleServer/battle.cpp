@@ -2016,6 +2016,9 @@ ppfunction:
                     int damage = calculateDamage(player, target);
                     if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
                         inflictDamage(target, damage, player, true);
+                    } else if (makesContact(player)) {
+                        // Contact effects still work when Disguise is up
+                        callieffects(target, player, "UponPhysicalAssault");
                     }
                     hitcount += 1;
                     hitting = true;
@@ -2028,6 +2031,8 @@ ppfunction:
                         int damage = turnMemory(player).value("CustomDamage").toInt();
                         if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
                             inflictDamage(target, damage, player, true);
+                        } else if (makesContact(player)) {
+                            callieffects(target, player, "UponPhysicalAssault");
                         }
                         hitcount += 1;
                         hitting = true;
