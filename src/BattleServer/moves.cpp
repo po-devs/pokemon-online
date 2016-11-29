@@ -8246,10 +8246,10 @@ struct MMZSupernova : public MM
         functions["AfterAttackFinished"] = &zm;
     }
 
-    static void zm(int, int, BS &b) {
+    static void zm(int s, int, BS &b) {
         if(b.terrain != BS::PsychicTerrain) {
-            //TODO: terrain extender because hackmons
-            b.coverField(BS::PsychicTerrain, 5);
+            b.sendMoveMessage(240,BS::PsychicTerrain - 1,s,type(b,s));
+            b.coverField(BS::PsychicTerrain, (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5));
         }
     }
 };
