@@ -2018,7 +2018,7 @@ ppfunction:
                 noDamage = turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()));
 
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
-                bool sub = hasSubstitute(target) && !canBypassSub(player, target);
+                bool sub = hasSubstitute(target) && !canBypassSub(player);
                 if (sub) {
                     fpoke(target).add(BasicPokeInfo::HadSubstitute);
                 }
