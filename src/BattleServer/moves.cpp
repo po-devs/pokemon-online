@@ -4287,8 +4287,9 @@ struct MMMagicCoat : public MM
         turn(b,target).clear();
         MoveEffect::setup(move,target,s,b);
         turn(b,target)["Target"] = s;
-        b.battleMemory()["CoatingAttackNow"] = true;
+        b.battleMemory()["CoatingAttackNow"] = turn(b,s)["StealingAttack"] = true;
         b.useAttack(target,move,true,false);
+        turn(b,s).remove("StealingAttack");
         b.battleMemory().remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
@@ -5098,7 +5099,7 @@ struct MMSnatch : public MM
     }
 
     static void uas (int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Snatch", &dgaf);
+        addFunction(b.battleMemory(), "BeforeTargetList", "Snatch", &dgaf);
         b.battleMemory()["Snatcher"] = s;
         turn(b,s)["Snatcher"] = true;
         b.sendMoveMessage(118,1,s,type(b,s));
@@ -5122,10 +5123,11 @@ struct MMSnatch : public MM
                 removeFunction(turn(b,snatcher), "UponAttackSuccessful", "Snatch");
                 turn(b,snatcher).remove("Snatcher");
                 b.battleMemory().remove("Snatcher");                
-                turn(b,snatcher)["SkipProtean"] = true; //The snatched move won't activate Protean. The user stays Dark
+                turn(b,snatcher)["StealingAttack"] = true; //The snatched move won't activate Protean. The user stays Dark
                 MoveEffect::setup(move,snatcher,s,b);
                 b.useAttack(snatcher,move,true);
                 MoveEffect::unsetup(move,snatcher,b);
+                turn(b,snatcher).remove("StealingAttack");
             }
         }
     }
@@ -7517,7 +7519,6 @@ struct MMHyperspaceFury : public MM {
     static void btl(int s, int, BS &b) {
         //Only Hoopa-Unbound and Transformed pokemon that are Hoopa-Unbound can use this move
         if (b.poke(s).num() != Pokemon::Hoopa_Unbound) {
-            turn(b,s)["SkipProtean"] = true;
             turn(b,s)["HyperspaceFail"] = true;
             b.sendMoveMessage(219, b.poke(s).num() == Pokemon::Hoopa,s,Type::Dark);
         }
