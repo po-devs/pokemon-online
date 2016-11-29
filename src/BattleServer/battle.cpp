@@ -1746,124 +1746,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
     }
 
-    targetList.clear();
-
-    {
-        int target = turnMemory(player)["Target"].toInt();
-
-        switch(Move::Target(tmove(player).targets)) {
-        case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
-        case Move::TeamSide:
-        case Move::User: targetList.push_back(player); break;
-        case Move::Opponents: {
-            int opp = opponent(this->player(player));
-            QVector<int> trueTargets;
-
-            for (int i = 0; i < numberOfSlots()/2; i++) {
-                if (areAdjacent(slot(opp, i), player) && !koed(slot(opp,i)))
-                    trueTargets.push_back(slot(opp, i));
-            }
-            makeTargetList(trueTargets);
-            break;
-        }
-        case Move::All: {
-            int tp = this->player(player);
-            int to = opponent(tp);
-
-            QVector<int> trueTargets;
-
-            for (int i = 0; i < numberOfSlots()/2; i++) {
-                if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)))
-                    trueTargets.push_back(slot(tp, i));
-            }
-            for (int i = 0; i < numberOfSlots()/2; i++) {
-                if (areAdjacent(slot(to, i), player) && !koed(slot(to, i)))
-                    trueTargets.push_back(slot(to, i));
-            }
-            makeTargetList(trueTargets);
-            break;
-        }
-        case Move::AllButSelf: {
-            int tp = this->player(player);
-            int to = opponent(tp);
-
-            QVector<int> trueTargets;
-
-            for (int i = 0; i < numberOfSlots()/2; i++) {
-                if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)) && player != slot(tp, i))
-                    trueTargets.push_back(slot(tp, i));
-            }
-            for (int i = 0; i < numberOfSlots()/2; i++) {
-                if (areAdjacent(slot(to, i), player) && !koed(slot(to, i)))
-                    trueTargets.push_back(slot(to, i));
-            }
-
-            makeTargetList(trueTargets);
-            break;
-        }
-        case Move::IndeterminateTarget:
-        case Move::ChosenTarget: case Move::MeFirstTarget: {
-            if (multiples()) {
-                if (!koed(target) && target != player && canTarget(attack, player, target)) {
-                    targetList.push_back(target);
-                    break;
-                }
-            } else {
-                if (!koed(target) && target != player) {
-                    targetList.push_back(target);
-                    break;
-                }
-            }
-        }
-            /* There is no "break" here and it is normal. Do not change the order */
-        case Move::RandomTarget :
-        {
-            if (!turnMemory(player).contains("TargetChanged")) {
-                QVector<int> possibilities;
-
-                for (int i = 0; i < numberOfSlots(); i++) {
-                    if (this->player(i) != this->player(player) && canTarget(attack, player, i) && !koed(i)) {
-                        possibilities.push_back(i);
-                    }
-                }
-                if (possibilities.size() > 0) {
-                    targetList.push_back(possibilities[randint(possibilities.size())]);
-                }
-            } else {
-                targetList.push_back(target);
-            }
-            break;
-        }
-        case Move::PartnerOrUser:
-            if (!multiples()) {
-                targetList.push_back(player);
-            } else {
-                /* Acupressure can be called with sleep talk, so the target needs to be checked */
-                if (!koed(target) && arePartners(target, player) && areAdjacent(player, target)) {
-                    targetList.push_back(target);
-                } else {
-                    targetList.push_back(player);
-                }
-            }
-            break;
-        case Move::Partner:
-            if (!koed(target) && arePartners(target, player) && areAdjacent(target, player) && target != player) {
-                targetList.push_back(target);
-            } else {
-                for (int i = 0; i < numberOfSlots(); i++) {
-                    if (arePartners(i, player) && i!=player && !koed(i) && areAdjacent(i, player)) {
-                        targetList.push_back(i);
-                    }
-                }
-                if (targetList.size() > 0) {
-                    int randp = targetList[randint(targetList.size())];
-                    targetList.clear();
-                    targetList.push_back(randp);
-                }
-            }
-            break;
-        }
-    }
+    determineTarget(player, attack);
 
 ppfunction:
     if (!specialOccurence && !turnMem(player).contains(TM::NoChoice)) {
@@ -2232,6 +2115,126 @@ trueend:
                 callaeffects(target, target, "DanceInvite");
             }
         }
+    }
+}
+
+void BattleSituation::determineTarget(int player, int attack)
+{
+    targetList.clear();
+
+    int target = turnMemory(player)["Target"].toInt();
+
+    switch(Move::Target(tmove(player).targets)) {
+    case Move::Field: case Move::TeamParty: case Move::OpposingTeam:
+    case Move::TeamSide:
+    case Move::User: targetList.push_back(player); break;
+    case Move::Opponents: {
+        int opp = opponent(this->player(player));
+        QVector<int> trueTargets;
+
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (areAdjacent(slot(opp, i), player) && !koed(slot(opp,i)))
+                trueTargets.push_back(slot(opp, i));
+        }
+        makeTargetList(trueTargets);
+        break;
+    }
+    case Move::All: {
+        int tp = this->player(player);
+        int to = opponent(tp);
+
+        QVector<int> trueTargets;
+
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)))
+                trueTargets.push_back(slot(tp, i));
+        }
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (areAdjacent(slot(to, i), player) && !koed(slot(to, i)))
+                trueTargets.push_back(slot(to, i));
+        }
+        makeTargetList(trueTargets);
+        break;
+    }
+    case Move::AllButSelf: {
+        int tp = this->player(player);
+        int to = opponent(tp);
+
+        QVector<int> trueTargets;
+
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (areAdjacent(slot(tp, i), player) && !koed(slot(tp, i)) && player != slot(tp, i))
+                trueTargets.push_back(slot(tp, i));
+        }
+        for (int i = 0; i < numberOfSlots()/2; i++) {
+            if (areAdjacent(slot(to, i), player) && !koed(slot(to, i)))
+                trueTargets.push_back(slot(to, i));
+        }
+
+        makeTargetList(trueTargets);
+        break;
+    }
+    case Move::IndeterminateTarget:
+    case Move::ChosenTarget: case Move::MeFirstTarget: {
+        if (multiples()) {
+            if (!koed(target) && target != player && canTarget(attack, player, target)) {
+                targetList.push_back(target);
+                break;
+            }
+        } else {
+            if (!koed(target) && target != player) {
+                targetList.push_back(target);
+                break;
+            }
+        }
+    }
+        /* There is no "break" here and it is normal. Do not change the order */
+    case Move::RandomTarget :
+    {
+        if (!turnMemory(player).contains("TargetChanged")) {
+            QVector<int> possibilities;
+
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (this->player(i) != this->player(player) && canTarget(attack, player, i) && !koed(i)) {
+                    possibilities.push_back(i);
+                }
+            }
+            if (possibilities.size() > 0) {
+                targetList.push_back(possibilities[randint(possibilities.size())]);
+            }
+        } else {
+            targetList.push_back(target);
+        }
+        break;
+    }
+    case Move::PartnerOrUser:
+        if (!multiples()) {
+            targetList.push_back(player);
+        } else {
+            /* Acupressure can be called with sleep talk, so the target needs to be checked */
+            if (!koed(target) && arePartners(target, player) && areAdjacent(player, target)) {
+                targetList.push_back(target);
+            } else {
+                targetList.push_back(player);
+            }
+        }
+        break;
+    case Move::Partner:
+        if (!koed(target) && arePartners(target, player) && areAdjacent(target, player) && target != player) {
+            targetList.push_back(target);
+        } else {
+            for (int i = 0; i < numberOfSlots(); i++) {
+                if (arePartners(i, player) && i!=player && !koed(i) && areAdjacent(i, player)) {
+                    targetList.push_back(i);
+                }
+            }
+            if (targetList.size() > 0) {
+                int randp = targetList[randint(targetList.size())];
+                targetList.clear();
+                targetList.push_back(randp);
+            }
+        }
+        break;
     }
 }
 
