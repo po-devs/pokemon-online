@@ -7536,8 +7536,7 @@ struct MMShellTrap : public MM {
     MMShellTrap() {
         functions["OnSetup"] = &os;
         functions["DetermineAttackFailure"] = &daf;
-        functions["BeforeCalculatingDamage"] = &daf;
-        functions["UponPhysicalAssault"] = &upa;
+        functions["UponOffensiveDamageReceived"] = &uodr;
     }
 
     static void os(int s, int, BS &b) {
@@ -7545,15 +7544,23 @@ struct MMShellTrap : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (turn(b,s)["ShellTrapTurn"] != b.turn()) {
-            turn(b,s)["LostFocus"] = true;
-            b.fail(s, 220, 1, Pokemon::Fire);
+        if (poke(b, s)["ShellTrapTurn"] != b.turn()) {
+            fturn(b,s).add(TM::Failed);
         }
     }
 
-    static void upa(int s, int t, BS &b) {
-        turn(b,s)["ShellTrapTurn"] = b.turn();
-        // Change target to attacker?
+    /* Need to change order so that shell trap activates
+       after secondary effects of the move that hit it */
+    static void uodr(int s, int t, BS &b) {
+        /* in game description says "physical move"
+           should test whether physical or contact move is trigger */
+        //if (tmove(b, t).category == Category::Physical)
+        if (b.makesContact(t)) {
+            poke(b, s)["ShellTrapTurn"] = b.turn();
+            //b.useAttack(s, Move::ShellTrap, true);
+            b.useAttack(s, b.choice(s).attackSlot());
+            MoveEffect::unsetup(Move::ShellTrap, s, b);
+        }
     }
 };
 

@@ -1914,7 +1914,7 @@ ppfunction:
             calculateTypeModStab();
 
             calleffects(player, target, "BeforeCalculatingDamage");
-            /* For Focus Punch and Shell Trap*/
+            /* For Focus Punch*/
             if (turnMemory(player).contains("LostFocus")) {
                 calleffects(player,target,"AttackSomehowFailed");
                 continue;
