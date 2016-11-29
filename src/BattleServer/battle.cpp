@@ -2149,36 +2149,8 @@ ppfunction:
             }
 
             /* Needs to be called before opponentblock because lightning rod / twave */
-            int type = tmove(player).type; /* move type */
             if (target != player) {
-                bool fail = false;
-                //Poison can't be poisoned regardless of Sleuthed status
-                if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) {
-                    if (!hasWorkingAbility(player, Ability::Corrosion))
-                        fail = true;
-                } else if (!pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()) {
-                    //RawTypeEffect is useless here because Inverted will never create an "ineffective" scenario.
-                    if (Move::StatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Steel)) {
-                        if (!hasWorkingAbility(player, Ability::Corrosion))
-                            fail = true;
-                    } else if (attack == Move::ThunderWave) {
-                        //Thunderwave is affected by immunities in all forms of battle
-                        if (ineffective(rawTypeEff(type, target))) {
-                            fail = true;
-                        } else if (gen() >= 6 && hasType(target, Type::Electric) &&
-                                   !(hasWorkingTeamAbility(target, Ability::Lightningrod) || hasWorkingAbility(target, Ability::VoltAbsorb) || hasWorkingAbility(target, Ability::MotorDrive))) {
-                            fail = true;
-                        }
-                    }
-                }
-                if (Move::StatusInducingMove && !fail) {
-                    if (hasWorkingAbility(target, Ability::Comatose) ||
-                            (hasWorkingAbility(target, Ability::ShieldsDown) && poke(target).num() == Pokemon::Minior)) {
-                        notify(All, Failed, player);
-                    }
-                }
-
-                if (fail) {
+                if (statusMoveFails(player, target)) {
                     sendMoveMessage(31,0,target); //It doesn't affect X...
                     //notify(All, Failed, player);
                     continue;
@@ -3204,6 +3176,19 @@ bool BattleSituation::hasGroundingEffect(int player)
 {
     return battleMemory().value("Gravity").toBool() || hasWorkingItem(player, Item::IronBall)
             || (gen() >= 3 && pokeMemory(player).value("Rooted").toBool()) || pokeMemory(player).value("SmackedDown").toBool();
+}
+
+bool BattleSituation::isSleeping(int player) const
+{
+    return poke(player).status() == Pokemon::Asleep || hasWorkingAbility(player, Ability::Comatose);
+}
+
+int BattleSituation::status(int player) const
+{
+    if (poke(player).status() == Pokemon::Fine && hasWorkingAbility(player, Ability::Comatose)) {
+        return Pokemon::Asleep;
+    }
+    return poke(player).status();
 }
 
 bool BattleSituation::isProtected(int slot, int target)
@@ -4813,6 +4798,61 @@ void BattleSituation::fail(int player, int move, int part, int type, int trueSou
     sendMoveMessage(move, part, trueSource != -1? trueSource : player, type, player,turnMemory(player)["MoveChosen"].toInt());
 }
 
+bool BattleSituation::statusMoveFails(int player, int target)
+{
+    int attack = tmove(player).attack;
+    int type = tmove(player).type; /* move type */
+
+    if (tmove(player).classification != Move::StatusInducingMove) {
+        return false;
+    }
+
+    if (hasWorkingAbility(target, Ability::Comatose) || (hasWorkingAbility(target, Ability::ShieldsDown) && poke(target).num() == Pokemon::Minior)) {
+        return true;
+    }
+
+    if (tmove(player).status == Pokemon::Poisoned && hasWorkingAbility(player, Ability::Corrosion)) {
+        return false;
+    }
+
+    //Poison can't be poisoned regardless of Sleuthed status
+    if (tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Poison)) {
+        return true;
+    }
+
+    if (pokeMemory(target).value(QString("%1Sleuthed").arg(type)).toBool()) {
+        return false;
+    }
+
+    if (tmove(player).status == Pokemon::Poisoned && hasType(target, Type::Steel)) {
+        return true;
+    }
+
+    if (attack == Move::ThunderWave) {
+        //Thunderwave is affected by immunities in all forms of battle
+        if (ineffective(rawTypeEff(type, target))) {
+            return true;
+        }
+        if (gen() < 6 || !hasType(target, Type::Electric)) {
+            return false;
+        }
+
+        switch (ability(target)) {
+        case Ability::Lightningrod:
+        case Ability::VoltAbsorb:
+        case Ability::MotorDrive:
+            if (hasWorkingAbility(target, ability(target))) {
+                return false;
+            }
+            //it's normal there's no break. If the ability IS working, the move goes through, otherwise it fails
+        default:
+            return true;
+        }
+    }
+
+    return false;
+}
+
 PokeFraction BattleSituation::getStatBoost(int player, int stat) const
 {
     int boost = fpoke(player).boosts[stat];
@@ -4970,7 +5010,7 @@ bool BattleSituation::canHeal(int s, int part, int focus)
     return true;
 }
 
-bool BattleSituation::canBypassSub(int t)
+bool BattleSituation::canBypassSub(int t) const
 {
     if (tmove(t).flags & Move::MischievousFlag)
         return true;
@@ -4982,6 +5022,11 @@ bool BattleSituation::canBypassSub(int t)
             return true;
     }
     return false;
+}
+
+bool BattleSituation::blockedBySub(int player, int target) const
+{
+    return hasSubstitute(target) && !canBypassSub(player);
 }
 
 void BattleSituation::symbiosisPass(int s)

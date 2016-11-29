@@ -854,7 +854,7 @@ struct MMDreamingTarget : public MM
     }
 
     static void daf(int s, int t, BS &b) {
-        if (b.poke(t).status() != Pokemon::Asleep || (tmove(b,s).power == 0 && b.hasSubstitute(t)) || !b.hasWorkingAbility(t, Ability::Comatose)) {
+        if (!b.isSleeping(t) ||  (tmove(b,s).power == 0 && b.blockedBySub(s,t))) {
             b.fail(s, 31, 0, type(b,s), t);
         }
     }
@@ -4985,10 +4985,7 @@ struct MMSleepingUser : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.hasWorkingAbility(s, Ability::Comatose)) {
-            return;
-        }
-        if (b.poke(s).status() != Pokemon::Asleep) {
+        if (!b.isSleeping(s)) {
             b.poke(s).advSleepCount() = 0;
             fturn(b,s).add(TM::Failed);
         }
@@ -5079,8 +5076,8 @@ struct MMSmellingSalt : public MM
             return;
 
         int st = turn(b,s)["SmellingSalt_Arg"].toInt();
-        if ( (st == 0 && b.poke(t).status() != Pokemon::Fine) || (st != 0 && b.poke(t).status() == st) ||
-             (st == Pokemon::Asleep && b.hasWorkingAbility(t, Ability::Comatose))) {
+
+        if ( (st == 0 && b.status(t) != Pokemon::Fine) || (st != 0 && b.status(t) == st)) {
             if (b.gen() < 5) {
                 b.chainBp(s, 20);
             } else {
