@@ -228,6 +228,7 @@ struct AMChlorophyll : public AM {
 struct AMColorChange : public AM {
     AMColorChange() {
         functions["UponBeingHit"] = &ubh;
+        /* In Gen 5+ color change is AFTER the hits of a multi-hit move */
         functions["AfterBeingPlumetted"] = &abp;
     }
 
@@ -251,7 +252,7 @@ struct AMColorChange : public AM {
     static void abp(int s, int t, BS &b) {
         if ((s!=t) && type(b,t) != Pokemon::Curse) {
             int tp = type(b,t);
-            if (fpoke(b,s).types.count() == 1&& tp == fpoke(b,s).types[0]) {
+            if (fpoke(b,s).types.count() == 1 && tp == fpoke(b,s).types[0]) {
                 return;
             }
             /* Sheer Force seems to negate Color Change */
