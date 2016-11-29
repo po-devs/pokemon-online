@@ -5052,6 +5052,9 @@ int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
 
 bool BattleSituation::makesContact(int s)
 {
+    if (!(tmove(s).flags & Move::ContactFlag)) {
+        return false;
+    }
     if (hasWorkingAbility(s, Ability::LongReach)) {
         return false;
     }
@@ -5059,10 +5062,7 @@ bool BattleSituation::makesContact(int s)
         sendItemMessage(72, s, 0);
         return false;
     }
-    if (tmove(s).flags & Move::ContactFlag) {
-        return true;
-    }
-    return false;
+    return true;
 }
 
 bool BattleSituation::isDisguised(int s)

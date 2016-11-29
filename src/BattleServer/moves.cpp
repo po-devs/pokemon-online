@@ -1764,11 +1764,20 @@ struct MMDoomDesire : public MM
                 if (b.gen() <= 4) {
                     b.inflictDamage(s,slot(b,s)["DoomDesireDamage"].toInt(), s, true, true);
                 } else {
-                    initMove(move, b.gen(), tmove(b,s));
+                    int t = b.opponent(b.player(s));
+                    int doomuser = b.slot(t,0);
 
-                    b.calculateTypeModStab(s, s);
+                    for (int i = 0; i < b.numberPerSide(); i++) {
+                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
+                            doomuser = b.slot(t, i);
+                            break;
+                        }
+                    }
+                    initMove(move, b.gen(), tmove(b,doomuser));
 
-                    int typemod = fturn(b,s).typeMod;
+                    b.calculateTypeModStab(doomuser, s);
+
+                    int typemod = fturn(b, doomuser).typeMod;
                     slot(b,s)["DoomDesireTypeMod"] = typemod;
                     if (typemod < -50) {
                         /* If it's ineffective we just say it */
@@ -1779,30 +1788,19 @@ struct MMDoomDesire : public MM
                         b.sendAbMessage(71,0,s);
                         return;
                     }
-                    fturn(b,s).stab = slot(b,s)["DoomDesireStab"].toInt();
-                    turn(b,s)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
-                    fturn(b,s).remove(TM::CriticalHit);
-                    tmove(b,s).power = MoveInfo::Power(move, b.gen());
+                    fturn(b,doomuser).stab = slot(b,s)["DoomDesireStab"].toInt();
+                    turn(b,doomuser)["AttackStat"] = slot(b,s)["DoomDesireAttack"];
+                    fturn(b,doomuser).remove(TM::CriticalHit);
 
-                    int t = b.opponent(b.player(s));
-                    int doomuser = b.slot(t,0);
-
-                    for (int i = 0; i < b.numberPerSide(); i++) {
-                        if (b.team(t).internalId(b.poke(t, i)) == slot(b,s).value("DoomDesireId").toInt()) {
-                            doomuser = b.slot(t, i);
-                            break;
-                        }
-                    }
-                    tmove(b, doomuser).recoil = 0;
                     b.clearBp();
                     b.clearAtk();
 
                     slot(b,s)["DoomDesireDamagingNow"] = true;
-                    tmove(b, doomuser).flags = 0; //Prevent inheriting the previous move's flag (ie: contact)
-                    int damage = b.calculateDamage(s, s);
+                    int damage = b.calculateDamage(doomuser, s);
                     b.notify(BS::All, BattleCommands::Effective, s, quint8(typemod > 0 ? 8 : (typemod < 0 ? 2 : 4)));
                     b.inflictDamage(s, damage, doomuser, true, true);
                     slot(b,s)["DoomDesireDamagingNow"] = false;
+                    b.callaeffects(s, doomuser, "AfterBeingPlumetted");
                 }
             }
         }
