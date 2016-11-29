@@ -2016,8 +2016,9 @@ ppfunction:
                     int damage = calculateDamage(player, target);
                     if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
                         inflictDamage(target, damage, player, true);
-                    } else if (makesContact(player)) {
+                    } else if (makesContact(player) && tmove(player).type != Type::Curse) {
                         // Contact effects still work when Disguise is up
+                        // The curse type check is for Corrosion
                         callieffects(target, player, "UponPhysicalAssault");
                     }
                     hitcount += 1;
@@ -2031,7 +2032,7 @@ ppfunction:
                         int damage = turnMemory(player).value("CustomDamage").toInt();
                         if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
                             inflictDamage(target, damage, player, true);
-                        } else if (makesContact(player)) {
+                        } else if (makesContact(player) && tmove(player).type != Type::Curse) {
                             callieffects(target, player, "UponPhysicalAssault");
                         }
                         hitcount += 1;
