@@ -2408,12 +2408,9 @@ struct AMProtean : public AM {
         }
 
         int mc = turn(b,s)["MoveChosen"].toInt();
-        if (type(b,s) != Pokemon::Curse && mc != 0) {
-            //Protean doesn't change on moves that are calling other moves. Mirror move doesn't change type, but Snatch does.
-            if (mc != Move::MirrorMove && mc != Move::SleepTalk && mc != Move::Copycat && mc != Move::MeFirst && mc != Move::NaturePower && mc != Move::Metronome && mc != Move::Assist) {
-                fturn(b,s).stab = 3;
-                poke(b,s)["ProteanActivated"] = true;
-            }
+        if (type(b,s) != Pokemon::Curse && mc != 0 && !MoveInfo::isInvokingMove(mc)) {
+            fturn(b,s).stab = 3;
+            poke(b,s)["ProteanActivated"] = true;
         }
     }
 

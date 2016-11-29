@@ -2442,6 +2442,12 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
     return type == ztype;
 }
 
+bool MoveInfo::isInvokingMove(int mc)
+{
+    return mc == Move::MirrorMove || mc == Move::SleepTalk || mc == Move::Copycat || mc == Move::MeFirst
+            || mc == Move::NaturePower || mc == Move::Metronome || mc == Move::Assist;
+}
+
 #undef move_find
 #undef move_find2
 
