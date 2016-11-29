@@ -131,7 +131,7 @@
 130 Has a 30% chance to Disable any attacking move used on a Pokémon with this ability.
 131 Each turn, has a 30% chance to heal any major status condition from partners adjacent to a Pokémon with this ability.
 132 Reduces by 25% damage that partners of a Pokémon with this ability receive.
-133 Lowers Defense of a Pokémon with this ability by one stage and raises its Speed by one stage when it is hit by a physical attack.
+133 Lowers Defense of a Pokémon with this ability by one stage and raises its Speed by two stages when it is hit by a physical attack.
 134 Doubles the weight of a Pokémon with this ability.
 135 Halves the weight of a Pokémon with this ability.
 136 Halves the damage taken from an attack by a Pokémon with this ability if it has max HP.
@@ -156,14 +156,14 @@
 155 Raises the Speed of a Pokémon with this ability by one stage every time it is hit by a Bug, Ghost or Dark attack.
 156 If an opponent targets a Pokémon with this ability with a status, stat altering, immunity removing, or hazard move, Defog, Roar, Whirlwind, or Spite, nullifies that move and instead makes the target use it on the original user.
 157 Grants a Pokémon with this ability immunity to all Grass moves and raises its Attack by one stage when hit by one.
-158 Raises priority of all non-attacking moves used by a Pokémon with this ability by 1.
+158 Raises priority of all non-attacking moves used by a Pokémon with this ability by 1, however, Dark-type Pokémon are now immune to opposing Pokémon's moves that gain priority due to this ability.
 159 Boosts the power of all Ground, Rock and Steel type attacks used by a Pokémon with this ability during Sandstorm.
 160 Damages the opponent for 1/8 its max HP every time it uses a contact move on a Pokémon with this ability.
 161 Changes Darmanitan into Zen Mode when it falls under 1/2 max HP.
 162 Raises accuracy of all moves used by a Pokémon with this ability and its partners by 10%.
 163 Prevents opponent abilities from hindering moves used by a Pokémon with this ability.
 164 Prevents opponent abilities from hindering moves used by a Pokémon with this ability.
-165 Changes all Normal-type moves used by a Pokémon with this Ability to Flying-type, and boosts their power by 30%.
+165 Changes all Normal-type moves used by a Pokémon with this Ability to Flying-type, and boosts their power by 20%.
 166 Makes Dark Aura and Fairy Aura reduce by 1/4 the power of their respective type as long as a Pokémon with this ability is on the field.
 167 Restores the HP of a Pokémon with this ability by 1/3 when it eats a Berry.
 168 Boosts the power of all Dark-type moves used by any Pokémon on the field by 1/3.
@@ -172,15 +172,15 @@
 171 Halves the damage taken from physical moves by a Pokémon with this ability.
 172 Boosts the power of Aura Sphere, Dark Pulse, Dragon Pulse, Heal Pulse, Origin Pulse, and Water Pulse used by a Pokémon with this ability by 50%.
 173 Allows all attacking moves that strike a single target a single time used by a Pokémon with this ability to strike a second time with halved power.
-174 Changes all Normal-type moves used by a Pokémon with this Ability to Fairy-type, and boosts their power by 30%.
+174 Changes all Normal-type moves used by a Pokémon with this Ability to Fairy-type, and boosts their power by 20%.
 175 Before a Pokémon with this ability uses any move, changes its type to match the move used.
-176 Changes all Normal-type moves used by a Pokémon with this Ability to Ice-type, and boosts their power by 30%.
+176 Changes all Normal-type moves used by a Pokémon with this Ability to Ice-type, and boosts their power by 20%.
 177 Changes Aegislash into Blade Forme when it uses any offensive move, and changes Aegislash into Shield Forme when it uses King's Shield.
 178 Boosts the power of Bite, Crunch, Fire Fang, Hyper Fang, Ice Fang, Poison Fang and Thunder Fang used by a Pokémon with this ability by 50%.
 179 Prevents any Pokémon on the side of a Pokémon with this ability from falling asleep.
 180 Boosts the power of contact moves used by a Pokémon with this ability by 1/3.
 181 Raises the Special Attack of a Pokémon with this ability by 2 stages every time the enemy lowers any of its stats.
-182 Raises priority of all Flying-type moves used by a Pokémon with this ability by 1.
+182 Raises priority of all Flying-type moves used by a Pokémon with this ability by 1 when the user is at Max HP.
 183 Lowers the Speed of the opponent every time it uses a contact move on a Pokémon with this ability.
 184 Prevents any Pokémon on the side of a Pokémon with this ability from being infatuated, or being under the effect of Disable, Encore, Heal Block, Taunt, and Torment.
 185 Makes a Pokémon with this ability immune to Acid Spray, Aura Sphere, Barrage, Bullet Seed, Egg Bomb, Electro Ball, Energy Ball, Focus Blast, Gyro Ball, Ice Ball, Magnet Bomb, Mist Ball, Mud Bomb, Octazooka, Rock Wrecker, Searing Shot, Seed Bomb, Shadow Ball, Sludge Bomb, Weather Ball, and Zap Cannon.
@@ -226,7 +226,7 @@
 225 Increases the damage of Steel-type moves by 50%.
 226 All moves used by a Pokémon with this ability do not make contact.
 227 All sound-based moves used by a Pokémon with this ability become Water-type moves.
-228 Changes all Normal-type moves used by a Pokémon with this Ability to Electric-type, and boosts their power by 30%.
+228 Changes all Normal-type moves used by a Pokémon with this Ability to Electric-type, and boosts their power by 20%.
 229 Lowers the Speed of the opponent every time it uses a contact move on a Pokémon with this ability.
 230 Copies the ability of a defeated partner Pokémon.
 231 Raises the currently highest stat (Attack, Defense, Special Attack, Special Defense, or Speed) of a Pokémon with this ability by one stage every time it knocks out a Pokémon.
