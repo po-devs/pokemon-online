@@ -4277,25 +4277,7 @@ struct MMMagicCoat : public MM
         if (target == -1)
             return;
 
-        int move = MM::move(b,s);
-
-        b.fail(s, 76, 1, Pokemon::Psychic);
-        /* Now Bouncing back ... */
-        BS::context ctx = turn(b,target);
-        BS::BasicMoveInfo info = tmove(b,target);
-
-        turn(b,target).clear();
-        MoveEffect::setup(move,target,s,b);
-        turn(b,target)["Target"] = s;
-        b.battleMemory()["CoatingAttackNow"] = turn(b,s)["StealingAttack"] = true;
-        b.useAttack(target,move,true,false);
-        turn(b,s).remove("StealingAttack");
-        b.battleMemory().remove("CoatingAttackNow");
-
-        /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
-            and don't cause any such data to be stored in that memory */
-        turn(b,target) = ctx;
-        tmove(b,target) = info;
+        AMMagicBounce::bounceAttack(s, target, b);
     }
 };
 
