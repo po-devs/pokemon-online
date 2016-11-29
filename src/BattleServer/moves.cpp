@@ -1872,7 +1872,7 @@ struct MMEncore : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        if (!poke(b,t).contains("LastMoveUsedTurn") || b.zTurn(t)) {
+        if (!poke(b,t).contains("LastMoveUsedTurn") || (b.zTurn(t) && b.hasMoved(t))) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -1935,7 +1935,7 @@ struct MMEncore : public MM
 
             /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
                 and i bet something strange would also happen with charging move) */
-            if (!fturn(b,t).contains(TM::NoChoice) && b.choice(t).attackingChoice()) {
+            if (!fturn(b,t).contains(TM::NoChoice) && b.choice(t).attackingChoice() && !b.zTurn(t)) {
                 for (int i = 0; i < 4; i ++) {
                     if (b.move(t, i) == mv) {
                         MoveEffect::unsetup(move(b,t), t, b);

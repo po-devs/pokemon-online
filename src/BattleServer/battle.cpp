@@ -1654,7 +1654,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     turnMemory(player)["MoveChosen"] = attack;
 
-    if (!specialOccurence) {
+    // Z-Moves ignore taunt, disable, etc.
+    if (!specialOccurence && !zmoving) {
         callbeffects(player,player,"MovePossible");
         if (turnMemory(player)["ImpossibleToMove"].toBool()) {
             goto trueend;
