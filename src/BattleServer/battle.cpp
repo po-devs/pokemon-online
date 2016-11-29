@@ -2011,6 +2011,8 @@ ppfunction:
             int hitcount = 0;
             bool hitting = false;
             bool noDamage = false;
+            bool sub = false;
+            
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 clearAtk();
                 clearBp();
@@ -2018,7 +2020,7 @@ ppfunction:
                 noDamage = turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()));
 
                 fpoke(target).remove(BasicPokeInfo::HadSubstitute);
-                bool sub = hasSubstitute(target) && !canBypassSub(player);
+                sub = hasSubstitute(target) && !canBypassSub(player);
                 if (sub) {
                     fpoke(target).add(BasicPokeInfo::HadSubstitute);
                 }
