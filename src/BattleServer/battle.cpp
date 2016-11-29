@@ -1785,13 +1785,20 @@ ppfunction:
         goto end;
     }
 
+    turnMem(player).remove(TM::Failed);
+
     calleffects(player, player, "BeforeTargetList");
-    //To prevent a Snatched move from changing type
     callaeffects(player, player, "BeforeTargetList");
 
     /* Choice item memory, copycat in gen 4 and less */
     if (!specialOccurence && attack != Move::Struggle) {
         battleMemory()["LastMoveUsed"] = attack;
+    }
+
+    /* Aura abilities, Snatch */
+    callbeffects(player, target, "BeforeTargetList", true);
+    if (turnMem(player).failed()) {
+        goto trueend;
     }
 
     foreach(int target, targetList) {
@@ -1821,9 +1828,6 @@ ppfunction:
         callaeffects(player, target, "MoveTypeModifier");
         calleffects(player, target, "MoveClassModifier");
 
-        /* Aura abilities, Snatch */
-        callbeffects(player, target, "DetermineGeneralAttackFailure", true);
-        checkAttackFailed();
         if (tmove(player).power > 0)
         {
             calculateTypeModStab();

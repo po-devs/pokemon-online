@@ -1934,8 +1934,9 @@ struct AMMagicBounce : public AM
         MoveEffect::setup(move,target,s,b);
 
         turn(b,target)["Target"] = s;
-        b.battleMemory()["CoatingAttackNow"] = true;
+        b.battleMemory()["CoatingAttackNow"] = turn(b,s)["StealingAttack"] = true;
         b.useAttack(target,move,true,false);
+        turn(b,s).remove("StealingAttack");
         b.battleMemory().remove("CoatingAttackNow");
 
         /* Restoring previous state. Only works because moves reflected don't store useful data in the turn memory,
@@ -2298,7 +2299,7 @@ struct AMAura : public AM {
     }
 
     static void us(int s, int, BS &b) {
-        addFunction(b.battleMemory(), "DetermineGeneralAttackFailure", "Aura", &dgaf);
+        addFunction(b.battleMemory(), "BeforeTargetList", "Aura", &dgaf);
         int type = poke(b,s)["AbilityArg"].toString().mid(5).toInt();
         b.sendAbMessage(103,0,s,0,type);
     }
@@ -2402,12 +2403,12 @@ struct AMProtean : public AM {
 
     static void aaf (int s, int, BS &b) {
         //Hard coded not to affect Silvally...
-        if (b.poke(s).num() == Pokemon::Silvally || turn(b,s).value("SkipProtean").toBool()) {
+        if (b.poke(s).num() == Pokemon::Silvally || turn(b,s).contains("StealingAttack")) {
             return;
         }
 
         int mc = turn(b,s)["MoveChosen"].toInt();
-        if (type(b,s) != Pokemon::Curse && mc != 0 && !b.battleMemory().contains("CoatingAttackNow")) {
+        if (type(b,s) != Pokemon::Curse && mc != 0) {
             //Protean doesn't change on moves that are calling other moves. Mirror move doesn't change type, but Snatch does.
             if (mc != Move::MirrorMove && mc != Move::SleepTalk && mc != Move::Copycat && mc != Move::MeFirst && mc != Move::NaturePower && mc != Move::Metronome && mc != Move::Assist) {
                 fturn(b,s).stab = 3;
