@@ -48,7 +48,7 @@ static void setDefaultValues()
     setDefaultValue(s, "BattleAudio/MusicVolume", 80);
     setDefaultValue(s, "BattleAudio/MusicDirectory", "Music/Battle/");
     setDefaultValue(s, "BattleAudio/PlayMusic", false);
-    setDefaultValue(s, "BattleAudio/PlaySounds", true);
+    setDefaultValue(s, "BattleAudio/PlaySounds", false);
     setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
