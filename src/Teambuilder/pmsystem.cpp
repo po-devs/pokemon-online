@@ -242,8 +242,7 @@ void PMStruct::emitCp()
 void PMStruct::changeName(const QString &newname)
 {
     QString oldname = name();
-    QSettings s;
-    if (s.value("PMs/ChangeNameEvents").toBool() && !oldname.isEmpty() && oldname != newname) {
+    if (!oldname.isEmpty() && oldname != newname) {
         printHtml(tr("%1 changed names and is now known as %2.").arg(oldname, newname));
     }
     this->m_name = newname;

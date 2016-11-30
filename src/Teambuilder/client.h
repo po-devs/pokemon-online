@@ -311,7 +311,6 @@ public slots:
     void togglePMTabs(bool);
     void togglePMNotifications(bool);
     void togglePMLogs(bool);
-    void toggleChangeNamePM(bool);
     void movePlayerList(bool);
     void useOldShortcuts(bool);
     void displayTrainerInfo(bool b);
