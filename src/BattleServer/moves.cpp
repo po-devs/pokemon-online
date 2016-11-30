@@ -1872,7 +1872,7 @@ struct MMEncore : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        if (!poke(b,t).contains("LastMoveUsedTurn") || b.zTurn(t)) {
+        if (!poke(b,t).contains("LastMoveUsedTurn") || (b.zTurn(t) && b.hasMoved(t))) {
             fturn(b,s).add(TM::Failed);
             return;
         }
@@ -1935,7 +1935,7 @@ struct MMEncore : public MM
 
             /*Changes the encored move, if no choice is off (otherwise recharging moves like blast burn would attack again,
                 and i bet something strange would also happen with charging move) */
-            if (!fturn(b,t).contains(TM::NoChoice) && b.choice(t).attackingChoice()) {
+            if (!fturn(b,t).contains(TM::NoChoice) && b.choice(t).attackingChoice() && !b.zTurn(t)) {
                 for (int i = 0; i < 4; i ++) {
                     if (b.move(t, i) == mv) {
                         MoveEffect::unsetup(move(b,t), t, b);
@@ -2694,17 +2694,19 @@ struct MMHiddenPower : public MM
         if (b.zTurn(s)) {
             return;
         }
-        quint8 *dvs = fpoke(b,s).dvs;
-
-        int type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
-        tmove(b, s).type = type;
-        if (b.gen() < 6) {
-            tmove(b, s).power = HiddenPowerInfo::Power(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
-        }
-
-        /* In 3rd gen, hidden powers can be physical! */
-        if (b.gen() <= 3) {
-            tmove(b, s).category = TypeInfo::Category(type);
+        if (b.gen() > 6) {
+            tmove(b, s).type = fpoke(b, s).hiddenPower;
+        } else {
+            quint8 *dvs = fpoke(b,s).dvs;
+            int type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+            tmove(b, s).type = type;
+            if (b.gen() < 6) {
+                tmove(b, s).power = HiddenPowerInfo::Power(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+            }
+            /* In 3rd gen, hidden powers can be physical! */
+            if (b.gen() <= 3) {
+                tmove(b, s).category = TypeInfo::Category(type);
+            }
         }
     }
 };
@@ -5054,10 +5056,7 @@ struct MMSleepTalk : public MM
         int mv = turn(b,s)["SleepTalkedMove"].toInt();
         BS::BasicMoveInfo info = tmove(b,s);
         MoveEffect::unsetup(Move::SleepTalk, s, b);
-        MoveEffect::setup(mv,s,s,b);
-        turn(b,s)["Target"] = b.randomValidOpponent(s);
-        b.useAttack(s, mv, true);
-        MoveEffect::unsetup(mv,s,b);
+        MoveEffect::reuseMove(mv, s, s, b);
         MoveEffect::setup(Move::SleepTalk, s, s, b);
         poke(b,s).remove("SleepTalking");
         tmove(b,s) = info;
@@ -8246,10 +8245,10 @@ struct MMZSupernova : public MM
         functions["AfterAttackFinished"] = &zm;
     }
 
-    static void zm(int, int, BS &b) {
+    static void zm(int s, int, BS &b) {
         if(b.terrain != BS::PsychicTerrain) {
-            //TODO: terrain extender because hackmons
-            b.coverField(BS::PsychicTerrain, 5);
+            b.sendMoveMessage(240,BS::PsychicTerrain - 1,s,type(b,s));
+            b.coverField(BS::PsychicTerrain, (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5));
         }
     }
 };

@@ -385,6 +385,7 @@ public:
 
     Q_INVOKABLE QScriptValue teamPokeHappiness(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeNature(int id, int team, int slot);
+    Q_INVOKABLE QScriptValue teamPokeHiddenPower(int id, int team, int slot);
     Q_INVOKABLE QScriptValue teamPokeEV(int id, int team, int slot, int stat);
     Q_INVOKABLE QScriptValue teamPokeDV(int id, int team, int slot, int stat);
     Q_INVOKABLE void changeTeamPokeDV(int id, int team, int slot, int stat, int newValue);
@@ -440,6 +441,7 @@ public:
     Q_INVOKABLE void changePokeShine(int id, int team, int slot, bool value);
     Q_INVOKABLE QScriptValue teamPokeShine(int id, int team, int slot);
     Q_INVOKABLE void changePokeNature(int id, int team, int pokeslot, int nature);
+    Q_INVOKABLE void changePokeHiddenPower(int id, int team, int pokeslot, int hiddenPower);
     Q_INVOKABLE QScriptValue teamPokeGender(int id, int team, int slot);
 
     Q_INVOKABLE QScriptValue teamPokeNick(int id, int team, int pokeslot);

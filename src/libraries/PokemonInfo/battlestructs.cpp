@@ -224,7 +224,7 @@ void PokeBattle::init(PokePersonal &poke)
     }
 
     dvs().clear();   
-    if(poke.num().pokenum == Pokemon::Xerneas || poke.num().pokenum == Pokemon::Yveltal || poke.num().pokenum == Pokemon::Zygarde) {
+    if(!poke.illegal() && ((poke.num().pokenum >= Pokemon::Xerneas && poke.num().pokenum <= Pokemon::Volcanion) || (poke.num().pokenum >= Pokemon::Tapu_Koko && poke.num().pokenum <= Pokemon::Marshadow))) {
         int numFlawless = 6;
         for (int i = 0; i < 6; i++) {
             if(poke.DV(i) < 31) {
@@ -242,6 +242,27 @@ void PokeBattle::init(PokePersonal &poke)
         for (int i = 0; i < 6; i++) {
             dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(p.gen() <= 2? 15: 31));
         }
+    }
+
+    if (poke.gen() > 6) {
+        int minPossible = 0;
+        int maxPossible = 0;
+        for (int i = 0; i < 6; i++) {
+            //Speed comes before sp.atk and sp.def
+            int b = i == 5 ? 3 : (i > 2 ? i+1 : i);
+
+            minPossible += poke.DV(i) == 31 ? 0 : (poke.DV(i) % 2) << b;
+            maxPossible += poke.DV(i) == 31 ? 1 << b : (poke.DV(i) % 2) << b;
+        }
+        minPossible = (minPossible*15)/63 + 1;
+        maxPossible = (maxPossible*15)/63 + 1;
+        if (maxPossible < poke.hiddenPower() || poke.hiddenPower() < minPossible) {
+            hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
+        } else {
+            hiddenPower() = poke.hiddenPower();
+        }
+    } else {
+        hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
     }
 
     evs().clear();
@@ -293,6 +314,9 @@ DataStream & operator >> (DataStream &in, PokeBattle &po)
     if (in.version >= 3) {
         in >> po.nature();
     }
+    if (in.version >= 4) {
+        in >> po.hiddenPower();
+    }
     in >> po.happiness();
 
     for (int i = 0; i < 5; i++) {
@@ -320,6 +344,9 @@ DataStream & operator << (DataStream &out, const PokeBattle &po)
     out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability();
     if (out.version >= 3) {
         out << po.nature();
+    }
+    if (out.version >= 4) {
+        out << po.hiddenPower();
     }
     out << po.happiness();
 
@@ -470,6 +497,10 @@ TeamBattle::TeamBattle(Team &other)
     int curs = 0;
     for (int i = 0; i < 6; i++) {
         poke(curs).init(other.poke(i));
+        //Lv 5 pokemon can't hyper train
+        if (tier == "SM LC") {
+            poke(curs).hiddenPower() = HiddenPowerInfo::Type(gen, poke(curs).dvs().value(0), poke(curs).dvs().value(1), poke(curs).dvs().value(2), poke(curs).dvs().value(3), poke(curs).dvs().value(4), poke(curs).dvs().value(5));
+        }
         if (poke(curs).num() != 0) {
             ++curs;
         }
@@ -995,6 +1026,9 @@ bool BattleChoice::match(const BattleChoices &avail) const
             if (attackSlot() < 0 || attackSlot() > 3) {
                 //Crash attempt!!
                 return false;
+            }
+            if (avail.zmove) {
+                return avail.zmoveAllowed[attackSlot()];
             }
             return avail.attackAllowed[attackSlot()];
         }

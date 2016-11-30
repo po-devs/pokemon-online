@@ -47,6 +47,7 @@ private:
     void updateHiddenPowerSelection();
     int calculateHiddenPowerPower();
     int calculateHiddenPowerType();
+    bool hasValidHiddenPower();
 
     QLabel *m_statslabel[6];
     QSpinBox *m_ivchangers[6];

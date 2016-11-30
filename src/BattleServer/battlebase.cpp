@@ -1462,6 +1462,7 @@ void BattleBase::BasicPokeInfo::init(const PokeBattle &p, Pokemon::gen gen)
     type2 = PokemonInfo::Type2(p.num(), gen);
     types = QVector<int>() << type1 << type2;
     ability = p.ability();
+    hiddenPower = p.hiddenPower();
     flags = 0;
 
     for (int i = 0; i < 4; i++) {

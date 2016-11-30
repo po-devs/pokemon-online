@@ -64,6 +64,7 @@ QVariantMap toJson(const BattleChoices &choices)
         list.push_back(choices.attackAllowed[i]);
     }
     ret.insert("attacks", list);
+    //Add ZAttackAllowed?
 
     return ret;
 }

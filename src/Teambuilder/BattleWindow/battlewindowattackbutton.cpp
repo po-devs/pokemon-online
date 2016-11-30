@@ -39,11 +39,14 @@ int AbstractAttackButton::num() const
 
 int AbstractAttackButton::type() const
 {
-    if (b->num() == Move::HiddenPower && validZmove) {
-        return Type::Normal;
-    } else {
-        return MoveInfo::Type(b->num(), gen, *p);
+    if (b->num() == Move::HiddenPower) {
+        if (zmove && validZmove) {
+            return Type::Normal;
+        } else if (gen >= 7) {
+            return p->hiddenPower();
+        }
     }
+    return MoveInfo::Type(b->num(), gen, *p);
 }
 
 QString AbstractAttackButton::moveName() const
@@ -87,6 +90,9 @@ QString AbstractAttackButton::tooltip() const
     }
 
     QString moveCategory = CategoryInfo::Name(MoveInfo::Category(num, gen));
+    if (zmove && validZmove && !MoveInfo::isUniqueZMove(num)) {
+        moveCategory = CategoryInfo::Name(MoveInfo::Category(b->num(), gen));
+    }
     return QObject::tr("%1\n\nPower: %2\nAccuracy: %3\nCategory: %4\nRange: %6\nFlags: %7\n\nDescription: %5%8")
             .arg(moveName(), power(), MoveInfo::AccS(num, gen), moveCategory,
                  MoveInfo::Description(num, gen), MoveInfo::TargetS(num, gen),

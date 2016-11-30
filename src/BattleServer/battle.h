@@ -27,6 +27,7 @@ public:
     /* Shows what attacks are allowed or not */
     BattleChoices createChoice(int player);
     bool isMovePossible(int player, int slot);
+    bool isZMovePossible(int player, int slot);
     /* called just after requestChoice(s) */
     void analyzeChoice(int player);
     void analyzeChoices(); 

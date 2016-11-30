@@ -71,6 +71,7 @@ public:
     Q_PROPERTY(int happiness READ happiness NOTIFY pokemonReset)
     Q_PROPERTY(int item READ item NOTIFY itemChanged)
     Q_PROPERTY(int nature READ nature NOTIFY pokemonReset)
+    Q_PROPERTY(int hiddenPower READ hiddenPower NOTIFY pokemonReset)
 
     enum Status {
         Koed = Pokemon::Koed,
@@ -99,6 +100,7 @@ public:
     int item() const {return dd()->item();}
     int happiness() const {return dd()->happiness();}
     int nature() const {return dd()->nature();}
+    int hiddenPower() const {return dd()->hiddenPower();}
     Q_INVOKABLE int basestat(int stat) const;
     Q_INVOKABLE int iv(int stat) const;
     Q_INVOKABLE int ev(int stat) const;

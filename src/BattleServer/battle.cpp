@@ -643,11 +643,7 @@ BattleChoices BattleSituation::createChoice(int spot)
         ret.zmove = true;
 
         for (int i = 0; i < 4; i++) {
-            /* TODO: Instead of ret.attackAllowed[i], use a function isZMovePossible(s,i) for things like Taunt that blocks
-             * normal moves but not zmoves. Maybe isZMovePossible should just check the pokemon is not locked into another
-             * move?
-             */
-            ret.zmoveAllowed[i] = canBeZMove(spot, move(spot, i)) && ret.attackAllowed[i];
+            ret.zmoveAllowed[i] = canBeZMove(spot, move(spot, i)) && isZMovePossible(spot, i);
         }
     }
 
@@ -695,6 +691,10 @@ bool BattleSituation::isMovePossible(int player, int move)
     }
 
     return possible;
+}
+
+bool BattleSituation::isZMovePossible(int player, int move) {
+    return PP(player, move) > 0;
 }
 
 void BattleSituation::analyzeChoice(int slot)
@@ -1652,7 +1652,8 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
     turnMemory(player)["MoveChosen"] = attack;
 
-    if (!specialOccurence) {
+    // Z-Moves ignore taunt, disable, etc.
+    if (!specialOccurence && !zmoving) {
         callbeffects(player,player,"MovePossible");
         if (turnMemory(player)["ImpossibleToMove"].toBool()) {
             goto trueend;
