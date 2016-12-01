@@ -2091,6 +2091,7 @@ ppfunction:
 
             if (gen() >= 5 && !koed(target) && !hasSubstitute(target)) {
                 callaeffects(target, player, "AfterBeingPlumetted");
+                calleffects(target, player, "AfterBeingPlummeted");
             }
 
             if (gen() <= 4 && koed(target))

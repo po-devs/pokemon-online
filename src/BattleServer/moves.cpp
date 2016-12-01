@@ -7537,6 +7537,7 @@ struct MMShellTrap : public MM {
         functions["OnSetup"] = &os;
         functions["DetermineAttackFailure"] = &daf;
         functions["UponOffensiveDamageReceived"] = &uodr;
+        functions["AfterBeingPlummeted"] = &abp;
     }
 
     static void os(int s, int, BS &b) {
@@ -7544,20 +7545,21 @@ struct MMShellTrap : public MM {
     }
 
     static void daf(int s, int, BS &b) {
-        if (poke(b, s)["ShellTrapTurn"] != b.turn()) {
+        if (poke(b,s)["ShellTrapTurn"] != b.turn()) {
             fturn(b,s).add(TM::Failed);
         }
     }
 
-    /* Need to change order so that shell trap activates
-       after secondary effects of the move that hit it */
     static void uodr(int s, int t, BS &b) {
-        /* in game description says "physical move"
-           should test whether physical or contact move is trigger */
-        //if (tmove(b, t).category == Category::Physical)
-        if (b.makesContact(t)) {
-            poke(b, s)["ShellTrapTurn"] = b.turn();
+        if (tmove(b,t).category == Category::Physical) {
+            poke(b,s)["ShellTrapTurn"] = b.turn();
             //b.useAttack(s, Move::ShellTrap, true);
+
+        }
+    }
+
+    static void abp(int s, int t, BS &b) {
+        if (poke(b,s)["ShellTrapTurn"] == b.turn()) {
             b.useAttack(s, b.choice(s).attackSlot());
             MoveEffect::unsetup(Move::ShellTrap, s, b);
         }
