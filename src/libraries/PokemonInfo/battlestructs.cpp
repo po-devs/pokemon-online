@@ -1027,7 +1027,7 @@ bool BattleChoice::match(const BattleChoices &avail) const
                 //Crash attempt!!
                 return false;
             }
-            if (avail.zmove) {
+            if (zmove() && avail.zmove) {
                 return avail.zmoveAllowed[attackSlot()];
             }
             return avail.attackAllowed[attackSlot()];
