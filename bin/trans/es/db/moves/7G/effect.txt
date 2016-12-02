@@ -192,7 +192,7 @@
 191 Esparce púas en el equipo rival. Las púas hieren a los Pokémon rivales que entran en combate.
 192 Dispara una descarga eléctrica que causa daño y parálisis.
 193 Permite atacar con cualquier movimiento a objetivos de tipo Fantasma y golpear a Pokémon evasivos.
-194 Si el usuario se debilita por un ataque rival antes de usar otro movimiento, el Pokémon rival se debilitará también.
+194 Si el usuario se debilita por un ataque rival antes de usar otro movimiento, el Pokémon rival se debilitará también. El movimiento fallará si se usa consecutivamente.
 195 Si un Pokémon escucha este canto y no es cambiado por otro en tres turnos, acaba debilitándose.
 196 Ataque con aire helado que baja la Velocidad del objetivo.
 197 Frena todos los ataques, pero puede fallar si se usa repetidamente.
@@ -327,7 +327,7 @@
 326 Energía muy extraña que puede hacer retroceder al objetivo.
 327 Gancho ascendente de gran ímpetu.
 328 Enreda al objetivo en un remolino de arena de cuatro a cinco turnos.
-329 Ataque de frío polar que debilita al objetivo si le alcanza.
+329 Ataque de frío polar que debilita al objetivo si le alcanza. No funciona contra Pokémon del tipo Hielo. Si un Pokémon que no es del tipo Hielo usa este movimiento, la precisión del movimiento se verá reducida.
 330 Ataque con agua lodosa que puede bajar la Precisión.
 331 Dispara rápido de dos a cinco ráfagas de semillas de manera consecutiva.
 332 El usuario lanza un ataque muy rápido e ineludible.
@@ -462,7 +462,7 @@
 461 El usuario se debilita, pero el Pokémon que lo sustituye recupera su estado, los PS y los PP.
 462 Estruja al objetivo con gran fuerza. Cuantos más PS le queden al objetivo, más fuerte será el ataque.
 463 El objetivo queda atrapado en una tormenta de fuego que dura de cuatro a cinco turnos.
-464 El objetivo es enviado a un mundo de tinieblas que lo hace dormir.
+464 El objetivo es enviado a un mundo de tinieblas que lo hace dormir. Sólo puede ser usado por Darkrai.
 465 Una onda de choque se libera del cuerpo. Puede bajar severamente la Defensa Especial del objetivo.
 466 Produce un viento horripilante. Puede subir de golpe todas las características del usuario.
 467 En el primer turno, desaparece. En el segundo, golpea al objetivo aunque se esté protegiendo.
@@ -558,138 +558,138 @@
 557 Golpea con una V de llamas al objetivo. Baja la Defensa, la Defensa Especial y la Velocidad de quien lo usa.
 558 Ataca con una llamarada gigantesca. Aumenta su potencia si es influenciada por una gran energía eléctrica.
 559 Ataca con una enorme descarga eléctrica. Aumenta su potencia si es influenciada por una gigantesca llamarada.
-560 Lowers the target's Attack by 1 stage. Priority level 1.
-562 Protects the user's party from all Other category moves, but fails if the user acts last in the turn it is used. Priority level 3.
-564 The user is healed for 3/4 of the HP lost by the target from this attack.
-566 The type effectiveness for this attack is the result of the multiplication of Fighting type effectiveness and Flying type effectiveness. This attack's power is doubled, and it will not miss, if the target has used Minimize.
-567 Adds Grass typing to the target.
-568 Deals super effective damage against Water type. Has a 10% chance to freeze the target.
-569 Two-turn move. Raises the user's Special Attack, Special Defense and Speed by 2 stages.
-571 Partially trapping attack. For four or five turns, the target cannot switch or flee, and at the end of every turn except the last, loses 1/8 of its max HP. The effect ends when the user or the target switches out, or when the target uses Rapid Spin. The effect is not reset when this or another multi-turn attack is used against the target while it is under the effect of this move.
-572 Has a 30% chance to lower the target's Special Attack by 1 stage.
-573 Lowers the target's Special Attack by 1 stage.
-574 Lowers the target's Attack and Special Attack by 1 stage.
-575 Paralyzes the target.
-576 The user is healed for 3/4 of the HP lost by the target from this attack.
-577 The user is healed for 1/2 of the HP lost by the target from this attack.
-578 Requires a charge up turn before use. While the user is using this attack, the user can't be hit by any move. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party. This attack's power is doubled, and it will not miss, if the target has used Minimize.
-579 Has a 10% chance to lower the target's Attack by 1 stage.
-580 Lowers the target's Attack by 1 stage. Ignores the effects of Protect, Detect, and Spiky Shield.
-581 Adds Ghost typing to the target.
-582 Multi-hit attack, attacks two to five times in a turn. 37.5% chance for 2 or 3 hits; 12.5% chance for 4 or 5 hits. Priority level 1.
-583 Raises Special Defense of a user's ally by 1 stage.
-584 This attack cannot be selected unless the user has eaten a Berry.
-585 Lowers the target's Special Attack by 1 stage.
-586 Cannot be evaded.
-587 Lowers the target's Special Attack by 2 stages.
-588 Terrain move. For 5 turns, grounded Pokémon cannot fall asleep, and have the power of their Electric-type moves boosted by 50%.
-589 If the target has not moved yet, changes the type of the target's next move to Electric.
-590 Prevents any Pokémon from switching out on the turn after the one it was used.
-591 If this attack knocks out the target, raises the user's Attack by 2 stages.
-592 Raises Defense of all Grass-type Pokémon in battle by 1 stage.
-593 Terrain move. For 5 turns, grounded Pokémon restore 1/16 of their max HP at the end of each turn, have the power of their Grass-type moves boosted by 50%, and have the damage they take from Bulldoze, Earthquake, and Magnitude reduced by 50%.
-594 For the current turn, all Normal-type moves used have their type changed to Electric. Priority level 1.
-595 Protects the user from offensive moves used by any other Pokémon, but fails if the user acts last in the turn it is used. If a Pokémon attacks the user with a contact move, lowers that Pokémon's Attack by 2 stages. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
-597 Raises Defense and Special Defense of Pokémon on the user's side with the Plus or Minus ability by 1 stage.
-598 Protects the user's party from offensive moves, but fails if the user acts last in the turn it is used. Can only be used on the first turn after the user has switched in.
-599 Terrain move. For 5 turns, grounded Pokémon cannot have their status altered, and take half damage from Dragon-type moves.
-600 Lowers the target's Attack and Special Attack by 1 stage. Immediately after using this move, the user switches out for a chosen Pokémon in its party.
-601 If the target uses a Fire-type move the turn this move is used, the move fails and the target loses 1/4 of its max HP. Priority level 1.
-602 Raises the user's Attack by 1 stage.
-603 Raises Attack and Special Attack of all grounded Grass-type Pokémon on the field by 1 stage.
-604 Protects the user from moves used by any other Pokémon, but fails if the user acts last in the turn it is used. If a Pokémon attacks the user with a contact move, damages that Pokémon for 1/8 of its max HP. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
-605 Lowers by 1 stage the Speed of the opponent's Pokémon as they switch in. Has no effect on Pokémon immune to Ground.
-606 Reverts all of the target's stat changes. Positive changes becomes negative, and vice versa.
-607 Only works if the target is Poisoned. Lowers the target's Attack, Special Attack and Speed by 1 stage.
-608 Doubles the money received after a battle.
-609 Congratulates you on your special day!
-610 Cannot bring the target to 0 HP.
-611 Has a 50% chance to raise the user's Defense by 2 stages.
-612 The user takes recoil damage equal to 1/2 of HP lost by the target from this attack.
-613 Has a 30% chance to burn the target. Thaws the user and the target if either is frozen.
-614 Cannot be evaded. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party.
-615 The user and an ally hold hands. This makes them very happy.
-616 Ignores the target's immunity to Ground type moves, stops the target's Bounce or Fly, and until the target switches out, removes the target's immunity to Ground moves. This attack's power is doubled if the target is using Fly, Bounce, or Sky Drop.
-617 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
-620 Lowers the user's Defense and Special Defense by 1 stage.
-621 Lowers the user's Defense by 1 stage. Cannot be evaded. Fails if the user is not Hoopa-Unbound. Removes the effect of Protect, Detect, Quick Guard, Wide Guard, Mat Block, Crafty Shield, Spiky Shield, King's Shield, and Baneful Bunker for the target or its party.
-622 If the target has already used a move in the same turn, its Ability will be ignored when it is hit by this move.
-623 If this attack hits, lowers the user's Special Attack by 2 stages.
-624 Deals normal damage.
-625 Deals normal damage.
-626 Ignores the target's Ability when hit by this move.
-627 Deals damage to the target equal to half of its current HP, but not less than 1.
-628 The user's type determines the type of this move.
-629 The target of this move is the last of the opponent's Pokémon to have damaged the user with a contact move this turn. Deals damage to the target equal to two times the damage the target dealt to the user with their last attack.
-630 Requires a charge up turn before use. (This attack's power is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.???)
-631 Ignores the target's Ability when hit by this move.
-632 Priority level 1.
-633 Terrain move. For 5 turns, grounded Pokémon will be unaffected by priority moves and have the power of their Psychic-type moves boosted by 50%.
-634 Prevents the target from using Sound-based moves for 2 turns.
-635 For five turns, the damage that Pokémon on the user's side take from all attacks is reduced by 50%, or 33% if there is more than one Pokémon on the user's side. Ignored by critical hits, and fails if this move is already active for the user. Can only be used during Hail.
-636 Guarantees the next move used will deal a Critical Hit.
-637 Lowers the user's Defense by 1 stage.
-638 This attack's type changes to match the Memory held by the user.
-639 Lowers the target's Attack by 1 stage.
-640 Deals normal damage.
-641 Causes the target to use the attack it last used again.
-642 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
-643 Damage is calculated ignoring the target's Defense stat changes, and hit chance is calculated ignoring the target's Evasion stat changes.
-644 Cures the target of Burn.
-645 Recovers 1/2 of the user's max HP, but 2/3 during Sandstorm.
-646 Can only be used on the first turn after the user has switched in. Priority level 2.
-647 Protects the user from offensive moves used by any other Pokémon, but fails if the user acts last in the turn it is used. If a Pokémon attacks the user with a contact move, that Pokémon becomes Poisoned. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
-648 Lowers the user's Speed by 1 stage.
-649 Recovers 1/2 of the user's max HP, but 2/3 during Grassy Terrain.
-650 Recovers HP equal to the value of the target's Attack stat. Lowers the target's Attack by 1 stage.
-651 Draws to the target any single-target move used by any of the opponent's Pokémon. Priority level 3.
-652 Lowers the target's Speed by 1. Poisons the target.
-653 Raises Attack and Special Attack of Pokémon on the user's side with the Plus or Minus ability by 1 stage.
-654 If the target is one of the user's allies, restores HP by 1/2.
-655 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
-656 Lowers the target's Attack by 1 stage.
-657 Lowers the target's Defense by 1 stage.
-658 This attack's power is increased by 20 for every stage the user's stats are raised.
-659 Removes Fire-type from the user after dealing damage. Fails if the user is not Fire-type.
-660 Switches the user's stat changes in Speed with the target's.
-661 Cannot be evaded.
-662 Cures the target of any status condition. If this move is successful, it also restores the user's HP by 1/2.
-663 Burns any Pokémon that make contact with the user before the move finishes. Priority level -3.
-664 Deals normal damage.
-665 If this attack hits the target, destroys the target's Reflect and Light Screen before dealing damage.
-666 Attack power doubles if the previous move used by the user failed.
-667 Has a 20% chance to lower the target's Defense by 1 stage.
-668 Has a 20% chance to lower the target's Defense by 1 stage.
-669 On the turn after this move hits, the user can't take any action or switch out.
-670 Before attacking, steals the target's positive stat boosts.
-671 Lowers the target's Attack and Special Attack by 1 stage.
-672 Has a 30% chance to cause the target to flinch.
-673 Z-Move. Requires a Normal-type move and the item Normalium Z.
-674 Z-Move. Requires a Fighting-type move and the item Fightinium Z.
-675 Z-Move. Requires a Flying-type move and the item Flyinium Z.
-676 Z-Move. Requires a Poison-type move and the item Poisonium Z.
-677 Z-Move. Requires a Ground-type move and the item Groundium Z.
-678 Z-Move. Requires a Rock-type move and the item Rockium Z.
-679 Z-Move. Requires a Bug-type move and the item Buginium Z.
-680 Z-Move. Requires a Ghost-type move and the item Ghostium Z.
-681 Z-Move. Requires a Steel-type move and the item Steelium Z.
-682 Z-Move. Requires a Fire-type move and the item Firium Z.
-683 Z-Move. Requires a Water-type move and the item Waterium Z.
-684 Z-Move. Requires a Grass-type move and the item Grassium Z.
-685 Z-Move. Requires an Electric-type move and the item Electrium Z.
-686 Z-Move. Requires a Psychic-type move and the item Psychium Z.
-687 Z-Move. Requires an Ice-type move and the item Icium Z.
-688 Z-Move. Requires a Dragon-type move and the item Dragonium Z.
-689 Z-Move. Requires a Dark-type move and the item Darkinium Z.
-690 Z-Move. Requires a Fairy-type move and the item Fairium Z.
-691 Z-Move. Deals immense damage. Requires the move Volt Tackle, the item Pikanium Z, and can only be used by Pikachu.
-692 Z-Move. Deals immense damage. Paralyzes the target. Requires the move Thunderbolt, the item Aloraichium Z, and can only be used by Alolan Raichu.
-693 Z-Move. Increases the user's Attack, Defense, Special Attack, Special Defense, and Speed by 2 stages. Requires the move Last Resort, the item Eevium Z, and can only be used by Eevee.
-694 Z-Move. Deals immense damage. Requires the move Giga Impact, the item Snorlium Z, and can only be used by Snorlax.
-695 Z-Move. Deals immense damage. Sets up Psychic Terrain for 5 turns after the move is finished. Requires the move Psychic, the item Mewnium Z, and can only be used by Mew.
-696 Z-Move. Deals damage to the target equal to 3/4 of its current HP, but not less than 1. Requires the move Nature's Madness, the item Tapunium Z, and can only be used by Tapu Koko, Tapu Lele, Tapu Bulu, or Tapu Fini.
-697 Z-Move. Deals immense damage. Requires the move Spirit Shackle, the item Decidium Z, and can only be used by Decidueye.
-698 Z-Move. Deals immense damage. Requires the move Darkest Lariat, the item Incinium Z, and can only be used by Incineroar.
-699 Z-Move. Deals immense damage. Requires the move Sparkling Aria, the item Primarium Z, and can only be used by Primarina.
-700 Z-Move. Deals immense damage. Requires the move Spectral Thief, the item Marshadium Z, and can only be used by Marshadow.
-701 Z-Move. Deals immense damage. The critical hit rate for this move is raised by 2 stages. Requires the move Thunderbolt, item Pikashunium Z, and can only be used by Pikachu-First Hat, Pikachu-Second Hat, Pikachu-Third Hat, Pikachu-Fourth Hat, Pikachu-Fifth Hat, or Pikachu-Sixth Hat.
+560 Reduce en 1 nivel el Ataque del objetivo. Prioridad nivel 1.
+562 Movimiento de alta prioridad (+3) que protege al usuario y a sus aliados de movimientos de estado durante el turno en el que se realiza el movimiento.
+564 Causa daño y el usuario recupera el 75% de los PS quitados por el movimiento al objetivo.
+566 Este movimiento causa daño usando una combinación de tipo Lucha y tipo Volador simultáneamente modificando la efectividad del movimiento.
+567 Añade el tipo Planta a los tipos originales del objetivo (si tiene dos tipos, pasará a tener tres). Este movimiento falla si el objetivo ya es de tipo Planta. Si el objetivo ya tiene añadido el tipo Fantasma por causa de Halloween, dicho tipo es sustituido por el tipo Planta.
+568 Causa daño supereficaz contra el tipo Agua y tiene un 10% de posibilidades de congelar al objetivo.
+569 Tarda un turno en cargarse y luego se ejecuta al siguiente turno, aumentando el Ataque Especial, la Defensa Especial y la Velocidad del usuario en 2 niveles cada uno.
+571 Atrapa al objetivo durante 4 o 5 turnos, durante los cuales pierde el equivalente a 1/8 de sus PS Máximos (exceptuando el último turno de efecto del movimiento). El efecto desaparece si el usuario se retira, es debilitado o cuando el objetivo usa Giro Rápido, el efecto no se resetea si se usa un movimiento similar contra el objetivo mientras esté bajo dicho efecto.
+572 Causa daño y tiene una probabilidad del 30% de bajar el Ataque Especial del objetivo.
+573 Causa daño y reduce en 1 nivel el Ataque Especial del oponente.
+574 Causa daño y reduce en 1 nivel el Ataque y Ataque Especial del objetivo.
+575 Causa daño y paraliza al objetivo.
+576 Causa daño y el usuario recupera el 75% de los PS quitados por el movimiento al objetivo.
+577 Causa daño y el usuario recupera el 50% de los PS quitados por el movimiento al objetivo.
+578 Desaparece en las tinieblas durante un turno de preparación en el cual solo puede ser afectado por efectos del clima como tormenta arena o granizo. En el segundo turno ataca. Su golpe no puede ser evitado por Protección, Detección, Barrera Espinosa, Escudo Real, Búnker o Escudo Tatami. Su poder se duplica y no fallará si el objetivo ha usado Reducción.
+579 Causa daño y tiene un 10% de posibilidades de reducir en 1 nivel el Ataque del objetivo.
+580 Reduce en 1 nivel el Ataque del objetivo. Ignora los efectos de Protección, Detección, Y Barrera Espinosa.
+581 Añade el tipo Fantasma a los tipos originales del objetivo (si tiene dos tipos, pasará a tener tres). Este movimiento falla si el objetivo ya es de tipo Fantasma. Si el objetivo ya tiene añadido el tipo Planta por causa de Condena Silvana, dicho tipo es sustituido por el tipo Fantasma.
+582 Causa daño de 2 a 5 veces en un mismo turno. Este movimiento golpea 2 veces 1/3 de los casos, 3 veces 1/3 de los casos, 4 veces 1/6 de los casos y 5 veces 1/6 de los casos. Prioridad nivel 1.
+583 Aumenta en un nivel la Defensa Especial de un Pokémon aliado en combates dobles o triples.
+584 Causa daño y no tiene ningún efecto secundario. Para poder efectuarse, el usuario debe haber consumido una baya, ya sea equipada o mediante Picoteo o Picadura.
+585 Reduce en 1 nivel el Ataque Especial del Objetivo.
+586 Causa daño y no tiene ningún efecto secundario. No se puede esquivar.
+587 Reduce en 2 niveles el Ataque Especial del Objetivo.
+588 Movimiento de terreno. Durante 5 turnos, los Pokémon que estén tocando el suelo no se pueden dormir, y los poderes de sus ataques tipo Eléctrico se incrementan en un 50%.
+589 Si se utiliza antes que el objetivo, cambia el tipo del movimiento realizado en ese turno a tipo Eléctrico, afecta a cualquier tipo de movimiento, incluyendo los de estado, excepto a Combate.
+590 Evita que tanto el Pokémon oponente como el usuario puedan ser cambiados durante el siguiente turno. El efecto se mantiene aunque el usuario se debilite.
+591 Causa daño. Si se debilita al objetivo con este movimiento, el Ataque del usuario aumenta en 2 niveles.
+592 Aumenta la Defensa de todos los Pokémon de tipo Planta que haya en el combate.
+593 Cubre de hierba el terreno de combate durante cinco turnos, haciendo que los Pokémon que estén en el suelo  recuperen 6,25% de sus PS máximos y los movimientos de tipo Planta aumentan su potencia un 50%. Terremoto, Magnitud y Terratemblor ven reducida su potencia a la mitad.
+594 Es un movimiento de alta prioridad (+1) que convierte los movimientos de tipo Normal de cualquier Pokémon en combate en tipo Eléctrico durante el resto del turno en el que se usa el ataque. 
+595 Movimiento de alta prioridad (+4) que permite al usuario evitar los movimientos dirigidos a él durante el turno en el que se utilice. Si alguien ataca al usuario de Escudo Real con un movimiento de contacto, su Ataque bajará 2 niveles. La probabilidad de éxito en el uso de este movimiento se reduce en un 50% extra si en el anterior turno se utilizó, tanto de forma exitosa o no, Protección, Detección o Aguante.
+597 Aumenta la Defensa y Defensa Especial en 1 nivel al usuario y Pokémon aliados con la habilidad Más o Menos.
+598 Protege al equipo aliado de cualquier movimiento, excepto ataques de estado. Sin embargo, solo se puede utilizar en el primer turno tras entrar en combate. No tiene prioridad.
+599 Cubre de niebla el terreno de combate durante cinco turnos haciendo que los Pokémon que estén en el suelo no se vean afectados por cambios de estado, y que los movimientos de tipo Dragón vean reducida su potencia a la mitad.
+600 Es un movimiento de sonido que disminuye el Ataque y el Ataque Especial del Pokémon objetivo y, a continuación, fuerza el cambio del usuario por otro Pokémon del equipo.
+601 Es un movimiento de alta prioridad (+1). Al usarlo contra el objetivo, si este intenta usar un movimiento de tipo Fuego en el mismo turno, el polvo explota y le inflige daño, perdiendo un 25% de sus PS máximos.
+602 Causa daño y siempre sube 1 nivel el Ataque del usuario.
+603 Aumenta el Ataque y el Ataque Especial en 1 nivel cada uno de todos los Pokémon de tipo Planta que estén en combate y que estén en contacto con el suelo.
+604 Movimiento de alta prioridad (+4) que permite al usuario evitar los movimientos dirigidos a él durante el turno en el que se utilice. Si el oponente ataca con un movimiento de contacto físico en ese mismo turno, el oponente resultará dañado, perdiendo 1/8 de sus PS máximos. La probabilidad de éxito en el uso de este movimiento se reduce en un 50% extra si en el anterior turno se utilizó, tanto de forma exitosa o no, Protección, Detección o Aguante.
+605 Es un movimiento dirigido al campo rival, que hace que los Pokémon oponentes, al entrar a combatir, vean disminuida su Velocidad en 1 nivel. No afecta a Pokémon que sean Immunes al tipo Tierra.
+606 Revierte todos los cambios de estado del objetivo. Los cambios positivos pasan a ser negativos y vice versa.
+607 Sólo funciona si el objetivo ya está envenenado. Reduce en 1 nivel el Ataque, Ataque Especial y Velocidad del objetivo en 1 nivel.
+608 Duplica el dinero recibido tras ganar un combate contra otro entrenador, y se consigue realizando el movimiento durante el combate.
+609 !Te felicita en tu día especial!
+610 Causa daño y no tiene efecto secundario. Si el movimiento fuera a debilitar al objetivo, este conservará siempre 1 PS.
+611 Causa daño y tiene un 50% de posibilidades de aumentar la Defensa del usuario en 1 nivel.
+612 Causa daño y el usuario recibe daño equivalente al 50% de los PS quitados al objetivo.
+613 Causa daño y además tiene una probabilidad del 30% de quemar al objetivo. Descongela tanto al usuario como al objetivo.
+614 causa daño y no tiene ningún efecto secundario. Este ataque nunca falla, ignorando cambios en la precisión del usuario y la evasión del objetivo. No puede ser evitado mediante el uso de Protección, Detección, Barrera Espinosa o Escudo Real.
+615 No tiene ningún efecto; el usuario y el objetivo simplemente saltan en círculos y acaban dándose la mano.
+616 Causa daño. Afecta a Pokémon de tipo Volador, con la habilidad Levitación, bajo el efecto de Telequinesis o Levitón o que lleven equipado un Globo Helio. Mil flechas puede golpear a Pokémon que estén usando Vuelo, Bote y Caída libre causando el doble de daño y cancelando dichos movimientos. Este movimiento hace al objetivo vulnerable a movimientos de tipo Tierra hasta que sea cambiado.
+617 Causa daño y atrapa al objetivo mientras el usuario permanezca en combate. Este solo puede cambiar usando Voltiocambio, Ida y Vuelta o Última Palabra o si lleva equipada una Muda Concha.
+620 Causa daño, pero baja 1 nivel la Defensa y la Defensa Especial del usuario.
+621 Causa daño, pero baja 1 nivel la Defensa del usuario tras ejecutarlo. Este ataque nunca falla, ignorando cambios en la precisión del usuario y la evasión del objetivo. Este movimiento solo puede ser usado por Hoopa en su Forma Desatada. Su golpe no puede ser evitado por Protección, Detección, Barrera Espinosa, Escudo Real, Búnker o Escudo Tatami.
+622 Causa daño y, si el objetivo ha usado un movimiento en ese turno, anula su habilidad.
+623 Causa daño, pero baja en 2 niveles el Ataque Especial del usuario.
+624 Causa daño sin efectos secundarios.
+625 Causa daño sin efectos secundarios.
+626 Causa daño sin tener en cuenta las habilidades del objetivo.
+627 Quita al objetivo la mitad de sus PS actuales, pero no menos de 1.
+628 Su tipo varia dependiendo del tipo del usuario.
+629 Es un ataque de prioridad reducida (-3). El usuario prepara una trampa al comienzo del turno. Si el usuario recibe un movimiento de categoría físico durante ese turno, el caparazón estalla dañando gravemente al oponente (equivalente a dos veces el daño producido por el último ataque del objetivo al usuario).
+630 Concentra la energía solar un turno, para liberar una cuchilla que causa daño en el siguiente turno. Si Cuchilla Solar se utiliza cuando el clima es soleado, el ataque será ejecutado en un solo turno, su poder se reduce a la mitad si se usa en lluvia, tormenta de arena o granizo.
+631 Causa daño sin tener en cuenta las habilidades del objetivo.
+632 Movimiento tipo Roca de Prioridad nivel 1.
+633 Vuelve extraño el terreno de combate durante cinco turnos haciendo que los Pokémon que estén en el suelo no se vean afectados por movimientos con alta prioridad, y que los movimientos de tipo Psíquico aumenten su potencia en un 50%.
+634 Impide al objetivo utilizar movimientos de Sonido durante 2 turnos.
+635 Reduce a la mitad el daño recibido de movimientos físicos y especiales durante 5 turnos. Este movimiento solo puede usarse si está granizando. La reducción será de un 33% si hay aliados en el terreno.
+636 Garantiza que el siguiente movimiento por parte del usuario sea de Golpe Crítico.
+637 Causa daño pero reduce en 1 nivel la Defensa del usuario.
+638 El tipo de este ataque será el mismo que el del Disco que lleva puesto el usuario.
+639 Causa daño y reduce el Ataque del objetivo en 1 nivel.
+640 Causa daño sin efectos secundarios.
+641 Obliga al objetivo a repetir inmediatamente el último movimiento realizado.
+642 Causa daño y atrapa al objetivo, impidiéndole huir o ser cambiado por otro Pokémon a menos que el usuario se retire.
+643 Causa daño sin aplicar los efectos en los cambios en la Evasión y/o la Defensa del objetivo.
+644 Causa daño y si el objetivo estaba quemado, lo cura de su quemadura.
+645 Recupera la mitad de los PS máximos del usuario. Si el movimiento es usado durante una tormenta de arena recupera el 100% de los PS máximos.
+646 Este movimiento sólo funciona en el primer turno después de haber sacado el Pokémon que conozca el ataque. Prioridad nivel 2.
+647 Tiene la misma función que Protección, con la diferencia que si el oponente ataca con un movimiento de contacto físico en ese mismo turno, el oponente resultará envenenado. Su precisión se reduce al 50% si en el turno anterior el usuario ha usado Búnker, Barrera Espinosa, Detección, Escudo Real, Protección, Aguante, Anticipo o Vastaguardia. Prioridad nivel 4.
+648 Causa daño y baja un nivel la Velocidad del usuario.
+649 Recupera el 50% de los PS máximos del objetivo, y 2/3 de los PS máximos si se usa bajo los efectos de Campo de Hierba.
+650 Restaura una cantidad de PS al usuario equivalente a la estadística de Ataque del objetivo. A continuación reduce en 1 nivel el Ataque del objetivo.
+651 Hace que el objetivo sea el centro de atención, dirigiendo todos los ataques hacia él. Prioridad nivel 3.
+652 Reduce en 1 nivel la Velocidad el objetivo. Envenena al objetivo.
+653 Aumenta en 1 nivel el Ataque y Ataque Especial de cualquier Pokémon aliado que tenga la habilidad Más o Menos.
+654 Si es usado contra un oponente, causa daño y no tiene ningún efecto secundario. Si es usado contra un aliado, restaura la mitad de sus PS máximos.
+655 Causa daño y atrapa al objetivo, impidiéndole huir o ser cambiado por otro Pokémon a menos que el usuario se retire.
+656 Reduce en 1 nivel el Ataque del objetivo.
+657 Reduce en 1 nivel la Defensa del objetivo.
+658 Causa daño y no tiene ningún efecto secundario. Este movimiento aumenta su potencia en 20 puntos por cada incremento temporal en las estadísticas del usuario.
+659 Elimina el tipo Fuego del usuario tras haber causado daño. No funciona si el usuario no es tipo Fuego.
+660 Intercambia los cambios de Velocidad del usuario con las de su objetivo.
+661 Causa daño y no se puede evadir.
+662 Cura al objetivo de cualquier problema de estado, y de ser así, restaura la mitad de los PS máximos del usuario.
+663 Es un movimiento de prioridad reducida (-3). El usuario carga el movimiento al inicio de un turno y al final del mismo turno lo ejecuta. Sin embargo, si el usuario es golpeado antes de realizar el ataque por un movimiento de contacto, el Pokémon oponente resultará quemado.
+664 Causa daño sin efectos secundarios.
+665 Causa daño y además elimina el efecto de Reflejo y Pantalla de Luz del objetivo.
+666 Causa daño y no tiene ningún efecto secundario. Si en el anterior turno, el usuario falló un movimiento, la potencia del ataque se duplica a 150.
+667 Tiene un 20% de probabilidades de reducir en 1 nivel la Defensa del objetivo.
+668 Tiene un 20% de probabilidades de reducir en 1 nivel la Defensa del objetivo.
+669 Causa daño y no tiene ningún efecto secundario. El usuario descansará el segundo turno, durante el cual no se podrán ejecutar ataques, usar objetos o cambiar de Pokémon.
+670 Antes de atacar, el usuario roba los aumentos en las estadísticas del objetivo.
+671 Reduce en 1 nivel el Ataque y Ataque Especial del objetivo.
+672 Tiene un 30% de posibilidades de hacer retroceder al objetivo.
+673 Movimiento Z. Requiere un movimiento de tipo Normal y el objeto Normastal Z.
+674 Movimiento Z. Requiere un movimiento de tipo Lucha y el objeto Lizastal Z.
+675 Movimiento Z. Requiere un movimiento de tipo Volador y el objeto Aerostal Z.
+676 Movimiento Z. Requiere un movimiento de tipo Veneno y el objeto Toxistal Z.
+677 Movimiento Z. Requiere un movimiento de tipo Tierra y el objeto Geostal Z.
+678 Movimiento Z. Requiere un movimiento de tipo Roca y el objeto Litostal Z.
+679 Movimiento Z. Requiere un movimiento de tipo Bicho y el objeto Insectostal Z.
+680 Movimiento Z. Requiere un movimiento de tipo Fantasma y el objeto Espectrostal Z.
+681 Movimiento Z. Requiere un movimiento de tipo Acero y el objeto Metalostal Z.
+682 Movimiento Z. Requiere un movimiento de tipo Fuego y el objeto Pirostal Z.
+683 Movimiento Z. Requiere un movimiento de tipo Agua y el objeto Hidrostal Z.
+684 Movimiento Z. Requiere un movimiento de tipo Planta y el objeto Fitostal Z.
+685 Movimiento Z. Requiere un movimiento de tipo Eléctrico y el objeto Electrostal Z.
+686 Movimiento Z. Requiere un movimiento de tipo Psíquico y el objeto Psicostal Z.
+687 Movimiento Z. Requiere un movimiento de tipo Hielo y el objeto Criostal Z.
+688 Movimiento Z. Requiere un movimiento de tipo Dragón y el objeto Dracostal Z.
+689 Movimiento Z. Requiere un movimiento de tipo Siniestro y el objeto Nictostal Z.
+690 Movimiento Z. Requiere un movimiento de tipo Hada y el objeto Feeristal Z.
+691 Movimiento Z. Causa daño inmenso. Requiere el movimiento Placaje Eléctrico, el objeto Pikastal Z y sólo puede ser usado por Pikachu.
+692 Movimiento Z. Causa daño inmenso. Paraliza al objetivo. Requiere el movimiento Rayo, el objeto Alo-Raistal Z y sólo puede ser usado por Raichu de Alola
+693 Movimiento Z. Aumenta el Ataque, Defensa, Ataque Especial, Defensa especial y Velocidad del usuario en 2 niveles. Requiere el movimiento Última Baza, el objeto Eeveestal Z y sólo puede ser usado por Eevee.
+694 Movimiento Z. Causa daño inmenso. Requiere el movimiento Giga Impacto, el objeto Snorlastal Z y sólo puede ser usado por Snorlax
+695 Movimiento Z. Causa daño inmenso. Crea un Campo Psíquico por 5 turnos luego de haberse utilizado. Requiere el movimiento Psíquico, el objeto Mewstal Z y sólo puede ser usado por Mew.
+696 Movimiento Z. Causa daño al objetivo equivalente a 3/4 partes de sus PS máximos, pero no menos de 1. Requiere el movimiento Furia Natural, el objeto Tapistal Z y sólo puede ser usado por Tapu Koko, Tapu Lele, Tapu Bulu, o Tapu Fini.
+697 Movimiento Z. Causa daño inmenso. Requiere el movimiento Puntada sombría, el objeto Dueyestal Z y sólo puede ser usado por Decidueye.
+698 Movimiento Z. Causa daño inmenso. Requiere el movimiento Lariat oscuro, el objeto Incinostal Z y sólo puede ser usado por Incineroar.
+699 Movimiento Z. Causa daño inmenso. Requiere el movimiento Aria burbuja, el objeto Primastal Z y sólo puede ser usado por Primarina.
+700 Movimiento Z. Causa daño inmenso. Requiere el movimiento Robasombra, el objeto Marshastal Z y sólo puede ser usado por Marshadow.
+701 Movimiento Z. Causa daño inmenso. La frecuencia de Golpe Crítico de este movimiento está aumentada en 2 niveles. Requiere el movimiento Rayo, el objeto Ash-Pikastal Z, y sólo puede ser usado por Pikachu-Primera Gorra, Pikachu-Segunda Gorra, Pikachu-Tercera Gorra, Pikachu-Cuarta Gorra, Pikachu-Quinta Gorra o Pikachu-Sexta Gorra.
