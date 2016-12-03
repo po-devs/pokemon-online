@@ -1905,8 +1905,7 @@ ppfunction:
             continue;
         }
 
-        /* Corrosion */
-        callaeffects(player, target, "MoveTypeModifier");
+        /* Pollen Puff */
         calleffects(player, target, "MoveClassModifier");
 
         if (tmove(player).power > 0)
@@ -1934,6 +1933,9 @@ ppfunction:
                 /* If it's ineffective we just say it */
                 notify(All, Effective, target, quint8(0));
                 calleffects(player,target,"AttackSomehowFailed");
+                if (Move::OffensiveStatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasWorkingAbility(player, Ability::Corrosion)) {
+                    applyMoveStatMods(player, target);
+                }
                 continue;
             }
 
@@ -2016,7 +2018,7 @@ ppfunction:
                     int damage = calculateDamage(player, target);
                     if (!turnMemory(target).contains(QString("BlockDamageOnly%1").arg(attackCount()))) {
                         inflictDamage(target, damage, player, true);
-                    } else if (makesContact(player) && tmove(player).type != Type::Curse) {
+                    } else if (makesContact(player)) {
                         // Contact effects still work when Disguise is up
                         // The curse type check is for Corrosion
                         callieffects(target, player, "UponPhysicalAssault");
