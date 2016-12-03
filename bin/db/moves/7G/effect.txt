@@ -594,7 +594,7 @@
 626 Ignores the target's Ability when hit by this move.
 627 Deals damage to the target equal to half of its current HP, but not less than 1.
 628 The user's type determines the type of this move.
-629 The target of this move is the last of the opponent's Pokémon to have damaged the user with a contact move this turn. Deals damage to the target equal to two times the damage the target dealt to the user with their last attack.
+629 Sets a trap which explodes when the user is hit by a physical move.
 630 Requires a charge up turn before use. (This attack's power is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.???)
 631 Ignores the target's Ability when hit by this move.
 632 Priority level 1.

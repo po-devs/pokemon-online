@@ -1824,8 +1824,7 @@ ppfunction:
             continue;
         }
 
-        /* Corrosion */
-        callaeffects(player, target, "MoveTypeModifier");
+        /* Pollen Puff */
         calleffects(player, target, "MoveClassModifier");
 
         if (tmove(player).power > 0)
@@ -1854,6 +1853,9 @@ ppfunction:
                 /* If it's ineffective we just say it */
                 notify(All, Effective, target, quint8(0));
                 calleffects(player,target,"AttackSomehowFailed");
+                if (Move::OffensiveStatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasWorkingAbility(player, Ability::Corrosion)) {
+                    applyMoveStatMods(player, target);
+                }
                 continue;
             }
 
@@ -1932,6 +1934,10 @@ ppfunction:
                         testCritical(player, target);
                         int damage = calculateDamage(player, target);
                         inflictDamage(target, damage, player, true);
+                    } else if (makesContact(player)) {
+                        // Contact effects still work when Disguise is up
+                        // The curse type check is for Corrosion
+                        callieffects(target, player, "UponPhysicalAssault");
                     }
                     hitcount += 1;
                     hitting = true;
@@ -1943,6 +1949,8 @@ ppfunction:
                         if (!noDamage) {
                             int damage = turnMemory(player).value("CustomDamage").toInt();
                             inflictDamage(target, damage, player, true);
+                        } else if (makesContact(player) && tmove(player).type != Type::Curse) {
+                            callieffects(target, player, "UponPhysicalAssault");
                         }
                         hitcount += 1;
                         hitting = true;
@@ -2000,6 +2008,7 @@ ppfunction:
 
             if (gen() >= 5 && !koed(target) && !sub) {
                 callaeffects(target, player, "AfterBeingPlumetted");
+                calleffects(target, player, "AfterBeingPlummeted");
             }
 
             if (gen() <= 4 && koed(target)) {
@@ -4114,6 +4123,7 @@ end:
                 if (!sub) {
                     callieffects(player, source, "UponPhysicalAssault");
                     callaeffects(player,source,"UponPhysicalAssault");
+                    calleffects(player, source, "UponPhysicalAssault");
                     if (pokeMemory(player).value("HotBeak").toBool()) {
                         inflictStatus(source, Pokemon::Burnt, player);
                     }
