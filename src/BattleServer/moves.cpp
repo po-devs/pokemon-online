@@ -7266,7 +7266,7 @@ struct MMSpikyShield : public MM
         }
         b.fail(s, 27, 0, Pokemon::Grass, t);
 
-        if (b.makesContact(s) && !b.hasWorkingAbility(t, Ability::MagicGuard) ) {
+        if (b.makesContact(s) && !b.hasWorkingAbility(s, Ability::MagicGuard) ) {
             b.inflictDamage(s,b.poke(s).totalLifePoints()/6,s,false);
             b.sendMoveMessage(209,0,s);
             return;
