@@ -1,78 +1,78 @@
-﻿0 (No Description)
-1 Automatically cures the holder of being Paralyzed. Consumed after use.
-2 Automatically cures the holder of being Asleep. Consumed after use.
-3 Automatically cures the holder of being Poisoned. Consumed after use.
-4 Automatically cures the holder of being Burned. Consumed after use.
-5 Automatically cures the holder of being Frozen. Consumed after use.
-6 Restores 10 PP to the holder's first move to run out of PP. Consumed after use.
-7 Restores 10 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
-8 Automatically cures the holder of being Confused. Consumed after use.
-9 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, Frozen or Confused. Consumed after use.
-10 Restores 25% of holder's max HP when its HP falls below 50%. Consumed after use.
-11 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Bold, Calm, Modest or Timid nature. Consumed after use.
-12 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has an Adamant, Careful, Impish or Jolly nature. Consumed after use.
-13 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Brave, Quiet, Relaxed or Sassy nature. Consumed after use.
-14 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Lax, Naive, Naughty or Rash nature. Consumed after use.
-15 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Gentle, Hasty, Lonely or Mild nature. Consumed after use.
-16 Bury it in soft soil to grow a Razz Plant.
-17 Bury it in soft soil to grow a Bluk Plant.
-18 Bury it in soft soil to grow a Nanab Plant.
-19 Bury it in soft soil to grow a Wepear Plant.
-20 Bury it in soft soil to grow a Pinap Plant.
-21 Raises a Pokemon's friendship, but lowers its HP EVs to 100 if above that, or by 10 if equal or below 100.
-22 Raises a Pokemon's friendship, but lowers its Attack EVs to 100 if above that, or by 10 if equal or below 100.
-23 Raises a Pokemon's friendship, but lowers its Defense EVs to 100 if above that, or by 10 if equal or below 100.
-24 Raises a Pokemon's friendship, but lowers its Special Attack EVs to 100 if above that, or by 10 if equal or below 100.
-25 Raises a Pokemon's friendship, but lowers its Special Defense EVs to 100 if above that, or by 10 if equal or below 100.
-26 Raises a Pokemon's friendship, but lowers its Speed EVs to 100 if above that, or by 10 if equal or below 100.
-27 Bury it in soft soil to grow a Cornn Plant.
-28 Bury it in soft soil to grow a Magost Plant.
-29 Bury it in soft soil to grow a Rabuta Plant.
-30 Bury it in soft soil to grow a Nomel Plant.
-31 Bury it in soft soil to grow a Spelon Plant.
-32 Bury it in soft soil to grow a Pamtre Plant.
-33 Bury it in soft soil to grow a Watmel Plant.
-34 Bury it in soft soil to grow a Durin Plant.
-35 Bury it in soft soil to grow a Belue Plant.
-36 Halves the damage of the opponent's super-effective Fire attack. Consumed after use.
-37 Halves the damage of the opponent's super-effective Water attack. Consumed after use.
-38 Halves the damage of the opponent's super-effective Electric attack. Consumed after use.
-39 Halves the damage of the opponent's super-effective Grass attack. Consumed after use.
-40 Halves the damage of the opponent's super-effective Ice attack. Consumed after use.
-41 Halves the damage of the opponent's super-effective Fighting attack. Consumed after use.
-42 Halves the damage of the opponent's super-effective Poison attack. Consumed after use.
-43 Halves the damage of the opponent's super-effective Ground attack. Consumed after use.
-44 Halves the damage of the opponent's super-effective Flying attack. Consumed after use.
-45 Halves the damage of the opponent's super-effective Psychic attack. Consumed after use.
-46 Halves the damage of the opponent's super-effective Bug attack. Consumed after use.
-47 Halves the damage of the opponent's super-effective Rock attack. Consumed after use.
-48 Halves the damage of the opponent's super-effective Ghost attack. Consumed after use.
-49 Halves the damage of the opponent's super-effective Dragon attack. Consumed after use.
-50 Halves the damage of the opponent's super-effective Dark attack. Consumed after use.
-51 Halves the damage of the opponent's super-effective Steel attack. Consumed after use.
-52 Halves the damage of the opponent's Normal attack. Consumed after use.
-53 Raises the holder's Attack by one stage when its HP falls below 25%. Consumed after use.
-54 Raises the holder's Defense by one stage when its HP falls below 25%. Consumed after use.
-55 Raises the holder's Speed by one stage when its HP falls below 25%. Consumed after use.
-56 Raises the holder's Special Attack by one stage when its HP falls below 25%. Consumed after use.
-57 Raises the holder's Special Defense by one stage when its HP falls below 25%. Consumed after use.
-58 Raises the holder's critical hit rate by two stages when its HP falls below 25%. Consumed after use.
-59 Raises a random stat of the holder by two stages when its HP falls below 25%. Consumed after use.
-60 Restores 25% of the holder's max HP if hit by a super-effective attack. Consumed after use.
-61 Raises the holder's Accuracy by 20% for the turn after its HP falls below 25%. Consumed after use.
-62 Ensures that the holder will move first within its priority bracket in the turn after its HP falls below 25%. Consumed after use.
-63 Damages the enemy for 12.5% its max HP if it hits the holder with a physical attack. Consumed after use.
-64 Damages the enemy for 12.5% its max HP if it hits the holder with a special attack. Consumed after use.
-65 Halves the damage of the opponent's super-effective Fairy attack. Consumed after use.
-66 Raises the holder's Defense by one stage when it is hit by a physical attack. Consumed after use.
-67 Raises the holder's Special Defense by one stage when it is hit by a special attack. Consumed after use.
-1000 Automatically cures the holder of being Paralyzed. Consumed after use.
-1001 Automatically cures the holder of being Asleep. Consumed after use.
-1002 Automatically cures the holder of being Poisoned. Consumed after use.
-1003 Automatically cures the holder of being Frozen. Consumed after use.
-1004 Automatically cures the holder of being Burned. Consumed after use.
-1005 Restores 5 PP to the holder's first move to run out of PP. Consumed after use.
-1006 Restores 10 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
-1007 Automatically cures the holder of being Confused. Consumed after use.
-1008 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, or Frozen. Consumed after use.
-1009 Restores 30 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
+﻿0 (Sin Descripción)
+1 Cura la Parlaísis del usuario. 
+2 Despierta al usuario. 
+3 Cura al usuario del Veneno. 
+4 Cura al usuario de su Quemadura. 
+5 Descongela al usuario. 
+6 Restaura por 10 los PP del primer movimiento que haya agotado sus PP.
+7 Restaura por 10 los PS máximos del usuario cuando sus PS caen por debajo del 50%.
+8 Cura al usuario de su Confusión. 
+9 Cura al usuario de su Parálisis, Sueño, Veneno, Quemadura, Congelamiento o Confusión. 
+10 Restaura el 25% de los PS máximos del usuario cuando sus PS caen por debajo del 50%. 
+11 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%,  pero confunde al usuario si su naturaleza es Osada, Serena, Modesta o Miedosa. 
+12 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Firme, Cauta, Agitada o Alegre. 
+13 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Audaz, Mansa, Plácida o Grosera. 
+14 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Floja, Ingenua, Pícara o Alocada. 
+15 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Amable, Activa, Huraña o Afable. 
+16 Plantar en tierra fértil para obtener un árbol de Frambu.
+17 Plantar en tierra fértil para obtener un árbol de Oram.
+18 Plantar en tierra fértil para obtener un árbol de Latano.
+19 Plantar en tierra fértil para obtener un árbol de Peragu.
+20 Plantar en tierra fértil para obtener un árbol de Pinia.
+21 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de PS. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+22 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Ataque. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+23 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Defensa. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+24 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Ataque Especial. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+25 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Defensa Especial. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+26 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Velocidad. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+27 Plantar en tierra fértil para obtener un árbol de Mais.
+28 Plantar en tierra fértil para obtener un árbol de Aostan.
+29 Plantar en tierra fértil para obtener un árbol de Rautan.
+30 Plantar en tierra fértil para obtener un árbol de Monli.
+31 Plantar en tierra fértil para obtener un árbol de Wikano.
+32 Plantar en tierra fértil para obtener un árbol de Plama.
+33 Plantar en tierra fértil para obtener un árbol de Sambia.
+34 Plantar en tierra fértil para obtener un árbol de Rudion.
+35 Plantar en tierra fértil para obtener un árbol de Andano.
+36 Reduce a la mitad el daño supereficaz producido por ataques tipo Fuego.
+37 Reduce a la mitad el daño supereficaz producido por ataques tipo Agua.
+38 Reduce a la mitad el daño supereficaz producido por ataques tipo Eléctrico.
+39 Reduce a la mitad el daño supereficaz producido por ataques tipo Planta.
+40 Reduce a la mitad el daño supereficaz producido por ataques tipo Hielo.
+41 Reduce a la mitad el daño supereficaz producido por ataques tipo Lucha.
+42 Reduce a la mitad el daño supereficaz producido por ataques tipo Veneno.
+43 Reduce a la mitad el daño supereficaz producido por ataques tipo Tierra.
+44 Reduce a la mitad el daño supereficaz producido por ataques tipo Volador.
+45 Reduce a la mitad el daño supereficaz producido por ataques tipo Psíquico.
+46 Reduce a la mitad el daño supereficaz producido por ataques tipo Bicho.
+47 Reduce a la mitad el daño supereficaz producido por ataques tipo Roca.
+48 Reduce a la mitad el daño supereficaz producido por ataques tipo Fantasma.
+49 Reduce a la mitad el daño supereficaz producido por ataques tipo Dragón.
+50 Reduce a la mitad el daño supereficaz producido por ataques tipo Siniestro.
+51 Reduce a la mitad el daño supereficaz producido por ataques tipo Acero.
+52 Reduce a la mitad el daño producido por ataques tipo Normal.
+53 Aumenta en 1 nivel el Ataque del usuario cuando tiene menos del 25% de sus PS máximos.
+54 Aumenta en 1 nivel la Defensa del usuario cuando tiene menos del 25% de sus PS máximos.
+55 Aumenta en 1 nivel la Velocidad del usuario cuando tiene menos del 25% de sus PS máximos.
+56 Aumenta en 1 nivel el Ataque Especial del usuario cuando tiene menos del 25% de sus PS máximos.
+57 Aumenta en 1 nivel la Defensa Especial del usuario cuando tiene menos del 25% de sus PS máximos.
+58 Aumenta en 2 niveles la frequencia de Golpes Críticos del usuario cuando tiene menos del 25% de sus PS máximos.
+59 Aumenta en 2 niveles una estadística al azar del usuario cuando tiene menos del 25% de sus PS máximos.
+60 Restaura el 25% de los PS máximos del usuario cuando es golpeado por un ataque supereficaz.
+61 Aumenta en un 20% la Precisión del usuario cuando tiene menos del 25% de sus PS máximos.
+62 Si el Pokémon tiene menos del 25% de sus PS máximos, su siguiente ataque se ejecutará antes que otros movimientos de igual  prioridad (pero después que movimientos con mayor prioridad).
+63 Provoca daño al enemigo equivalente al 12.5% de sus PS máximos cuando el usuario es golpeado por un ataque de categoría Física. 
+64 Provoca daño al enemigo equivalente al 12.5% de sus PS máximos cuando el usuario es golpeado por un ataque de categoría Especial. 
+65 Reduce a la mitad el daño supereficaz producido por ataques tipo Hada.
+66 Aumenta en 1 nivel la Defensa del usuario cuando es herido por un ataque de categoría Física. 
+67 Aumenta en 1 nivel la Defensa Especial del usuario cuando es herido por un ataque de categoría Especial. 
+1000 Cura la Parlaísis del usuario.
+1001 Despierta al usuario.
+1002 Cura al usuario del Veneno.
+1003 Descongela al usuario.
+1004 Cura al usuario de su Quemadura.
+1005 Restaura por 5 los PP del primer movimiento que haya agotado sus PP.
+1006 Restaura por 10 los PS máximos del usuario cuando sus PS caen por debajo del 50%.
+1007 Cura al usuario de su Confusión.
+1008 Cura al usuario de su Parálisis, Sueño, Veneno, Quemadura, Congelamiento o Confusión. 
+1009 Restaura por 30 los PS del usuario cuando sus PS caen por debajo del 50%.
