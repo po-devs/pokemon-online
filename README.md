@@ -1,3 +1,8 @@
+This is trying to implement Pokémon Online in pure QML, with no Qt desktop component.
+Not complete.
+
+README for Pokémon Online:
+
 This is Pokémon Online
 ----------------------
 [![Build Status](https://travis-ci.org/po-devs/pokemon-online.png)](https://travis-ci.org/po-devs/pokemon-online)

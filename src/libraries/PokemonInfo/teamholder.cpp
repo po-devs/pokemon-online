@@ -118,13 +118,13 @@ void Profile::sanitize()
     info().sanitize();
 }
 
-TeamHolder::TeamHolder()
+TeamHolder::TeamHolder(QObject *parent) : QObject(parent)
 {
     m_teams.push_back(Team());
     m_currentTeam = 0;
 }
 
-TeamHolder::TeamHolder(const QString &name)
+TeamHolder::TeamHolder(const QString &name, QObject *parent) : QObject(parent)
 {
     m_teams.push_back(Team());
     m_currentTeam = 0;

@@ -656,7 +656,7 @@ public:
         battleId = 0;
     }
 
-    explicit BattleConfiguration(const BattleConfiguration &other);
+    BattleConfiguration(const BattleConfiguration &other);
     BattleConfiguration& operator = (const BattleConfiguration& conf);
     ~BattleConfiguration();
 

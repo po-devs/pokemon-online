@@ -1,0 +1,5 @@
+to build with custom libzip
+
+1. download libzip, compile
+2. qmake LIBZIP_PATH=<libzip root path> -r && make
+3. To run, go to bin, -DLD_LIBRARY_PATH=<lipzip path>/lib/.libs ./Pokemon-Online
