@@ -1219,9 +1219,6 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (shiny) {
             return PokemonInfo::Picture(pokeid, gen, gender, false, back);
         }
-        if (back) {
-            return PokemonInfo::Picture(pokeid, gen, gender);
-        }
 
         switch(gen.num) {
             case 7: return PokemonInfo::Picture(pokeid, 6, gender, shiny, back); break;
