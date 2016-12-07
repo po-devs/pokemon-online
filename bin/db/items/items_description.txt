@@ -254,7 +254,7 @@
 253 Increases power of Bug-type moves used by the holder by 30%. Consumed after use.
 254 Increases power of Rock-type moves used by the holder by 30%. Consumed after use.
 255 Increases power of Ghost-type moves used by the holder by 30%. Consumed after use.
-256 Increases power of Fire-type moves used by the holder by 30%. Consumed after use.
+256 Increases power of Dragon-type moves used by the holder by 30%. Consumed after use.
 257 Increases power of Dark-type moves used by the holder by 30%. Consumed after use.
 258 Increases power of Steel-type moves used by the holder by 30%. Consumed after use.
 259 Increases power of Normal-type moves used by the holder by 30%. Consumed after use.
