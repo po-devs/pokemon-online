@@ -613,6 +613,8 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
         p.dvs() << p2.DV(0) << p2.DV(1) << p2.DV(2) << p2.DV(3) << p2.DV(4) << p2.DV(5);
         p.evs() << p2.EV(0) << p2.EV(1) << p2.EV(2) << p2.EV(3) << p2.EV(4) << p2.EV(5);
 
+        p.hiddenPower() = HiddenPowerInfo::Type(gen, p2.DV(0), p2.DV(1), p2.DV(2), p2.DV(3), p2.DV(4), p2.DV(5));
+
         QList<int> moves = g.moves().toList();
         if (illegal) {
             QSet<int> allMoves = MoveInfo::Moves(gen);
