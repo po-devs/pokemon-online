@@ -2180,7 +2180,9 @@ struct MMFling : public MM
                 return;
             } else if (ItemInfo::isGem(b.poke(s).item())) {
                 return;
-            }
+            } else if (ItemInfo::isGem(b.poke(s).item()) {
+				return;
+			}
             tmove(b, s).power = tmove(b, s).power * ItemInfo::Power(b.poke(s).item());
             int t = b.targetList.front();
             b.sendMoveMessage(45, 0, s, type(b,s), t, b.poke(s).item());
