@@ -119,7 +119,7 @@
 118 El Pokémon recoge Miel de donde puede.
 119 El Pokémon puede ver el objeto que lleva el rival.
 120 Potencia los movimientos que dañan al usuario.
-121 Cambia el tipo al de la Tabla que lleve.
+121 Cambia el tipo al de la Tabla o Cristal Z que lleve.
 122 Potencia los Pokémon del equipo si está soleado.
 123 Reduce los PS de un rival mientras duerme.
 124 Al ser golpeado, roba el objeto del objetivo.
