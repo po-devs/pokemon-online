@@ -119,7 +119,7 @@
 118 Causes a Pokémon with this ability to have a chance to collect Honey after a battle.
 119 When a Pokémon with this ability switches in, lets it see what item its opponent is holding.
 120 Boosts the power of Brave Bird, Double-Edge, Flare Blitz, Head Charge, Head Smash, Hi Jump Kick, Jump Kick, Submission, Take Down, Volt Tackle, Wild Charge and Wood Hammer by 20% when used by a Pokémon with this ability.
-121 Changes the type of a Pokémon with this ability to match the Plate it holds.
+121 Changes the type of a Pokémon with this ability to match the Plate or Z-Crystal it holds.
 122 During Sunny Day, raises Attack and Special Defense of a Pokémon with this ability and its partners by 50%.
 123 Causes the opponent Pokémon to lose 1/8 its max HP every turn it is Sleeping as long as a Pokémon with this ability is on the field.
 124 When a Pokémon with this ability is hit by a contact move, lets it steal the opponent's held item if it's not holding one already.
