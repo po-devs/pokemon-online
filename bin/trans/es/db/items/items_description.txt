@@ -342,23 +342,23 @@
 341 Si lo lleva equipado un Swirlix durante un intercambio, hace que evolucione a Slurpuff.
 342 Provoca la Regresión Primigenia en Groudon durante la batalla.
 343 Provoca la Regresión Primigenia en Kyogre durante la batalla.
-344 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Lucha.
-345 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Volador.
-346 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Veneno.
-347 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Tierra.
-348 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Roca.
-349 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Bicho.
-350 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Fantasma.
-351 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Acero.
-352 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Fuego.
-353 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Agua.
-354 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Planta.
-355 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Eléctrico.
-356 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Psíquico.
-357 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Hielo.
-358 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Dragon.
-359 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Siniestro.
-360 Cambia el tipo de Multiataque y Sivally con Sistema Alfa al tipo Hada.
+344 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Lucha.
+345 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Volador.
+346 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Veneno.
+347 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Tierra.
+348 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Roca.
+349 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Bicho.
+350 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Fantasma.
+351 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Acero.
+352 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Fuego.
+353 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Agua.
+354 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Planta.
+355 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Eléctrico.
+356 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Psíquico.
+357 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Hielo.
+358 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Dragon.
+359 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Siniestro.
+360 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Hada.
 361 Aumenta en 1 nivel la Velocidad del usuario cuando este es intimidado. Se consume tras su uso.
 362 Si el usuario utiliza Campo Eléctrico, Campo Psíquico, Campo de Niebla o Campo de Hierba llevando este objeto, la duración del campo pasa de 5 turnos a 8 turnos.
 363 Protege al usuario de efectos secundarios causados por atacar al oponente con un movimiento de Contacto.
