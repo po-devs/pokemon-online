@@ -150,7 +150,7 @@ public:
     void setEV(int stat, quint8 EV, bool hack = false);
 
     enum Flags {
-        hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs, hasHiddenPower,
+        hasGen, hasNickname, hasPokeball, hasHappiness, hasHiddenPower, hasPPups, hasIVs,
         isShiny=0, isIllegal
     };
 };
