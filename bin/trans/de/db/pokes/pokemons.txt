@@ -24,15 +24,20 @@
 18:0:H Tauboss
 18:1 Mega-Tauboss
 19:0 Ratzfratz
+19:1 Alola-Ratzfratz
 20:0 Rattikarl
+20:1 Alola-Rattikarl
 21:0 Habitak
 22:0 Ibitak
 23:0 Rettan
 24:0 Arbok
 25:0 Pikachu
 26:0 Raichu
+26:1 Alola-Raichu
 27:0 Sandan
+27:1 Alola-Sandan
 28:0 Sandamer
+28:1 Alola-Sandamer
 29:0 Nidoran w
 30:0 Nidorina
 31:0 Nidoqueen
@@ -42,7 +47,9 @@
 35:0 Piepi
 36:0 Pixi
 37:0 Vulpix
+37:1 Alola-Vulpix
 38:0 Vulnona
+38:1 Alola-Vulnona
 39:0 Pummeluff
 40:0 Knuddeluff
 41:0 Zubat
@@ -55,9 +62,13 @@
 48:0 Bluzuk
 49:0 Omot
 50:0 Digda
+50:1 Alola-Digda
 51:0 Digdri
+51:1 Alola-Digdri
 52:0 Mauzi
+52:1 Alola-Mauzi
 53:0 Snobilikat
+53:1 Alola-Snobilikat
 54:0 Enton
 55:0 Entoron
 56:0 Menki
@@ -80,8 +91,11 @@
 72:0 Tentacha
 73:0 Tentoxa
 74:0 Kleinstein
+74:1 Alola-Kleinstein
 75:0 Georok
+75:1 Alola-Georok
 76:0 Geowaz
+76:1 Alola-Geowaz
 77:0 Ponita
 78:0 Gallopa
 79:0 Flegmon
@@ -95,7 +109,9 @@
 86:0 Jurob
 87:0 Jugong
 88:0 Sleima
+88:1 Alola-Sleima
 89:0 Sleimok
+89:1 Alola-Sleimok
 90:0 Muschas
 91:0 Austos
 92:0 Nebulak
@@ -111,8 +127,10 @@
 101:0 Lektrobal
 102:0 Owei
 103:0 Kokowei
+103:1 Alola-Kokowei
 104:0 Tragosso
 105:0 Knogga
+105:1 Alola-Knogga
 106:0 Kicklee
 107:0 Nokchan
 108:0 Schlurp
