@@ -5,7 +5,7 @@
 4 Automatically cures the holder of being Burned. Consumed after use.
 5 Automatically cures the holder of being Frozen. Consumed after use.
 6 Restores 10 PP to the holder's first move to run out of PP. Consumed after use.
-7 Restores 10 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
+7 Restores 10 HP to the holder when its HP falls below 50%. Consumed after use.
 8 Automatically cures the holder of being Confused. Consumed after use.
 9 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, Frozen or Confused. Consumed after use.
 10 Restores 25% of holder's max HP when its HP falls below 50%. Consumed after use.
@@ -72,7 +72,7 @@
 1003 Automatically cures the holder of being Frozen. Consumed after use.
 1004 Automatically cures the holder of being Burned. Consumed after use.
 1005 Restores 5 PP to the holder's first move to run out of PP. Consumed after use.
-1006 Restores 10 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
+1006 Restores 10 HP to the holder when its HP falls below 50%. Consumed after use.
 1007 Automatically cures the holder of being Confused. Consumed after use.
 1008 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, or Frozen. Consumed after use.
-1009 Restores 30 HP to the holder when its max HP when its HP falls below 50%. Consumed after use.
+1009 Restores 30 HP to the holder when its HP falls below 50%. Consumed after use.

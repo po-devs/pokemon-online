@@ -620,3 +620,83 @@
 619 Lame Pangéenne
 620 Draco Ascension
 621 Furie Dimension
+622 Sanction Suprême
+623 Canon Floral
+624 Cavalerie Lourde
+625 Feuillage
+626 Rayon Spectral
+627 Ire de la Nature
+628 Danse Éveil
+629 Carapiège
+630 Lame Solaire
+631 Choc Météore
+632 Vif Roc
+633 Champ Psychique
+634 Exécu-Son
+635 Voile Aurore
+636 Affilage
+637 Vibrécaille
+638 Coup Varia-Type
+639 Botte Sucrette
+640 Draco-Marteau
+641 Sommation
+642 Tisse Ombre
+643 Dark Lariat
+644 Aria de l'Écume
+645 Amass'Sable
+646 Escarmouche
+647 Blockhaus
+648 Marteau de Glace
+649 Soin Floral
+650 Vol-Force
+651 Projecteur
+652 Fil Toxique
+653 Engrenage
+654 Boule Pollen
+655 Ancrage
+656 Furie-Bond
+657 Fouet de Feu
+658 Arrogance
+659 Flamme Ultime
+660 Permuvitesse
+661 Estocorne
+662 Purification
+663 Bec-Canon
+664 Centrifugifle
+665 Psycho-Croc
+666 Trépignement
+667 Os'Ombre
+668 Aqua-Brèche
+669 Laser Prisme
+670 Clepto-Mânes
+671 Larme à l'Œil
+672 Électrikipik
+673 Turbo-Charge Bulldozer
+674 Combo Hyper-Furie
+675 Piqué Supersonique
+676 Déluge Causti-Toxique
+677 Éruption Géo-Sismique
+678 Apocalypse Gigalithique
+679 Cocon Fatal
+680 Appel des Ombres Éternelles
+681 Vrille Maximum
+682 Pyro-Explosion Cataclysmique
+683 Super Tourbillon Abyssal
+684 Pétalexplosion Éblouissante
+685 Fulguro-Lance Gigavolt
+686 Psycho-Pulvérisation EX
+687 Laser Cryogénique
+688 Chaos Draconique
+689 Trou Noir des Ombres
+690 Impact Choupinova
+691 Pikachute Foudroyante
+692 Électro-Surf Survolté
+693 Neuf pour Un
+694 Gare au Ronflex
+695 Supernova Originelle
+696 Colère du Gardien d'Alola
+697 Fureur des Plumes Spectrales
+698 Dark Body Press
+699 Symphonie des Ondines
+700 Fauche-Âme des Sept Étoiles
+701 Giga-Tonnerre

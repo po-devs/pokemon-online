@@ -259,6 +259,7 @@ struct BMPinchStat : public BMPinch
         functions["AfterHPChange"] = &ahpc;
         functions["TestPinch"] = &tp;
         functions["UponReactivation"] = &tp;
+        functions["AfterStatChange"] = &tp;
     }
 
     static void ahpc(int p, int s, BS &b) {
@@ -271,6 +272,7 @@ struct BMPinchStat : public BMPinch
         tp(p, s, b);
     }
 
+    //If a pokemon couldn't boost when Pinched but they can at a later point and still are within the threshold it will activate
     static void tp(int p, int s, BS &b) {
         /* The berry may change after the call to test pinch (eaten),
            so saved before. */
@@ -281,10 +283,17 @@ struct BMPinchStat : public BMPinch
 
         int arg = poke(b,p)["ItemArg"].toInt();
 
+        //Pinch Berries aren't consumed if the pokemon would gain no effect from it.
         if (b.isOut(s)) {
             if (b.hasWorkingAbility(s, Ability::Contrary)) {
+                if (b.hasMinimalStatMod(s, arg)) {
+                    return;
+                }
                 b.sendBerryMessage(7,s,1,s, berry, arg);
             } else {
+                if (b.hasMaximalStatMod(s, arg)) {
+                    return;
+                }
                 b.sendBerryMessage(7,s,0,s, berry, arg);
             }
             b.inflictStatMod(s, arg, 1, s, false);
@@ -484,11 +493,13 @@ struct BMConfuseBerry : public BMPinch
         if (b.koed(s))
             return;
 
-        if (!testpinch(p, s, b, 4, true))
+        int ratio = b.gen() >= 7 ? 4 : 2;
+        if (!testpinch(p, s, b, ratio, true))
             return;
 
         b.sendBerryMessage(6,s,0);
-        b.healLife(s, b.poke(s).totalLifePoints()/8);
+        int rate = b.gen() >= 7 ? 2 : 8;
+        b.healLife(s, b.poke(s).totalLifePoints()/rate);
 
         //Berries inflict confusion based on the hindering stat of a non-neutral Nature
         int plus = NatureInfo::StatBoosted(b.poke(s).nature());

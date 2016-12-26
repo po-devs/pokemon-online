@@ -57,11 +57,19 @@ public:
     void setBaseStat(int stat, quint8 base);
 };
 
+
+class PokeDataInterface {
+public:
+    virtual int item() const = 0;
+    virtual int iv(int stat) const = 0;
+    virtual Pokemon::uniqueId num() const = 0;
+};
+
 /* Data that every pokemon of the same specy share. */
 class PokeGeneral
 {
-    PROPERTY(Pokemon::uniqueId, num);
-    PROPERTY(Pokemon::gen, gen);
+    PROPERTY(Pokemon::uniqueId, num)
+    PROPERTY(Pokemon::gen, gen)
 public:
     PokeGeneral();
     virtual ~PokeGeneral(){}
@@ -95,6 +103,7 @@ class PokePersonal
     PROPERTY(quint16, item)
     PROPERTY(quint16, ability)
     PROPERTY(quint8, nature)
+    PROPERTY(quint8, hiddenPower)
     PROPERTY(quint8, gender)
     PROPERTY(bool, shiny)
     PROPERTY(quint8, happiness)
@@ -131,6 +140,7 @@ public:
     quint8 DV(int stat) const;
     void setDV(int stat, quint8 DV);
     void controlHPDV();
+    void setHiddenPower(int type);
     void controlShininess();
     void controlGender();
 
@@ -140,7 +150,7 @@ public:
     void setEV(int stat, quint8 EV, bool hack = false);
 
     enum Flags {
-        hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs,
+        hasGen, hasNickname, hasPokeball, hasHappiness, hasPPups, hasIVs, hasHiddenPower,
         isShiny=0, isIllegal
     };
 };

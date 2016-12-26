@@ -14,16 +14,13 @@ SOURCES += main.cpp \
     client.cpp \
     clientsetupscripts.cpp \
     analyze.cpp \
-    battlewindow.cpp \
     controlpanel.cpp \
-    basebattlewindow.cpp \
     ranking.cpp \
     pluginmanager.cpp \
     channel.cpp \
     tierstruct.cpp \
     rearrangewindow.cpp \
     logmanager.cpp \
-    spectatorwindow.cpp \
     replayviewer.cpp \
     soundconfigwindow.cpp \
     password_wallet.cpp \
@@ -56,14 +53,16 @@ SOURCES += main.cpp \
     Teambuilder/pokedex.cpp \
     Teambuilder/pokedexpokeselection.cpp \
     Teambuilder/avatardialog.cpp \
-    damagecalc.cpp
+    damagecalc.cpp \
+    BattleWindow/battlewindowattackbutton.cpp \
+    BattleWindow/basebattlewindow.cpp \
+    BattleWindow/battlewindow.cpp \
+    BattleWindow/spectatorwindow.cpp
 
 HEADERS += mainwindow.h \
     client.h \
     analyze.h \
-    battlewindow.h \
     controlpanel.h \
-    basebattlewindow.h \
     ranking.h \
     pluginmanager.h \
     plugininterface.h \
@@ -74,7 +73,6 @@ HEADERS += mainwindow.h \
     engineinterface.h \
     logmanager.h \
     password_wallet.h\
-    basebattlewindowinterface.h \
     soundconfigwindow.h \
     replayviewer.h \
     password_wallet.h \
@@ -105,14 +103,18 @@ HEADERS += mainwindow.h \
     mainwidget.h \
     loadwindow.h \
     loadline.h \
-    spectatorwindow.h \
     downloadmanager.h \
     teambuilderinterface.h \
     Teambuilder/pokedex.h \
     Teambuilder/pokedexpokeselection.h \
     ../Shared/config.h \
     Teambuilder/avatardialog.h \
-    damagecalc.h
+    damagecalc.h \
+    BattleWindow/battlewindowattackbutton.h \
+    BattleWindow/basebattlewindow.h \
+    BattleWindow/basebattlewindowinterface.h \
+    BattleWindow/battlewindow.h \
+    BattleWindow/spectatorwindow.h
 
 contains(QT_VERSION, ^5\\.[0-9]\\..*) {
   DEFINES += QT5

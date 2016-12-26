@@ -65,6 +65,7 @@
 103 %s is radiating a %t aura!
 104 %f's %a prevents %s's stats from being lowered!|%f's %a prevents %s's status from changing!
 107 %s had its type changed to %t!
+110 %s changed to Blade Forme!|%s changed to Shield Forme!
 112 %s surrounded itself with a veil of sweetness!|%s surrounded itself with an aromatic veil!
 115 %s's Gooey slows down %f!
 117 %s reversed all other Pokémon's auras!
@@ -74,3 +75,14 @@
 124 %s gave its %i to %f!
 125 %s's Cheek Pouch provided extra nutrients to restore HP!
 126 %s's Desolate Land turned the sunlight extremely harsh!|%s's Primordial Sea causes a heavy rain to fall!|%s's Delta Stream stirs up a mysterious air current to protect Flying-type Pokémon!|The extremely harsh sunlight was not lessened at all!|There is no relief from this heavy rain!|The strong winds prevent the atmospheric conditions from changing!|The Water-Type attack evaporated in the harsh sunlight.|The Fire-Type attack fizzled out in the heavy rain!
+127 %s is drowsing!
+129 %f cannot use %m!
+138 %s's disguise served it as a decoy and was busted!
+139 %s's Innards Out hurts %f!
+140 %s started to dance too!
+141 %s became fully charged due to its bond with %ts!|%s became Ash-Greninja!
+142 %s's Soul-Heart raises its Special Attack!
+143 %f's %a was taken over by %s!
+147 %s formed a school!|%s stopped schooling!
+148 %s transformed into its Complete Forme!
+149 %s's Shields Down deactivated!|%s's Shields Down activated!

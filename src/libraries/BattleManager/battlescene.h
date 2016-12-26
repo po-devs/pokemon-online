@@ -38,13 +38,15 @@ public:
     Q_PROPERTY(int width READ width() CONSTANT)
     Q_PROPERTY(int height READ height() CONSTANT)
     Q_PROPERTY(bool newSprites READ newSprites() CONSTANT)
+    Q_PROPERTY(bool rated READ rated() CONSTANT)
 
     /* Should the players be reversed positions in the visual scene? */
-    bool reversed();
+    bool reversed() const;
+    bool rated() const;
     int width() const;
     int height() const;
     void launch();
-    bool newSprites();
+    bool newSprites() const;
     bool mNewSprites;
 
     template <enumClass val, typename... Params>
@@ -127,6 +129,7 @@ signals:
 private:
     battledata_ptr mData;
     battledata_ptr data();
+    const AdvancedBattleData * data() const;
 
     BattleSceneProxy *mOwnProxy;
 

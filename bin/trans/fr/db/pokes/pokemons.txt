@@ -18,15 +18,20 @@
 17:0 Roucoups
 18:0 Roucarnage
 19:0 Rattata
+19:1 Rattata d'Alola
 20:0 Rattatac
+20:1 Rattatac d'Alola
 21:0 Piafabec
 22:0 Rapasdepic
 23:0 Abo
 24:0 Arbok
 25:0 Pikachu
 26:0 Raichu
+26:1 Raichu d'Alola
 27:0 Sabelette
+27:1 Sabelette d'Alola
 28:0 Sablaireau
+28:1 Sablaireau d'Alola
 29:0 Nidoran F
 30:0 Nidorina
 31:0 Nidoqueen
@@ -36,7 +41,9 @@
 35:0 Melofee
 36:0 Melodelfe
 37:0 Goupix
+37:1 Goupix d'Alola
 38:0 Feunard
+38:1 Feunard d'Alola
 39:0 Rondoudou
 40:0 Grodoudou
 41:0 Nosferapti
@@ -49,9 +56,13 @@
 48:0 Mimitoss
 49:0 Aeromite
 50:0 Taupiqueur
+50:1 Taupiqueur d'Alola
 51:0 Triopikeur
+51:1 Triopikeur d'Alola
 52:0 Miaouss
+52:1 Miaouss d'Alola
 53:0 Persian
+53:1 Persion d'Alola
 54:0 Psykokwak
 55:0 Akwakwak
 56:0 Ferosinge
@@ -73,8 +84,11 @@
 72:0 Tentacool
 73:0 Tentacruel
 74:0 Racaillou
+74:1 Racaillou d'Alola
 75:0 Gravalanch
+75:2 Gravalanch d'Alola
 76:0 Grolem
+76:1 Grolem d'Alola
 77:0 Ponyta
 78:0 Galopa
 79:0 Ramoloss
@@ -87,7 +101,9 @@
 86:0 Otaria
 87:0 Lamantine
 88:0 Tadmorv
+88:1 Tadmorv d'Alola
 89:0 Grotadmorv
+89:1 Grotadmorv d'Alola
 90:0 Kokiyas
 91:0 Crustabri
 92:0 Fantominus
@@ -102,8 +118,10 @@
 101:0 Electrode
 102:0 Noeunoeuf
 103:0 Noadkoko
+103:1 Noadkoko d'Alola
 104:0 Osselait
 105:0 Ossatueur
+105:1 Ossatueur d'Alola
 106:0 Kicklee
 107:0 Tygnon
 108:0 Excelangue

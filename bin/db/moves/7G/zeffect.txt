@@ -1,0 +1,234 @@
+14 Changes all the user's negative stat boosts to 0.
+18 Raises the user's Special Defense by 1 stage.
+28 Raises the user's Evasion by 1 stage.
+39 Raises the user's Attack by 1 stage.
+43 Raises the user's Attack by 1 stage.
+45 Raises the user's Defense by 1 stage.
+46 Raises the user's Defense by 1 stage.
+47 Raises the user's Speed by 1 stage.
+48 Raises the user's Speed by 1 stage.
+50 Changes all the user's negative stat boosts to 0.
+54 Recovers user's HP by 100%.
+73 Changes all the user's negative stat boosts to 0.
+74 Raises the user's Special Attack by 1 stage.
+77 Raises the user's Defense by 1 stage.
+78 Raises the user's Special Defense by 1 stage.
+79 Raises the user's Speed by 1 stage.
+81 Raises the user's Speed by 1 stage.
+86 Raises the user's Special Defense by 1 stage.
+92 Raises the user's Defense by 1 stage.
+95 Raises the user's Speed by 1 stage.
+96 Raises the user's Attack by 1 stage.
+97 Changes all the user's negative stat boosts to 0.
+100 Recovers user's HP by 100%.
+102 Raises the user's Accuracy by 1 stage.
+103 Raises the user's Attack by 1 stage.
+104 Changes all the user's negative stat boosts to 0.
+105 Changes all the user's negative stat boosts to 0.
+106 Raises the user's Defense by 1 stage.
+107 Changes all the user's negative stat boosts to 0.
+108 Raises the user's Evasion by 1 stage.
+109 Raises the user's Special Attack by 1 stage.
+110 Raises the user's Defense by 1 stage.
+111 Raises the user's Accuracy by 1 stage.
+112 Changes all the user's negative stat boosts to 0.
+113 Raises the user's Special Defense by 1 stage.
+114 Recovers user's HP by 100%.
+115 Raises the user's Defense by 1 stage.
+116 Raises the user's Accuracy by 1 stage.
+119 Raises the user's Attack by 2 stages.
+133 Changes all the user's negative stat boosts to 0.
+134 Raises the user's Evasion by 1 stage.
+135 Changes all the user's negative stat boosts to 0.
+137 Raises the user's Special Defense by 1 stage.
+139 Raises the user's Defense by 1 stage.
+142 Raises the user's Speed by 1 stage.
+144 Recovers user's HP by 100%.
+147 Changes all the user's negative stat boosts to 0.
+148 Raises the user's Evasion by 1 stage.
+150 Raises the user's Attack by 3 stages.
+151 Changes all the user's negative stat boosts to 0.
+156 Changes all the user's negative stat boosts to 0.
+159 Raises the user's Attack by 1 stage.
+160 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+164 Changes all the user's negative stat boosts to 0.
+166 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+169 Raises the user's Defense by 1 stage.
+170 Raises the user's Special Attack by 1 stage.
+171 Raises the user's Special Attack by 1 stage.
+174 If the user is Ghost-type, recovers HP by 100%. Otherwise, increases the user's Attack by 1 stage.
+176 Recovers user's HP by 100%.
+178 Changes all the user's negative stat boosts to 0.
+180 Recovers user's HP by 100%.
+182 Changes all the user's negative stat boosts to 0.
+184 Raises the user's Speed by 1 stage.
+186 Raises the user's Special Attack by 1 stage.
+187 Recovers user's HP by 100%.
+191 Raises the user's Defense by 1 stage.
+193 Raises the user's critical hit chance by 1 stage.
+194 Draws to the user any single-target move used by any of the opponent's Pokémon.
+195 Changes all the user's negative stat boosts to 0.
+197 Raises the user's Evasion by 1 stage.
+199 Raises the user's Speed by 1 stage.
+201 Raises the user's Speed by 1 stage.
+203 Changes all the user's negative stat boosts to 0.
+204 Raises the user's Defense by 1 stage.
+207 Changes all the user's negative stat boosts to 0.
+208 Changes all the user's negative stat boosts to 0.
+212 Raises the user's Special Defense by 1 stage.
+213 Changes all the user's negative stat boosts to 0.
+214 Raises the user's critical hit chance by 1 stage.
+215 Recovers user's HP by 100%.
+219 Raises the user's Speed by 1 stage.
+220 Raises the user's Defense by 1 stage.
+226 Changes all the user's negative stat boosts to 0.
+227 Raises the user's Speed by 1 stage.
+230 Raises the user's Accuracy by 1 stage.
+234 Changes all the user's negative stat boosts to 0.
+235 Changes all the user's negative stat boosts to 0.
+236 Changes all the user's negative stat boosts to 0.
+240 Raises the user's Speed by 1 stage.
+241 Raises the user's Speed by 1 stage.
+244 Recovers user's HP by 100%.
+254 Recovers user's HP by 100%.
+256 Changes all the user's negative stat boosts to 0.
+258 Raises the user's Speed by 1 stage.
+259 Raises the user's Defense by 1 stage.
+260 Raises the user's Special Defense by 1 stage.
+261 Raises the user's Attack by 1 stage.
+262 Immediately after using this move, a new Pokémon will be switched in. The new Pokémon's HP will be recovered to 100%.
+266 Changes all the user's negative stat boosts to 0.
+268 Raises the user's Special Defense by 1 stage.
+269 Raises the user's Attack by 1 stage.
+270 Changes all the user's negative stat boosts to 0.
+271 Raises the user's Speed by 2 stages.
+272 Raises the user's Speed by 1 stage.
+273 Raises the user's Special Defense by 1 stage.
+275 Raises the user's Special Defense by 1 stage.
+277 Raises the user's Special Defense by 2 stages.
+278 Raises the user's Speed by 2 stages.
+281 Raises the user's Speed by 1 stage.
+285 Raises the user's Speed by 1 stage.
+286 Raises the user's Special Defense by 2 stages.
+287 Recovers user's HP by 100%.
+288 Draws to the user any single-target move used by any of the opponent's Pokémon.
+289 Raises the user's Speed by 2 stages.
+293 Raises the user's Evasion by 1 stage.
+294 Changes all the user's negative stat boosts to 0.
+297 Raises the user's Defense by 1 stage.
+298 Raises the user's Special Attack by 1 stage.
+300 Raises the user's Special Defense by 1 stage.
+303 Changes all the user's negative stat boosts to 0.
+312 Recovers user's HP by 100%.
+313 Raises the user's Special Attack by 1 stage.
+316 Raises the user's Attack by 1 stage.
+319 Raises the user's Special Attack by 1 stage.
+320 Raises the user's Speed by 1 stage.
+321 Raises the user's Defense by 1 stage.
+322 Raises the user's Special Defense by 1 stage.
+334 Changes all the user's negative stat boosts to 0.
+335 Raises the user's Defense by 1 stage.
+336 Raises the user's Attack by 1 stage.
+339 Raises the user's Attack by 1 stage.
+346 Raises the user's Special Defense by 1 stage.
+347 Changes all the user's negative stat boosts to 0.
+349 Changes all the user's negative stat boosts to 0.
+355 Changes all the user's negative stat boosts to 0.
+356 Raises the user's Special Attack by 1 stage.
+357 Raises the user's Special Attack by 1 stage.
+366 Raises the user's critical hit chance by 1 stage.
+367 Raises the user's critical hit chance by 1 stage.
+373 Raises the user's Special Attack by 1 stage.
+375 Raises the user's Special Attack by 2 stages.
+377 Raises the user's Special Attack by 2 stages.
+379 Raises the user's Attack by 1 stage.
+380 Raises the user's Speed by 1 stage.
+381 Raises the user's Evasion by 1 stage.
+382 Raises the user's Speed by 2 stages.
+383 Raises the user's Accuracy by 1 stage.
+384 Raises the user's Speed by 1 stage.
+385 Raises the user's Speed by 1 stage.
+388 Raises the user's Speed by 1 stage.
+390 Raises the user's Defense by 1 stage.
+391 Raises the user's critical hit chance by 1 stage.
+392 Raises the user's Defense by 1 stage.
+393 Raises the user's Evasion by 1 stage.
+397 Changes all the user's negative stat boosts to 0.
+415 Raises the user's Speed by 2 stages.
+417 Changes all the user's negative stat boosts to 0.
+432 Raises the user's Accuracy by 1 stage.
+433 Raises the user's Accuracy by 1 stage.
+445 Raises the user's Special Defense by 2 stages.
+446 Raises the user's Defense by 1 stage.
+455 Raises the user's Defense by 1 stage.
+456 Changes all the user's negative stat boosts to 0.
+464 Changes all the user's negative stat boosts to 0.
+468 Raises the user's Attack by 1 stage.
+469 Raises the user's Defense by 1 stage.
+470 Raises the user's Speed by 1 stage.
+471 Raises the user's Speed by 1 stage.
+472 Raises the user's Special Defense by 1 stage.
+475 Changes all the user's negative stat boosts to 0.
+476 Changes all the user's negative stat boosts to 0.
+477 Raises the user's Special Attack by 1 stage.
+478 Raises the user's Special Defense by 1 stage.
+483 Changes all the user's negative stat boosts to 0.
+487 Raises the user's Special Attack by 1 stage.
+489 Changes all the user's negative stat boosts to 0.
+493 Raises the user's Special Attack by 1 stage.
+494 Raises the user's Special Defense by 1 stage.
+495 Raises the user's Speed by 1 stage.
+501 Raises the user's Defense by 1 stage.
+502 Raises the user's Speed by 2 stages.
+504 Changes all the user's negative stat boosts to 0.
+505 Changes all the user's negative stat boosts to 0.
+508 Changes all the user's negative stat boosts to 0.
+511 Raises the user's Speed by 1 stage.
+513 Raises the user's Special Attack by 1 stage.
+516 Raises the user's Speed by 2 stages.
+526 Raises the user's Attack by 1 stage.
+538 Changes all the user's negative stat boosts to 0.
+560 Raises the user's Defense by 1 stage.
+562 Raises the user's Special Defense by 1 stage.
+567 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+569 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+574 Raises the user's Defense by 1 stage.
+580 Raises the user's Defense by 1 stage.
+581 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+583 Raises the user's Special Defense by 2 stages.
+585 Raises the user's Special Defense by 1 stage.
+587 Raises the user's Special Defense by 1 stage.
+588 Raises the user's Speed by 1 stage.
+589 Raises the user's Special Attack by 1 stage.
+590 Raises the user's Defense by 1 stage.
+592 Raises the user's Defense by 1 stage.
+593 Raises the user's Defense by 1 stage.
+594 Raises the user's Special Attack by 1 stage.
+595 Changes all the user's negative stat boosts to 0.
+597 Raises the user's Special Defense by 1 stage.
+598 Raises the user's Defense by 1 stage.
+599 Raises the user's Special Defense by 1 stage.
+600 Immediately after using this move, a new Pokémon will be switched in. The new Pokémon's HP will be recovered to 100%.
+601 Raises the user's Special Defense by 2 stages.
+603 Raises the user's Attack by 1 stage.
+604 Raises the user's Defense by 1 stage.
+605 Raises the user's Speed by 1 stage.
+606 Raises the user's Attack by 1 stage.
+607 Raises the user's Defense by 1 stage.
+608 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+609 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+615 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+633 Raises the user's Special Attack by 1 stage.
+635 Raises the user's Speed by 1 stage.
+636 Raises the user's Attack by 1 stage.
+641 Raises the user's Special Attack by 1 stage.
+645 Changes all the user's negative stat boosts to 0.
+647 Raises the user's Defense by 1 stage.
+649 Changes all the user's negative stat boosts to 0.
+650 Raises the user's Defense by 1 stage.
+651 Raises the user's Special Defense by 1 stage.
+652 Raises the user's Speed by 1 stage.
+653 Raises the user's Special Attack by 1 stage.
+660 Raises the user's Speed by 1 stage.
+662 Raises the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage.
+671 Raises the user's Defense by 1 stage.

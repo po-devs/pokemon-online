@@ -122,6 +122,12 @@ public:
         field().setWeather(weather);
     }
 
+    void onStartTerrain(int spot, int terrain, bool ability) {
+        (void) ability;
+        (void) spot;
+        field().setTerrain(terrain);
+    }
+
     void onContinueWeather(int weather) {
         field().setWeather(weather);
     }
@@ -130,6 +136,15 @@ public:
         (void) weather;
         field().setWeather(Weather::NormalWeather);
     }
+
+    void onEndTerrain(int terrain) {
+        (void) terrain;
+        field().setTerrain(Terrain::NoTerrain);
+    }
+
+    /*void onContinueTerrain(int terrain) {
+        field().setTerrain(terrain);
+    }*/
 
     void onClockStart(int player, int time) {
         team(player).setTimeLeft(time,true);
@@ -161,6 +176,17 @@ public:
         tempPoke(spot).move(slot)->setNum(move, this->gen().num == 1 ? true : false);
         if (definite) {
             poke(spot).move(slot)->setNum(move, this->gen().num == 1 ? true : false);
+        }
+    }
+
+    void onDefiniteFormeChange(int player, int poke, int newPoke)
+    {
+        BattleDataInherit::onDefiniteFormeChange(player, poke, newPoke);
+
+        /* Use setNum to also update HP of temp poke, if there is cause to */
+        if (isPlayer(player)) {
+            tempPoke(spot(player, poke)).setNum(newPoke);
+            return;
         }
     }
 

@@ -118,6 +118,7 @@ public:
     }
 
     Q_PROPERTY(int weather READ weather NOTIFY weatherChanged)
+    Q_PROPERTY(int terrain READ terrain NOTIFY terrainChanged)
 
     void shiftSpots(int spot1, int spot2) {
         std::swap(auxdata[spot1], auxdata[spot2]);
@@ -131,17 +132,30 @@ public:
         Sunny = 4
     };
 
+    enum Terrain {
+        NoTerrain = 0,
+        ElectricTerrain = 1,
+        GrassyTerrain = 2,
+        MistyTerrain = 3,
+        PsychicTerrain = 4
+    };
+
     Q_ENUMS(Weather)
+    Q_ENUMS(Terrain)
 
     int weather() {return mWeather;}
     void setWeather(int newWeather);
+    int terrain() {return mTerrain;}
+    void setTerrain(int newTerrain);
 signals:
     void weatherChanged();
+    void terrainChanged();
 private:
     std::vector<AuxPokeDataProxy*> auxdata;
     std::vector<ZoneProxy*> zonedata;
 
     int mWeather;
+    int mTerrain;
 };
 
 #endif // AUXPOKEDATAPROXY_H

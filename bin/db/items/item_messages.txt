@@ -6,7 +6,7 @@
 11 %s used its Power Herb to attack immediately!
 12 %s restored a little HP using its Leftovers!
 16 %s restored a little HP using its Black Sludge!|%s was hurt by Black Sludge!
-17 %s's Quick Claw activated!
+17 %s's Quick Claw let it move first!
 18 %s restored a little HP using its Berry Juice!
 19 %s's Flame Orb activated!|%s's Toxic Orb activated!
 21 %s is hurt by its Life Orb!
@@ -24,5 +24,8 @@
 43 %s used its Weakness Policy!
 66 %s has Mega Evolved into %p!
 67 %s's Primal Reversion! It reverted to its primal form!
+68 %s surrounded itself with its Z-Power!|%f couldn't fully protect itself and got hurt!|%s used Z-%m!
+71 The Adrenaline Orb raised %s's Speed!
+72 %s protected itself with the Protective Pads!
 1007 %s recovered from fainting!
 1999 %s recovered from fainting!

@@ -609,7 +609,7 @@
 608 Paga Extra
 609 Celebración
 610 Clemencia
-611 Acoso
+611 Torm. Diamantes
 612 Luz Aniquiladora
 613 Chorro de Vapor
 614 Paso Dimensional
@@ -620,3 +620,83 @@
 619 Filo del Abismo
 620 Ascenso Draco
 621 Cerco Dimensión
+622 Núcleo Castigo
+623 Cañón Floral
+624 Fuerza Equina
+625 Follaje
+626 Rayo Umbrío
+627 Furia Natural
+628 Danza Despertar
+629 Coraza Trampa
+630 Cuchilla Solar
+631 Meteoimpacto
+632 Roca Veloz
+633 Campo Psíquico
+634 Golpe Mordaza
+635 Velo Aurora
+636 Aguzar
+637 Fragor Escamas
+638 Multiataque
+639 Patada Tropica
+640 Martillo Dragón
+641 Mandato
+642 Puntada Sombría
+643 Lariat Oscuro
+644 Aria Burbuja
+645 Recogearena
+646 Escaramuza
+647 Búnker
+648 Martillo Hielo
+649 Cura Floral
+650 Absorbefuerza
+651 Foco
+652 Hilo Venenoso
+653 Piñón Auxiliar
+654 Bola de Polen
+655 Anclaje
+656 Plancha
+657 Látigo Ígneo
+658 Chulería
+659 Llama Final
+660 Cambia Velocidad
+661 Cuerno Certero
+662 Purificación
+663 Pico Cañón
+664 Giro Vil
+665 Psicocolmillo
+666 Pataleta
+667 Hueso Sombrío
+668 Hidroariete
+669 Láser Prisma
+670 Robasombra
+671 Ojos Llorosos
+672 Electropunzada
+673 Carrera Arrolladora
+674 Ráfaga Demoledora
+675 Picado Supersónico
+676 Diluvio Corrosivo
+677 Barrena Telúrica
+678 Aplastamiento Gigalítico
+679 Guadaña Sedosa
+680 Presa Espectral
+681 Hélice Trepanadora
+682 Hecatombe Pírica
+683 Hidrovórtice Abisal
+684 Megatón Floral
+685 Gigavoltio Destructor
+686 Disruptor Psíquico
+687 Crioaliento Despiadado
+688 Dracoaliento Devastador
+689 Agujero Negro Aniquilador
+690 Arrumaco Sideral
+691 Pikavoltio Letal
+692 Surfeo Galvánico
+693 Novena Potencia
+694 Arrojo Intempestivo
+695 Supernova original
+696 Cólera del Guardián
+697 Aluvión de Flechas Sombrías
+698 Hiperplancha Oscura
+699 Sinfonía de la Diva Marina
+700 Constelación Robaalmas
+701 Gigarrayo fulminante

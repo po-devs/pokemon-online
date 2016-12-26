@@ -133,3 +133,18 @@
 217 ¡Una lluvia de electrones cae sobre el terreno de combate!
 218 ¡Felicidades, %ts!
 219 ¡%s no ha podido ponerlo en práctica!|¡%s no ha podido ponerlo en práctica!
+220 !%s ha activado la Coraza Trampa!|!La Coraza Trampa de %s no funcionó!
+223 !%s no puede usar %m luego de recibir el Golpe Mordaza!|!Los efectos de Golpe Mordaza impiden que %f use movimientos de Sonido!|<%s ya puede hablar>
+224 !%s se concentró mucho!
+225 !%f sigue el Mandato de %s y repite su último movimiento!
+229 !%s ha drenado las fuerzas de %t para recuperar su salud!
+231 !La habilidad de %t fue ignorada!
+233 !%s se ha quemado!
+234 !%t fue curado de su problema de estado!|!%s recuperó su salud!
+235 !El pico de %s empezó a calentarse!
+236 !El Velo Aurora hizo al equipo de %ts más resistente a los ataques físicos y especiales!|El Velo Aurora de %ts se ha desvanecido.
+238 !%s robó las estadísticas aumentadas de su objetivo!
+239 !%s intercambió su Velocidad con la de su objetivo!
+1001 !La frecuencia de Golpes Críticos de %s aumentaron!
+1002 !Las estadísticas negativas de %s fueron eliminadas!
+1003 !%s restauró todos sus PS!

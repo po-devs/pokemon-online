@@ -651,7 +651,7 @@ void DamageCalc::calculate()
     int dmod = 0x1000;
     // -1A. BOOSTS //
     unaware = (myability == Ability::Unaware);
-    if (!unaware && move != Move::ChipAway) {
+    if (!unaware && move != Move::ChipAway && move != Move::DarkestLariat) {
         if (oboosts[2] > 0 && crit) {
             oboosts[2] = 0;
         }
@@ -809,7 +809,7 @@ void DamageCalc::calculate()
         bmod = chainmod(bmod, 0x1800);
     }
     // 0V. SOLARBEAR // i dont want to fix this solarbear is cool
-    if (move == Move::SolarBeam && (weather != Weather::Sunny && weather != Weather::NormalWeather)) {
+    if ((move == Move::SolarBeam || move == Move::SolarBlade) && (weather != Weather::Sunny && weather != Weather::NormalWeather)) {
         bmod = chainmod(bmod, 0x800);
     }
     // 0W. CHARGE //

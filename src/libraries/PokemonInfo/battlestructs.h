@@ -45,6 +45,7 @@ class ShallowBattlePoke
     PROPERTY(quint16, ability)
     PROPERTY(quint16, item)
     PROPERTY(bool, illegal)
+    PROPERTY(Pokemon::gen, gen)
 public:
     ShallowBattlePoke();
     ShallowBattlePoke(const PokeBattle &poke);
@@ -64,7 +65,7 @@ public:
     virtual int totalLife() const { return 100; }
     virtual void setLife(int newLife) { mLifePercent = newLife;}
     virtual void setLifePercent(quint8 percent) {mLifePercent = percent;}
-    void setNum(Pokemon::uniqueId num) {this->num() = num;}
+    virtual void setNum(Pokemon::uniqueId num) {this->num() = num;}
     void setAbility(quint16 ability) {this->ability() = ability;}
     void setItem(quint16 item) {this->item() = item;}
 
@@ -92,6 +93,7 @@ class PokeBattle : public ShallowBattlePoke
     PROPERTY(quint16, totalLifePoints)
     PROPERTY(quint16, item)
     PROPERTY(quint8, nature)
+    PROPERTY(quint8, hiddenPower)
     PROPERTY(quint8, happiness)
     /* Below is only known by battle */
     PROPERTY(quint16, itemUsed)
@@ -100,6 +102,8 @@ class PokeBattle : public ShallowBattlePoke
     PROPERTY(qint8, oriStatusCount)
     /* ADV Sleep has some weird mechanics */
     PROPERTY(qint8, advSleepCount)
+    /* To know if it has real stats */
+    PROPERTY(bool, nonshallow)
 public:
     PokeBattle();
 
@@ -117,13 +121,14 @@ public:
     virtual void setLifePercent(quint8 percent) {mLifePoints = percent == 1 ? 1 :percent * totalLifePoints() / 100;}
     virtual int life() const { return mLifePoints; }
     virtual int totalLife() const { return m_prop_totalLifePoints;}
+    virtual void setNum(Pokemon::uniqueId num);
     quint16 lifePoints() const { return mLifePoints;}
     quint16 &lifePoints() { return mLifePoints;}
 
     void setNormalStat(int, quint16);
 
     bool operator == (const PokeBattle &other) const {
-        return ShallowBattlePoke::operator ==(other) && nature() == other.nature() && item() == other.item()
+        return ShallowBattlePoke::operator ==(other) && nature() == other.nature() && hiddenPower() == other.hiddenPower() && item() == other.item()
                 && ability() == other.ability() && happiness() == other.happiness() && totalLifePoints() == other.totalLifePoints()
                 && dvs() == other.dvs() && evs() == other.evs();
     }
@@ -162,6 +167,8 @@ public:
             m_indexes[i] = indexes[i];
         }
     }
+
+    void updateGen(const Pokemon::gen &gen);
 
     void setItems(const QHash<quint16,quint16> &items) {
         this->items = items;
@@ -250,6 +257,8 @@ struct BattleChoices
     bool attackAllowed[4];
     quint8 numSlot;
     bool mega;
+    bool zmove;
+    bool zmoveAllowed[4];
 
     bool struggle() const { return qFind(attackAllowed, attackAllowed+4, true) == attackAllowed+4; }
 
@@ -283,6 +292,7 @@ struct AttackChoice {
     qint8 attackSlot;
     qint8 attackTarget;
     bool mega;
+    bool zmove;
 };
 
 struct SwitchChoice {
@@ -394,6 +404,10 @@ struct BattleChoice {
         return choice.attack.mega;
     }
 
+    bool zmove() const {
+        return choice.attack.zmove;
+    }
+
     int pokeSlot() const {
         return choice.switching.pokeSlot;
     }
@@ -425,6 +439,10 @@ struct BattleChoice {
 
     void setMegaEvo(bool megaevo) {
         choice.attack.mega = megaevo;
+    }
+
+    void setZMove(bool zmove) {
+        choice.attack.zmove = zmove;
     }
 
     void setPokeSlot(int slot) {
@@ -708,6 +726,7 @@ struct FullBattleConfiguration : public BattleConfiguration
 public:
     QString name[2];
     QSet<int> spectators;
+    int protocolVersion;
 
     const QString getName(int player) const {return receivingMode[player] == Spectator ? name[player] : teams[player]->name;}
 

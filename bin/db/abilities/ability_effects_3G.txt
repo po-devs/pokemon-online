@@ -35,7 +35,7 @@
 44 32-2#Rain Dish
 45 14-3#Sandstream
 46 46#Pressure
-47 64#Thick fat
+47 64-9_14#Thick fat
 49 18-4#Flame Body
 51 30-6#Keen Eye
 52 30-1#Hyper Cutter

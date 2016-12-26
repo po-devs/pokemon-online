@@ -905,3 +905,34 @@ QTabBar::tab:left:last, QTabBar::tab:right:last {
 
  */
 
+
+QPushButton#MegaEvo {
+    background-color: qradialgradient(cx:0.5, cy:1, fx:0.5, fy:1, radius:1, stop: 0.3 skyblue, stop: 0.45 palegreen, stop: 0.6 palegoldenrod, stop: 0.8 lightcoral, stop:0.9 plum);
+    font-weight:bold;
+    border: none;
+    padding: 5px;
+}
+
+QPushButton#MegaEvo:checked {
+    background-color: qradialgradient(cx:0.5, cy:1, fx:0.5, fy:1, radius:1, stop: 0.2 black, stop: 0.4 turquoise stop: 0.6 #0822BD, stop: 0.8 #EC095E, stop:0.9 #7C0000);
+    color: white;
+}
+
+QPushButton#MegaEvo:hover:!checked{
+    background-color: qradialgradient(cx:0.5, cy:1, fx:0.5, fy:1, radius:1, stop: 0.2 #E6E6E6, stop: 0.4 #92DFFF stop: 0.6 #ffac62, stop: 0.8 #FFC99A, stop:0.9 #E5CCFF);
+}
+
+QPushButton#ZMove {
+    background-color: qradialgradient(cx:0.5, cy:1, fx:0.5, fy:1, radius:1, stop: 0.4 #f1e767, stop: 0.8 #ffd700);
+    font-weight:bold;
+    border: none;
+    padding: 5px;
+}
+
+QPushButton#ZMove:checked {
+    background-color: qradialgradient(cx:0.5, cy:1, fx:0.5, fy:1, radius:1, stop: 0.4 #ebde28, stop: 0.8 #ccad00);
+}
+
+QPushButton#ZMove:hover:!checked{
+    background-color: qradialgradient(cx:0.5, cy:1, fx:0.5, fy:1, radius:1, stop: 0.4 #f6f1a2, stop: 0.8 #ffe033);
+}

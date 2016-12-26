@@ -408,6 +408,11 @@ void PokePersonal::setDV(int stat, quint8 val)
     }
 }
 
+void PokePersonal::setHiddenPower(int type)
+{
+    hiddenPower() = type;
+}
+
 void PokePersonal::controlShininess()
 {
     shiny() = DV(Defense) == 10 && DV(Speed) == 10 && DV(SpAttack) == 10 && DV(Attack) % 4 >= 2;
@@ -463,6 +468,7 @@ void PokePersonal::reset()
     ability() = 0;
     nickname() = "";
     nature() = 0;
+    hiddenPower() = Type::Dark;
     item() = 0;
     illegal() = false;
 
@@ -682,6 +688,7 @@ QDomElement & PokeTeam::toXml(QDomElement &el) const
     el.setAttribute("Item", item());
     el.setAttribute("Ability", ability());
     el.setAttribute("Nature", nature());
+    el.setAttribute("HiddenPower", hiddenPower());
     el.setAttribute("Gender", gender());
     el.setAttribute("Shiny", shiny());
     el.setAttribute("Happiness", happiness());
@@ -852,6 +859,7 @@ void PokeTeam::loadFromXml(const QDomElement &poke, int version, bool hack)
         ability() = AbilityInfo::ConvertFromOldAbility(ability());
     }
     nature() = poke.attribute("Nature").toInt();
+    hiddenPower() = poke.attribute("HiddenPower").toInt();
     gender() = poke.attribute("Gender").toInt();
     shiny() = QVariant(poke.attribute("Shiny")).toBool();
     happiness() = poke.attribute("Happiness").toInt();
@@ -1094,7 +1102,9 @@ bool Team::importFromTxt(const QString &file1, bool hack)
                     if (type != 0) {
                         move = move.section('[',0,0).trimmed();
 
-                        if (p.gen() >= 3) {
+                        if (p.gen() >= 7) {
+                            p.hiddenPower() = type;
+                        } else if (p.gen() >= 3) {
                             QStringList dvs = HiddenPowerInfo::PossibilitiesForType(type, p.gen())[0];
                             for(int i =0;i < dvs.size(); i++) {
                                 p.setDV(i, dvs[i].toInt());
@@ -1250,7 +1260,11 @@ QString Team::exportToTxt() const
             if (p.move(i) != 0) {
                 ret += "- " + MoveInfo::Name(p.move(i)) ;
                 if (p.move(i) == Move::HiddenPower) {
-                    ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.gen().num, p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
+                    if (p.gen() >= 7) {
+                        ret += " [" + TypeInfo::Name(p.hiddenPower()) + "]";
+                    } else {
+                        ret += " [" + TypeInfo::Name(HiddenPowerInfo::Type(p.gen().num, p.DV(0), p.DV(1), p.DV(2), p.DV(3), p.DV(4), p.DV(5))) + "]";
+                    }
                 }
                 ret += "\n";
             }
@@ -1479,6 +1493,7 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
 
     network.setFlag(pp::hasNickname, !p.nickname().isEmpty());
     network.setFlag(pp::hasHappiness, p.happiness() != 0);
+    network.setFlag(pp::hasHiddenPower, p.hiddenPower() != Type::Dark);
 
     for (int i = Hp; i <= Speed; i++) {
         if (p.DV(i) != 31) {
@@ -1512,6 +1527,9 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
         v.stream << p.gender();
         if (p.gen() >= 2 && p.happiness() != 0) {
             v.stream << p.happiness();
+        }
+        if (p.gen() > 6 && p.hiddenPower() != Type::Dark) {
+            v.stream << p.hiddenPower();
         }
     }
 
@@ -1576,6 +1594,9 @@ DataStream & operator >> (DataStream & in, PokePersonal & p)
         v.stream >> p.gender();
         if (p.gen() >= 2 && network[pp::hasHappiness]) {
             v.stream >> p.happiness();
+        }
+        if (p.gen() > 6 && network[pp::hasHiddenPower]) {
+            v.stream >> p.hiddenPower();
         }
     }
 

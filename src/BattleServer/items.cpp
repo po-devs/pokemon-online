@@ -312,7 +312,7 @@ struct IMStatusOrb : public IM
             return;
         }
         int status = poke(b,s)["ItemArg"].toInt();
-        if (!b.canGetStatus(s, status))
+        if (!b.canGetStatus(s, status, s))
             return;
         if (status == Pokemon::Burnt) {
             b.sendItemMessage(19,s,0);
@@ -525,6 +525,11 @@ struct IMQuickClaw : public IM
         if (b.coinflip(1, 5)) {
             turn(b,s)["TurnOrder"] = 2;
             turn(b,s)["QuickClawed"] = true;
+            if (b.gen() >= 7) {
+                //Message changed places in gen 7. It now shows at the start of the turn, even if it didnt do anything
+                //EX: Quick Claw + Water Gun versus Quick Attack. ORDER: Quick Claw Message -> Quick Attack -> Water Gun
+                b.sendItemMessage(17, s);
+            }
         }
     }
 };
@@ -574,6 +579,13 @@ struct IMMentalHerb : public IM
                 removeFunction(poke(b,s), "MovePossible", "HealBlock");
                 b.removeEndTurnEffect(BS::PokeEffect, s, "HealBlock");
                 poke(b,s).remove("HealBlocked");
+                used = true;
+            }
+            //Unconfirmed
+            if (b.counters(s).hasCounter(BC::ThroatChop)) {
+                removeFunction(poke(b,s), "MovesPossible", "ThroatChop");
+                removeFunction(poke(b,s), "MovePossible", "ThroatChop");
+                b.removeEndTurnEffect(BS::PokeEffect, s, "ThroatChop");
                 used = true;
             }
             b.counters(s).clear();
@@ -671,7 +683,7 @@ struct IMRockyHelmet : public IM
             b.inflictDamage(t,b.poke(t).totalLifePoints()/6,s,false);
 
             /* In VGC 2011, the one with the rugged helmet wins */
-            if (b.koed(t)) {
+            if (b.koed(t) && b.gen() < 7) {
                 b.selfKoer() = t;
             }
         }
@@ -700,7 +712,7 @@ struct IMAirBalloon : public IM
 struct IMAbsorbBulb : public IM
 {
     IMAbsorbBulb() {
-        functions["UponBeingHit"] = &ubh;
+        functions["UponBeingHit2"] = &ubh;
     }
 
     static void ubh(int s, int t, BS &b) {
@@ -814,7 +826,7 @@ struct IMEscapeButton : public IM
     }
 
     static void ubh(int s, int t, BS &b) {
-        //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, or during a switch where pursuit is used
+        //Prevent button from activating when dead, behind a sub, opponent has Sheer Force, during a switch where pursuit is used, or during Wimp Out
         if (b.koed(s) || turn(b,t).value("EncourageBug").toBool() || (b.hasSubstitute(s) && !b.canBypassSub(t)) || turn(b,s).value("SendingBack").toBool())
             return;
         if (b.countAlive(b.player(s)) <= 1) // Button doesn't activate when target is the last pokemon
@@ -831,7 +843,7 @@ struct IMEscapeButton : public IM
 
         for (unsigned i = 0; i < speeds.size(); i++) {
             int p = speeds[i];
-            if (!b.hasWorkingItem(p, Item::EscapeButton))
+            if (!b.hasWorkingItem(p, Item::EjectButton))
                 continue;
             if (!turn(b,p).contains("EscapeButtonActivated"))
                 continue;
@@ -847,11 +859,8 @@ struct IMEscapeButton : public IM
 };
 
 /* Needs a function in order for its Item argument to be registered */
-struct IMDrive : public IM {
-    IMDrive() {
-
-    }
-};
+struct IMDrive : public IM { IMDrive() {}};
+struct IMMemoryChip : public IM { IMMemoryChip() {}};
 
 struct IMBerserkGene : public IM {
     IMBerserkGene() {
@@ -1129,6 +1138,29 @@ struct IMPrimalOrb : public IM {
     }
 };
 
+struct IMSeeds : public IM {
+    IMSeeds() {
+        functions["UponSetup"] = &us;
+        functions["UponReactivation"] = &us;
+        functions["TerrainChange"] = &us;
+    }
+
+    static void us(int s, int, BS &b){
+        QStringList args = poke(b,s)["ItemArg"].toString().split('_');
+        int terrainType = args[0].toInt();
+        if (b.terrain == terrainType) {
+            int stat = args[1].toInt();
+            if (b.hasMaximalStatMod(s, stat))
+                return;
+
+            //probably a message here too, even if one isnt in game
+            b.sendItemMessage(36, s, 0, s, b.poke(s).item(), stat);
+            b.disposeItem(s);
+            b.inflictStatMod(s, stat, 1, s, false);
+        }
+    }
+};
+
 #define REGISTER_ITEM(num, name) mechanics[num] = IM##name(); names[num] = #name; nums[#name] = num;
 
 void ItemEffect::init()
@@ -1156,6 +1188,7 @@ void ItemEffect::init()
     REGISTER_ITEM(26, CriticalPoke);
     REGISTER_ITEM(27, PokeTypeBoost);
     REGISTER_ITEM(28, StickyBarb);
+    //29 Formerly Plates. Doesn't need a function cause their arg is called in BoostType, unlike Drive and MemoryChips
     REGISTER_ITEM(32, Drive);
     REGISTER_ITEM(33, Eviolite);
     REGISTER_ITEM(34, RockyHelmet);
@@ -1168,7 +1201,13 @@ void ItemEffect::init()
     REGISTER_ITEM(41, AssaultVest);
     REGISTER_ITEM(42, SafetyGoggles);
     REGISTER_ITEM(43, WeaknessPolicy);
+    //66 Mega stones
     REGISTER_ITEM(67, PrimalOrb);
+    REGISTER_ITEM(68, MemoryChip);
+    //REGISTER_ITEM(69, ZCrystal);
+    REGISTER_ITEM(70, Seeds);
+    //71 Adrenaline orb message
+    //72 Protective pads message
     /* Trainer items */
     REGISTER_ITEM(1000, StatusHeal);
     REGISTER_ITEM(1001, Potion);
@@ -1178,4 +1217,6 @@ void ItemEffect::init()
     REGISTER_ITEM(1007, Revive);
     REGISTER_ITEM(1999, SacredAsh);
     initBerries();
+
+    //NOT DONE: Memories Fling power
 }

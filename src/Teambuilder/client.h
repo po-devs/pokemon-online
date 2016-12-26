@@ -311,7 +311,6 @@ public slots:
     void togglePMTabs(bool);
     void togglePMNotifications(bool);
     void togglePMLogs(bool);
-    void toggleChangeNamePM(bool);
     void movePlayerList(bool);
     void useOldShortcuts(bool);
     void displayTrainerInfo(bool b);
@@ -339,6 +338,8 @@ public slots:
     /* exit warning */
     void changeExitWarning(bool show);
     void showExitWarning();
+    /* forfeit warning */
+    void toggleForfeitWarning(bool show);
 signals:
     void done();
     void userInfoReceived(const UserInfo &ui);

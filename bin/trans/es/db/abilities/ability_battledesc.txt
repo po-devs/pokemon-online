@@ -119,7 +119,7 @@
 118 El Pokémon recoge Miel de donde puede.
 119 El Pokémon puede ver el objeto que lleva el rival.
 120 Potencia los movimientos que dañan al usuario.
-121 Cambia el tipo al de la Tabla que lleve.
+121 Cambia el tipo al de la Tabla o Cristal Z que lleve.
 122 Potencia los Pokémon del equipo si está soleado.
 123 Reduce los PS de un rival mientras duerme.
 124 Al ser golpeado, roba el objeto del objetivo.
@@ -131,7 +131,7 @@
 130 Puede anular el movimiento usado en su contra.
 131 Puede curar los cambios de estado de aliados vecinos.
 132 Reduce el daño que sufren los aliados.
-133 Un ataque físico baja la Defensa y sube la Veloc.
+133 Un ataque físico baja la Defensa un nivel y sube la Velocidad dos niveles.
 134 Duplica el peso del Pokémon.
 135 Reduce a la mitad el peso del Pokémon.
 136 Reduce el daño sufrido si los PS están al máximo.
@@ -156,10 +156,79 @@
 155 El miedo a algunos ataques sube su Velocidad.
 156 Permite devolver los ataques de estado.
 157 Sube el Ataque al recibir uno de tipo Planta.
-158 Permite lanzar primero un ataque de estado.
+158 La prioridad de los ataques de estado sube a 1. Los tipo Siniestro son immunes a esta habilidad.
 159 Potencia algunos movimientos en tormentas de arena.
 160 El Pokémon que lo toque recibe daño.
 161 Cambia de forma en un apuro.
 162 Sube la Precisión de todo el equipo.
 163 Usa movimientos sin que importen las habilidades.
 164 Usa movimientos sin que importen las habilidades.
+165 Cambia el tipo de los movimientos de tipo Normal por tipo Volador y los potencia en un 20%.
+166 Invierte los efectos de Aura Feérica y Aura Oscura, haciendo que los movimientos de sus respectivos tipos se reduzcan en 1/4 mientras el Pokémon permanezca en el terreno.
+167 Restaura por 1/3 los PS máximos del Pokémon cuando consume una baya, después haberse aplicado el efecto de la baya.
+168 Potencia los movimientos de tipo Siniestro por 1/3.
+169 Potencia los movimientos de tipo Hada por 1/3.
+170 Evita que bajen las características de los Pokémon de tipo Planta aliados debidos a movimientos del oponente.
+171 Reduce a la mitad el daño recibido por ataques físicos.
+172 Aumenta la potencia de movimientos de pulsos y auras en un 50%.
+173 Permite al poseedor atacar, con la mayoría de movimientos que causan daño, dos veces en un mismo turno, teniendo el segundo golpe el 25% de potencia que el primero.
+Cambia el tipo de los movimientos de tipo Normal por tipo Hada y los potencia en un 20%.
+175 Cambia los tipos del poseedor de la habilidad por el tipo del movimiento que realice justo antes de efectuarlo.
+176 Cambia el tipo de los movimientos de tipo Normal por tipo Hielo y los potencia en un 20%.
+177 Hace que Aegislash cambie a su Forma Filo cuando usa cualquier movimiento ofensivo, y lo regresa a su Forma Escudo cuando usa Escudo Real.
+178 Aumenta la potencia de movimientos basados en mordiscos en un 50%.
+179 Evita que el poseedor de la habilidad y los Pokémon aliados en combate caigan dormidos.
+180 Aumenta la potencia de los ataques de contacto en un 33% (1/3).
+181 Aumenta el Ataque Especial del poseedor en dos niveles cuando un oponente reduce alguna de sus estadísticas.
+182 Cuando el poseedor tiene sus PS al máximo, aumenta en 1 la prioridad de cualquier movimiento de tipo Volador, como Respiro o Acróbata, a excepción de Poder Oculto de tipo Volador.
+183 Baja en un nivel la Velocidad del oponente que golpee al poseedor con un movimiento de contacto.
+184 Protege al poseedor de la habilidad y a sus aliados de los movimientos Anticura, Anulación, Atracción, Mofa, Otra Vez y Tormento.
+185 Hace al poseedor inmune a todos los movimientos basados en balas, cañones, bombas y bolas, incluyendo movimientos como Onda Certera, Esfera Aural, Recurrente, y Romperrocas.
+186 Aumenta la Defensa del usuario en un 50% mientras esté activo Campo de Hierba.
+187 Permite al poseedor de la habilidad robar el objeto equipado del oponente al golpearlo con un movimiento, en caso de que el usuario no lleve ningún objeto.
+188 Hace que el usuario sea capaz de pasar un objeto a un aliado, si este pierde o utiliza su objeto.
+189 Hace que el sol brille con un calor abrasador mientras el usuario permanezca en el terreno, una condición que no puede alterarse excepto por las habilidades Mar del albor o Ráfaga Delta. Incrementa el poder de los ataques tipo Fuego en un 50%, evita que los Pokémon se congelen y anula los movimientos tipo Agua.
+190 Hace que se ponga a diluviar mientras el usuario permanezca en el terreno, una condición que no puede alterarse excepto por las habilidades Tierra del Ocaso y Ráfaga Delta. Aumenta el poder de los ataques tipo Agua en un 50% y anula los ataques tipo Fuego.
+191 Hace que el clima cambie a turbulencias mientras el usuario permanezca en el terreno, una condición que no puede alterarse excepto por las habilidades Mar del Albor o Tierra del Ocaso. Hace que los movimientos supereficaces contra el tipo Volador causen daño normal.
+192 Inmunidad a las reducciones de stats que le pueda causar un Pokémon rival o aliado mediante movimientos o habilidades. Movimientos con efecto secundario sobre sí mismo aún funcionan.
+193 El Pokémon tiene sus PS al máximo, esta habilidad reduce el daño recibido del ataque rival a la mitad.
+194 Letargo perenne mantiene al poseedor en un estado somnoliento constante y evita que sufra otros cambios de estado que no sea sueño.
+195 Esta habilidad hace cambiar a Zygarde a su Forma Completa (con mayores estadísticas de PS y Ataque Especial y menor de Velocidad) cuando su PS restante sea inferior al 50% de su PS máximo.
+196 Aumenta un nivel el ataque especial del poseedor cada vez que otro Pokémon en el terreno de combate se debilita, incluyendo aliados.
+197 Esta habilidad duplica el daño causado por los ataques del Pokémon cuando el Pokémon objetivo acaba de salir al combate tras un intercambio.
+198 Genera un Campo Eléctrico cuando el poseedor de la habilidad entra al combate.
+199 Impide que los oponentes usen contra el poseedor movimientos que tienen alta prioridad.
+200 Cuando el Pokémon con esta habilidad tiene la mitad o menos de su PS máximo, aumenta un nivel su Ataque Especial.
+201 Aumenta la potencia de los movimientos de categoría especial de los Pokémon aliados en combates dobles y triples.
+202 El Pokémon con esta habilidad puede envenenar o intoxicar a cualquier Pokémon, incluyendo a Pokémon de tipo Acero o Veneno.
+203 Disfraz hace que el Pokémon poseedor de la habilidad no reciba ningún daño del primer ataque que recibe en un combate, tras lo cual cambia de aspecto. El disfraz también puede ser roto si el usuario se hiere a si mismo debido al estado de confusión. El disfraz permanece roto por el resto del combate.
+204 Reduce a la mitad el daño de los ataques de contacto y duplica el daño de los ataques de tipo Fuego que reciba el Pokémon (los ataques de contacto de tipo Fuego hacen un daño normal).
+205 Aumenta un nivel la Defensa del Pokémon cuando recibe un ataque de daño directo.
+206 Aumenta en 3 la prioridad de movimientos curativos en combate. Incluye aquellos que causen daño y recuperación, como Gigadrenado.
+207 Cuando el Pokémon con esta habilidad tiene la mitad o menos de su PS máximo, huye automáticamente de combates contra Pokémon salvajes o es intercambiado en combates contra Pokémon de otros entrenadores.
+208 Permite al poseedor copiar inmediatamente cualquier movimiento de danza usado por otro Pokémon que esté combatiendo.
+209 Escudo limitado genera una coraza que protege al poseedor de problemas de estado. Cuando su salud baja por debajo del 50% de sus PS máximos, la coraza se rompe y adquiere unas estadísticas más ofensivas.
+210 Resta al Pokémon enemigo una cantidad de PS iguales a los que tenía el usuario antes de caer debilitado por el golpe de gracia.
+211 Esta habilidad mantiene al Pokémon en Forma Banco mientras su PS restante sea superior al 25% de su PS máximo, y le hace cambiar a su Forma Individual cuando su PS restante sea inferior al 25% de su PS máximo.
+212 La Velocidad del Pokémon se duplica en Campo Eléctrico. No se incluye el turno en el que se pone el campo.
+213 Aumenta dos niveles la Defensa del Pokémon cuando recibe un ataque de tipo Agua.
+214 Impide que los oponentes usen contra el poseedor movimientos que tienen alta prioridad.
+215 Esta habilidad hace que Greninja cambie a Greninja-Ash (con mayores estadísticas de Ataque y Ataque Especial) cuando debilita a un Pokémon del rival. El poder del ataque Shuriken de Agua durante la Forma Ash aumenta en un 50%.
+216 Hace que el poseedor adquiera la habilidad de un aliado que caiga debilitado durante el combate, a excepción de Banco, Cambio Táctico, Disfraz, Escudo Limitado, Predicción y Superguarda.
+217 Cambia el tipo elemental del poseedor al del disco que este lleve equipado.
+218 Genera un Campo Psíquico cuando el poseedor de la habilidad entra al combate.
+219 Genera un Campo de Hierba cuando el poseedor de la habilidad entra al combate.
+220 Genera un Campo de Niebla cuando el poseedor de la habilidad entra al combate.
+221 Duplica la velocidad del poseedor en tormentas de granizo. También evita que el poseedor sea dañado por la misma. No incluye el turno en que empieza a granizar.
+222 Cuando el Pokémon con esta habilidad tiene la mitad o menos de su PS máximo, huye automáticamente de combates contra Pokémon salvajes o es intercambiado en combates contra Pokémon de otros entrenadores.
+223 Los ataques del Pokémon con esta habilidad siempre serán Golpe crítico si el Pokémon objetivo está envenenado.
+224 Hace que el poseedor reciba la mitad de daño de ataques de tipo Fuego y le impide ser quemado. Además esta habilidad también duplica la potencia de los ataques de tipo Agua del poseedor.
+225 El poder de los ataques de tipo Acero del Pokémon con esta habilidad aumenta en un 50%.
+226 Los ataques del Pokémon con esta habilidad golpean al rival sin hacer contacto.
+227 Esta habilidad altera todos los movimientos que funcionan por sonido que use el Pokémon para que sean de tipo Agua.
+228 Altera todos los movimientos de tipo Normal que use el Pokémon para que sean de tipo Eléctrico en su lugar, aumentando su poder en un 20% si son ofensivos.
+229 Baja en un nivel la Velocidad del oponente que golpee al poseedor con un movimiento de contacto.
+230 Hace que el poseedor adquiera la habilidad de un aliado que caiga debilitado durante el combate, a excepción de Banco, Cambio Táctico, Disfraz, Escudo Limitado, Predicción y Superguarda.
+231 Sube la estadística más alta del poseedor un nivel al debilitar a un Pokémon mediante daño directo. En caso de empate de dos estádisticas en el primer puesto, aumentarán en el orden de Ataque, Defensa, Ataque Especial, Defensa Especial y Velocidad.
+232 Reduce en 1/4 el daño recibido de los movimientos supereficaces usados contra el Pokémon poseedor de la habilidad.
+

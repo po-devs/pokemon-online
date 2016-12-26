@@ -45,6 +45,7 @@ void PureMechanicsBase::initMove(int num, Pokemon::gen gen, BattleBase::BasicMov
     data.priority = MoveInfo::SpeedPriority(num, gen);
     data.flags = MoveInfo::Flags(num, gen);
     data.power = MoveInfo::Power(num, gen);
+    data.zpower = MoveInfo::ZPower(num, gen);
     data.accuracy = MoveInfo::Acc(num, gen);
     data.type = MoveInfo::Type(num, gen);
     data.category = MoveInfo::Category(num, gen);
@@ -57,11 +58,11 @@ void PureMechanicsBase::initMove(int num, Pokemon::gen gen, BattleBase::BasicMov
     data.healing = MoveInfo::Healing(num, gen);
     data.classification = MoveInfo::Classification(num, gen);
     data.status = MoveInfo::Status(num, gen);
-    data.statusKind = MoveInfo::StatusKind(num, gen);
+    //data.statusKind = MoveInfo::StatusKind(num, gen);
     data.minTurns = MoveInfo::MinTurns(num, gen);
     data.maxTurns = MoveInfo::MaxTurns(num, gen);
     data.statAffected = MoveInfo::StatAffected(num, gen);
     data.boostOfStat = MoveInfo::BoostOfStat(num, gen);
     data.rateOfStat = MoveInfo::RateOfStat(num, gen);
-    data.kingRock = MoveInfo::FlinchByKingRock(num, gen);
+    //data.kingRock = MoveInfo::FlinchByKingRock(num, gen);
 }

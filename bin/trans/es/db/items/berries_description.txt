@@ -1,0 +1,78 @@
+﻿0 (Sin Descripción)
+1 Cura la Parlaísis del usuario. 
+2 Despierta al usuario. 
+3 Cura al usuario del Veneno. 
+4 Cura al usuario de su Quemadura. 
+5 Descongela al usuario. 
+6 Restaura por 10 los PP del primer movimiento que haya agotado sus PP.
+7 Restaura por 10 los PS máximos del usuario cuando sus PS caen por debajo del 50%.
+8 Cura al usuario de su Confusión. 
+9 Cura al usuario de su Parálisis, Sueño, Veneno, Quemadura, Congelamiento o Confusión. 
+10 Restaura el 25% de los PS máximos del usuario cuando sus PS caen por debajo del 50%. 
+11 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%,  pero confunde al usuario si su naturaleza es Osada, Serena, Modesta o Miedosa. 
+12 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Firme, Cauta, Agitada o Alegre. 
+13 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Audaz, Mansa, Plácida o Grosera. 
+14 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Floja, Ingenua, Pícara o Alocada. 
+15 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Amable, Activa, Huraña o Afable. 
+16 Plantar en tierra fértil para obtener un árbol de Frambu.
+17 Plantar en tierra fértil para obtener un árbol de Oram.
+18 Plantar en tierra fértil para obtener un árbol de Latano.
+19 Plantar en tierra fértil para obtener un árbol de Peragu.
+20 Plantar en tierra fértil para obtener un árbol de Pinia.
+21 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de PS. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+22 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Ataque. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+23 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Defensa. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+24 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Ataque Especial. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+25 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Defensa Especial. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+26 Aumenta la amistad del Pokémon, pero reduce en 10 los Puntos de Esfuerzo obtenidos en la característica de Velocidad. Si el Pokémon tiene más de 100 puntos de esfuerzo en esa característica los reduce directamente a 100 con una sola baya, y a partir de aquí los reduce de 10 en 10.
+27 Plantar en tierra fértil para obtener un árbol de Mais.
+28 Plantar en tierra fértil para obtener un árbol de Aostan.
+29 Plantar en tierra fértil para obtener un árbol de Rautan.
+30 Plantar en tierra fértil para obtener un árbol de Monli.
+31 Plantar en tierra fértil para obtener un árbol de Wikano.
+32 Plantar en tierra fértil para obtener un árbol de Plama.
+33 Plantar en tierra fértil para obtener un árbol de Sambia.
+34 Plantar en tierra fértil para obtener un árbol de Rudion.
+35 Plantar en tierra fértil para obtener un árbol de Andano.
+36 Reduce a la mitad el daño supereficaz producido por ataques tipo Fuego.
+37 Reduce a la mitad el daño supereficaz producido por ataques tipo Agua.
+38 Reduce a la mitad el daño supereficaz producido por ataques tipo Eléctrico.
+39 Reduce a la mitad el daño supereficaz producido por ataques tipo Planta.
+40 Reduce a la mitad el daño supereficaz producido por ataques tipo Hielo.
+41 Reduce a la mitad el daño supereficaz producido por ataques tipo Lucha.
+42 Reduce a la mitad el daño supereficaz producido por ataques tipo Veneno.
+43 Reduce a la mitad el daño supereficaz producido por ataques tipo Tierra.
+44 Reduce a la mitad el daño supereficaz producido por ataques tipo Volador.
+45 Reduce a la mitad el daño supereficaz producido por ataques tipo Psíquico.
+46 Reduce a la mitad el daño supereficaz producido por ataques tipo Bicho.
+47 Reduce a la mitad el daño supereficaz producido por ataques tipo Roca.
+48 Reduce a la mitad el daño supereficaz producido por ataques tipo Fantasma.
+49 Reduce a la mitad el daño supereficaz producido por ataques tipo Dragón.
+50 Reduce a la mitad el daño supereficaz producido por ataques tipo Siniestro.
+51 Reduce a la mitad el daño supereficaz producido por ataques tipo Acero.
+52 Reduce a la mitad el daño producido por ataques tipo Normal.
+53 Aumenta en 1 nivel el Ataque del usuario cuando tiene menos del 25% de sus PS máximos.
+54 Aumenta en 1 nivel la Defensa del usuario cuando tiene menos del 25% de sus PS máximos.
+55 Aumenta en 1 nivel la Velocidad del usuario cuando tiene menos del 25% de sus PS máximos.
+56 Aumenta en 1 nivel el Ataque Especial del usuario cuando tiene menos del 25% de sus PS máximos.
+57 Aumenta en 1 nivel la Defensa Especial del usuario cuando tiene menos del 25% de sus PS máximos.
+58 Aumenta en 2 niveles la frequencia de Golpes Críticos del usuario cuando tiene menos del 25% de sus PS máximos.
+59 Aumenta en 2 niveles una estadística al azar del usuario cuando tiene menos del 25% de sus PS máximos.
+60 Restaura el 25% de los PS máximos del usuario cuando es golpeado por un ataque supereficaz.
+61 Aumenta en un 20% la Precisión del usuario cuando tiene menos del 25% de sus PS máximos.
+62 Si el Pokémon tiene menos del 25% de sus PS máximos, su siguiente ataque se ejecutará antes que otros movimientos de igual  prioridad (pero después que movimientos con mayor prioridad).
+63 Provoca daño al enemigo equivalente al 12.5% de sus PS máximos cuando el usuario es golpeado por un ataque de categoría Física. 
+64 Provoca daño al enemigo equivalente al 12.5% de sus PS máximos cuando el usuario es golpeado por un ataque de categoría Especial. 
+65 Reduce a la mitad el daño supereficaz producido por ataques tipo Hada.
+66 Aumenta en 1 nivel la Defensa del usuario cuando es herido por un ataque de categoría Física. 
+67 Aumenta en 1 nivel la Defensa Especial del usuario cuando es herido por un ataque de categoría Especial. 
+1000 Cura la Parlaísis del usuario.
+1001 Despierta al usuario.
+1002 Cura al usuario del Veneno.
+1003 Descongela al usuario.
+1004 Cura al usuario de su Quemadura.
+1005 Restaura por 5 los PP del primer movimiento que haya agotado sus PP.
+1006 Restaura por 10 los PS máximos del usuario cuando sus PS caen por debajo del 50%.
+1007 Cura al usuario de su Confusión.
+1008 Cura al usuario de su Parálisis, Sueño, Veneno, Quemadura, Congelamiento o Confusión. 
+1009 Restaura por 30 los PS del usuario cuando sus PS caen por debajo del 50%.

@@ -1,6 +1,6 @@
 ﻿#include <PokemonInfo/pokemoninfo.h>
 #include "../Teambuilder/clientinterface.h"
-#include "../Teambuilder/basebattlewindowinterface.h"
+#include "../Teambuilder/BattleWindow/basebattlewindowinterface.h"
 #include "scriptengine.h"
 #include "scriptutils.h"
 #include "battlescripting.h"

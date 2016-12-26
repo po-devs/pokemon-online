@@ -12,7 +12,7 @@ public:
     typedef TeamProxy teamType;
     typedef FieldProxy fieldType;
 
-    ProxyDataContainer(const BattleConfiguration *conf=NULL);
+    ProxyDataContainer(const BattleConfiguration *conf = 0);
     ~ProxyDataContainer();
 
     Q_INVOKABLE TeamProxy *team(int player) {
@@ -27,7 +27,7 @@ public:
         return conf->avatar[player];
     }
 
-    Q_PROPERTY (FieldProxy *field READ field CONSTANT);
+    Q_PROPERTY (FieldProxy *field READ field CONSTANT)
 
     AuxPokeDataProxy &fieldPoke(int spot) {
         return *auxdata.poke(spot);
@@ -655,7 +655,36 @@ public:
         SpikyShield,
         StickyWeb,
         TopsyTurvy,
-        VenomDrench
+        VenomDrench,
+        HappyHour,
+        Celebrate,
+        HoldBack,
+        DiamondStorm,
+        LightOfRuin,
+        SteamEruption,
+        HyperspaceHole,
+        HoldHands,
+        ThousandArrows,
+        ThousandWaves,
+        OriginPulse,
+        PrecipiceBlades,
+        DragonAscent,
+        HyperspaceFury,
+        CoreEnforcer,
+        FleurCannon,
+        HighhorsePower,
+        Leafage,
+        MoongeistBeam,
+        NaturesMadness,
+        RevelationDance,
+        ShellTrap,
+        SolarBlade,
+        SunsteelStrike,
+        Accelerock,
+        PsychicTerrain,
+        ThroatChop,
+        AuroraVeil,
+        LaserFocus
     };
 
     enum Items {

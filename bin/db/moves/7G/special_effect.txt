@@ -1,0 +1,422 @@
+﻿12 43#Guillotine
+13 104-0#razor wind
+14 1002#SwordsDance
+18 107|1000-4_1#Whirlwind
+19 13-3_16*8192_239*8192_327_87*8192_542*8192_479*8192_616*8192_248_353_18#Fly
+20 10#bind-inflict damage every turn
+23 126#stomp
+26 64#jump kick
+28 1000-7_1#Sand Attack
+32 43#Horn Drill
+34 126#Body slam
+35 10#wrap
+37 93#thrash
+39 1000-1_1#TailWhip
+43 1000-1_1#Leer
+45 1000-2_1#Growl
+46 107|1000-2 _1#Roar
+47 1000-5_1#Sing
+48 1000-5_1#Supersonic
+49 30-20#sonic boom
+50 28|1002#disable
+54 86|1003#mist
+59 38#blizzard
+63 11#Hyper beam
+67 52#Low kick
+68 22-1#counter: 1 is physical
+69 91#seismic toss
+71 #1#leech
+72 #1#mega drain
+73 72|1002#leech seed
+74 191|1000-3_1#Growth
+76 104-3#solar beam
+77 1000-2_1#PoisonPowder
+78 198|1000-4_1#Stun spore
+79 1000-5_1#SleepPowder
+80 93#petal dance
+81 1000-5_1#StringShot
+82 30-40#dragon rage
+83 10#Fire spin
+86 1000-4_1#ThunderWave
+87 152#Thunder
+90 43#Fissure
+91 13-1_89*8192_222*8192_248_353#Dig
+92 1000-2_1#Toxic
+95 1000-5_1#Hypnosis
+96 1000-1_1#Meditate
+97 1002#Agility
+99 102#rage
+100 1003#Teleport
+101 91#night shade
+102 81|1000-6_1#Mimic
+103 1000-1_1#Screech
+104 1002#DoubleTeam
+105 1002#Recover
+106 1000-2_1#Harden
+107 83|1002#Minimize
+108 1000-7_1#Smokescreen
+109 1000-3_1#ConfuseRay
+110 1000-2_1#Withdraw
+111 154|1000-6_1#DefenseCurl
+112 1002#Barrier
+113 73-2|1000-4_1#LightScreen
+114 149|1003#Haze
+115 73-1|1000-2_1#Reflect
+116 46|1000-6_1#FocusEnergy
+117 9#bide
+118 80#metronome
+119 85|1000-1_2#MirrorMove
+120 37#self destruct
+128 10#Clamp
+130 104-2#skull bash
+133 1002#Amnesia
+134 1000-7_1#Kinesis
+135 1002#Soft-Boiled
+136 64#high jump kick
+137 1000-4_1#Glare
+138 31|1#dream eater
+139 1000-2_1#PoisonGas
+141 #1#Leech Life
+142 1000-5_1#LovelyKiss
+143 104-1#sky attack
+144 137|1003#Transform
+147 198|1002#Spore
+148 1000-7_1#Flash
+149 99#psywave
+150 82|1000-1_3#Splash
+151 1002#AcidArmor
+153 37#explosion
+156 106|1002#Rest
+159 1000-1_1#Sharpen
+160 19|1000-8_1#Conversion
+161 #192#Tri Attack
+162 130-1#super fang
+164 8-25|128|1002#SUBSTITUTE
+165 #127#struggle
+166 111|1000-8_1#Sketch
+167 139#triple kick
+168 23#thief
+169 12|1000-2_1#SpiderWeb
+170 74|1000-3_1#MindReader
+171 31|92|1000-3_1#Nightmare
+172 153#flame wheel
+173 115#snore
+174 25|1006#curse
+175 44#flail
+176 20|1003#Conversion2
+178 198|1002#CottonSpore
+179 44#flail
+180 123|1003#Spite
+182 27|1002#Protect
+184 1000-5_1#ScaryFace
+186 1000-3_1#SweetKiss
+187 8-50|1003#BellyDrum
+191 121|1000-2_1#Spikes
+193 84-7|1001#7 is ghost -- fore sight
+194 26|1005#DestinyBond
+195 95|1002#PerishSong
+197 27|1000-7_1#Detect
+199 74|1000-5_1#Lock-On
+200 93#outrage
+201 57-3|1000-5_1#Sandstorm
+202 #1#Giga drain
+203 35|1002#Endure
+204 1000-2_1#Charm
+205 66#rollout
+206 41#false swipe
+207 196|1002#Swagger
+208 1002#MilkDrink
+210 50#fury cutter
+212 12|1000-4_1#MeanLook
+213 58|1002#Attract
+214 115|116|1001#115 = works only if asleep, 116 is sleep talk
+215 3|1003#HealBell
+216 49-0#return
+217 96#present
+218 49-1#frustration
+219 109|1000-5_1#Safeguard
+220 94|1000-2_1#PainSplit
+221 153#sacred fire
+222 78#magnitude
+226 6|1002#BatonPass
+227 33|1000-5_1#Encore
+229 103#rapid spin
+230 1000-6_1#SweetScent
+234 87|1002#MorningSun
+235 87|1002#Synthesis
+236 87|1002#Moonlight
+237 65#hidden power
+240 57-2|1000-5_1#RainDance
+241 57-4|1000-5_1#SunnyDay
+243 22-2#mirror coat
+244 97|1003#PsychUp
+248 29#Future sight
+250 10#whirlpool
+251 7#beat up
+252 40#fake out
+253 141#uproar
+254 125|1003#Stockpile
+255 122#spit up
+256 131|1002#Swallow
+258 57-1|1000-5_1#Hail
+259 135|1000-2_1#Torment
+260 1000-4_1#Flatter
+261 195|1000-1_1#Will-O-Wisp
+262 165|1004#Memento
+263 39#facade
+264 47#focus punch
+265 117-1#smelling salt
+266 48|1002#FollowMe
+267 90#nature power
+268 18|1000-4_1#Charge
+269 134|1000-1_1#Taunt
+270 63|1002#HelpingHand
+271 132|1000-5_2#Trick
+272 108|1000-5_1#RolePlay
+273 142|1000-4_1#Wish
+274 4#assist
+275 151|1000-4_1#Ingrain
+277 76|1000-4_2#MagicCoat
+278 105|1000-5_2#Recycle
+279 146#revenge
+280 14#brick break
+281 144|1000-5_1#Yawn
+282 70#knock off
+283 34#endeavor
+284 36#eruption
+285 112|1000-5_1#SkillSwap
+286 67|1000-4_2#Imprison
+287 164|1003#Refresh
+288 54|1005#grudge
+289 118|1000-5_2#Snatch
+290 110#secret power
+291 13-2_57*8192_248_353#dive
+293 17|1000-7_1#Camouflage
+294 1002#TailGlow
+297 1000-2_1#FeatherDance
+298 1000-3_1#TeeterDance
+300 88-12|1000-4_1#MudSport
+301 66#ice ball
+303 1002#SlackOff
+307 11#blast burn -- one turn slacking off
+308 11#hydro cannon
+311 113#weather ball
+312 3|1003#Aromatherapy
+313 1000-3_1#FakeTears
+316 84-7|1000-1_1#OdorSleuth
+319 1000-3_1#MetalSound
+320 1000-5_1#GrassWhistle
+321 1000-2_1#Tickle
+322 1000-4_1#CosmicPower
+323 36#water spout
+328 10#sand tomb
+329 43#sheer cold
+334 1002#Iron1000-2
+335 12|1000-2_1#Block
+336 1000-1_1#Howl
+338 11#frenzy plant
+339 1000-1_1#BulkUp
+340 13-0_16*8192_239*8192_327_87*8192_542*8192_479*8192_616*8192_248_353#bounce
+343 23#covet
+346 88-9|1000-4_1#WaterSport
+347 1002#CalmMind
+349 1002#DragonDance
+353 29#doom desire
+355 150|1002#Roost
+356 53|1000-3_1#Gravity
+357 84-16|1000-3_1#MiracleEye
+358 117-2#wake up slap
+360 56-0#gyro ball. 0 is to tell it's up to us to be slow
+361 61#healing wish
+362 15#brine
+363 89#natural gift
+364 42#only works when protect detect
+365 16#Pluck
+366 133|1001#Tailwind
+367 120|1001#Acupressure
+368 119#metal burst
+369 140#U-turn
+371 145#payback
+372 5#assurance
+373 32|1000-3_1#Embargo
+374 45#fling
+375 98|1000-3_2#PsychoShift
+376 148#trump card
+377 59|1000-3_2#HealBlock
+378 24#wring out
+379 62|1000-1_1#PowerTrick
+380 51|1000-5_1#GastroAcid
+381 75|1000-7_1#LuckyChant
+382 79|1000-5_2#MeFirst
+383 21|1000-6_1#Copycat
+384 55-1_3|1000-5_1#PowerSwap
+385 55-2_4|1000-5_1#GuardSwap
+386 100#punishment
+387 71#last resort
+388 143-15|1000-5_1#WorrySeed
+389 129#sucker punch
+390 136|1000-2_1#ToxicSpikes
+391 1001|55-1_2_3_4_5_6_7#heart swap -- reverses all stat with foe
+392 2|1000-2_1#AquaRing
+393 68|1000-7_1#MagnetRise
+394 153#flareBlitz
+397 1002#RockPolish
+407 126#Dragon Rush
+409 #1#Drain punch
+415 132|1000-5_2#Switcheroo
+416 11#Giga impact
+417 1002#NastyPlot
+419 146#avalanche
+428 #nothing but gotta fill the line
+432 77|1000-6_1#Defog
+433 138|1000-6_1#TrickRoom
+439 11#rock wrecker
+445 101|1000-4_2#Captivate
+446 124|1000-2_1#StealthRock
+447 52#grass knot
+448 147#chatter
+449 69#judgment
+450 16#like pluck
+455 1000-2_1#DefendOrder
+456 1002#HealOrder
+459 11#roar of time
+461 61#Lunar dance
+462 24#crush grip
+463 10#magma storm
+464 238|1002#DarkVoid
+467 13-4_248_353#shadow force
+468 1000-1_1#HoneClaws
+469 169|1000-2_1#WideGuard
+470 155-2_4|1000-5_1#GuardSplit
+471 155-1_3|1000-5_1#PowerSplit
+472 168|1000-4_1#WonderRoom
+474 117-5#Venom Shock
+475 197|1002#Autotomize
+476 48|1002#RagePowder
+477 174|1000-3_1#Telekinesis
+478 156|1000-4_1#MagicRoom
+479 175#Smack Down
+481 189#Flame Burst
+483 1002#QuiverDance
+484 167#HeavyBomber
+485 186#Synchro Noise
+486 182#Eleci Ball
+487 157-10|1000-3_1#Soak
+489 1002#Coil
+492 187#Trickery
+493 143-86|1000-3_1#SimpleBeam
+494 158|1000-4_1#Entrainment
+495 176|1000-5_1#AfterYou
+496 184#A Capella
+497 181#Echo Voice
+499 149#Clear Smog
+500 185#Assist Power
+501 170|1000-2_1#QuickGuard
+502 190|1000-5_2#AllySwitch
+504 159|1002#ShellSmash
+505 1002#HealPulse
+506 117-0#Evil Eye
+507 13-5_16*8192_239*8192_327_87*8192_542*8192_479*8192_616*8192_248_353#Sky Drop
+508 1002#ShiftGear
+509 107#Overhead Throw
+510 160#Complete Burn
+511 177|1000-5_1#Quash
+512 173#Acrobat
+513 172|1000-3_1#ReflectType
+514 188#Retaliation
+515 161#Desperation
+516 162|1000-5_2#Bestow
+518 180#Water Oath
+519 178#Fire Oath
+520 179#Grass Oath
+521 140#Volt Change
+525 107#Dragon Tail
+526 1000-1_1#WorkUp
+535 167#Heat Stamp
+537 126#Heart roller
+538 1002#CottonGuard
+542 152#Wind Storm
+546 183#Techno buster
+547 166#Ancient Song
+553 104-4#freeze shock
+554 104-5#ice burn
+558 193#Cross Flame
+559 194#Cross Thunder
+560 1000-2_1#Baby-DollEyes
+562 199|1000-4_1#CraftyShield
+566 126#Flying Press
+567 157-11|1000-8_1#Forest’sCurse
+569 104-6|1000-8_1#Geomancy
+571 10#Infestation
+574 1000-2_1#NobleRoar
+578 13-4_248_353#phantom force
+580 1000-2_1#PlayNice
+581 157-7|1000-8_1#Trick-or-Treat
+582 242#Water Shuriken
+583 1000-4_2#AromaticMist
+584 200#Belch
+585 1000-4_1#Confide
+587 1000-4_1#EerieImpulse
+588 240-1|1000-5_1#ElectricTerrain
+589 202|1000-3_1#Electrify
+590 203|1000-2_1#FairyLock
+591 204#Fell Stinger
+592 213|1000-2_1#FlowerShield
+593 240-2|1000-2_1#GrassyTerrain
+594 217|1000-3_1#IonDeluge
+595 206|1002#King’sShield
+597 216-2_4|1000-4_1#MagneticFlux
+598 207|1000-2_1#MatBlock
+599 240-3|1000-4_1#MistyTerrain
+600 140|1004#PartingShot
+601 215|1000-4_2#Powder
+603 214|1000-1_1#Rototiller
+604 209|1000-2_1#SpikyShield
+605 210|1000-5_1#StickyWeb
+606 211|1000-1_1#Topsy-Turvy
+607 212|1000-2_1#VenomDrench
+608 1000-8_1#HappyHour
+609 218|1000-8_1#Celebrate
+610 41#Hold Back
+614 42#Hyperspace hole-- breaks protect
+615 1000-8_1#HoldHands
+616 175#Thousand Arrows
+617 12#Thousand Waves-- Has Mean Look effect
+621 219#Hyperpsace Fury-- breaks protect
+622 231#core enforcer
+626 231#moongeist beam
+627 130-2#Nature's Madness
+628 221#Revelation Dance
+629 220#Shell Trap
+631 231#sunsteel strike
+633 240-4|1000-3_1#PsychicTerrain
+634 223#throat chop
+635 236|1000-5_1#AuroraVeil
+636 224|1000-1_1#LaserFocus
+638 69#multi-attack
+641 225|1000-3_1#Instruct
+642 12#Spirit Shackle
+644 117-4#Sparkling Aria
+645 226|1002#ShoreUp
+646 40#FirstImpression
+647 227|1000-2_1#BanefulBunker
+649 228|1002#FloralHealing
+650 229|1000-2_1#StrengthSap
+651 241|1000-4_1#Spotlight
+652 1000-5_1#ToxicThread
+653 216-1_3|1000-3_1#GearUp
+654 232#Pollen Puff
+655 12#Anchor Shot
+658 185#Power Trip, stored power clone
+659 233#Burn Up
+660 239|1000-5_1#Speed Swap
+662 234|1000-8_1#Purify
+663 235#Beak Blast
+665 14#Psychic Fangs
+666 237#Stomping Tantrum
+669 11#Prismatic Laser
+670 230#Spectral Thief
+671 1000-2_1#TearfulLook
+693 1000-8_2#Extreme evo boost
+695 1007#genesis supernova
+696 1008#guardian of alola

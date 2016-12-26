@@ -46,7 +46,7 @@ private:
     PokeProxy *master() const;
 };
 
-class PokeProxy : public QObject
+class PokeProxy : public QObject, public PokeDataInterface
 {
     Q_OBJECT
 public:
@@ -67,10 +67,11 @@ public:
     Q_PROPERTY(int ability READ ability STORED false NOTIFY abilityChanged)
     Q_PROPERTY(int life READ life NOTIFY lifeChanged)
     Q_PROPERTY(int lifePercent READ lifePercent STORED false NOTIFY lifeChanged)
-    Q_PROPERTY(int totalLife READ totalLife NOTIFY pokemonReset)
+    Q_PROPERTY(int totalLife READ totalLife NOTIFY totalLifeChanged)
     Q_PROPERTY(int happiness READ happiness NOTIFY pokemonReset)
     Q_PROPERTY(int item READ item NOTIFY itemChanged)
     Q_PROPERTY(int nature READ nature NOTIFY pokemonReset)
+    Q_PROPERTY(int hiddenPower READ hiddenPower NOTIFY pokemonReset)
 
     enum Status {
         Koed = Pokemon::Koed,
@@ -99,6 +100,7 @@ public:
     int item() const {return dd()->item();}
     int happiness() const {return dd()->happiness();}
     int nature() const {return dd()->nature();}
+    int hiddenPower() const {return dd()->hiddenPower();}
     Q_INVOKABLE int basestat(int stat) const;
     Q_INVOKABLE int iv(int stat) const;
     Q_INVOKABLE int ev(int stat) const;
@@ -125,6 +127,8 @@ public:
     void setOwnerShip(bool o) {hasOwnerShip = o;}
 
     ShallowBattlePoke *exposedData() { return d();}
+    /* Risky if not valid, so forced const */
+    const PokeBattle *pokeBattle() const { return dd();}
 signals:
     void numChanged();
     void abilityChanged();
@@ -132,6 +136,7 @@ signals:
     void pokemonReset();
     void lifeChanged();
     void itemChanged();
+    void totalLifeChanged();
     void ko();
 private:
     bool hasOwnerShip;

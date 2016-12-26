@@ -190,3 +190,44 @@
 189 Desolate Land
 190 Primordial Sea
 191 Delta Stream
+192 Full Metal Body
+193 Shadow Shield
+194 Comatose
+195 Power Construct
+196 Soul-Heart
+197 Stakeout
+198 Electric Surge
+199 Dazzling
+200 Berserk
+201 Battery
+202 Corrosion
+203 Disguise
+204 Fluffy
+205 Stamina
+206 Triage
+207 Wimp Out
+208 Dancer
+209 Shields Down
+210 Innards Out
+211 Schooling
+212 Surge Surfer
+213 Water Compaction
+214 Queenly Majesty
+215 Battle Bond
+216 Receiver
+217 RKS System
+218 Psychic Surge
+219 Grassy Surge
+220 Misty Surge
+221 Slush Rush
+222 Emergency Exit
+223 Merciless
+224 Water Bubble
+225 Steelworker
+226 Long Reach
+227 Liquid Voice
+228 Galvanize
+229 Tangling Hair
+230 Power of Alchemy
+231 Beast Boost
+232 Prism Armor

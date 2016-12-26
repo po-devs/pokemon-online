@@ -525,7 +525,7 @@ struct RBYHaze : public MM
         int t = b.opponent(s);
         b.healStatus(t, b.poke(t).status());
 
-        for (int i = Attack; i < AllStats; i++) {
+        for (int i = (int) Attack; i < (int) AllStats; i++) {
             b.changeStatMod(s, i, 0);
             b.changeStatMod(t, i, 0);
             fpoke(b,s).stats[i] = b.getBoostedStat(s, i);
@@ -747,6 +747,16 @@ struct RBYMirrorMove : public MM
 
     static void daf(int s, int t, BS &b) {
         int lastMove = fpoke(b,t).lastMoveUsed;
+        if (b.isStadium()) { // Mirror Move also copies charging moves
+            if (poke(b,t).contains("Recharging")) // Only used by Hyper Beam
+                lastMove = Move::HyperBeam;
+                
+            if (poke(b,t).contains("ChargeMove")) // Used by all other charging moves except Bide
+                lastMove = poke(b,t)["ChargeMove"].toInt();
+                
+            if (poke(b,s).contains("BideCount"))
+                lastMove = Move::Bide;
+        }
 
         if (lastMove == 0 || lastMove == Move::MirrorMove) {
             fturn(b,s).add(TM::Failed);
@@ -758,6 +768,17 @@ struct RBYMirrorMove : public MM
         removeFunction(turn(b,s), "UponAttackSuccessful", "MirrorMove");
 
         int move = fpoke(b,t).lastMoveUsed;
+        if (b.isStadium()) {
+            if (poke(b,t).contains("Recharging"))
+                move = Move::HyperBeam;
+                
+            if (poke(b,t).contains("ChargeMove"))
+                move = poke(b,t)["ChargeMove"].toInt();
+                
+            if (poke(b,t).contains("BideCount"))
+                move = Move::Bide;
+        }
+        
         BS::BasicMoveInfo info = tmove(b,s);
         RBYMoveEffect::setup(move,s,s,b);
         b.useAttack(s,move,true,true);
@@ -912,7 +933,7 @@ struct RBYRazorWind : public MM
         b.sendMoveMessage(104, turn(b,s)["RazorWind_Arg"].toInt(), s, type(b,s));
         /* Skull bash */
 
-        poke(b,s)["ChargingMove"] = mv;
+        poke(b,s)["ChargeMove"] = mv;
         poke(b,s)["ReleaseTurn"] = b.turn() + 1;
         turn(b,s)["TellPlayers"] = false;
         tmove(b, s).power = 0;
@@ -930,7 +951,7 @@ struct RBYRazorWind : public MM
         }
         fturn(b,s).add(TM::NoChoice);
         fturn(b,s).add(TM::UsePP);
-        int mv = poke(b,s)["ChargingMove"].toInt();
+        int mv = poke(b,s)["ChargeMove"].toInt();
         initMove(mv, b.gen(), tmove(b, s));
         turn(b,s)["AutomaticMove"] = mv;
     }

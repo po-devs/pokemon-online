@@ -408,6 +408,33 @@ void BattleClientLog::onStartWeather(int spot, int weather, bool ability)
     }
 }
 
+void BattleClientLog::onStartTerrain(int spot, int terrain, bool ability)
+{
+    (void) spot;
+    (void) ability;
+    QColor c = theme()->typeColor(TypeInfo::TypeForTerrain(terrain));
+
+    static const QString terrainAbilityMessage[4] = {
+        tr("%1's Electric Surge causes an electric current to run across the battlefield!"),
+        tr("%1's Grassy Surge makes the grass grow to cover the battlefield!"),
+        tr("%1's Misty Surge causes mist to swirl around the battlefield!"),
+        tr("%1's Psychic Surge turns the battlefield weird!")
+    };
+
+    static const QString terrainRegularMessage[4] = {
+        tr("An electric current runs across the battlefield!"),
+        tr("Grass grew to cover the battlefield!"),
+        tr("Mist swirls around the battlefield!"),
+        tr("The battlefield got weird!")
+    };
+
+    if (ability) {
+        printLine("Terrain", toColor(tu(terrainAbilityMessage[terrain-1].arg(nick(spot))), c));
+    } else {
+        printLine("Terrain", toColor(tu(terrainRegularMessage[terrain-1]), c));
+    }
+}
+
 void BattleClientLog::onContinueWeather(int weather)
 {
     QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
@@ -438,6 +465,18 @@ void BattleClientLog::onEndWeather(int weather)
     }
 }
 
+void BattleClientLog::onEndTerrain(int terrain)
+{
+    QColor c = theme()->typeColor(TypeInfo::TypeForTerrain(terrain));
+
+    switch(terrain) {
+    case Terrain::ElectricTerrain: printHtml("Terrain", toColor(tr("The electricity disappeared from the battlefield!"),c)); break;
+    case Terrain::GrassyTerrain: printHtml("Terrain", toColor(tr("The grass disappeared from the battlefield!"),c)); break;
+    case Terrain::MistyTerrain: printHtml("Terrain", toColor(tr("The mist disappeared from the battlefield!"),c)); break;
+    case Terrain::PsychicTerrain: printHtml("Terrain", toColor(tr("The weirdness disappeared from the battlefield!"),c)); break;
+    }
+}
+
 void BattleClientLog::onHurtWeather(int spot, int weather)
 {
     QColor c = theme()->typeColor(TypeInfo::TypeForWeather(weather));
@@ -462,7 +501,7 @@ void BattleClientLog::onAbilityMessage(int spot, int ab, int part, int type, int
     QString mess = AbilityInfo::Message(ab,part);
     mess.replace("%st", StatInfo::Stat(other, data()->gen()));
     mess.replace("%s", nick(spot));
-    //            mess.replace("%ts", data()->name(spot));
+    mess.replace("%ts", data()->name(spot));
     mess.replace("%tf", data()->name(!spot));
     mess.replace("%t", TypeInfo::Name(type));
     mess.replace("%f", nick(foe));

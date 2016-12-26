@@ -90,11 +90,12 @@ void PokeEdit::fillMoves()
     ui->moveChoice->disconnect(SIGNAL(activated(QModelIndex)), this);
     connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
 #ifdef QT5
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Range, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Priority, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
+    ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Type, QHeaderView::Fixed);
 #else
     ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
@@ -407,7 +408,9 @@ void PokeEdit::setNum(Pokemon::uniqueId num)
             }
         } else if (num.pokenum == Pokemon::Arceus && ItemInfo::PlateType(poke().item()) != num.subnum) {
             poke().item() = ItemInfo::PlateForType(num.subnum);
-        } else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
+        }  else if (num.pokenum == Pokemon::Silvally && ItemInfo::MemoryChipType(poke().item()) != num.subnum) {
+            poke().item() = ItemInfo::MemoryChipForType(num.subnum);
+        }else if (num.pokenum == Pokemon::Genesect && ItemInfo::DriveForme(poke().item()) != num.subnum) {
             poke().item() = ItemInfo::DriveForForme(num.subnum);
         } else if (PokemonInfo::IsMegaEvo(num)) {
             poke().item() = ItemInfo::StoneForForme(num);
@@ -458,6 +461,10 @@ void PokeEdit::changeItem(const QString &itemName)
         }
         if (poke().num().pokenum == Pokemon::Arceus) {
             int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
+            setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
+        }
+        if (poke().num().pokenum == Pokemon::Silvally) {
+            int subnum = ItemInfo::isMemoryChip(itemNum) ? ItemInfo::MemoryChipType(itemNum) : 0;
             setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
         }
         if (poke().num().pokenum == Pokemon::Genesect) {

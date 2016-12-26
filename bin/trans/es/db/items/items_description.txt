@@ -1,0 +1,457 @@
+﻿0 (Sin Objeto)
+1 Recupera un 30% más de PS al utilizar los movimientos: Absorber, Megaagotar, Gigadrenado, Puño Drenaje, Asta Drenaje, Chupavidas, Come Sueños, Beso Drenaje, Carga Parábola y Ala Mortífera. El mismo incremento del 30% se da en los PS obtenidos por Acua Aro, Arraigo y Drenadoras.
+2 Potencia la cualidad de concurso de Belleza, y evoca la inmensidad del mar.
+3 Aumenta en un 10% la Evasión del usuario. 
+4 Aumenta en un 50% el Ataque del Usuario, pero no puede utilizar ningún otro movimiento aparte del que ya usó hasta que sea cambiado. 
+5 Aumenta en un 50% la Velocidad del Usuario, pero no puede utilizar ningún otro movimiento aparte del que ya usó hasta que sea cambiado.
+6 Aumenta en un 50% el Ataque Especial del Usuario, pero no puede utilizar ningún otro movimiento aparte del que ya usó hasta que sea cambiado. 
+7 El Pokémon que lleve el Lazo Destino equipado provocará que el Pokémon respecto del cual se sienta atraído también quede bajo los efectos de Atracción.
+8 Aumenta en un 20% la potencia de los ataques super eficaces del usuario. 
+9 Tiene un 10% de posibilidades de dejar al usuario con 1 PS si el ataque que recibió fuese a debilitarlo. 
+10 Le garantiza al usuario resistir con 1 PS siempre y cuando tenga sus PS al máximo y si el ataque recibido fuese a debilitarlo. Se consume tras su uso.
+11 El Pokémon que lo lleve equipado atacará siempre en último lugar, igual que con la Cola Plúmbea. En la crianza Pokémon, si lo lleva equipado Snorlax al criar, producirá un huevo de su preevolución Munchlax.
+12 Potencia la cualidad de concurso de Ingenio, y representa la Firmeza.
+13 El Pokémon que lo lleve equipado atacará siempre en último lugar.
+14 Aumenta en un 10% la Evasión del usuario. En la crianza Pokémon, si lo lleva equipado Wobbuffet al criar, producirá un huevo de su preevolución Wynaut.
+15 Restaura en un 6.125% los PS máximos del usuario cada turno.
+16 El Pokémon que lo lleve equipado y participe en la batalla dobla el dinero ganado en un combate Pokémon. En la crianza Pokémon, si lo lleva equipado Chansey o Blissey al criar, producirá un huevo de su preevolución Happiny. 
+17 Cura al Pokémon que la lleve equipada del estado de enamoramiento causado por Atracción, o por efecto de la habilidad Gran Encanto, también libera al portador de los efectos de Mofa, Tormento, Otra Vez, Anulación y Cuerpo Maldito. Se consume tras su uso.
+18 Aumenta la Defensa y Defensa Especial de Ditto en un 50%. No obstante, estos efectos solo se tienen en cuenta cuando Ditto no se ha transformado. De haberse transformado, el efecto se pierde.
+19 Aumenta en un 10% la potencia de los ataques Físicos del usuario. 
+20 Aumenta en un 20% la potencia de los ataques tipo Psíquico del usuario. En la crianza Pokémon, si lo lleva equipado Mr. Mime al criar, producirá un huevo de su preevolución Mime Jr.
+21 Potencia la cualidad de concurso de Dulzura, y desprende cierto encanto.
+22 Permite el uso inmediato de cualquier movimiento que necesite cargar el primer turno antes de atacar. Se consume tras su uso.
+23 Al ser equipado en el primer Pokémon del equipo disminuye la frecuencia de aparición de Pokémon salvajes. En la crianza Pokémon, si lo lleva equipado Chimecho al criar, producirá un huevo de su preevolución Chingling.
+24 Aumenta la Velocidad de Ditto en un 100%. No obstante, estos efectos solo se tienen en cuenta cuando Ditto no se ha transformado. De haberse transformado, el efecto se pierde.
+25 Si lo lleva equipado un Dusclops durante un intercambio, hace que evolucione a Dusknoir. 
+26 Potencia la cualidad de concurso de Carisma, y representa la pasión.
+27 Aumenta en un 20% la potencia de los ataques tipo Roca del usuario. En la crianza Pokémon, si lo lleva equipado Sudowoodo al criar, producirá un huevo de su preevolución Bonsly.
+28 Aumenta en un 20% la potencia de los ataques tipo Planta del usuario. En la crianza Pokémon, si lo lleva equipado Roselia o Roserade al criar, producirá un huevo de su preevolución Budew. 
+29 Aumenta en un 20% la potencia de los ataques tipo Agua del usuario. En la crianza Pokémon, si lo lleva equipado Marill o Azumarill al criar, producirá un huevo de su preevolución Azurill. 
+30 Permite al usuario ser cambiado por otro Pokémon del equipo, sin importar que haya atrapado al usuario. 
+31 Aumenta en un 20% la potencia de los ataques tipo Normal del usuario.
+32 Aumenta en un 20% la potencia de los ataques tipo Bicho del usuario. 
+33 Si el usuario utiliza Tormenta de Arena llevando este objeto, la duración de la tormenta pasa de 5 turnos a 8 turnos.
+34 Aumenta en un 20% la potencia de los ataques tipo Tierra del usuario. 
+35 Equipada en un Pokémon, multiplica por 1,5 los puntos ganados al subir la amistad, redondeando hacia abajo el resultado (por ejemplo, si +3 de amistad por 1,5 da 4,5 será +4 de amistad).
+36 Aumenta en un 20% la potencia de los ataques tipo Agua del usuario. En la crianza Pokémon, si lo lleva equipado Mantine al criar, producirá un huevo de su preevolución Mantyke.
+37 Restaura las características del Pokémon si bajan por debajo del nivel habitual. Se consume tras su uso. 
+38 Aumenta en un 10% la Precisión del usuario.
+39 Aumenta en un 10% la potencia de los ataques Especiales del usuario.
+40 Potencia la cualidad de concurso de Dureza, y representa la firmeza.
+41 Si el usuario ataca después del oponente, la Precisión del usuario aumenta en un 20%.
+42 El Pokémon que lo lleve equipado y participe en la batalla dobla el dinero ganado en un combate Pokémon. 
+43 Cura el Veneno de un Pokémon.
+44 Despierta a un Pokémon.
+45 Restaura 20 PS al usuario cuando sus PS máximos están por debajo del 50%.
+46 Una gran perla brillante de color plateado, se vende a un alto precio. 
+47 Una especie de hongo grande y raro, buscado por coleccionistas.
+48 Aumenta en un 20% la potencia de los ataques tipo Lucha del usuario.
+49 Una flauta de juguete hecha de vidrio negro. Un maniaco lo comprará a un alto precio.
+50 Si se le equipa a un Pokémon tipo Veneno, recupera el 6.125% de sus PS máximos al final de cada turno. De ser equipado por un Pokémon que no sea del tipo Veneno, perderá el 6.125% de sus PS máximos al final de cada turno.
+51 Aumenta en un 20% la potencia de los ataques tipo Siniestro del usuario.
+52 Una flauta de juguete hecha de vidrio azul. Un maniaco lo comprará a un alto precio.
+53 Un pequeño fragmento azul. Parece ser de algun tipo de instrumento hecho hace ya un tiempo.
+54 Cura a un Pokémon de su quemadura.
+55 Aumenta por 10 los PE de Ataque Especial de un Pokémon, pero no por encima de 100.
+56 Aumenta por 10 los PE de Velocidad de un Pokémon, pero no por encima de 100.
+57 Aumenta en un 20% la potencia de los ataques tipo Fuego del usuario.
+58 Si se le equipa al primer Pokémon del equipo, disminuye la frecuencia de encuentros con Pokémon salvajes.
+59 Aumenta en un 25% el tiempo total que le toma a una Baya crecer, pero a su vez hace que la tierra tarde más en secarse.
+60 Si lo lleva equipado un Clamperl, aumenta su Defensa Especial en un 100%, durante un intercambio, hace que Clamperl evolucione a Gorebyss.
+61 Aumenta en 1 nivel la frecuencia de golpes críticos del usuario e incrementa su felicidad.
+62 Aumenta en un 20% la potencia de los ataques tipo Dragón del usuario. 
+63 Recupera por 10 los PP de todos los movimientos de un Pokémon.
+64 Recupera 200 PS a un Pokémon, pero disminuye su amistad.
+65 Recupera 50 PS a un Pokémon, pero disminuye su amistad.
+66 Si se utiliza dentro de una cueva, devuelve al usuario a la entrada de esa cueva.
+67 Recupera por 10 los PP de un movimiento de un Pokémon.
+68 Impide que el usuario evolucione por nivel. Si se le equipa a un Pokémon hembra en la Guardería Pokémon, tiene un 50% de posibilidades de pasarle su naturaleza a la cría.
+69 Hace que el Pokémon que combatió recibe el 100% de la experiencia ganada, mientras que el resto reciben el 50% cada uno.
+70 Permite a Vulpix evolucionar a Ninetales, Growlithe a Arcanine, Eevee a Flareon y Pansear a Simisear.
+71 Le provoca una quemadura al usuario al final de un turno. No funciona si el usuario no puede ser quemado.
+72 Permite escapar de cualquier enfrentamiento con un Pokémon salvaje.
+73 Recupera 50 PS a un Pokémon.
+74 Cura a un Pokémon de cualquier problema de estado.
+75 Cura a un Pokémon de cualquier problema de estado, y recupera todos sus PS.
+76 Hace que broten más plantas nuevas de las plantas marchitas. Un maniaco lo comprará a un alto precio.
+77 Un pequeño fragmento verde. Parece ser de algun tipo de instrumento hecho hace ya un tiempo.
+78 Disminuye en un 25% el tiempo total que le toma a una Baya crecer, pero a su vez hace que la tierra se seque más rápido. Un maniaco lo comprará a un alto precio.
+79 Previene la reducción de estadísticas del equipo del usuario durante 5 turnos al usarse.
+80 Cura a un Pokémon de cualquier problema de estado, pero disminuye su amistad.
+81 Es una escama muy fina de color rosa, con forma de corazón.
+82 Tras su uso, atrae inmediatamente a un Pokémon salvaje.
+83 Aumenta por 10 los PE de PS de un Pokémon, pero no por encima de 100.
+84 Recupera 200 PS a un Pokémon.
+85 Descongela a un Pokémon.
+86 Aumenta por 10 los PE de Defensa de un Pokémon, pero no por encima de 100.
+87 Le añade un 10% de posibilidades a todos los movimientos del usuario de hacer retroceder al objetivo, si estos movimientos no tenían dicho efecto desde el inicio. Se ve afectado por la habilidad Dicha. Si se le equipa a un Poliwhirl durante un intercambio, hace que evolucione a Poliwrath. Si se le equipa a un Slowpoke durante un intercambio, hace que evolucione a Slowking.
+88 Cura a un Pokémon de cualquier problema de estado.
+89 Permite a Gloom evolucionar a Vileplume, Weepinbell a Victreebel, Exeggcute a Exeggutor, Nuzleaf a Shiftry y Pansage a Simisage.
+90 Recupera 80 PS a un Pokémon.
+91 Aumenta en un 30% la potencia de todos los movimientos del usuario, pero le provoca daño equivalente al 10% de sus PS máximos cada vez que acierte un golpe. Este efecto de auto daño es mitigado por la habilidad Potencia Bruta y potencia los movimientos que se vean afectados por esta habilidad.
+92 Si se le equipa a un Pikachu, aumenta en un 100% su Ataque y Ataque Especial. En la crianza Pokémon, si lo lleva equipado Pikachu o Raichu al criar, su preevolución Pichu nacerá con el movimiento Placaje Eléctrico.
+93 Si el usuario utiliza Reflejo o Pantalla de Luz llevando este objeto, la duración de dichos movimientos pasa de 5 turnos a 8 turnos.
+94 Aumenta en un 50% la experiencia obtenida por el usuario.
+95 Aumenta en un 20% la potencia de los ataques tipo Eléctrico del usuario.
+96 Recupera todos los PP de todos los movimientos de un Pokémon.
+97 Recupera todos los PP de un movimiento de un Pokémon.
+98 Recupera todos los PS de un Pokémon.
+99 Previene la aparición de Pokémon salvaje cuyo nivel esté por debajo del primer Pokémon en el equipo por 250 pasos.
+100 Revive a todos los Pokémon con todos sus PS.
+101 Aumenta en un 20% la potencia de los ataques tipo Acero del usuario. Si se le equipa a un Onix durante un intercambio, hace que evolucione a Steelix. Si se le equipa a un Scyther durante un intercambio, hace que evolucione a Scizor.
+102 Aumenta en un 20% (hasta un máximo de 100%) la potencia del movimiento que el usuario ejecute cada vez que se repita.
+103 Aumenta en un 20% la potencia de los ataques tipo Planta del usuario.
+104 Recupera 100 PS a un Pokémon.
+105 Permite a Nidorina evolucionar a Nidoqueen, Nidorino a Nidoking, Clefairy a Clefable, Jigglypuff a Wigglytuff, Skitty a Delcatty y Munna a Musharna.
+106 Aumenta en un 20% la potencia de los ataques tipo Agua del usuario.
+107 Aumenta en un 20% la potencia de los ataques tipo Hielo del usuario.
+108 Una pepita de puro oro que brilla mucho. Se vende a un alto precio en la tiendas.
+109 Cura a un Pokémon de cualquier problema de estado.
+110 Cura la Parálisis de un Pokémon.
+111 Una perla pequeña que brilla con un color plateado, se vende barato en tiendas.
+112 Permite escapar de cualquier enfrentamiento con un Pokémon salvaje.
+113 Recupera 20 PS a un Pokémon.
+114 Aumenta en un 60% los PP máximos de un movimiento de un Pokémon.
+115 Aumenta en un 20% los PP máximos de un movimiento de un Pokémon, hasta un máximo de 60%.
+116 Aumenta por 10 los PE de Ataque de un Pokémon, pero no por encima de 100.
+117 Hace que el Pokémon suba 1 nivel.
+118 Le añade un 10% de posibilidades a todos los movimientos del usuario de hacer retroceder al objetivo, si estos movimientos no tenían dicho efecto desde el inicio. Se ve afectado por la habilidad Dicha. Si se le equipa a un Gligar durante la noche mientras sube de nivel, hace que evolucione a Gliscor.
+119 Una flauta de juguete hecha de vidrio rojo. Un maniaco lo comprará a un alto precio.
+120 Un pequeño fragmento rojo. Parece ser de algun tipo de instrumento hecho hace ya un tiempo.
+121 Previene la aparición de Pokémon salvaje cuyo nivel esté por debajo del primer Pokémon en el equipo por 100 pasos.
+122 Revive a un Pokémon debilitado con todos sus PS, pero disminuye su amistad.
+123 Revive a un Pokémon debilitado con el 50% de sus PS máximos.
+124 Revive a un Pokémon debilitado con todos sus PS.
+125 Aumenta en 1 nivel la frecuencia de golpes críticos del usuario.
+126 Hace que el usuario recupere PS equivalente al 12.5% del daño causado al oponente.
+127 Sal pura que puede ser encontrada en la Cueva Cardumen. Un maniaco lo comprará a un alto precio.
+128 Una hermosa concha de mar que puede ser encontrada en la Cueva Cardumen. Un maniaco lo comprará a un alto precio.
+129 Permite escapar de cualquier enfrentamiento con un Pokémon salvaje.
+130 Recupera 60 PS a un Pokémon.
+131 Si se le equipa a Latias o Latios, aumenta en un 20% la potencia de los ataques tipo Dragón y Psíquico.
+132 Aumenta en un 20% la potencia de los ataques tipo Fantasma del usuario.
+133 Retrasa la caída de las bayas maduras. Un maniaco lo comprará a un alto precio.
+134 Un pequeño fragmento escarlata que brilla mucho. Se vende a un alto precio en las tiendas.
+135 Un polvo raro de color rojo con una sensación sedosa. Se vende a un alto precio en las tiendas.
+136 Permite a Gloom evolucionar a Bellossom, Sunkern a Sunflora, Cottonee a Whimsicott y Petilil a Lilligant.
+137 Recupera 50 PS a un Pokémon.
+138 Previene la aparición de Pokémon salvaje cuyo nivel esté por debajo del primer Pokémon en el equipo por 100 pasos.
+139 Permite a Pikachu evolucionar a Raichu, Eevee a Jolteon y Eelektrik a Eelektross.
+140 Un pequeño y raro hongo. Es buscado por coleccionistas.
+141 Le provoca un Veneno Tóxico al usuario al final de un turno. No funciona si el usuario no puede ser envenenado.
+142 Aumenta en un 20% la potencia de los ataques tipo Psíquico del usuario.
+143 Si lo lleva equipado un Porygon durante un intercambio, le permite evolucionar a Porygon2.
+144 Permite a Poliwhirl evolucionar a Poliwrath, Shellder a Cloyster, Staryu a Starmie, Eevee a Vaporeon, Lombre a Ludicolo y Panpour a Simipour.
+145 Una flauta de juguete hecha de vidrio blanco. Un maniaco lo comprará a un alto precio.
+146 Aumenta en 1 nivel la Precisión de un Pokémon.
+147 Aumenta en 1 nivel el Ataque de un Pokémon.
+148 Aumenta en 1 nivel la Defensa de un Pokémon.
+149 Aumenta en 1 nivel el Ataque Especial de un Pokémon.
+150 Aumenta en 1 nivel la Defensa Especial de un Pokémon.
+151 Aumenta en 1 nivel la Velocidad de un Pokémon.
+152 Una flauta de juguete hecha de vidrio amarillo. Un maniaco lo comprará a un alto precio.
+153 Un pequeño fragmento amarillo. Parece ser de algun tipo de instrumento hecho hace ya un tiempo.
+154 Aumenta por 10 los PE de Defensa Especial de un Pokémon, pero no por encima de 100.
+155 Si el usuario utiliza Granizo llevando este objeto, la duración de la tormenta de granizo pasa de 5 turnos a 8 turnos.
+156 Si se le equipa a Chansey, aumenta en 2 niveles la frecuencia de golpes críticos.
+157 Si lo lleva equipado un Porygon2 durante un intercambio, le permite evolucionar a Porygon-Z.
+158 Aumenta en un 20% la potencia de los ataques tipo Volador del usuario.
+159 Si lo lleva equipado un Dialga, aumenta en un 20% la potencia de sus ataques tipo Dragón y Acero.
+160 Si el usuario utiliza Danza Lluvia llevando este objeto, la duración de la lluvia pasa de 5 turnos a 8 turnos.
+161 Si el usuario utiliza Día Soleado llevando este objeto, la duración del sol pasa de 5 turnos a 8 turnos.
+162 Si lo lleva equipado un Palkia, aumenta en un 20% la potencia de sus ataques tipo Dragón y Agua.
+163 Reduce a la mitad la Velocidad del usuario, pero duplica los PE obtenidos en batalla.
+164 Si se le equipa a Farfetch'd, aumenta en 2 niveles la frecuencia de golpes críticos.
+165 Aumenta en un 20%  la potencia de los ataques tipo Dragón del usuario.
+166 Aumenta en un 20%  la potencia de los ataques tipo Veneno del usuario.
+167 Reduce a la mitad la Velocidad del usuario, pero gana 4 PE de Velocidad adicionales a lo habitual luego de cualquier combate.
+168 Reduce a la mitad la Velocidad del usuario, pero gana 4 PE de Ataque Especial adicionales a lo habitual luego de cualquier combate.
+169 Reduce a la mitad la Velocidad del usuario, pero gana 4 PE de Defensa adicionales a lo habitual luego de cualquier combate.
+170 Reduce a la mitad la Velocidad del usuario, pero gana 4 PE de Ataque adicionales a lo habitual luego de cualquier combate.
+171 Reduce a la mitad la Velocidad del usuario, pero gana 4 PE de Defensa Especial adicionales a lo habitual luego de cualquier combate.
+172 Reduce a la mitad la Velocidad del usuario, pero gana 4 PE de PS adicionales a lo habitual luego de cualquier combate.
+173 Permite a Kirlia macho a Gallade, y Snorunt hembra a Froslass.
+174 Permite a Murkrow evolucionar a Honchkrow, Misdreavus a Mismagius y Lampent a Chandelure.
+175 Si lo lleva equipado un Electabuzz durante un intercambio, le permite evolucionar a Electivire.
+176 Si lo lleva equipado un Magmar durante un intercambio, le permite evolucionar a Magmortar.
+177 Un objeto vital necesario para prevenir el colapso de una torre de piedra. Se pueden escuchar voces de ahí ocasionalmente.
+178 Si lo lleva equipado un Happiny durante el día mientras sube de nivel, le permite evolucionar a Chansey.
+179 Si lo lleva equipado un Rhydon durante un intercambio, le permite evolucionar a Rhyperior.
+180 Tiene un 20% de probabilidades de que el usuario ataque primero.
+181 Aumenta en 1 nivel la frecuencia de golpes críticos. Si se le equipa a un Sneasel durante la noche mientras sube de nivel, hace que evolucione a Weavile.
+182 Permite a Togetic evolucionar a Togekiss, Roselia a Roserade y Minccino a Cinccino.
+183 Causa al usuario daño equivalente al 12.5% de sus PS máximos cada turno. Si el usuario fue golpeado con un movimiento de contacto y este no posee un objeto, entonces el objeto se pasará al oponente que lo golpeó.
+184 Si lo lleva equipado un Clamperl, aumenta su Ataque Especial en un 100%, durante un intercambio, hace que Clamperl evolucione a Huntail.
+185 Hace que el poder de los ataques de tipo Dragón incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Dragón, al igual que el movimiento Sentencia. 
+186 Hace que el poder de los ataques de tipo Siniestro incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Siniestro, al igual que el movimiento Sentencia. 
+187 Hace que el poder de los ataques de tipo Tierra incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Tierra, al igual que el movimiento Sentencia. 
+188 Hace que el poder de los ataques de tipo Lucha incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Lucha, al igual que el movimiento Sentencia. 
+189 Hace que el poder de los ataques de tipo Fuego incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Fuego, al igual que el movimiento Sentencia. 
+190 Garantiza que los movimientos que atrapen al objetivo duren los 5 turnos correspondientes.
+191 Hace que el poder de los ataques de tipo Hielo incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Hielo, al igual que el movimiento Sentencia. 
+192 Hace que el poder de los ataques de tipo Bicho incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Bicho, al igual que el movimiento Sentencia. 
+193 Hace que el poder de los ataques de tipo Acero incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Acero, al igual que el movimiento Sentencia. 
+194 Hace que el poder de los ataques de tipo Planta incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Planta, al igual que el movimiento Sentencia. 
+195 Hace que el poder de los ataques de tipo Psíquico incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Psíquico, al igual que el movimiento Sentencia. 
+196 Hace que el poder de los ataques de tipo Volador incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Volador, al igual que el movimiento Sentencia. 
+197 Hace que el poder de los ataques de tipo Agua incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Agua, al igual que el movimiento Sentencia. 
+198 Hace que el poder de los ataques de tipo Fantasma incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Fantasma, al igual que el movimiento Sentencia. 
+199 Hace que el poder de los ataques de tipo Roca incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Roca, al igual que el movimiento Sentencia. 
+200 Si lo lleva equipado un Cubone o Marowak, aumenta su Ataque en un 100%.
+201 Hace que el poder de los ataques de tipo Veneno incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Veneno, al igual que el movimiento Sentencia. 
+202 Hace que el poder de los ataques de tipo Eléctrico incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Eléctrico, al igual que el movimiento Sentencia. 
+203 El fósil de un Pokémon antiguo que vivió en la tierra. Parece ser la parte de un collar.
+204 El fósil de un Pokémon antiguo que vivió en el mar. Parece ser la parte de una garra.
+205 El fósil de un Pokémon antiguo que vivió en el mar. Parece ser la parte de un caparazón.
+206 Aumenta en un 20% la potencia de los ataques tipo Roca del usuario.
+207 El fósil de un Pokémon antiguo que vivió en el mar. Parece ser la parte de un caparazón de mar.
+208 Un pedazo de ámbar que contiene el material genético de un Pokémon antiguo. Tiene un color claro con un tono rojizo.
+209 Un hueso que es extremadamente valioso para la arqueología Pokémon. Se puede vender a un alto precio en las tiendas.
+210 El fósil de un Pokémon antiguo que vivió en el mar. Parece ser la parte de una raíz.
+211 El fósil de un Pokémon antiguo que vivió en la tierra. Parece ser la parte de una cabeza.
+212 Reduce a la mitad la Velocidad del usuario y lo hace vulnerable a los ataques tipo Tierra, Trampa Arena, Púas y Púas Tóxicas si es tipo Volador o tiene Levitación.
+213 Si lo lleva equipado un Giratina, aumenta en un 20% la potencia de sus ataques tipo Dragón y Fantasma. Hace que cambie a su forma Origen.
+214 Papel con un colorido conjunto de letras. Equipala a un Pokémon para su entrega.
+215 Papel con hermosos patrones florales. Equipalo a un Pokémon para su entrega.
+216 Papel con un patrón de ladrillos. Equipalo a un Pokémon para su entrega.
+217 Papel con la impersión de un mundo bajo el agua. Equipalo a un Pokémon para su entrega.
+218 Papel con la impersión de llamas. Equipalo a un Pokémon para su entrega.
+219 Papel con la impersión de un hermoso campo verde. Equipalo a un Pokémon para su entrega.
+220 Un correo con la impresión de un lindo Wingull. Se le equipa a un Pokémon.
+221 Papel con la impersión de enormes patrones de corazón. Equipalo a un Pokémon para su entrega.
+222 Papel con  la impresión de un vívido patron de arcoíris. Equipalo a un Pokémon para su entrega.
+223 Papel con la impersión de un mundo cubierto de nieve. Equipalo a un Pokémon para su entrega.
+224 Papel con la impersión describiendo la expansión del universo. Equipalo a un Pokémon para su entrega.
+225 Papel con la impresión de diseños mecánicos. Equipalo a un Pokémon para su entrega.
+226 Papel con la impersión de una mina de carbón poco iluminada. Equipalo a un Pokémon para su entrega.
+227 Hace que Tecno Shock sea de tipo Agua.
+228 Hace que Tecno Shock sea de tipo Eléctrico.
+229 Hace que Tecno Shock sea de tipo Fuego.
+230 Hace que Tecno Shock sea de tipo Hielo.
+231 Recupera 20 PS a un Pokémon.
+232 Si se le equipa a Feebas durante un intercambio, hace que evolucione a Milotic.
+233 Aumenta en un 50% la Defensa y Defensa Especial de un Pokémon si este aún puede evolucionar.
+234 Reduce a la mitad el peso del usuario.
+235 Causa daño equivalente al 16.6% de los PS máximos del oponente si este ataca al usuario con un movimiento de contacto.
+236 Hace al usuario immune a los ataques tipo Tierra, Trampa Arena, Púas y Púas Tóxicas. El objeto se pierde una vez que el usuario recibe daño por parte del oponente.
+237 El usuario forza al Pokémon que lo ataca a ser cambiado por otro Pokémon. Se consume tras su uso.
+238 Hace que el usuario pierda sus inmunidades frente a los tipos correspondientes.
+239 Hace que el daño causado por los movimientos del usuario que atrapan al rival pase del 6.25% al 12.5% del PS máximo del rival.
+240 Aumenta en 1 nivel el Ataque Especial del usuario cuando es golpeado por un ataque tipo Agua. Se consume tras su uso.
+241 Aumenta en 1 nivel el Ataque del usuario cuando es golpeado por un ataque tipo Eléctrico. Se consume tras su uso.
+242 Cuando el usuario es atacado por el oponente, hace que el usuario se vea forzado a ser cambiado. Se consume tras su uso.
+243 Aumenta en un 30% la Potencia de los ataques tipo Fuego. Se consume tras su uso.
+244 Aumenta en un 30% la Potencia de los ataques tipo Agua. Se consume tras su uso.
+245 Aumenta en un 30% la Potencia de los ataques tipo Eléctrico. Se consume tras su uso.
+246 Aumenta en un 30% la Potencia de los ataques tipo Planta. Se consume tras su uso.
+247 Aumenta en un 30% la Potencia de los ataques tipo Hielo. Se consume tras su uso.
+248 Aumenta en un 30% la Potencia de los ataques tipo Lucha. Se consume tras su uso.
+249 Aumenta en un 30% la Potencia de los ataques tipo Veneno. Se consume tras su uso.
+250 Aumenta en un 30% la Potencia de los ataques tipo Tierra. Se consume tras su uso.
+251 Aumenta en un 30% la Potencia de los ataques tipo Volador. Se consume tras su uso.
+252 Aumenta en un 30% la Potencia de los ataques tipo Psíquico. Se consume tras su uso.
+253 Aumenta en un 30% la Potencia de los ataques tipo Bicho. Se consume tras su uso.
+254 Aumenta en un 30% la Potencia de los ataques tipo Roca. Se consume tras su uso.
+255 Aumenta en un 30% la Potencia de los ataques tipo Fantasma. Se consume tras su uso.
+256 Aumenta en un 30% la Potencia de los ataques tipo Dragón. Se consume tras su uso.
+257 Aumenta en un 30% la Potencia de los ataques tipo Siniestro. Se consume tras su uso.
+258 Aumenta en un 30% la Potencia de los ataques tipo Acero. Se consume tras su uso.
+259 Aumenta en un 30% la Potencia de los ataques tipo Normal. Se consume tras su uso.
+260 Aumenta por 1 los PE de PS de un Pokémon y aumenta su amistad.
+261 Aumenta por 1 los PE de Ataque de un Pokémon y aumenta su amistad.
+262 Aumenta por 1 los PE de Defensa de un Pokémon y aumenta su amistad.
+263 Aumenta por 1 los PE de Ataque Especial de un Pokémon y aumenta su amistad.
+264 Aumenta por 1 los PE de Defensa Especial de un Pokémon y aumenta su amistad.
+265 Aumenta por 1 los PE de Velocidad de un Pokémon y aumenta su amistad.
+266 Es sólo una hermosa pluma que no tiene ningún efecto en los Pokémon.
+267 Tiene un ratio de captura de 100%. Sólo se puede usar en el Bosque Nexo.
+268 Un hongo raro de agradable fragancia. Un maniaco lo comprará a un alto precio.
+269 Una pepita grande de puro oro que brilla mucho. Un maniaco lo comprará a un alto precio.
+270 Perlas grandes que brillan de color plateado. Un maniaco lo comprará a un alto precio.
+271 Un fragmento que cayó al suelo cuando un cometa se aproximó. Un maniaco lo comprará a un alto precio.
+272 Una moneda de cobre usada en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+273 Una moneda de plata usada en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+274 Una moneda de oro usada en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+275 Una vasija hecha en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+276 Un bracalete hecho en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+277 Una figura de piedra hecha en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+278 Una corona hecha en una civilización hace 3,000 años. Un maniaco lo comprará a un alto precio.
+279 Cura a un Pokémon de cualquier problema de estado.
+280 Objeto de Superlanzador. Aumenta en 2 niveles la frecuencia de golpes críticos de un Pokémon.
+281 Objeto de Superlanzador. Aumenta en 2 niveles la Velocidad de un Pokémon.
+282 Objeto de Superlanzador. Aumenta en 2 niveles el Ataque Especial de un Pokémon.
+283 Objeto de Superlanzador. Aumenta en 2 niveles la Defensa Especial de un Pokémon.
+284 Objeto de Superlanzador. Aumenta en 2 niveles la Defensa de un Pokémon.
+285 Objeto de Superlanzador. Aumenta en 2 niveles el Ataque de un Pokémon.
+286 Objeto de Superlanzador. Aumenta en 2 niveles la Precisión de un Pokémon.
+287 Objeto de Superlanzador. Aumenta en 3 niveles la Velocidad de un Pokémon.
+288 Objeto de Superlanzador. Aumenta en 3 niveles el Ataque Especial de un Pokémon.
+289 Objeto de Superlanzador. Aumenta en 3 niveles la Defensa Especial de un Pokémon.
+290 Objeto de Superlanzador. Aumenta en 3 niveles la Defensa de un Pokémon.
+291 Objeto de Superlanzador. Aumenta en 3 niveles el Ataque de un Pokémon.
+292 Objeto de Superlanzador. Aumenta en 3 niveles la Precisión de un Pokémon.
+293 Objeto de Superlanzador. Aumenta en 6 niveles la Velocidad de un Pokémon.
+294 Objeto de Superlanzador. Aumenta en 6 niveles el Ataque Especial de un Pokémon.
+295 Objeto de Superlanzador. Aumenta en 6 niveles la Defensa Especial de un Pokémon.
+296 Objeto de Superlanzador. Aumenta en 6 niveles la Defensa de un Pokémon.
+297 Objeto de Superlanzador. Aumenta en 6 niveles el Ataque de un Pokémon.
+298 Objeto de Superlanzador. Aumenta en 6 niveles la Precisión de un Pokémon.
+299 Objeto de Superlanzador. Activa el efecto de la habilidad del Pokémon aliado si dicha habilidad es  Anticipación, Descarga, Llovizna, Sequía, Alerta, Cacheo, Intimidación, Chorro Arena, Inicio Lento, Nevada o Rastro.
+300 Objeto de Superlanzador. Elimina objeto equipado del Pokémon aliado para el resto de la batalla.
+301 Objeto de Superlanzador. Activa el efecto del objeto equipado del Pokémon aliado.
+302 Objeto de Superlanzador. Elimina todos los cambios en las estadísticas del Pokémon aliado.
+303 Objeto de Superlanzador. Aumenta en 3 niveles la frecuencia de golpes críticos de un Pokémon.
+304 Aumenta en 1 nivel el Ataque del usuario, pero también lo confunde. Se consume tras su uso.
+305 Tiene un ratio de captura de 1.
+306 Tiene un ratio de captura de 1.5.
+307 Tiene un ratio de captura de 2.
+308 Tiene un 100% de posibilidades de capturar a un Pokémon.
+309 Tiene un ratio de captura de 1.5. Sólo se puede usar en la Zona Safari.
+310 Si el nivel del Pokémon del entrenador es igual o menor al del objetivo, su ratio de captura será de 1. De ser mayor que el del objetivo, pero menor a dos veces el nivel del objetivo, su ratio de captura será de 2. Si es mayor a dos veces el nivel del objetivo, pero menor a cuatro veces el nivel del objetivo, su ratio de captura será de 4. Si es mayor que cuatro veces el nivel del objetivo, su ratio de captura será de 8.
+311 Tiene un ratio de captura de 3 si el Pokémon fue atrapado tras ser pescado, en caso contrario su ratio de captura es de 1.
+312 Si el objetivo pertenece a una línea evolutiva de un Pokémon que puede evolucionar gracias a la Piedra Lunar, su ratio de captura será de 4, en caso contrario su ratio de captura será de 1.
+313 Tiene un ratio de captura de 1. El Pokémon capturado con esta bola tiene automáticamente su amistad en 200.
+314 Si el objetivo es de la misma especie que el Pokémon del entrenador pero de género opuesto, tiene ratio de captura de 8, en caso contrario su ratio será de 1.
+315 Tiene un ratio de captura de 1. Añade -20 a las probabilidades de captura si el objetivo tiene un peso menor o igual a 204.8 kg. Añade 20 a las probabilidades de captura si el objetivo tiene un peso mayor a 204.8 kg, pero menor o igual a 307.2 kg. Añade 30 a las probabilidades de captura si el objetivo tiene un peso mayor a 307.2 kg, pero menor o igual a 409.6 kg. Añade 40 a las probabilidades de captura si el objetivo tiene un peso mayor a 409.6 kg.
+316 Si la Velocidad base del objetivo es de 100 o más, su ratio de captura será de 4x, en caso contrario su ratio de captura será de 1.
+317 Tiene un ratio de captura de 1.5. Sólo se puede usar en el Concurso de captura de Bichos.
+318 Tiene un ratio de captura de 1.
+319 Si el objetivo ya había sido atrapado anteriormente, su ratio de captura será de 3, en caso contrario su ratio de captura será de 1.
+320 Tiene un ratio de captura de 1+ (turnos transcurridos en batalla x 3 / 10), con un máximo de 4.
+321 Tiene un ratio de captura de (41 - el nivel del objetivo) / 10, con un mínimo de 1.
+322 Si el objetivo es de tipo Bicho o Agua, su ratio de captura será de 3, en caso contrario su ratio de captura será de 1.
+323 Si se usa mientras se surfea o si el objetivo fue pescado, su ratio de captura será de 3.5, en caso contrario, su ratio de captura será de 1.
+324 Tiene un ratio de captura de 1. Duplica la efectividad de cualquier acción que aumente la amistad del Pokémon capturado.
+325 Tiene un ratio de captura de 1. Cura al Pokémon capturado de cualquier problema de estado, restaurando sus PS y sus PP.
+326 Si se usa en el primer turno de la batalla, su ratio de captura será de 5 (Quinta generación) y de 4 (Cuarta generación). En caso contrario, su ratio de captura será de 1.
+327 Si se usa durante la noche o en una cueva, su ratio de captura será de 3.5, en caso contrario su ratio de captura será de 1.
+328 Tiene un ratio de captura de 1. Es la Poké Ball con la que suelen haber sido capturados los Pokémon entregados por evento o Regalo Misterioso.
+329 Tiene un 100% de posibilidades de capturar a un Pokémon. Sólo se puede usar en el Parque Compi.
+330 Hace que el poder de los ataques de tipo Hada incrementen su daño un 20%. Si se equipa en Arceus, gracias a su habilidad Multitipo, pasará de ser de tipo Normal a tipo Hada, al igual que el movimiento Sentencia.
+331 Aumenta en un 50% la Defensa Especial del usuario, pero no puede utilizar ningún movimiento de estado o no ofensivo, sólo ataques ofensivos.
+332 Hace que el usuario no reciba daño de los efectos climáticos (Granizo y Tormenta Arena), ni problemas de estado producidos por movimientos basados en polvos (Paralizador, Espora, Polvo Veneno, Somnífero, Polvo Explosivo o Esporagodón) o de la habilidad Efecto Espora.
+333 Aumenta en 2 niveles el Ataque y Ataque Especial del usuario cuando es golpeado por un ataque supereficaz. Se consume tras su uso.
+334 Aumenta en 1 nivel el Ataque del usuario cuando es golpeado por un ataque tipo Hielo. Se consume tras su uso.
+335 Aumenta en 1 nivel la Defensa Especial del usuario cuando es golpeado por un ataque tipo Agua. Se consume tras su uso.
+336 Permite al Pokémon en el que se use cambiar de habilidad permanentemente, siempre que la especie del Pokémon cuente con dos habilidades.
+337 El fósil de un Pokémon antiguo. Parece ser la parte de la mandíbula.
+338 El fósil de un Pokémon antiguo. Parece ser la parte de una aleta.
+339 Cura a un Pokémon de cualquier problema de estado.
+340 Si lo lleva equipado un Spritzee durante un intercambio, hace que evolucione a Aromatisse.
+341 Si lo lleva equipado un Swirlix durante un intercambio, hace que evolucione a Slurpuff.
+342 Provoca la Regresión Primigenia en Groudon durante la batalla.
+343 Provoca la Regresión Primigenia en Kyogre durante la batalla.
+344 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Lucha.
+345 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Volador.
+346 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Veneno.
+347 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Tierra.
+348 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Roca.
+349 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Bicho.
+350 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Fantasma.
+351 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Acero.
+352 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Fuego.
+353 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Agua.
+354 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Planta.
+355 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Eléctrico.
+356 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Psíquico.
+357 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Hielo.
+358 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Dragon.
+359 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Siniestro.
+360 Cambia el tipo de Multiataque y Silvally con Sistema Alfa al tipo Hada.
+361 Aumenta en 1 nivel la Velocidad del usuario cuando este es intimidado. Se consume tras su uso.
+362 Si el usuario utiliza Campo Eléctrico, Campo Psíquico, Campo de Niebla o Campo de Hierba llevando este objeto, la duración del campo pasa de 5 turnos a 8 turnos.
+363 Protege al usuario de efectos secundarios causados por atacar al oponente con un movimiento de Contacto.
+364 Aumenta en 1 nivel la Defensa del usuario al activar Campo Eléctrico. Se consume tras su uso.
+365 Aumenta en 1 nivel la Defensa Especial del usuario al activar Campo Psíquico. Se consume tras su uso.
+366 Aumenta en 1 nivel la Defensa Especial del usuario al activar Campo de Niebla. Se consume tras su uso.
+367 Aumenta en 1 nivel la Defensa del usuario al activar Campo de Hierba. Se consume tras su uso.
+368 Tiene un ratio de captura de x5 si se utiliza contra un Ultraente, en caso contrario su ratio de captura será de  x0,1.
+369 Cura a un Pokémon de cualquier problema de estado.
+370 Una piedra perfectamente normal que pudiera ser valiosa para algunas personas. Todo depende del observador.
+371 Una hermosa chapa de botella con brillo plateado. A algunas personas les alegra recibir una.
+372 Una hermosa chapa de botella con brillo dorado. A algunas personas les alegra recibir una.
+373 Permite a Vulpix de Alola evolucionar a Ninetales de Alola y Sandshrew de Alola a Sandslash de Alola.
+374 Cura a un Pokémon de cualquier problema de estado.
+375 Cambia la forma de Oricorio a Oricorio-Plácido.
+376 Cambia la forma de Oricorio a Oricorio-Animado.
+377 Cambia la forma de Oricorio a Oricorio-Apasionado.
+378 Cambia la forma de Oricorio a Oricorio-Refinado.
+1000 Aumenta en un 10% la potencia de los ataques tipo Normal del usuario.
+1001 Aumenta en un 10% la potencia de los ataques tipo Normal del usuario.
+2001 Permite a Venusaur Mega Evolucionar en combate.
+2002 Permite a Charizard Mega Evolucionar en combate.
+2003 Permite a Charizard Mega Evolucionar en combate.
+2004 Permite a Blastoise Mega Evolucionar en combate.
+2005 Permite a Alakazam Mega Evolucionar en combate.
+2006 Permite a Gengar Mega Evolucionar en combate.
+2007 Permite a Kangaskhan Mega Evolucionar en combate.
+2008 Permite a Pinsir Mega Evolucionar en combate.
+2009 Permite a Gyarados Mega Evolucionar en combate.
+2010 Permite a Aerodactyl Mega Evolucionar en combate.
+2011 Permite a Mewtwo Mega Evolucionar en combate.
+2012 Permite a Mewtwo Mega Evolucionar en combate.
+2013 Permite a Ampharos Mega Evolucionar en combate.
+2014 Permite a Scizor Mega Evolucionar en combate.
+2015 Permite a Heracross Mega Evolucionar en combate.
+2016 Permite a Houndoom Mega Evolucionar en combate.
+2017 Permite a Tyranitar Mega Evolucionar en combate.
+2018 Permite a Blaziken Mega Evolucionar en combate.
+2019 Permite a Gardevoir Mega Evolucionar en combate.
+2020 Permite a Mawile Mega Evolucionar en combate.
+2021 Permite a Aggron Mega Evolucionar en combate.
+2022 Permite a Medicham Mega Evolucionar en combate.
+2023 Permite a Manectric Mega Evolucionar en combate.
+2024 Permite a Banette Mega Evolucionar en combate.
+2025 Permite a Absol Mega Evolucionar en combate.
+2026 Permite a Garchomp Mega Evolucionar en combate.
+2027 Permite a Lucario Mega Evolucionar en combate.
+2028 Permite a Abomasnow Mega Evolucionar en combate.
+2029 Permite a Sceptile Mega Evolucionar en combate.
+2030 Permite a Swampert Mega Evolucionar en combate.
+2031 Permite a Beedrill Mega Evolucionar en combate.
+2032 Permite a Pidgeot Mega Evolucionar en combate.
+2033 Permite a Slowbro Mega Evolucionar en combate.
+2034 Permite a Steelix Mega Evolucionar en combate.
+2035 Permite a Sableye Mega Evolucionar en combate.
+2036 Permite a Sharpedo Mega Evolucionar en combate.
+2037 Permite a Camerupt Mega Evolucionar en combate.
+2038 Permite a Altaria Mega Evolucionar en combate.
+2039 Permite a Glalie Mega Evolucionar en combate.
+2040 Permite a Salamence Mega Evolucionar en combate.
+2041 Permite a Metagross Mega Evolucionar en combate.
+2042 Permite a Lopunny Mega Evolucionar en combate.
+2043 Permite a Gallade Mega Evolucionar en combate.
+2044 Permite a Audino Mega Evolucionar en combate.
+2045 Permite a Diancie Mega Evolucionar en combate.
+2046 Permite a Latias Mega Evolucionar en combate.
+2047 Permite a Latios Mega Evolucionar en combate.
+3000 Permite transformar los movimientos tipo Normal en el Movimiento Z: Carrera Arrolladora.
+3001 Permite transformar los movimientos tipo Lucha en el Movimiento Z: Ráfaga Demoledora.
+3002 Permite transformar los movimientos tipo Volador en el Movimiento Z: Picado Supersónico.
+3003 Permite transformar los movimientos tipo Veneno en el Movimiento Z: Diluvio Corrosivo.
+3004 Permite transformar los movimientos tipo Tierra en el Movimiento Z: Barrena Telúrica.
+3005 Permite transformar los movimientos tipo Roca en el Movimiento Z: Aplastamiento Gigalítico.
+3006 Permite transformar los movimientos tipo Bicho en el Movimiento Z: Guadaña Sedosa.
+3007 Permite transformar los movimientos tipo Fantasma en el Movimiento Z: Presa Espectral.
+3008 Permite transformar los movimientos tipo Acero en el Movimiento Z: Hélice Trepanadora.
+3009 Permite transformar los movimientos tipo Fuego en el Movimiento Z: Hecatombe Pírica.
+3010 Permite transformar los movimientos tipo Agua en el Movimiento Z: Hidrovórtice Abisal.
+3011 Permite transformar los movimientos tipo Planta en el Movimiento Z: Megatón Floral.
+3012 Permite transformar los movimientos tipo Eléctrico en el Movimiento Z: Gigavoltio Destructor.
+3013 Permite transformar los movimientos tipo Psíquico en el Movimiento Z: Disruptor Psíquico.
+3014 Permite transformar los movimientos tipo Hielo en el Movimiento Z: Crioaliento Despiadado.
+3015 Permite transformar los movimientos tipo Dragón en el Movimiento Z: Dracoaliento Devastador.
+3016 Permite transformar los movimientos tipo Siniestro en el Movimiento Z: Agujero Negro Aniquilador.
+3017 Permite transformar los movimientos tipo Hada en el Movimiento Z: Arrumaco Sideral.
+3018 Permite a Pikachu transformar Placaje Eléctrico en el Movimiento Z especial: Pikavoltio Letal.
+3019 Permite a Raichu de Alola transformar Rayo en el Movimiento Z especial: Surfeo Galvánico.
+3020 Permite a Eevee transformar Última Baza en el Movimiento Z especial: Novena Potencia.
+3021 Permite a Snorlax transformar Giga Impacto en el Movimiento Z especial: Arrojo Intempestivo.
+3022 Permite a Mew transformar Psíquico en el Movimiento Z especial: Supernova Original.
+3023 Permite a Tapu Koko, Tapu Lele, Tapu Bulu y Tapu Fini transformar Furia Natural en el Movimiento Z especial: Cólera del Guardián.
+3024 Permite a Decidueye transformar Puntada Sombría en el Movimiento Z especial: Aluvión de Flechas Sombrías.
+3025 Permite a Incineroar transformar Lariat Oscuro en el Movimiento Z especial: Hiperplancha Oscura.
+3026 Permite a Primarina transformar Aria Burbuja en el Movimiento Z especial: Sinfonía de la Diva Marina.
+3027 Permite a Marshadow transformar Robasombra en el Movimiento Z especial: Constelación Robaalmas.
+3028 Permite a Pikachu con Gorra transformar Rayo en el Movimiento Z especial: Gigarrayo Fulminante.

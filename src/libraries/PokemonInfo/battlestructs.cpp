@@ -85,6 +85,7 @@ DataStream & operator << (DataStream &out, const BattleMove &mo)
 
 PokeBattle::PokeBattle()
 {
+    nonshallow() = false;
     num() = Pokemon::NoPoke;
     ability() = 0;
     item() = 0;
@@ -127,6 +128,8 @@ void PokeBattle::setNormalStat(int stat, quint16 i)
 
 void PokeBattle::init(PokePersonal &poke)
 {
+    nonshallow() = true;
+
     /* Checks num, ability, moves, item */
     poke.runCheck(poke.illegal());
     illegal() = poke.illegal();
@@ -140,7 +143,7 @@ void PokeBattle::init(PokePersonal &poke)
 
 
     PokeGeneral p;
-    p.gen() = poke.gen();
+    this->gen() = p.gen() = poke.gen();
     p.num() = poke.num();
     p.load();
 
@@ -165,6 +168,13 @@ void PokeBattle::init(PokePersonal &poke)
         if (PokemonInfo::OriginalForme(num()) == Pokemon::Arceus) {
             if (ItemInfo::isPlate(item())) {
                 num().subnum = ItemInfo::PlateType(item());
+            } else {
+                num().subnum = 0;
+            }
+        }
+        if (PokemonInfo::OriginalForme(num()) == Pokemon::Silvally) {
+            if (ItemInfo::isMemoryChip(item())) {
+                num().subnum = ItemInfo::MemoryChipType(item());
             } else {
                 num().subnum = 0;
             }
@@ -214,7 +224,7 @@ void PokeBattle::init(PokePersonal &poke)
     }
 
     dvs().clear();   
-    if(poke.num().pokenum == Pokemon::Xerneas || poke.num().pokenum == Pokemon::Yveltal || poke.num().pokenum == Pokemon::Zygarde) {
+    if(!poke.illegal() && ((poke.num().pokenum >= Pokemon::Xerneas && poke.num().pokenum <= Pokemon::Volcanion) || (poke.num().pokenum >= Pokemon::Tapu_Koko && poke.num().pokenum <= Pokemon::Marshadow))) {
         int numFlawless = 6;
         for (int i = 0; i < 6; i++) {
             if(poke.DV(i) < 31) {
@@ -232,6 +242,27 @@ void PokeBattle::init(PokePersonal &poke)
         for (int i = 0; i < 6; i++) {
             dvs() << std::min(std::max(poke.DV(i), quint8(0)),quint8(p.gen() <= 2? 15: 31));
         }
+    }
+
+    if (poke.gen() > 6) {
+        int minPossible = 0;
+        int maxPossible = 0;
+        for (int i = 0; i < 6; i++) {
+            //Speed comes before sp.atk and sp.def
+            int b = i == 5 ? 3 : (i > 2 ? i+1 : i);
+
+            minPossible += poke.DV(i) == 31 ? 0 : (poke.DV(i) % 2) << b;
+            maxPossible += poke.DV(i) == 31 ? 1 << b : (poke.DV(i) % 2) << b;
+        }
+        minPossible = (minPossible*15)/63 + 1;
+        maxPossible = (maxPossible*15)/63 + 1;
+        if (maxPossible < poke.hiddenPower() || poke.hiddenPower() < minPossible) {
+            hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
+        } else {
+            hiddenPower() = poke.hiddenPower();
+        }
+    } else {
+        hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
     }
 
     evs().clear();
@@ -252,11 +283,13 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    updateStats(p.gen().num);
+    updateStats(gen());
 }
 
 void PokeBattle::updateStats(Pokemon::gen gen)
 {
+    this->gen() = gen;
+
     totalLifePoints() = std::max(PokemonInfo::FullStat(num(), gen.num, nature(), Hp, level(), dvs()[Hp], evs()[Hp]),1);
     setLife(totalLifePoints());
 
@@ -265,11 +298,24 @@ void PokeBattle::updateStats(Pokemon::gen gen)
     }
 }
 
+void PokeBattle::setNum(Pokemon::uniqueId num)
+{
+    ShallowBattlePoke::setNum(num);
+    if (nonshallow()) {
+        updateStats(gen());
+    }
+}
+
 DataStream & operator >> (DataStream &in, PokeBattle &po)
 {
+    po.nonshallow() = true;
+
     in >> po.num() >> po.nick() >> po.totalLifePoints() >> po.lifePoints() >> po.gender() >> po.shiny() >> po.level() >> po.item() >> po.ability();
     if (in.version >= 3) {
         in >> po.nature();
+    }
+    if (in.version >= 4) {
+        in >> po.hiddenPower();
     }
     in >> po.happiness();
 
@@ -298,6 +344,9 @@ DataStream & operator << (DataStream &out, const PokeBattle &po)
     out << po.num() << po.nick() << po.totalLifePoints() << po.lifePoints() << po.gender() << po.shiny() << po.level() << po.item() << po.ability();
     if (out.version >= 3) {
         out << po.nature();
+    }
+    if (out.version >= 4) {
+        out << po.hiddenPower();
     }
     out << po.happiness();
 
@@ -343,6 +392,7 @@ void ShallowBattlePoke::init(const PokeBattle &poke)
     shiny() = poke.shiny();
     illegal() = poke.illegal();
     gender() = poke.gender();
+    gen() = poke.gen();
     setLifePercent( (poke.lifePoints() * 100) / poke.totalLifePoints() );
     if (lifePercent() == 0 && poke.lifePoints() > 0) {
         setLifePercent(1);
@@ -419,8 +469,8 @@ TeamBattle::TeamBattle(PersonalTeam &other)
     gen = other.gen();
     tier = other.defaultTier();
 
-    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
-        gen = GenInfo::GenMax();
+    if (!gen.isValid()) {
+        gen = Pokemon::gen();
     }
 
     int curs = 0;
@@ -440,16 +490,28 @@ TeamBattle::TeamBattle(Team &other)
     gen = other.gen();
     tier = other.defaultTier();
 
-    if (gen < GEN_MIN || gen > GenInfo::GenMax()) {
-        gen = GenInfo::GenMax();
+    if (!gen.isValid()) {
+        gen = Pokemon::gen();
     }
 
     int curs = 0;
     for (int i = 0; i < 6; i++) {
         poke(curs).init(other.poke(i));
+        //Lv 5 pokemon can't hyper train
+        if (tier == "SM LC") {
+            poke(curs).hiddenPower() = HiddenPowerInfo::Type(gen, poke(curs).dvs().value(0), poke(curs).dvs().value(1), poke(curs).dvs().value(2), poke(curs).dvs().value(3), poke(curs).dvs().value(4), poke(curs).dvs().value(5));
+        }
         if (poke(curs).num() != 0) {
             ++curs;
         }
+    }
+}
+
+void TeamBattle::updateGen(const Pokemon::gen &gen)
+{
+    this->gen = gen;
+    for (int i = 0; i < 6; i++) {
+        poke(i).gen() = gen;
     }
 }
 
@@ -551,6 +613,8 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
         p.dvs() << p2.DV(0) << p2.DV(1) << p2.DV(2) << p2.DV(3) << p2.DV(4) << p2.DV(5);
         p.evs() << p2.EV(0) << p2.EV(1) << p2.EV(2) << p2.EV(3) << p2.EV(4) << p2.EV(5);
 
+        p.hiddenPower() = HiddenPowerInfo::Type(gen, p2.DV(0), p2.DV(1), p2.DV(2), p2.DV(3), p2.DV(4), p2.DV(5));
+
         QList<int> moves = g.moves().toList();
         if (illegal) {
             QSet<int> allMoves = MoveInfo::Moves(gen);
@@ -606,6 +670,9 @@ void TeamBattle::generateRandom(Pokemon::gen gen, bool illegal)
 
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Arceus && p.ability() == Ability::Multitype) {
             p.num() = Pokemon::uniqueId(Pokemon::Arceus, ItemInfo::PlateType(p.item()));
+        }
+        if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Silvally && p.ability() == Ability::RKSSystem) {
+            p.num() = Pokemon::uniqueId(Pokemon::Silvally, ItemInfo::MemoryChipType(p.item()));
         }
         if (PokemonInfo::OriginalForme(p.num()) == Pokemon::Genesect) {
             p.num() = Pokemon::uniqueId(Pokemon::Genesect, ItemInfo::DriveForme(p.item()));
@@ -678,7 +745,10 @@ DataStream & operator >> (DataStream &in, TeamBattle::FullSerializer f) {
     in >> f.team->gen;
     in >> (*f.team);
 
-    assert(f.team->gen.isValid());
+    if (!f.team->gen.isValid()) {
+        f.team->gen = GenInfo::GenMax();
+    }
+    f.team->updateGen(f.team->gen);
 
     return in;
 }
@@ -702,9 +772,9 @@ void ShallowShownPoke::init(const PokeBattle &b)
     gender = b.gender();
 
     /* All arceus formes have the same icon */
-    if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
+    /*if (PokemonInfo::OriginalForme(num) == Pokemon::Arceus) {
         num = Pokemon::Arceus;
-    }
+    }*/
     if (PokemonInfo::OriginalForme(num) == Pokemon::Genesect) {
         num = Pokemon::Genesect;
     }
@@ -815,6 +885,8 @@ bool FullBattleConfiguration::acceptSpectator(int player, bool authed) const
 
 DataStream & operator >> (DataStream &in, FullBattleConfiguration &c)
 {
+    c.protocolVersion = in.version;
+
     VersionControl v;
     in >> v;
 
@@ -874,9 +946,11 @@ DataStream & operator << (DataStream &out, const FullBattleConfiguration &c)
 BattleChoices::BattleChoices()
 {
     mega = false;
+    zmove = false;
     switchAllowed = true;
     attacksAllowed = true;
     std::fill(attackAllowed, attackAllowed+4, true);
+    std::fill(zmoveAllowed, zmoveAllowed+4, false);
 }
 
 void BattleChoices::disableSwitch()
@@ -906,13 +980,27 @@ BattleChoices BattleChoices::SwitchOnly(quint8 slot)
 
 DataStream & operator >> (DataStream &in, BattleChoices &po)
 {
-    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3] >> po.mega;
+    in >> po.numSlot >> po.switchAllowed >> po.attacksAllowed >> po.attackAllowed[0] >> po.attackAllowed[1] >> po.attackAllowed[2] >> po.attackAllowed[3] >> po.mega >> po.zmove;
+
+    if (po.zmove) {
+        for (int i = 0; i < 4; i++) {
+            in >> po.zmoveAllowed[i];
+        }
+    }
+
     return in;
 }
 
 DataStream & operator << (DataStream &out, const BattleChoices &po)
 {
-    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3] << po.mega;
+    out << po.numSlot << po.switchAllowed << po.attacksAllowed << po.attackAllowed[0] << po.attackAllowed[1] << po.attackAllowed[2] << po.attackAllowed[3] << po.mega << po.zmove;
+
+    if (po.zmove) {
+        for (int i = 0; i < 4; i++) {
+            out << po.zmoveAllowed[i];
+        }
+    }
+
     return out;
 }
 
@@ -934,10 +1022,15 @@ bool BattleChoice::match(const BattleChoices &avail) const
             return false;
         if (mega() && !avail.mega)
             return false;
+        if (zmove() && !avail.zmove)
+            return false;
         if (!avail.struggle()) {
             if (attackSlot() < 0 || attackSlot() > 3) {
                 //Crash attempt!!
                 return false;
+            }
+            if (zmove() && avail.zmove) {
+                return avail.zmoveAllowed[attackSlot()];
             }
             return avail.attackAllowed[attackSlot()];
         }
@@ -977,7 +1070,7 @@ DataStream & operator >> (DataStream &in, BattleChoice &po)
         in >> po.choice.switching.pokeSlot;
         break;
     case AttackType:
-        in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget >> po.choice.attack.mega;
+        in >> po.choice.attack.attackSlot >> po.choice.attack.attackTarget >> po.choice.attack.mega >> po.choice.attack.zmove;
         break;
     case RearrangeType:
         for (int i = 0; i < 6; i++) {
@@ -1005,7 +1098,7 @@ DataStream & operator << (DataStream &out, const BattleChoice &po)
         out << po.choice.switching.pokeSlot;
         break;
     case AttackType:
-        out << po.choice.attack.attackSlot << po.choice.attack.attackTarget << po.choice.attack.mega;
+        out << po.choice.attack.attackSlot << po.choice.attack.attackTarget << po.choice.attack.mega << po.choice.attack.zmove;
         break;
     case RearrangeType:
         for (int i = 0; i < 6; i++) {

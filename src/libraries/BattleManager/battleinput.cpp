@@ -9,10 +9,9 @@ namespace BC = BattleCommands;
 
 template <class T> std::shared_ptr<T> mk() { return std::shared_ptr<T>(new T()); }
 
-BattleInput::BattleInput(const BattleConfiguration *conf) {
+BattleInput::BattleInput(const BattleConfiguration *conf, int version) :  majorProtocolVersion(version), conf(conf) {
     mCount = 0;
     delayCount = 0;
-    this->conf = conf;
 }
 
 void BattleInput::receiveData(QByteArray inf)
@@ -40,7 +39,7 @@ void BattleInput::receiveData(QByteArray inf)
         return;
     }
 
-    DataStream in (&inf, QIODevice::ReadOnly);
+    DataStream in (&inf, QIODevice::ReadOnly, majorProtocolVersion);
 
     uchar command;
     qint8 player;
@@ -91,6 +90,10 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         in >> silent;
         in >> prevIndex;
         in >> *poke;
+
+        if (conf) {
+            poke->gen() = conf->gen;
+        }
         output<BattleEnum::SendOut>(spot, prevIndex, &poke, silent);
         break;
     }
@@ -303,6 +306,8 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
         in >> move >> part >> type >> foe >> other >> *q;
         if (move == 57) {
             output<BattleEnum::StartWeather>(spot, part+1, false); //False for non-ability weather
+        } else if (move == 240) {
+            output<BattleEnum::StartTerrain>(spot, part+1, false); //False for non-ability terrain
         } else {
             output<BattleEnum::MoveMessage>(spot, move, part, type, foe, other, &q);
         }
@@ -356,6 +361,18 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
             break;
         }
     } break;
+    case BC::TerrainMessage: {
+        qint8 tstatus, terrain;
+        in >> tstatus >> terrain;
+        if (terrain == BC::NoTerrain)
+            break;
+
+        switch(tstatus) {
+        case BC::EndTerrain:
+            output<BattleEnum::EndTerrain>(terrain);
+            break;
+        }
+    } break;
     case BC::StraightDamage:
     {
         qint16 damage;
@@ -377,6 +394,8 @@ void BattleInput::dealWithCommandInfo(DataStream &in, uchar command, int spot)
             output<BattleEnum::StartWeather>(spot, part+1, true); //true is for ability-weather
         } else if (ab == 126 && other < 1) {
             output<BattleEnum::StartWeather>(spot, part+5, true); //true is for ability-weather
+        } else if (ab == 128) {
+            output<BattleEnum::StartTerrain>(spot, part+1, true); //true is for ability-terrain
         } else {
             output<BattleEnum::AbilityMessage>(spot, ab, part, type, foe, other);
         }

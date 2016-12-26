@@ -59,7 +59,8 @@ namespace BattleCommands {
         CappedStat,
         UsePP,
         Notice, /* Two strings: type & content */
-        HtmlMessage /* Full html message */
+        HtmlMessage, /* Full html message */
+        TerrainMessage
     };
 
     enum ChangeTempPoke {
@@ -89,6 +90,19 @@ namespace BattleCommands {
         HurtWeather
     };
 
-};
+    enum Terrain
+    {
+        NoTerrain = 0,
+        Electric = 1,
+        Grassy = 2,
+        Misty = 3,
+        Psychic = 4
+    };
+
+    enum TerrainM
+    {
+        EndTerrain
+    };
+}
 
 #endif // BATTLECOMMANDS_H

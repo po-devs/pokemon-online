@@ -620,3 +620,83 @@
 619 Precipice Blades
 620 Dragon Ascent
 621 Hyperspace Fury
+622 Core Enforcer
+623 Fleur Cannon
+624 High Horsepower
+625 Leafage
+626 Moongeist Beam
+627 Nature's Madness
+628 Revelation Dance
+629 Shell Trap
+630 Solar Blade
+631 Sunsteel Strike
+632 Accelerock
+633 Psychic Terrain
+634 Throat Chop
+635 Aurora Veil
+636 Laser Focus
+637 Clanging Scales
+638 Multi-Attack
+639 Trop Kick
+640 Dragon Hammer
+641 Instruct
+642 Spirit Shackle
+643 Darkest Lariat
+644 Sparkling Aria
+645 Shore Up
+646 First Impression
+647 Baneful Bunker
+648 Ice Hammer
+649 Floral Healing
+650 Strength Sap
+651 Spotlight
+652 Toxic Thread
+653 Gear Up
+654 Pollen Puff
+655 Anchor Shot
+656 Lunge
+657 Fire Lash
+658 Power Trip
+659 Burn Up
+660 Speed Swap
+661 Smart Strike
+662 Purify
+663 Beak Blast
+664 Brutal Swing
+665 Psychic Fangs
+666 Stomping Tantrum
+667 Shadow Bone
+668 Liquidation
+669 Prismatic Laser
+670 Spectral Thief
+671 Tearful Look
+672 Zing Zap
+673 Breakneck Blitz
+674 All-Out Pummeling
+675 Supersonic Skystrike
+676 Acid Downpour
+677 Tectonic Rage
+678 Continental Crush
+679 Savage Spin-out
+680 Never-Ending Nightmare
+681 Corkscrew Crash
+682 Inferno Overdrive
+683 Hydro Vortex
+684 Bloom Doom
+685 Gigavolt Havoc
+686 Shattered Psyche
+687 Subzero Slammer
+688 Devastating Drake
+689 Black Hole Eclipse
+690 Twinkle Tackle
+691 Catastropika
+692 Stoked Sparksurfer
+693 Extreme Evoboost
+694 Pulverizing Pancake
+695 Genesis Supernova
+696 Guardian of Alola
+697 Sinister Arrow Raid
+698 Malicious Moonsault
+699 Oceanic Operetta
+700 Soul-Stealing 7-Star Strike
+701 10,000,000 Volt Thunderbolt

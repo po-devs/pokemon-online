@@ -108,6 +108,7 @@ public:
     static bool IsForme(const Pokemon::uniqueId &pokeid);
     static bool IsAesthetic(Pokemon::uniqueId id);
     static bool IsDifferent(Pokemon::uniqueId id);
+    static bool IsAlolan(Pokemon::uniqueId id);
     static Pokemon::uniqueId NonAestheticForme(Pokemon::uniqueId id);
     static Pokemon::uniqueId OriginalForme(const Pokemon::uniqueId &pokeid);
     static bool HasFormes(const Pokemon::uniqueId &pokeid);
@@ -237,9 +238,12 @@ public:
 
     /* Self-explainable functions */
     static QString Name(int movenum);
+    static QString ZName(int movenum, bool zmove = true);
     static QStringList Names();
     static QStringList Names(Pokemon::gen gen);
     static int Type(int movenum, Pokemon::gen gen);
+    /* For a more precise type depending on the situation */
+    static int Type(int movenum, Pokemon::gen gen, const PokeDataInterface &pokemon);
     static int Category(int movenum, Pokemon::gen gen);
     static int Classification(int movenum, Pokemon::gen gen);
     static int Number(const QString &movename);
@@ -248,9 +252,12 @@ public:
     static int FlinchRate(int movenum, Pokemon::gen gen);
     static int Recoil(int movenum, Pokemon::gen gen);
     static QString Description(int movenum, Pokemon::gen gen);
+    static QString ZDescription(int movenum, Pokemon::gen gen);
     static int Power(int movenum, Pokemon::gen gen);
+    static int ZPower(int movenum, Pokemon::gen gen);
     /* gives the power of a move in the form of a string */
     static QString PowerS(int movenum, Pokemon::gen gen);
+    static QString PowerToString(int powerValue);
     static int PP(int movenum, Pokemon::gen gen);
     static int Acc(int movenum, Pokemon::gen gen);
     /* gives the accuracy of a move in the form of a string */
@@ -261,10 +268,11 @@ public:
     static int SpeedPriority(int movenum, Pokemon::gen gen);
     static QString PriorityS(int movenum, Pokemon::gen gen);
     static int Flags(int movenum, Pokemon::gen gen);
+    static QString FlagsS(int movenum, Pokemon::gen gen);
     static bool Exists(int movenum, Pokemon::gen gen);
     static bool isOHKO(int movenum, Pokemon::gen gen);
     static bool isHM(int movenum, Pokemon::gen gen);
-    static bool FlinchByKingRock(int movenum, Pokemon::gen gen);
+    //static bool FlinchByKingRock(int movenum);
     static int EffectRate(int movenum, Pokemon::gen gen);
     static quint32 StatAffected(int movenum, Pokemon::gen gen);
     static quint32 BoostOfStat(int movenum, Pokemon::gen gen);
@@ -275,13 +283,17 @@ public:
     static int MinTurns(int movenum, Pokemon::gen gen);
     static int MaxTurns(int movenum, Pokemon::gen gen);
     static int Status(int movenum, Pokemon::gen gen);
-    static int StatusKind(int movenum, Pokemon::gen gen);
+    //static int StatusKind(int movenum, Pokemon::gen gen);
     static int ConvertFromOldMove(int oldmovenum);
     static QString MoveMessage(int moveeffect, int part);
     /* the status mod of a move*/
     //static QString Effect(int movenum, int gen);
     static QString SpecialEffect(int movenum, Pokemon::gen gen);
     static QSet<int> Moves(Pokemon::gen gen);
+    static bool isUniqueZMove(int movenum);
+    static bool isZMove(int movenum);
+    static bool canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen);
+    static bool isInvokingMove(int movenum);
 private:
     static QHash<int, QString> m_Names;
     static QHash<QString, int> m_LowerCaseMoves;
@@ -310,6 +322,7 @@ private:
         QHash<int, char> critRate;
         QHash<int, char> damageClass;
         QHash<int, QString> effect;
+        QHash<int, QString> zeffect;
         QHash<int, QString> specialEffect;
         QHash<int, char> effectChance;
         QHash<int, int> flags;
@@ -322,13 +335,14 @@ private:
         QHash<int,long> statboost;
         QHash<int,long> statrate;
         QHash<int, unsigned char> power;
+        QHash<int, unsigned char> zpower;
         QHash<int, char> pp;
         QHash<int, signed char> priority;
         QHash<int, char> range;
         QHash<int, signed char> recoil;
-        QHash<int, char> status;
+        //QHash<int, char> status;
         QHash<int, char> type;
-        QHash<int, bool> kingRock;
+        //QHash<int, bool> kingRock;
         QSet<int> HMs;
     };
 
@@ -361,15 +375,21 @@ public:
     static bool Exists(int itemnum, Pokemon::gen gen);
     static bool isBerry(int itemnum);
     static bool isPlate(int itemnum);
+    static bool isMemoryChip(int itemnum);
     static bool isMegaStone(int itemnum);
+    static bool isZCrystal(int itemnum);
     static bool isPrimalStone(int itemnum);
     static bool isDrive(int itemnum);
     static bool isMail(int itemnum);
     static bool isGem(int itemnum);
     static bool isUseful(int itemnum);
     static int PlateType(int itemnum);
+    static int MemoryChipType(int itemnum);
+    static int ZCrystalType(int itemnum);
+    static int ZCrystalMove(int itemnum);
     static Pokemon::uniqueId MegaStoneForme(int itemnum);
     static int PlateForType(int type);
+    static int MemoryChipForType(int type);
     static int DriveType(int itemnum);
     static int DriveForme(int itemnum);
     static int DriveForForme(int forme);
@@ -403,11 +423,12 @@ private:
     static QHash<int,int> m_Powers;
     static QHash<int,int> m_BerryPowers;
     static QHash<int,int> m_BerryTypes;
-    static QHash<int, bool> m_UsefulItems, m_UsefulBerries;
+    static QSet<int> m_UsefulItems, m_UsefulBerries;
     static QVector<QSet<int> > m_GenItems;
     static QHash<int,QString> m_ItemDesc;
     static QHash<int,QString> m_BerryDesc;
     static QHash<Pokemon::uniqueId,int> m_StoneFormes;
+    static QHash<int,int> m_ZCrystalTypes;
 
     static void loadNames();
     static void loadEffects();
@@ -433,8 +454,10 @@ public:
     static int Eff(int type_attack, int type_defend, Pokemon::gen gen = GenInfo::GenMax()); /* Returns how effective it is: 4 = super, 2 = normal, 1 = not much, 0 = ineffective */
     static int NumberOfTypes();
     static int TypeForWeather(int weather);
+    static int TypeForTerrain(int terrain);
     static int Category(int type);
     static QString weatherName(int weather);
+    static QString terrainName(int terrain);
 private:
     enum Weather
     {
@@ -446,6 +469,15 @@ private:
         StrongSun = 5,
         StrongRain = 6,
         StrongWinds = 7
+    };
+
+    enum Terrain
+    {
+        NoTerrain = 0,
+        ElectricTerrain = 1,
+        GrassyTerrain = 2,
+        MistyTerrain = 3,
+        PsychicTerrain = 4
     };
 
     static QHash<int, QString> m_Names;
@@ -530,15 +562,17 @@ public:
     static bool Exists(int ability, Pokemon::gen gen);
     static int ConvertFromOldAbility(int oldability);
     static bool moldBreakable(int abnum);
+    static int abFlags(int abnum);
 private:
     static QHash<int, QString> m_Names;
     static QString m_Directory;
     static QVector<QHash<int,Effect> > m_Effects;
     static QHash<int,QStringList> m_Messages;
     static QHash<int,int> m_OldAbilities;
-    static QHash<int,QString> m_Desc;
+    //static QHash<int,QString> m_Desc;
     static QHash<int,QString> m_BattleDesc;
     static QHash<int, bool> m_moldBreaker;
+    static QHash<int, int> m_abFlags;
 
     static void loadNames();
     static void loadMessages();
