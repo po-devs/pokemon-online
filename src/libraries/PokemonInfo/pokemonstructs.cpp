@@ -1021,6 +1021,8 @@ bool Team::importFromTxt(const QString &file1, bool hack)
                 } else {
                     pokestring = "Mega " + pokestring;
                 }
+            } else if (forme.indexOf("Alola") != -1) {
+                pokestring = "Alolan " + pokestring.mid(0, index);
             }
         }
         pokenum = PokemonInfo::Number(pokestring);
