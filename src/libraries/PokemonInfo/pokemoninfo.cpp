@@ -1249,8 +1249,10 @@ QPixmap PokemonInfo::Sub(Pokemon::gen gen, bool back)
         file = QString("heartgold-soulsilver/%1substitute.png").arg(back?"back/":"");
     } else if (gen <= 5) {
         file = QString("black-white/%1substitute.png").arg(back?"back/":"");
-    } else {
+    } else if (gen <= 6){
         file = QString("x-y/%1substitute.png").arg(back?"back/":"");
+    } else {
+        file = QString("s-m/%1substitute.png").arg(back?"back/":"");
     }
 
     QPixmap ret;
