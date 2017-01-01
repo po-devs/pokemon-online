@@ -207,6 +207,11 @@ bool PokePersonal::isLegal() const
     if (!PokemonInfo::Exists(num(), gen())) {
         return false;
     }
+    for (int i = 0; i < 4; i++) {
+        if (!MoveInfo::Exists(move(i), gen())) {
+            return false;
+        }
+    }
     if (PokemonInfo::IsForme(num()) && !PokemonInfo::AFormesShown(num())) {
         return false;
     }
@@ -247,6 +252,11 @@ void PokePersonal::runCheck(bool hack)
     if (!PokemonInfo::Exists(num(), gen())) {
         reset();
         return;
+    }
+    for (int i = 0; i < 4; i++) {
+        if (!MoveInfo::Exists(move(i), gen())) {
+            setMove(0, i, false);
+        }
     }
     if (hack) {
         return;
