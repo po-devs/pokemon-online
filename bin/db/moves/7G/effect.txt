@@ -625,7 +625,7 @@
 657 Lowers the target's Defense by 1 stage.
 658 This attack's power is increased by 20 for every stage the user's stats are raised.
 659 Removes Fire-type from the user after dealing damage. Fails if the user is not Fire-type.
-660 Switches the user's stat changes in Speed with the target's.
+660 Switches the user's raw speed stat with the target's.
 661 Cannot be evaded.
 662 Cures the target of any status condition. If this move is successful, it also restores the user's HP by 1/2.
 663 Burns any Pokémon that make contact with the user before the move finishes. Priority level -3.
