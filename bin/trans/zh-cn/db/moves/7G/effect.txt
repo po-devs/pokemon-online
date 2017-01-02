@@ -614,79 +614,80 @@
 617 对方不能主动交换，效果持续到使用者交换或者对方被强制交换时。
 620 学会画龙点睛的烈空坐可在对战中百万进化。 攻击命中后，攻击方防御、特防降低1级。
 621 攻击命中后，攻击方防御降低1级。只有被解放的胡巴可以使用异次元暴怒，其他精灵如图图犬使用时将使用失败。 攻击方防御降低1级。不经过命中计算，必定能命中目标。 消除目标及其队伍所有的保护、见切、快速防御、广域防御、叠返、荆棘护盾、王者之盾的效果。
-622 If the target has already used a move in the same turn, its Ability will be ignored when it is hit by this move.
-623 If this attack hits, lowers the user's Special Attack by 2 stages.
-626 Ignores the target's Ability when hit by this move.
-627 Deals damage to the target equal to half of its current HP, but not less than 1.
-628 The user's type determines the type of this move.
-629 The target of this move is the last of the opponent's Pokémon to have damaged the user with a contact move this turn. Deals damage to the target equal to two times the damage the target dealt to the user with their last attack.
-630 Requires a charge up turn before use. (This attack's power is halved during Rain Dance, Sandstorm, fog, and Hail. During Sunny Day, this attack takes one turn.???)
-631 Ignores the target's Ability when hit by this move.
-632 Priority level 1.
-633 Terrain move. For 5 turns, grounded Pokémon will be unaffected by priority moves and have the power of their Psychic-type moves boosted by 50%.
-634 Prevents the target from using Sound-based moves for 2 turns.
-635 For five turns, the damage that Pokémon on the user's side take from all attacks is reduced by 50%, or 33% if there is more than one Pokémon on the user's side. Ignored by critical hits, and fails if this move is already active for the user. Can only be used during Hail.
-636 Guarantees the next move used will deal a Critical Hit.
-637 Lowers the user's Defense by 1 stage.
-638 This attack's type changes to match the Memory held by the user.
-639 Lowers the target's Attack by 1 stage.
-641 Causes the target to use the attack it last used again.
-642 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
-643 Damage is calculated ignoring the target's Defense stat changes, and hit chance is calculated ignoring the target's Evasion stat changes.
-644 Cures the target of Burn.
-645 Recovers 1/2 of the user's max HP, but 2/3 during Sandstorm.
-646 Can only be used on the first turn after the user has switched in. Priority level 2.
-647 Protects the user from offensive moves used by any other Pokémon, but fails if the user acts last in the turn it is used. If a Pokémon attacks the user with a contact move, that Pokémon becomes Poisoned. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
-648 Lowers the user's Speed by 1 stage.
-649 Recovers 1/2 of the user's max HP, but 2/3 during Grassy Terrain.
-650 Recovers HP equal to the value of the target's Attack stat. Lowers the target's Attack by 1 stage.
-651 Draws to the target any single-target move used by any of the opponent's Pokémon. Priority level 3.
-652 Lowers the target's Speed by 1. Poisons the target.
-653 Raises Attack and Special Attack of Pokémon on the user's side with the Plus or Minus ability by 1 stage.
-654 If the target is one of the user's allies, restores HP by 1/2.
-655 Until the user switches out or the target is forced to switch out, the target cannot willingly switch out.
-656 Lowers the target's Attack by 1 stage.
-657 Lowers the target's Defense by 1 stage.
-658 This attack's power is increased by 20 for every stage the user's stats are raised.
-659 Removes Fire-type from the user after dealing damage. Fails if the user is not Fire-type.
-660 Switches the user's stat changes in Speed with the target's.
-661 Cannot be evaded.
-662 Cures the target of any status condition. If this move is successful, it also restores the user's HP by 1/2.
-663 Burns any Pokémon that make contact with the user before the move finishes. Priority level -3.
-665 If this attack hits the target, destroys the target's Reflect and Light Screen before dealing damage.
-666 Attack power doubles if the previous move used by the user failed.
-667 Has a 20% chance to lower the target's Defense by 1 stage.
-668 Has a 20% chance to lower the target's Defense by 1 stage.
-669 On the turn after this move hits, the user can't take any action or switch out.
-670 Before attacking, steals the target's positive stat boosts.
-671 Lowers the target's Attack and Special Attack by 1 stage.
-672 Has a 30% chance to cause the target to flinch.
-673 Z-Move. Requires a Normal-type move and the item Normalium Z.
-674 Z-Move. Requires a Fighting-type move and the item Fightinium Z.
-675 Z-Move. Requires a Flying-type move and the item Flyinium Z.
-676 Z-Move. Requires a Poison-type move and the item Poisonium Z.
-677 Z-Move. Requires a Ground-type move and the item Groundium Z.
-678 Z-Move. Requires a Rock-type move and the item Rockium Z.
-679 Z-Move. Requires a Bug-type move and the item Buginium Z.
-680 Z-Move. Requires a Ghost-type move and the item Ghostium Z.
-681 Z-Move. Requires a Steel-type move and the item Steelium Z.
-682 Z-Move. Requires a Fire-type move and the item Firium Z.
-683 Z-Move. Requires a Water-type move and the item Waterium Z.
-684 Z-Move. Requires a Grass-type move and the item Grassium Z.
-685 Z-Move. Requires an Electric-type move and the item Electrium Z.
-686 Z-Move. Requires a Psychic-type move and the item Psychium Z.
-687 Z-Move. Requires an Ice-type move and the item Icium Z.
-688 Z-Move. Requires a Dragon-type move and the item Dragonium Z.
-689 Z-Move. Requires a Dark-type move and the item Darkinium Z.
-690 Z-Move. Requires a Fairy-type move and the item Fairium Z.
-691 Z-Move. Deals immense damage. Requires the move Volt Tackle, the item Pikanium Z, and can only be used by Pikachu.
-692 Z-Move. Deals immense damage. Paralyzes the target. Requires the move Thunderbolt, the item Aloraichium Z, and can only be used by Alolan Raichu.
-693 Z-Move. Increases the user's Attack, Defense, Special Attack, Special Defense, and Speed by 2 stages. Requires the move Last Resort, the item Eevium Z, and can only be used by Eevee.
-694 Z-Move. Deals immense damage. Requires the move Giga Impact, the item Snorlium Z, and can only be used by Snorlax.
-695 Z-Move. Deals immense damage. Sets up Psychic Terrain for 5 turns after the move is finished. Requires the move Psychic, the item Mewnium Z, and can only be used by Mew.
-696 Z-Move. Deals damage to the target equal to 3/4 of its current HP, but not less than 1. Requires the move Nature's Madness, the item Tapunium Z, and can only be used by Tapu Koko, Tapu Lele, Tapu Bulu, or Tapu Fini.
-697 Z-Move. Deals immense damage. Requires the move Spirit Shackle, the item Decidium Z, and can only be used by Decidueye.
-698 Z-Move. Deals immense damage. Requires the move Darkest Lariat, the item Incinium Z, and can only be used by Incineroar.
-699 Z-Move. Deals immense damage. Requires the move Sparkling Aria, the item Primarium Z, and can only be used by Primarina.
-700 Z-Move. Deals immense damage. Requires the move Spectral Thief, the item Marshadium Z, and can only be used by Marshadow.
-701 Z-Move. Deals immense damage. The critical hit rate for this move is raised by 2 stages. Requires the move Thunderbolt, item Pikashunium Z, and can only be used by Pikachu-First Hat, Pikachu-Second Hat, Pikachu-Third Hat, Pikachu-Fourth Hat, Pikachu-Fifth Hat, or Pikachu-Sixth Hat.
+622 使出后能够消除已经在该回合使出招式的对手的特性。
+623 若该技能命中，则令使用者的特攻降低2级。
+626 可无视对手的特性进行攻击。
+627 向对手发泄自然之怒，使对手的HP减半。至少造成1点伤害
+628 根据精灵的属性来改变招式的属性。
+629 招式目标固定为上一次使用接触招式攻击自身的对方精灵。造成使用者上一次受到的接触攻击伤害×2的固定伤害。
+630 第一回合进行蓄气，第二回合发动攻击;在阳光天气下无需蓄气，在下雨、沙暴、冰雹天气下招式威力减半。
+631 可无视对手的特性进行攻击。
+632 先制度+1
+633 5回合内站在地上的神奇宝贝不会受到对手先制攻击类招式的攻击以及优先度+1以上变化招式之影响。使超能力系招式的威力提升50%。
+634 令对方2回合内不得使用声音类技能
+635 在5回合内减半（或33%若己方场上精灵多于一只）己方队伍的物理和特殊伤害。只有冰雹时才能使出。
+636 使得下一个技能必定会心。
+637 降低使用者1级物防
+638 持有对应各属性的存储碟来改变招式的属性。
+639 使得目标攻击下降1级。
+641 让被选为招式使用对象的宝可梦当场把刚刚使用的招式再使用一次。
+642 对手会变得无法主动逃走或进行替换。
+643 无视对方的回避率和防御的提升进行攻击。
+644 令目标的烧伤状态恢复。
+645 恢复自身50%HP，若天气为沙暴则恢复自身的2⁄3HP。
+646 仅在宝可梦入场第一回合有效。先制度+2
+647 当回合防止自身受到任何技能伤害，如果被近身招式定为目标，则使攻击方陷入中毒。佯攻与影袭无视保护，且受到这两招的攻击后保护状态解除。连续使用容易失败。当使用保护的精灵在回合的最后行动时，保护失败。
+648 降低使用者的速度1级
+649 使目标和自身恢复全部HP的50%。在青草场地中恢复2/3。
+650 回复等同于目标的攻击力的HP，并降低目标1级攻击。
+651 直到这回合结束，所有对方使用的单体攻击类招式都会攻向自己。先制度+3
+652 使得目标的速度降低1级，使目标中毒。
+653 提升使用者一方场上拥有正极或负极的精灵1级物攻和1级攻击。
+654 如果目标是队友则回复1/2的HP
+655 对手会变得无法主动逃走或进行替换。
+656 令目标攻击降低1级。
+657 令目标防御降低1级。
+658 自身每有一项能力等级提升一级，招式威力增加20。自身的能力降低不会影响威力。
+659 使用后使用者失去火属性；若使用者不是火属性则使用失败。
+660 交换使用者和目标的速度能力值。
+661 必定命中
+662 治疗’用者的异常状态，若试用成功则回复1/2的HP
+663 回合初加热鸟嘴，若对方在技能发动起对使用者使用接触攻击会被烧伤。先制度-3
+665 如果该技能命中，则在计算伤害前让对方场地上的光之壁和反射盾失效。
+666 如果使用者上一个技能使用失败，本次攻击威力翻倍。
+667 20%令目标防御下降1级。
+668 20%令目标防御下降1级。
+669 命中后有一回合的硬直
+670 在攻击前窃取对方正面的能力变化再进行攻击。
+671 令目标的攻击与特攻下降1级。
+672 30%令目标害怕。
+673 Z技能，需要携带一般属性的攻击技能和对应的Z纯晶。
+674 Z技能，需要携带格斗属性的攻击技能和对应的Z纯晶。
+675 Z技能，需要携带飞行属性的攻击技能和对应的Z纯晶。
+676 Z技能，需要携带毒属性的攻击技能和对应的Z纯晶。
+677 Z技能，需要携带地面属性的攻击技能和对应的Z纯晶。
+678 Z技能，需要携带岩石属性的攻击技能和对应的Z纯晶。
+679 Z技能，需要携带虫属性的攻击技能和对应的Z纯晶。
+680 Z技能，需要携带幽灵属性的攻击技能和对应的Z纯晶。
+681 Z技能，需要携带钢属性的攻击技能和对应的Z纯晶。
+682 Z技能，需要携带火属性的攻击技能和对应的Z纯晶。
+683 Z技能，需要携带水属性的攻击技能和对应的Z纯晶。
+684 Z技能，需要携带草属性的攻击技能和对应的Z纯晶。
+685 Z技能，需要携带电属性的攻击技能和对应的Z纯晶。
+686 Z技能，需要携带超能属性的攻击技能和对应的Z纯晶。
+687 Z技能，需要携带冰属性的攻击技能和对应的Z纯晶。
+688 Z技能，需要携带龙属性的攻击技能和对应的Z纯晶。
+689 Z技能，需要携带恶属性的攻击技能和对应的Z纯晶。
+690 Z技能，需要携带妖精属性的攻击技能和对应的Z纯晶。
+691 Z技能，由习得高压点击，携带专属Z纯晶的皮卡丘发动。
+692 Z技能，由习得十万伏特，携带专属Z纯晶的阿罗拉雷丘发动。
+693 Z技能，由习得最终保留，携带专属Z纯晶的伊布发动，使用者全能力上升2级。
+694 Z技能，由习得亿万冲击，携带专属Z纯晶的卡比兽发动。
+695 Z技能，由习得精神干扰，携带专属Z纯晶的梦幻发动。使用后让场地5回合内成为精神场地。
+696 Z技能，由习得自然之怒，携带专属Z纯晶的卡噗们发动，造成目标现有HP的3/4的伤害，至少造成1HP伤害。
+697 Z技能，由习得缝影，携带专属Z纯晶的狙射树枭发动。
+698 Z技能，由习得ＤＤ金勾臂，携带专属Z纯晶的炽焰咆哮虎发动。
+699 Z技能，由习得泡影的咏叹调，携带专属Z纯晶的西狮海壬发动。
+700 Z技能，由习得暗影偷盗，携带专属Z纯晶的玛夏多发动。
+701 Z技能，由习得十万伏特，携带专属Z纯晶的戴着帽子的皮卡丘们发动。会心率+2
+
