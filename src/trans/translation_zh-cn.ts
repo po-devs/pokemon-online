@@ -4657,7 +4657,7 @@ Move4</source>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3110"/>
         <source>psychic Terrain</source>
-        <translation">精神场地</translation>
+        <translation>精神场地</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3111"/>
@@ -5253,7 +5253,7 @@ Description: %5%8</source>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="155"/>
         <source>Visit Pokemon Online Forum</source>
-        <translation">访问PO论坛</translation>
+        <translation>访问PO论坛</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="157"/>
