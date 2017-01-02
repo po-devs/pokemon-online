@@ -276,7 +276,7 @@
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="162"/>
         <source>&amp;Damage Calc</source>
-        <translation type>伤害计算器</translation>
+        <translation>伤害计算器</translation>
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="431"/>
@@ -2255,7 +2255,7 @@ This server requires a password to log in.</source>
         <location filename="../Teambuilder/damagecalc.ui" line="198"/>
         <location filename="../Teambuilder/damagecalc.ui" line="913"/>
         <source>Pokemon:</source>
-        <translation type>精灵:</translation>
+        <translation>精灵:</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="205"/>
