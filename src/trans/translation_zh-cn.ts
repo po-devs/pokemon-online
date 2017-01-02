@@ -276,7 +276,7 @@
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="162"/>
         <source>&amp;Damage Calc</source>
-        <translation type>伤害计算器</translation>
+        <translation>伤害计算器</translation>
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="431"/>
@@ -2255,7 +2255,7 @@ This server requires a password to log in.</source>
         <location filename="../Teambuilder/damagecalc.ui" line="198"/>
         <location filename="../Teambuilder/damagecalc.ui" line="913"/>
         <source>Pokemon:</source>
-        <translation type>精灵:</translation>
+        <translation>精灵:</translation>
     </message>
     <message>
         <location filename="../Teambuilder/damagecalc.ui" line="205"/>
@@ -4657,7 +4657,7 @@ Move4</source>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3110"/>
         <source>psychic Terrain</source>
-        <translation">精神场地</translation>
+        <translation>精神场地</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="3111"/>
@@ -5253,7 +5253,7 @@ Description: %5%8</source>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="155"/>
         <source>Visit Pokemon Online Forum</source>
-        <translation">访问PO论坛</translation>
+        <translation>访问PO论坛</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="157"/>
