@@ -238,116 +238,116 @@
 341 使棉球舔进化为泡芙舔。
 342 允许固拉多变为原始形态
 343 允许盖欧卡变为原始形态
-344 Changes Multi-Attack and Sivally with RKS System to the Fighting type.
-345 Changes Multi-Attack and Sivally with RKS System to the Flying type.
-346 Changes Multi-Attack and Sivally with RKS System to the Poison type.
-347 Changes Multi-Attack and Sivally with RKS System to the Ground type.
-348 Changes Multi-Attack and Sivally with RKS System to the Rock type.
-349 Changes Multi-Attack and Sivally with RKS System to the Bug type.
-350 Changes Multi-Attack and Sivally with RKS System to the Ghost type.
-351 Changes Multi-Attack and Sivally with RKS System to the Steel type.
-352 Changes Multi-Attack and Sivally with RKS System to the Fire type.
-353 Changes Multi-Attack and Sivally with RKS System to the Water type.
-354 Changes Multi-Attack and Sivally with RKS System to the Grass type.
-355 Changes Multi-Attack and Sivally with RKS System to the Electric type.
-356 Changes Multi-Attack and Sivally with RKS System to the Psychic type.
-357 Changes Multi-Attack and Sivally with RKS System to the Ice type.
-358 Changes Multi-Attack and Sivally with RKS System to the Dragon type.
-359 Changes Multi-Attack and Sivally with RKS System to the Dark type.
-360 Changes Multi-Attack and Sivally with RKS System to the Fairy type.
-361 Increases the holder's Speed by 1 stage when Intimidated. Consumed after use.
-362 When the holder uses Electric Terrain, Psychic Terrain, Misty Terrain, or Grassy Terrain, increases its duration from 5 turns to 8 turns.
-363 Protects the holder from side effects caused by using a Contact move against an opponent.
-364 Increases the holder's Defense by 1 stage while on Electric Terrain. Consumed after use.
-365 Increases the holder's Special Defense by 1 stage while on Psychic Terrain. Consumed after use.
-366 Increases the holder's Special Defense by 1 stage while on Misty Terrain. Consumed after use.
-367 Increases the holder's Defense by 1 stage while on Grassy Terrain. Consumed after use.
-368 Has an increased capture rate against Ultra Beasts.
-369 Cures a Pokémon of any major status condition.
-370 A perfectly normal stone that might appear to be valuable to some. It’s all in the eye of the beholder.
-371 A beautiful bottle cap that gives off a silver gleam. Some people are happy to receive one.
-372 A beautiful bottle cap that gives off a golden gleam. Some people are happy to receive one.
-373 Evolves Alolan Vulpix into Alolan Ninetales and Alolan Sandshrew into Alolan Sandslash.
-374 Cures a Pokémon of any major status condition.
-375 Changes the form of Oricorio to Oricorio-Pa'u.
-376 Changes the form of Oricorio to Oricorio-Pom Pom.
-377 Changes the form of Oricorio to Oricorio-Baile.
-378 Changes the form of Oricorio to Oricorio-Sensu.
+344 将多属性攻击和AR系统特性的银伴战兽的属性改变为格斗。
+345 将多属性攻击和AR系统特性的银伴战兽的属性改变为飞行。
+346 将多属性攻击和AR系统特性的银伴战兽的属性改变为毒。
+347 将多属性攻击和AR系统特性的银伴战兽的属性改变为地面。
+348 将多属性攻击和AR系统特性的银伴战兽的属性改变为岩石。
+349 将多属性攻击和AR系统特性的银伴战兽的属性改变为虫。
+350 将多属性攻击和AR系统特性的银伴战兽的属性改变为鬼。
+351 将多属性攻击和AR系统特性的银伴战兽的属性改变为钢。
+352 将多属性攻击和AR系统特性的银伴战兽的属性改变为火。
+353 将多属性攻击和AR系统特性的银伴战兽的属性改变为水。
+354 将多属性攻击和AR系统特性的银伴战兽的属性改变为草。
+355 将多属性攻击和AR系统特性的银伴战兽的属性改变为电。
+356 将多属性攻击和AR系统特性的银伴战兽的属性改变为超能。
+357 将多属性攻击和AR系统特性的银伴战兽的属性改变为冰。
+358 将多属性攻击和AR系统特性的银伴战兽的属性改变为龙。
+359 将多属性攻击和AR系统特性的银伴战兽的属性改变为恶。
+360 将多属性攻击和AR系统特性的银伴战兽的属性改变为仙。
+361 携带后，在受到威吓时速度会提高，使用后会消失。
+362 当携带它的宝可梦利用招式或特性展开场地时，场地的持续时间由5回合延长为8回合。
+363 不会受到触碰攻击对手时本应受到的效果。
+364 让宝可梦携带后，在电气场地上使用，防御就会提高。使用后会消失。
+365 让宝可梦携带后，在精神场地上使用，特防就会提高。使用后会消失。
+366 让宝可梦携带后，在薄雾场地上使用，特防就会提高。使用后会消失。
+367 让宝可梦携带后，在青草场地上使用，防御就会提高。使用后会消失。
+368 为捕捉究极异兽而制作的特殊精灵球。很难捕捉究极异兽之外的宝可梦。
+369 能治愈一只宝可梦的所有异常状态。
+370 某些人十分感兴趣、再一般不过的一块石头
+371 银色的美丽王冠。有些人收到它会很高兴。
+372 金色的美丽王冠。比银色王冠珍贵。有些人收到它会很高兴。
+373 对 穿山鼠（阿罗拉的样子）使用，使其进化为 穿山王（阿罗拉的样子）；对 六尾（阿罗拉的样子）使用，使其进化为 九尾（阿罗拉的样子）。
+374 能治愈一只宝可梦的所有异常状态。
+375 对任意形态的花舞鸟使用，使其变化为热辣热辣风格.
+376 对任意形态的花舞鸟使用，使其变化为啪滋啪滋风格.
+377 对任意形态的花舞鸟使用，使其变化为呼拉呼拉风格。
+378 对任意形态的花舞鸟使用，使其变化为轻盈轻盈风格。
 1000 增加10%普通系技能威力。
 1001 增加10%普通系技能威力。
-2001 Enables Venusaur to Mega Evolve during battle.
-2002 Enables Charizard to Mega Evolve during battle.
-2003 Enables Charizard to Mega Evolve during battle.
-2004 Enables Blastoise to Mega Evolve during battle.
-2005 Enables Alakazam to Mega Evolve during battle.
-2006 Enables Gengar to Mega Evolve during battle.
-2007 Enables Kangaskhan to Mega Evolve during battle.
-2008 Enables Pinsir to Mega Evolve during battle.
-2009 Enables Gyarados to Mega Evolve during battle.
-2010 Enables Aerodactyl to Mega Evolve during battle.
-2011 Enables Mewtwo to Mega Evolve during battle.
-2012 Enables Mewtwo to Mega Evolve during battle.
-2013 Enables Ampharos to Mega Evolve during battle.
-2014 Enables Scizor to Mega Evolve during battle.
-2015 Enables Heracross to Mega Evolve during battle.
-2016 Enables Houndoom to Mega Evolve during battle.
-2017 Enables Tyranitar to Mega Evolve during battle.
-2018 Enables Blaziken to Mega Evolve during battle.
-2019 Enables Gardevoir to Mega Evolve during battle.
-2020 Enables Mawile to Mega Evolve during battle.
-2021 Enables Aggron to Mega Evolve during battle.
-2022 Enables Medicham to Mega Evolve during battle.
-2023 Enables Manectric to Mega Evolve during battle.
-2024 Enables Banette to Mega Evolve during battle.
-2025 Enables Absol to Mega Evolve during battle.
-2026 Enables Garchomp to Mega Evolve during battle.
-2027 Enables Lucario to Mega Evolve during battle.
-2028 Enables Abomasnow to Mega Evolve during battle.
-2029 Enables Sceptile to Mega Evolve during battle.
-2030 Enables Swampert to Mega Evolve during battle.
-2031 Enables Beedrill to Mega Evolve during battle.
-2032 Enables Pidgeot to Mega Evolve during battle.
-2033 Enables Slowbro to Mega Evolve during battle.
-2034 Enables Steelix to Mega Evolve during battle.
-2035 Enables Sableye to Mega Evolve during battle.
-2036 Enables Sharpedo to Mega Evolve during battle.
-2037 Enables Camerupt to Mega Evolve during battle.
-2038 Enables Altaria to Mega Evolve during battle.
-2039 Enables Glalie to Mega Evolve during battle.
-2040 Enables Salamence to Mega Evolve during battle.
-2041 Enables Metagross to Mega Evolve during battle.
-2042 Enables Lopunny to Mega Evolve during battle.
-2043 Enables Gallade to Mega Evolve during battle.
-2044 Enables Audino to Mega Evolve during battle.
-2045 Enables Diancie to Mega Evolve during battle.
-2046 Enables Latias to Mega Evolve during battle.
-2047 Enables Latios to Mega Evolve during battle.
-3000 Enables a Pokémon to upgrade Normal-type moves to the Z Move: Breakneck Blitz
-3001 Enables a Pokémon to upgrade Fighting-type moves to the Z Move: All-Out Pummelling
-3002 Enables a Pokémon to upgrade Flying-type moves to the Z Move: Supersonic Skystrike
-3003 Enables a Pokémon to upgrade Poison-type moves to the Z Move: Acid Downpour
-3004 Enables a Pokémon to upgrade Ground-type moves to the Z Move: Tectonic Rage
-3005 Enables a Pokémon to upgrade Rock-type moves to the Z Move: Continental Crush
-3006 Enables a Pokémon to upgrade Bug-type moves to the Z Move: Savage Spinout
-3007 Enables a Pokémon to upgrade Ghost-type moves to the Z Move: Never-Ending Nightmare
-3008 Enables a Pokémon to upgrade Steel-type moves to the Z Move: Corkscrew Crash
-3009 Enables a Pokémon to upgrade Fire-type moves to the Z Move: Inferno Overdrive
-3010 Enables a Pokémon to upgrade Water-type moves to the Z Move: Hydro Vortex
-3011 Enables a Pokémon to upgrade Grass-type moves to the Z Move: Bloom Doom
-3012 Enables a Pokémon to upgrade Electric-type moves to the Z Move: Gigavolt Havoc
-3013 Enables a Pokémon to upgrade Psychic-type moves to the Z Move: Shattered Psyche
-3014 Enables a Pokémon to upgrade Ice-type moves to the Z Move: Subzero Slammer
-3015 Enables a Pokémon to upgrade Dragon-type moves to the Z Move: Devastating Drake
-3016 Enables a Pokémon to upgrade Dark-type moves to the Z Move: Black Hole Eclipse
-3017 Enables a Pokémon to upgrade Fairy-type moves to the Z Move: Twinkle Tackle
-3018 Enables Pikachu to upgrade Volt Tackle into the special Z Move: Catastropika
-3019 Enables Alolan Raichu to upgrade Thunderbolt into the special Z Move: Stoked SparkSurfer
-3020 Enables Eevee to upgrade Last Resort into the special Z Move: Extreme Evoboost
-3021 Enables Snorlax to upgrade Giga Impact into the special Z Move: Pulversing Pancake
-3022 Enables Mew to upgrade Psychic into the special Z Move: Genesis Supernova
-3023 Enables Tapu Koko, Tapu Lele, Tapu Bulu, and Tapu Fini to upgrade Nature's Madness into the special Z Move: Guardian of Alola
-3024 Enables Decidueye to upgrade Spirit Shackle into the special Z Move: Sinister Arrow Raid
-3025 Enables Incineroar to upgrade Darkest Lariat into the special Z Move: Malicious Moonsault
-3026 Enables Primarina to upgrade Sparkling Aria into the special Z Move: Oceanic Operetta
-3027 Enables Marshadow to upgrade Spectral Thief into the special Z Move: Soul-Stealing 7-Star Strike
-3028 Enables Pikachu in Cap to upgrade Thunderbolt into the special Z Move: 10,000,000 Volt Thunderbolt
+2001 能够让妙蛙花在战斗中百万进化。
+2002 能够让喷火龙在战斗中百万进化。
+2003 能够让喷火龙在战斗中百万进化。
+2004 能够让水箭龟在战斗中百万进化。
+2005 能够让胡地在战斗中百万进化。
+2006 能够让耿鬼在战斗中百万进化。
+2007 能够让袋龙在战斗中百万进化。
+2008 能够让大甲在战斗中百万进化。
+2009 能够让暴鲤龙在战斗中百万进化。
+2010 能够让化石飞龙在战斗中百万进化。
+2011 能够让超梦在战斗中百万进化。
+2012 能够让超梦在战斗中百万进化。
+2013 能够让电龙在战斗中百万进化。
+2014 能够让巨钳螳螂在战斗中百万进化。
+2015 能够让赫拉克罗斯在战斗中百万进化。
+2016 能够让黑鲁加在战斗中百万进化。
+2017 能够让班吉拉在战斗中百万进化。
+2018 能够让火焰鸡在战斗中百万进化。
+2019 能够让沙奈朵在战斗中百万进化。
+2020 能够让大嘴娃在战斗中百万进化。
+2021 能够让波士可多拉在战斗中百万进化。
+2022 能够让恰雷姆在战斗中百万进化。
+2023 能够让雷电兽在战斗中百万进化。
+2024 能够让诅咒娃娃在战斗中百万进化。
+2025 能够让灾兽在战斗中百万进化。
+2026 能够让烈咬陆鲨在战斗中百万进化。
+2027 能够让路卡利欧在战斗中百万进化。
+2028 能够让暴雪王在战斗中百万进化。
+2029 能够让蜥蜴王在战斗中百万进化。
+2030 能够让巨沼怪在战斗中百万进化。
+2031 能够让大针蜂在战斗中百万进化。
+2032 能够让比雕在战斗中百万进化。
+2033 能够让呆河马在战斗中百万进化。
+2034 能够让大钢蛇在战斗中百万进化。
+2035 能够让勾魂眼在战斗中百万进化。
+2036 能够让巨牙鲨在战斗中百万进化。
+2037 能够让喷火驼在战斗中百万进化。
+2038 能够让七夕青鸟在战斗中百万进化。
+2039 能够让冰鬼护在战斗中百万进化。
+2040 能够让暴蝾螈在战斗中百万进化。
+2041 能够让巨金怪在战斗中百万进化。
+2042 能够让女郎兔在战斗中百万进化。
+2043 能够让冰鬼护在战斗中百万进化。
+2044 能够让差不多娃娃在战斗中百万进化。
+2045 能够让蒂安希在战斗中百万进化。
+2046 能够让拉帝亚斯在战斗中百万进化。
+2047 能够让拉帝奥斯在战斗中百万进化。
+3000 携带后能将一般属性招式升级成Ｚ招式究极无敌大冲撞的Ｚ力量结晶。
+3001 携带后能将格斗属性招式升级成Ｚ招式全力无双激烈拳的Ｚ力量结晶。
+3002 携带后能将飞行属性招式升级成Ｚ招式极速俯冲轰烈撞的Ｚ力量结晶。 
+3003 携带后能将毒属性招式升级成Ｚ招式强酸剧毒灭绝雨的Ｚ力量结晶。 
+3004 携带后能将地面属性招式升级成Ｚ招式地隆啸天大终结的Ｚ力量结晶。
+3005 携带后能将岩石属性招式升级成Ｚ招式毁天灭地巨岩坠的Ｚ力量结晶。 
+3006 携带后能将虫属性招式升级成Ｚ招式绝对捕食回旋斩的Ｚ力量结晶。 
+3007 携带后能将幽灵属性招式升级成Ｚ招式无尽暗夜之诱惑的Ｚ力量结晶。
+3008 携带后能将钢属性招式升级成Ｚ招式超绝螺旋连击的Ｚ力量结晶。 
+3009 携带后能将火属性招式升级成Ｚ招式超强极限爆焰弹的Ｚ力量结晶。 
+3010 携带后能将水属性招式升级成Ｚ招式超级水流大漩涡的Ｚ力量结晶。 
+3011 携带后能将草属性招式升级成Ｚ招式绚烂缤纷花怒放的Ｚ力量结晶。 
+3012 携带后能将电属性招式升级成Ｚ招式终极伏特狂雷闪的Ｚ力量结晶。 
+3013 携带后能将超能属性招式升级成Ｚ招式至高精神破坏波的Ｚ力量结晶。 
+3014 携带后能将冰属性招式升级成Ｚ招式激狂大地万里冰的Ｚ力量结晶。 
+3015 携带后能将龙属性招式升级成Ｚ招式究极巨龙震天地的Ｚ力量结晶。 
+3016 携带后能将恶属性招式升级成Ｚ招式黑洞吞噬万物灭的Ｚ力量结晶。 
+3017 携带后能将妖精属性招式升级成Ｚ招式可愛星星飛天撞的Ｚ力量结晶。 
+3018 携带后能将皮卡丘的高压电机升级成特殊Ｚ招式皮卡皮卡必杀击的Ｚ力量结晶。 
+3019 携带后能将阿罗拉样子的雷丘的十万伏特升级成特殊Ｚ招式驾雷驭电戏冲浪的Ｚ力量结晶。 
+3020 携带后能将伊布的最终保留升级成特殊Ｚ招式九彩昇华齐聚顶的Ｚ力量结晶。 
+3021 携带后能将卡比兽的亿万冲击升级成特殊Ｚ招式认真起来大爆击的Ｚ力量结晶。
+3022 携带后能将梦幻的精神干扰升级成特殊Ｚ招式起源超新星大爆炸的Ｚ力量结晶。
+3023 携带后能将卡璞们的自然之怒升级成特殊Ｚ招式巨人卫士·阿罗拉的Ｚ力量结晶。
+3024 携带后能将狙射树枭的缝影升级成特殊Ｚ招式遮天蔽日暗影箭的Ｚ力量结晶。
+3025 携带后能将炽焰咆哮虎的ＤＤ金勾臂升级成特殊Ｚ招式极恶飞躍粉碎击的Ｚ力量结晶。
+3026 携带后能将西狮海壬的泡影的咏叹调升级成特殊Ｚ招式海神庄严交响乐的Ｚ力量结晶。
+3027 携带后能将玛夏多的暗影偷盗升级成特殊Ｚ招式七星夺魂腿的Ｚ力量结晶。
+3028 携带后能将戴着帽子的皮卡丘的十万伏特升级成特殊Ｚ招式千万伏特的Ｚ力量结晶。
