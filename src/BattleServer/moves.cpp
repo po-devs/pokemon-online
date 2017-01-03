@@ -4277,6 +4277,7 @@ struct MMMagicCoat : public MM
         if (target == -1)
             return;
 
+        b.fail(s, 76, 1, Pokemon::Psychic);
         AMMagicBounce::bounceAttack(s, target, b);
     }
 };
