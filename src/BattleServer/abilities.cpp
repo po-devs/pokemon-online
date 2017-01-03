@@ -3017,9 +3017,9 @@ struct AMBattleBond : public AM {
         if (b.koed(s))
             return;
 
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja_Unbonded || b.preTransPoke(s, Pokemon::Greninja_Unbonded))
+        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja || b.preTransPoke(s, Pokemon::Greninja_Unbonded))
             return;
-        if (b.pokenum(s).subnum == 0) {
+        if (b.pokenum(s).subnum == 1) {
             b.sendAbMessage(141, 0, s);
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
             b.sendAbMessage(141, 1, s);
