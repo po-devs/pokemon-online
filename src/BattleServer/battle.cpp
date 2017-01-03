@@ -4719,7 +4719,7 @@ void BattleSituation::notifySituation(int key)
 
 int BattleSituation::getRawStat(int player, int stat)
 {
-    return fpoke(player).stats[givenStat];
+    return fpoke(player).stats[stat];
 }
 
 int BattleSituation::getStat(int player, int stat, int purityLevel)
