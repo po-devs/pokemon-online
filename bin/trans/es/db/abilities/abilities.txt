@@ -190,30 +190,30 @@
 189 Tierra del Ocaso
 190 Mar del Albor
 191 Ráfaga Delta
-192 Guardia metálica
-193 Guardia espectro
-194 Letargo perenne
+192 Guardia Metálica
+193 Guardia Espectro
+194 Letargo Perenne
 195 Agrupamiento
 196 Coránima
 197 Vigilante
 198 Electrogénesis
-199 Cuerpo vívido
+199 Cuerpo Vívido
 200 Cólera
 201 Batería
 202 Corrosión
 203 Disfraz
 204 Peluche
 205 Firmeza
-206 Primer auxilio
+206 Primer Auxilio
 207 Huida
-208 Pareja de baile
-209 Escudo limitado
+208 Pareja de Baile
+209 Escudo Limitado
 210 Revés
 211 Banco
-212 Cola surf
+212 Cola Surf
 213 Hidrorrefuerzo
-214 Regia presencia
-215 Fuerte afecto
+214 Regia Presencia
+215 Fuerte Afecto
 216 Receptor
 217 Sistema Alfa
 218 Psicogénesis
@@ -223,11 +223,11 @@
 222 Retirada
 223 Ensañamiento
 224 Pompa
-225 Acero templado
+225 Acero Templado
 226 Remoto
-227 Voz fluida
-228 Piel eléctrica
-229 Rizos rebeldes
-230 Reacción química
+227 Voz Fluida
+228 Piel Eléctrica
+229 Rizos Rebeldes
+230 Reacción Química
 231 Ultraimpulso
-232 Armadura prisma
+232 Armadura Prisma

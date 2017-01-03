@@ -24,8 +24,8 @@
 43 ¡%s ha activado su Seguro Debilidad!
 66 ¡%s ha evolucionado a %p!
 67 ¡%s ha experimentado una Regresión Primigenia y ha recobrado su apariencia primitiva!
-68 !%s se envuelve en un halo de Poder Z!|!%f no se pudo proteger del todo y fue herido!|!%s usó %m Z!
-71 !La Nerviosfera de %s aumentó su velocidad!
-72 !%s se protegió con su Paracontacto!
+68 ¡%s se envuelve en un halo de Poder Z!|¡%f no se ha podido proteger del ataque y ha recibido daño!|¡%s usó %m Z!
+71 ¡La Nerviosfera de %s aumentó su Velocidad!
+72 ¡%s se protegió con su Paracontacto!
 1007 ¡%s ya no está debilitado!
 1999 ¡%s ya no está debilitado!

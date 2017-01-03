@@ -637,7 +637,7 @@
 636 Aguzar
 637 Fragor Escamas
 638 Multiataque
-639 Patada Tropica
+639 Patada Tropical
 640 Martillo Dragón
 641 Mandato
 642 Puntada Sombría
@@ -693,10 +693,10 @@
 692 Surfeo Galvánico
 693 Novena Potencia
 694 Arrojo Intempestivo
-695 Supernova original
+695 Supernova Original
 696 Cólera del Guardián
 697 Aluvión de Flechas Sombrías
 698 Hiperplancha Oscura
 699 Sinfonía de la Diva Marina
 700 Constelación Robaalmas
-701 Gigarrayo fulminante
+701 Gigarrayo Fulminante
