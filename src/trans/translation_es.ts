@@ -36,7 +36,8 @@
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="74"/>
         <source>&amp;Base Stats</source>
-        <translation>&amp;Puntos de base</translation>
+        <translatorcomment>This concept is well-known among Spanish competitive players.</translatorcomment>
+        <translation>&amp;Stats base</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/advancedsearch.ui" line="80"/>
@@ -129,7 +130,7 @@
     <message>
         <location filename="../Teambuilder/analyze.cpp" line="740"/>
         <source>Protocol error: unknown command received -- maybe an update for the program is available</source>
-        <translation>Error de protocolo: comando desconocido recibido -- Puede que haya una nueva versión del Programa</translation>
+        <translation>Error de protocolo: comando desconocido recibido -- Puede que haya una nueva versión del programa</translation>
     </message>
     <message>
         <location filename="../Server/analyze.cpp" line="543"/>
@@ -230,12 +231,12 @@
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="140"/>
         <source>Battle Music</source>
-        <translation>Música de Batalla</translation>
+        <translation>Música</translation>
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="141"/>
         <source>Pokemon Cries</source>
-        <translation>Gritos del Pokemon</translation>
+        <translation>Gritos de los Pokémon</translation>
     </message>
     <message>
         <location filename="../Teambuilder/BattleWindow/basebattlewindow.cpp" line="142"/>
@@ -1569,7 +1570,7 @@ Movimientos:
         <location filename="../Teambuilder/client.cpp" line="1288"/>
         <location filename="../Teambuilder/client.cpp" line="1290"/>
         <source>&amp;Open TeamBuilder</source>
-        <translation>&amp;Abrir editor de equipo</translation>
+        <translation>&amp;Abrir editor de equipos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1290"/>
@@ -1913,17 +1914,17 @@ Este servidor pide una contraseña para acceder.</translation>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1518"/>
         <source>Visit Pokemon Online Webpage</source>
-        <translation>Sitio Web de Pokemon Online</translation>
+        <translation>Sitio web de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1519"/>
         <source>Visit Pokemon Online Forum</source>
-        <translation>Visitar Foro de Pokemon Online</translation>
+        <translation>Visitar foro de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1521"/>
         <source>About Pokemon Online</source>
-        <translation>Acerca de Pokemon Online</translation>
+        <translation>Acerca de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/client.cpp" line="1544"/>
@@ -3016,7 +3017,7 @@ Tu color actual tiene %1 de verde, un brillo de %2, y una luminosidad de %3.</tr
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="397"/>
         <source>About Pokemon Online</source>
-        <translation>Acerca de Pokemon Online</translation>
+        <translation>Acerca de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="426"/>
@@ -3031,7 +3032,7 @@ Tu color actual tiene %1 de verde, un brillo de %2, y una luminosidad de %3.</tr
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="554"/>
         <source>You haven&apos;t set your name yet. Do so in the teambuilder.</source>
-        <translation>No tienes un nombre. Escribe un nombre en el editor de equipo.</translation>
+        <translation>No tienes un nombre. Escribe un nombre en el editor de equipos.</translation>
     </message>
     <message>
         <location filename="../Teambuilder/mainwindow.cpp" line="678"/>
@@ -3190,7 +3191,7 @@ Tu color actual tiene %1 de verde, un brillo de %2, y una luminosidad de %3.</tr
     <message>
         <location filename="../Teambuilder/menu.ui" line="76"/>
         <source>&amp;Teambuilder</source>
-        <translation>&amp;Editor de equipo</translation>
+        <translation>&amp;Editor de equipos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/menu.ui" line="62"/>
@@ -3954,7 +3955,8 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="97"/>
         <source>Flags</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>Maybe there is a better option than &apos;flags&apos; - but it is certainly not &apos;banderas&apos;, as Spanish programmers use &apos;flags&apos; instead.</translatorcomment>
+        <translation type="unfinished">Flags</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="101"/>
@@ -3974,7 +3976,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="116"/>
         <source>The Pokemon affected by the move.</source>
-        <translation>El pokémon afectado por el movimiento.</translation>
+        <translation>El Pokémon o los Pokémon afectados por el movimiento.</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="118"/>
@@ -3984,7 +3986,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="120"/>
         <source>The special categorizations of a move such as &quot;Makes Contact&quot; or &quot;Sound-based&quot;.</source>
-        <translation>Las categorizaciones especiales un movimiento, tales como &quot;Hace contacto&quot; or &quot;De sonido&quot;</translation>
+        <translation>Propiedades especiales de un movimiento, como &quot;Contacto&quot; o &quot;Sonido&quot;.</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="108"/>
@@ -3994,7 +3996,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="110"/>
         <source>The power of the attack. ??? indicates varying power, -- indicates it never deals direct damage.</source>
-        <translation>La potencia/poder base. Los movimientos de poder base variable se muestran como ???, y -- indica que no causa daño directo.</translation>
+        <translation>La potencia o poder base. Los movimientos de poder base variable se muestran como ???, y -- indica que no causa daño directo.</translation>
     </message>
     <message>
         <location filename="../libraries/TeambuilderLibrary/pokemovesmodel.cpp" line="112"/>
@@ -4454,7 +4456,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2192"/>
         <source>Bypasses %0 &amp; %1</source>
-        <translation>Ignora %0 &amp; %1</translation>
+        <translation>Ignora %0 y %1</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2193"/>
@@ -4545,7 +4547,7 @@ Movimiento 4</translation>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2305"/>
         <source>User&apos;s Team</source>
-        <translation>Equipo del Usuario</translation>
+        <translation>Equipo del usuario</translation>
     </message>
     <message>
         <location filename="../libraries/PokemonInfo/pokemoninfo.cpp" line="2307"/>
@@ -4879,11 +4881,12 @@ Range: %6
 Flags: %7
 
 Description: %5%8</source>
+        <translatorcomment>Maybe there is a better option than &apos;flags&apos; - but it is certainly not &apos;banderas&apos;, as Spanish programmers use &apos;flags&apos; instead.</translatorcomment>
         <translation type="unfinished">%1
 
 Poder: %2
 Precisión: %3
-Categoria: %4
+Categoría: %4
 Rango: %6
 Flags: %7
 
@@ -5218,7 +5221,7 @@ Descripción: %5%8</translation>
     <message>
         <location filename="../Server/server.cpp" line="1209"/>
         <source>Your player session was still active on the server, so the data was kept. If you want to update your team/player info, just open the teambuilder and close it.</source>
-        <translation>Tu sesión aún estaba activa en el servidor, así que se conservaron los datos. Si quieres actualizar tu información de equipo/jugador, abre el editor de equipo y ciérralo.</translation>
+        <translation>Tu sesión aún estaba activa en el servidor, así que se conservaron los datos. Si quieres actualizar tu información de equipo/jugador, abre el editor de equipos y ciérralo.</translation>
     </message>
     <message>
         <location filename="../Server/server.cpp" line="1228"/>
@@ -5268,7 +5271,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoice.ui" line="130"/>
         <source>&amp;Teambuilder</source>
-        <translation>&amp;Editor de equipo</translation>
+        <translation>&amp;Editor de equipos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.ui" line="137"/>
@@ -5342,17 +5345,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="154"/>
         <source>Visit Pokemon Online Webpage</source>
-        <translation>Visitar el Sitio Web de Pokemon Online</translation>
+        <translation>Visitar el sitio web de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="155"/>
         <source>Visit Pokemon Online Forum</source>
-        <translation>Visitar el Foro de Pokemon Online</translation>
+        <translation>Visitar el foro de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="157"/>
         <source>About Pokemon Online</source>
-        <translation>Acerca de Pokemon Online</translation>
+        <translation>Acerca de Pokémon Online</translation>
     </message>
     <message>
         <location filename="../Teambuilder/serverchoice.cpp" line="200"/>
@@ -5517,7 +5520,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="39"/>
         <source>Teambuilder</source>
-        <translation>Editor de equipo</translation>
+        <translation>Editor de equipos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/teambuilder.cpp" line="73"/>
@@ -6034,7 +6037,7 @@ Tu idioma debe coincidir con el idioma en que se exportó el equipo.</translatio
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="29"/>
         <source>Team Builder</source>
-        <translation>Editor de equipo</translation>
+        <translation>Editor de equipos</translation>
     </message>
     <message>
         <location filename="../Teambuilder/Teambuilder/trainermenu.ui" line="62"/>
