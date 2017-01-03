@@ -1210,14 +1210,18 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     if (data.length()==0)
     {
-        if (gender == Pokemon::Female) {
-            return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiny, back);
-        }
         if (mod) {
             return PokemonInfo::Picture(pokeid, gen, gender, shiny, back, false);
         }
-        if (shiny) {
-            return PokemonInfo::Picture(pokeid, gen, gender, false, back);
+
+        if (gen.num != 7) {
+            if (gender == Pokemon::Female) {
+                return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiny, back);
+            }
+
+            if (shiny) {
+                return PokemonInfo::Picture(pokeid, gen, gender, false, back);
+            }
         }
 
         switch(gen.num) {
