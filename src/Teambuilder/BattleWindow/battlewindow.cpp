@@ -1137,8 +1137,12 @@ void BattlePokeButton::updateToolTip()
         QString type = "";
         QString pp = tr(" - %1/%2 PP").arg(p.move(i)->PP()).arg(p.move(i)->totalPP());
         if (p.move(i)->num() == Move::HiddenPower) {
-            type = QString(" [%1]").arg(TypeInfo::Name(HiddenPowerInfo::Type(p.gen(), p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5])));
-        }
+            if (p.gen() >= 7) {
+                type = QString(" [%1]").arg(TypeInfo::Name(p.hiddenPower()));
+            } else {
+                type = QString(" [%1]").arg(TypeInfo::Name(HiddenPowerInfo::Type(p.gen(), p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5])));
+            }
+        }        }
         if (p.move(i)->num() == Move::NoMove) {
             pp = "";
         }
