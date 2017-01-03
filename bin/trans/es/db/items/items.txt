@@ -372,7 +372,7 @@
 371 Chapa Plateada
 372 Chapa Dorada
 373 Piedra Hielo
-374 Shalour Sable
+374 Galleta Yantra
 375 Néctar Rosa
 376 Néctar Amarillo
 377 Néctar Rojo
@@ -453,5 +453,5 @@
 3024 Dueyestal Z
 3025 Incinostal Z
 3026 Primastal Z
-3027 Marshadium Z
+3027 Marshastal Z
 3028 Ash-Pikastal Z
