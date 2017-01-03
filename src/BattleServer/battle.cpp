@@ -1571,7 +1571,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     int oldAttacked = attacked();
     /* For Sleep Talk */
     bool special = specialOccurence;    
-    bool zmoving = pokeMemory(player).value("ZMoveTurn") == turn();
+    bool zmoving = pokeMemory(player).value("ZMoveTurn") == turn() && !specialOccurence;
     bool zmovenotify = false;
 
     heatOfAttack() = true;
@@ -1640,7 +1640,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     turnMem(player).add(TM::HasPassedStatus);
 
     //Down here so it doesnt get overridden but still defines it before the announcement
-    if (zmoving && canBeZMove(player, attack) && isZMovePossible(player, attack)) {
+    if (zmoving && canBeZMove(player, attack) && isZMovePossible(player, move)) {
         zmoves[this->player(player)] = true;
         sendItemMessage(68, player);
         if (tmove(player).power > 0 && attack != Move::MeFirst) {
