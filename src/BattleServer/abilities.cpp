@@ -2905,6 +2905,10 @@ struct AMDisguise : AM
         if (b.hasSubstitute(s)) {
             return;
         }
+        
+        if (fturn(b,t).typeMod == -100) {
+            return;
+        }
 
         //UNTESTED: Pokemon shouldn't take Recoil damage but should take Rocky Helmet
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
