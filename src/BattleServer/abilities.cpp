@@ -3086,7 +3086,7 @@ struct AMBeastBoost : public AM {
         int bestStat = Attack;
         //Start at Defense because Attack is already "best stat" at this point
         for (int i = Defense; i <= Speed; i++) {
-            if (b.getStat(s, i) > b.getStat(s, bestStat)) {
+            if (b.getRawStat(s, i) > b.getRawStat(s, bestStat)) {
                 bestStat = i;
             }
         }

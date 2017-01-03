@@ -165,6 +165,7 @@ public:
     int linker(int linked, QString relationShip) const;
     int repeatNum(int player);
     PokeFraction getStatBoost(int player, int stat) const;
+    int getRawStat(int player, int stat);
     /* "Pure" stat is without items */
     int getStat(int player, int stat) {return getStat(player, stat, 0);}
     int getStat(int player, int stat, int purityLevel);
