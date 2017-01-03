@@ -1142,7 +1142,7 @@ void BattlePokeButton::updateToolTip()
             } else {
                 type = QString(" [%1]").arg(TypeInfo::Name(HiddenPowerInfo::Type(p.gen(), p.dvs()[0], p.dvs()[1],p.dvs()[2],p.dvs()[3],p.dvs()[4],p.dvs()[5])));
             }
-        }        }
+        }
         if (p.move(i)->num() == Move::NoMove) {
             pp = "";
         }
