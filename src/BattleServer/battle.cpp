@@ -1889,7 +1889,7 @@ ppfunction:
             /* Protect, ... */
             calleffects(target, player, "DetermineProtectedAgainstAttack");
             checkAttackFailed();
-            callzeffects(target, player, "DetermineProtectedAgainstAttack");
+            callzeffects(this->player(target), player, "DetermineProtectedAgainstAttack");
             checkAttackFailed();
 
             int num = repeatNum(player);
@@ -2026,7 +2026,7 @@ ppfunction:
             if (target != player) {
                 calleffects(target, player, "DetermineProtectedAgainstAttack");
                 checkAttackFailed();
-                callzeffects(target, player, "DetermineProtectedAgainstAttack");
+                callzeffects(this->player(target), player, "DetermineProtectedAgainstAttack");
                 checkAttackFailed();
             }
 
