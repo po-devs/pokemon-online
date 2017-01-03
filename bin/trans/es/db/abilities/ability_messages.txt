@@ -1,5 +1,5 @@
 ﻿0 
-2 ¡Resquicio de %s dañó a %f!
+2 ¡Resquicio de %s dañó a %f!|Resquicio no afecta a %f.
 3 ¡%s activó su Punto Ira!
 4 ¡Anticipación de %s le hizo estremecerse!
 6 ¡Mal sueño de %s daña a %f!
@@ -8,7 +8,7 @@
 12 ¡%s no retrocedió gracias a Foco Interno!
 13 ¡Descarga de %s se activó!
 14 ¡Nevada de %s provocó granizo!|¡Llovizna de %s hizo llover!|¡Chorro Arena de %s provocó tormenta de arena!|¡Sequía de %s intensificó los rayos de sol!
-15 ¡%s restauró un poco sus PS gracias a Piel Seca!|¡%s perdió PS por su Piel Seca!
+15 ¡%s restauró un poco sus PS gracias a Piel Seca!|¡%s perdió PS por su Piel Seca!|¡Piel Seca de %s absorbió el ataque!
 16 ¡Efecto Espora de %s se activó!
 17 ¡Funda de %s lo protege!
 18 ¡%a de %s se activó!
@@ -21,7 +21,7 @@
 30 ¡%a de %s impide que bajen sus estadísticas!
 31 ¡%a de %s impidió que bajasen sus estadísticas!
 32 ¡%s se cura gracias a %a!
-33 ¡%s se cura gracias a %a!|¡%a de %s impidió la paráisis!|¡%a de %s impidió que se durmiese!|¡%a de %s evitó que se congelase!|¡%a impidió que %s se quemara!|¡%a de %s evita el envenenamiento!
+33 ¡%s se cura gracias a %a!|¡%a de %s impidió la paráisis!|¡%a de %s impidió que se durmiese!|¡%a de %s evitó que se congelase!|¡%a impidió que %s se quemara!|¡%a de %s evita el envenenamiento!|¡%a de %s lo ha inutilizado!
 34 ¡Intimidación de %s bajó el ataque a %f!|¡El Sustituto de %f evitó la Intimidación de %s!
 37 ¡Defensa Hoja de %s impide recibir cambios de estado!
 38 ¡%a de %s atrajo el ataque!|¡%a de %s subió su Ataque Especial!|¡%a de %s inutilizó el ataque!
@@ -47,7 +47,7 @@
 74 ¡%s perdió parte de su armadura!
 77 ¡Modo Daruma de %s desactivado!|¡Modo Daruma de %s activado!
 78 ¡%s robó el objeto %i de %f!
-80 ¡Competitivo de %s subió mucho su Ataque!
+80 ¡%a de %s subió mucho su Ataque!|¡%a de %s subió mucho su Defensa!|¡%a de %s subió mucho su Ataque Especial!|¡%a de %s subió mucho su Defensa Especial!|¡%a de %s subió mucho su Velocidad!
 81 ¡%s se transformó en %p!
 85 ¡%s evitó el ataque de %f gracias a Telepatía!
 86 ¡%s recuperó salud gracias a Regeneración!
@@ -65,6 +65,7 @@
 103 ¡%s irradia un aura %t!
 104 ¡%a de %f ha impedido que bajen las características de %s!|%a de %f ha impedido que cambie el estado de %s!
 107 ¡%s ha cambiado a tipo %t!
+110 ¡%s ha cambiado a Forma Filo!|¡%s ha cambiado a Forma Escudo!
 112 ¡%s está rodeado con un velo de dulzura!|¡%s está rodeado con un velo aromático!
 115 ¡La Baba de %s ralentiza a %f!
 117 ¡%s ha invertido todas las auras!
@@ -74,3 +75,14 @@
 124 ¡%s dio su %i a %f!
 125 ¡%s ha recuperado PS gracias a Carrillo!
 126 ¡Tierra del Ocaso de %s provoca un sol realmente abrasador!|¡Mar del Albor de %s hace que empiece a diluviar!|¡Ráfaga Delta de %s provoca unas misteriosas turbulencias que protegen a los Pokémon de tipo Volador!|¡El calor abrasador se mantiene sin perder un ápice de intensidad!|¡No parece que vaya a dejar de diluviar!|¡Las misteriosas turbulencias continúan sin cesar!|¡El sol abrasador ha evaporado el ataque tipo Agua!|¡El diluvio ha disipado el ataque tipo Fuego!
+127 ¡%s está sumido en un profundo letargo!
+129 ¡%f no puede usar %m!
+138 ¡El disfraz de %s ha actuado como señuelo y se ha roto!
+139 ¡Revés de %s hiere a %f!
+140 ¡%s también está empezando a bailar!
+141 ¡%s siente la fuerza de su afecto hacia %ts!|¡%s se ha convertido en Greninja Ash!
+142 ¡Coránima de %s sube su Ataque Especial!
+143 ¡%s ha recibido la habilidad %f de %a!
+147 ¡%s ha formado un banco!|¡El banco de %s se ha dispersado!
+148 ¡%s ha adoptado la Forma Completa!
+149 Escudo Limitado de %s desactivado.|¡Escudo Limitado de %s activado!
