@@ -4479,10 +4479,14 @@ void BattleSituation::koPoke(int player, int source, bool straightattack)
     }
 
     for (int i : sortedBySpeed()) {
-        if (koed(i) || !arePartners(player, i)) {
+        if (koed(i)) {
             continue;
         }
-        callaeffects(i, player, "OnPartnerKO"); //receiver, soul heart
+        if (arePartners(player, i)) {
+            callaeffects(i, player, "OnPartnerKO"); //receiver, soul heart
+        } else {
+            callaeffects(i, player, "OnOpponentKO"); //soul heart
+        }
     }
     //useful for third gen
     turnMem(player).add(TM::WasKoed);

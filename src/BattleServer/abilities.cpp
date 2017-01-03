@@ -3026,6 +3026,7 @@ struct AMBattleBond : public AM {
 struct AMSoulHeart : public AM {
     AMSoulHeart() {
         functions["OnPartnerKO"] = &opk;
+        functions["OnOpponentKO"] = &opk;
     }
 
     static void opk(int s, int, BS &b) {
