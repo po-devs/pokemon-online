@@ -4719,8 +4719,7 @@ void BattleSituation::notifySituation(int key)
 
 int BattleSituation::getRawStat(int player, int stat)
 {
-    PokeBattle p = poke(player);
-    return PokemonInfo::FullStat(p.num(), p.gen(), p.nature(), stat, p.level(), p.dvs().at(stat), p.evs().at(stat));
+    return fpoke(player).stats[stat];
 }
 
 int BattleSituation::getStat(int player, int stat, int purityLevel)
