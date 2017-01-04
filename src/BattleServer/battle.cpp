@@ -5143,7 +5143,7 @@ bool BattleSituation::canUseZMove (int spot)
     int item = poke(spot).item();
     if (ItemInfo::isZCrystal(item)) {
         for (int i = 0; i < 4; i++) {
-            if (canBeZMove(spot, move(spot,i)) && PP(spot, i) > 0) {
+            if (canBeZMove(spot, move(spot,i)) && isZMovePossible(spot, i)) {
                 return true;
             }
         }
