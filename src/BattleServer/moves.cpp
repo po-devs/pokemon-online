@@ -7241,7 +7241,7 @@ struct MMSpikyShield : public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.turnMemory(s), "", "SpikyShield", &dgaf);
+        addFunction(b.turnMemory(s), "DetermineProtectedAgainstAttack", "SpikyShield", &dgaf);
         turn(b,s)["SpikyShieldUsed"] = true;
         b.sendMoveMessage(27, 0, s, Pokemon::Grass);
     }
@@ -7710,7 +7710,7 @@ struct MMBanefulBunker: public MM
     }
 
     static void uas(int s, int, BS &b) {
-        addFunction(b.turnMemory(s), "", "BanefulBunker", &dgaf);
+        addFunction(b.turnMemory(s), "DetermineProtectedAgainstAttack", "BanefulBunker", &dgaf);
         turn(b,s)["BanefulBunkerUsed"] = true;
         b.sendMoveMessage(27, 0, s, type(b,s));
     }
