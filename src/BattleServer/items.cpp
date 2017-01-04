@@ -762,7 +762,7 @@ struct IMGem : public IM
 struct IMRedCard : public IM
 {
     IMRedCard() {
-        functions["UponBeingHit"] = &ubh;
+        functions["UponBeingHit3"] = &ubh;
     }
 
     static void ubh(int s, int t, BS &b) {
