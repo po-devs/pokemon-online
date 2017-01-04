@@ -7529,13 +7529,13 @@ struct MMShellTrap : public MM {
         }
     }
 
-    static void uodr(int s, int, BS &b) {
+    static void uodr(int s, int t, BS &b) {
         if (tmove(b,t).category == Category::Physical) {
             poke(b,s)["ShellTrapTurn"] = b.turn();
         }
     }
 
-    static void abp(int s, int t, BS &b) {
+    static void abp(int s, int, BS &b) {
         if (poke(b,s)["ShellTrapTurn"] == b.turn()) {
             //b.useAttack(s, Move::ShellTrap, true);
             b.useAttack(s, b.choice(s).attackSlot());
