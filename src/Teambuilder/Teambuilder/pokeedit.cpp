@@ -75,7 +75,6 @@ PokeEdit::PokeEdit(TeamBuilderWidget *master, PokeTeam *poke, QAbstractItemModel
     connect(ui->item, SIGNAL(currentIndexChanged(QString)), this, SLOT(changeItem(QString)));
     connect(ui->evbox, SIGNAL(natureChanged(int)), this, SLOT(setNature(int)));
     connect(ui->evbox, SIGNAL(natureBoostChanged()), ui->ivbox, SLOT(updateStats()));
-    connect(ui->evbox, SIGNAL(EVsChanged()), ui->ivbox, SLOT(updateStats()));
     connect(ui->ivbox, SIGNAL(statsUpdated()), ui->evbox, SLOT(updateEVs()));
 
     updateAll();
