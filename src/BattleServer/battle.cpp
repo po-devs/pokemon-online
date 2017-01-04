@@ -4158,8 +4158,11 @@ end:
         }
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
-            callaeffects(player, source, "UponOffensiveDamageReceived");
-        }
+            
+            // Otherwise Stamina boosts twice and this is only for Berserk anyway
+            if (pokeMemory(source)["Berserked"] == true) { 
+                callaeffects(player, source, "UponOffensiveDamageReceived");
+            }        }
     }
 
     if (!sub)
