@@ -7247,6 +7247,9 @@ struct MMSpikyShield : public MM
     }
 
     static void dgaf(int t, int s, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
         if (!turn(b,t)["SpikyShieldUsed"].toBool()) {
             return;
         }
@@ -7713,6 +7716,9 @@ struct MMBanefulBunker: public MM
     }
 
     static void dgaf(int t, int s, BS &b) {
+        if (s == t || t == -1) {
+            return;
+        }
         if (!turn(b,t)["BanefulBunkerUsed"].toBool()) {
             return;
         }
