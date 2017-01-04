@@ -7529,7 +7529,7 @@ struct MMShellTrap : public MM {
         }
     }
 
-    static void uodr(int s, int t, BS &b) {
+    static void uodr(int s, int, BS &b) {
         if (tmove(b,t).category == Category::Physical) {
             poke(b,s)["ShellTrapTurn"] = b.turn();
         }
