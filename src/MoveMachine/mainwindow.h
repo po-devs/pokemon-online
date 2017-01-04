@@ -44,6 +44,7 @@ struct PokeMovesDb
 
     QHash<Pokemon::uniqueId, MovesPerPoke> pokes;
 
+    void addPreEvo(Pokemon::uniqueId evo, Pokemon::uniqueId preEvo);
     void save();
 };
 
