@@ -2747,7 +2747,7 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 
         if (b.isOut(s)) {
             if (!b.hasMaximalStatMod(s, arg)) {
-                b.inflictStatMod(s, arg, 1, s, false);
+                b.inflictStatMod(s, arg, 1, s);
                 poke(b,s)["Berserked"] = true;
             }
         }
