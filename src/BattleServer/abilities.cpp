@@ -2373,10 +2373,11 @@ struct AMToughClaws : public AM {
 
 struct AMStanceChange : public AM {
     AMStanceChange() {
-        functions["EvenWhenCantMove"] = &btl;
+        functions["EvenWhenCantMove"] = &ewct;
+        functions["BeforeTargetList"] = &btl;
     }
 
-    static void btl (int s, int, BS &b) {
+    static void ewct (int s, int, BS &b) {
         /* Not using field pokemon since Ditto doesn't gain stance change.
          * So using b.poke(s) instead of fpoke(b,s). */
         Pokemon::uniqueId num = b.poke(s).num();
@@ -2393,6 +2394,11 @@ struct AMStanceChange : public AM {
             b.changeForme(b.player(s), b.slotNum(s), Pokemon::Aegislash, true);
             b.sendAbMessage(110,1,0);
         }
+    }
+    static void btl (int s, int, BS &b) {
+        if (b.gen() <= 6)
+            return;
+        ewct(s, s, b);
     }
 };
 
