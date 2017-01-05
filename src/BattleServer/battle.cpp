@@ -3845,8 +3845,10 @@ int BattleSituation::calculateDamage(int p, int t)
         if (terrain == GrassyTerrain && (attackused == Move::Bulldoze || attackused == Move::Earthquake || attackused == Move::Magnitude)) {
             damage = applyMod(damage, 0x800);
         }
-        //Terrains boost moves of same type
-        if (TypeInfo::TypeForTerrain(terrain) == type && !isFlying(p)) {
+        // Grassy/Electric/Psychic terrain boost moves of same type
+        int terrainType = TypeInfo::TypeForTerrain(terrain);
+        bool moveBoostingTerrain = !(terrainType == Type::Fairy || terrainType == Type::Normal); // false if terrainType is either Fairy or Normal(default)
+        if (terrainType == type && moveBoostingTerrain && !isFlying(p)) {
             damage = applyMod(damage, 0x1800);
         }
 
