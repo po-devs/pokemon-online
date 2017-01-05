@@ -813,34 +813,6 @@ void BattleSituation::analyzeChoices()
 
     std::vector<int> playersByOrder = sortedBySpeed();
 
-    //Gen 7 mega evolution changes turn order now.
-    if (gen() >= 7) {
-        auto speeds = calculateSpeeds();
-
-        foreach(int i, playersByOrder) {
-            if (!choice(i).attackingChoice() && ! choice(i).moveToCenterChoice()) {
-                continue;
-            }
-
-            int spot = i;
-
-            if (!megaEvolve(spot)) {
-                continue;
-            }
-
-            //update particular speed as it mega evolved
-            for (auto &pair : speeds) {
-                if (pair.first == spot) {
-                    pair.second = getStat(spot, Speed);
-                    break;
-                }
-            }
-        }
-
-        /* In gen 7, recalculate turns after mega evos */
-        playersByOrder = sortedBySpeed(std::move(speeds));
-    }
-
     foreach(int i, playersByOrder) {
         if (choice(i).itemChoice()) {
             items.push_back(i);
@@ -898,10 +870,32 @@ void BattleSituation::analyzeChoices()
     foreach(int i, playersByOrder) {
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
-            if (gen() < 7) {
-                megaEvolve(slot);
-            }
+            megaEvolve(slot);
             useZMove(slot);
+        }
+    }
+
+    //Gen 7 mega evolution changes turn order now.
+    if (gen() >= 7) {
+        players.clear();
+        playersByOrder = sortedBySpeed(calculateSpeeds());
+        for (it = priorities.begin(); it != priorities.end(); ++it) {
+            std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
+
+            foreach (int player, it->second) {
+                //already called turnorder effects above
+                secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
+            }
+
+            for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
+                foreach(int i, playersByOrder) {
+                    foreach(int p, it->second) {
+                        if (i == p) {
+                            players.push_back(i);
+                        }
+                    }
+                }
+            }
         }
     }
 
