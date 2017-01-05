@@ -2685,7 +2685,7 @@ struct AMTriage : public AM
     }
 
     static void pc(int s, int, BS &b) {
-        if (tmove(b,s).category & Move::HealingMove || tmove(b,s).classification == Move::AbsorbingMove) {
+        if (tmove(b,s).classification == Move::HealingMove || tmove(b,s).classification == Move::AbsorbingMove) {
             tmove(b,s).priority += 3;
         }
     }
