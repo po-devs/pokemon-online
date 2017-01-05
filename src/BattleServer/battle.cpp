@@ -879,6 +879,23 @@ void BattleSituation::analyzeChoices()
     if (gen() >= 7) {
         players.clear();
         playersByOrder = sortedBySpeed(calculateSpeeds());
+
+        //Ability of the mega evo is used to determine priority
+        priorities.clear();
+        foreach(int i, playersByOrder) {
+            //Reset priority to erase effects of base evolution abilities
+            tmove(i).priority = MoveInfo::SpeedPriority(tmove(i).attack, gen());
+
+            if (choice(i).attackingChoice()){
+                calleffects(i, i, "PriorityChoice"); //Me First. Needs to go above aeffects
+                callaeffects(i, i, "PriorityChoice");
+                priorities[tmove(i).priority].push_back(i);
+            } else if (choice(i).moveToCenterChoice()){
+                /* Shifting choice */
+                priorities[0].push_back(i);
+            }
+        }
+
         for (it = priorities.begin(); it != priorities.end(); ++it) {
             std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
