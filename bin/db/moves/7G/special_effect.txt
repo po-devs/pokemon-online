@@ -417,6 +417,6 @@
 669 11#Prismatic Laser
 670 230#Spectral Thief
 671 1000-2_1#TearfulLook
-693 1000-8_2#Extreme evo boost
+693 1009#Extreme evo boost
 695 1007#genesis supernova
 696 1008#guardian of alola
