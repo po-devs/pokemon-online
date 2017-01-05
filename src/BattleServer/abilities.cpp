@@ -2946,7 +2946,8 @@ struct AMInnardsOut : AM
     static void bbk(int s, int t, BS &b) {
         if (!turn(b,s).contains("HPBeforeDamage"))
             return; //This means something broke...
-
+        if (b.hasWorkingAbility(t, Ability::MagicGuard))
+            return;
         b.sendAbMessage(139, 0, s, t); //Message tweaked for clarity vs. actual game message
         b.inflictDamage(t, turn(b,s).value("HPBeforeDamage").toInt(), s);
     }
