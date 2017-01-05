@@ -134,6 +134,7 @@
 218 Congratulations, %ts!
 219 But %s can't use the move!|But %s can't use it the way it is now!
 220 %s set a Shell Trap!|%s's Shell Trap didn't work!
+222 The battlefield got weird!|The weirdness disappeared from the battlefield!|%s surrounds itself with psychic terrain to block %t's %m!
 223 %s can't use %m after the Throat Chop!|The effects of Throat Chop prevent %f from using Sound-based moves!|<%s can speak again>
 224 %s concentrated intensely!
 225 %f used the move instructed by %s!
