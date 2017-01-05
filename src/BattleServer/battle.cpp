@@ -1934,11 +1934,10 @@ ppfunction:
                         testCritical(player, target);
                         int damage = calculateDamage(player, target);
                         inflictDamage(target, damage, player, true);
-                    } else { // Some item effects still work when Disguise is up
-                        if (makesContact(player)) {
-                            callieffects(target, player, "UponPhysicalAssault");
-                        }
-                        callieffects(target, player, "UponBeingHit3"); //Red Card
+                    } else if (makesContact(player)) {
+                        // Contact effects still work when Disguise is up
+                        // The curse type check is for Corrosion
+                        callieffects(target, player, "UponPhysicalAssault");
                     }
                     hitcount += 1;
                     hitting = true;
@@ -1967,7 +1966,6 @@ ppfunction:
                 //heatOfAttack() = false;
                 if (hitting) {
                     callieffects(target, player, "UponBeingHit");
-                    callieffects(target, player, "UponBeingHit3"); //Red Card
                     if (!sub) {
                         callaeffects(target, player, "UponBeingHit");
                         callaeffects(player, target, "OnHitting");
