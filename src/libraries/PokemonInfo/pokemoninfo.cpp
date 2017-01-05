@@ -1922,7 +1922,7 @@ QString MoveInfo::ZName(int movenum, bool zmove)
 {
     QString ret = Name(movenum);
 
-    if (zmove && movenum != 0 && (Power(movenum, Pokemon::gen()) == 0 || movenum == Move::ExtremeEvoboost || movenum == Move::MeFirst)) {
+    if (zmove && movenum != 0 && movenum != Move::ExtremeEvoboost && (Power(movenum, Pokemon::gen()) == 0 || movenum == Move::MeFirst)) {
         ret = QObject::tr("Z-%1", "Z-Move Renameing").arg(ret);
     }
 

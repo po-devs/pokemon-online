@@ -8222,6 +8222,19 @@ struct MMZAlola : public MM
     }
 };
 
+struct MMZExtremeEvoboost : public MM
+{
+    MMZExtremeEvoboost() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        for (int i = Attack; i <= Speed; i++) {
+            b.inflictStatMod(s, i, 2, s);
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -8510,4 +8523,5 @@ void MoveEffect::init()
     REGISTER_MOVE(1006, ZCurse);
     REGISTER_MOVE(1007, ZSupernova);
     REGISTER_MOVE(1008, ZAlola);
+    REGISTER_MOVE(1009, ZExtremeEvoboost)
 }

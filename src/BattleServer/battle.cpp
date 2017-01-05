@@ -1644,7 +1644,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     if (zmoving && canBeZMove(player, attack) && isZMovePossible(player, move)) {
         zmoves[this->player(player)] = true;
         sendItemMessage(68, player);
-        if (tmove(player).power > 0 && attack != Move::MeFirst) {
+        if ((tmove(player).power > 0 && attack != Move::MeFirst) || tmove(player).attack == Move::ExtremeEvoboost) {
             notify(All, UseAttack, player, qint16(ItemInfo::ZCrystalMove(poke(player).item())), false, true);
             zmovenotify = true;
         } else {
@@ -5011,10 +5011,10 @@ void BattleSituation::storeChoice(const BattleChoice &b)
         choice(b.slot()).choice.attack.attackTarget = b.slot();
 }
 
-void BattleSituation::setupMove(int i, int move, bool zmove)
+void BattleSituation::setupMove(int i, int move, bool zmoving)
 {
     //ZAttack should be a completely seperate move from the base attack
-    if (move != Move::MeFirst && zmove && MoveInfo::Power(move, this->gen()) > 0 && !zmoves[player(i)] && canBeZMove(i, move)) {
+    if (move != Move::MeFirst && zmoving && MoveInfo::Power(move, this->gen()) > 0 && !zmoves[player(i)] && canBeZMove(i, move)) {
         int zmove = ItemInfo::ZCrystalMove(this->poke(i).item());
         int power = MoveInfo::ZPower(move, this->gen());
         int moveCategory = MoveInfo::Category(move, this->gen());
