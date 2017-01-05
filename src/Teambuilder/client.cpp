@@ -2325,7 +2325,7 @@ void Client::ladderChanged(int id, bool ladder)
 
 bool Client::busy() const
 {
-    return away() || mychallenges.size() >= 5;
+    return away();
 }
 
 bool Client::away() const
