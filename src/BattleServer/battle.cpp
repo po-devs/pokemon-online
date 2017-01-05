@@ -5097,6 +5097,9 @@ bool BattleSituation::canMegaEvolve (int slot)
         return false;
     }
     if (ItemInfo::isMegaStone(item)) {
+        if (pokeMemory(slot).contains("PreTransformPoke")) {
+            return false;
+        }
         //Pokemon can't mega into themselves
         if (ItemInfo::MegaStoneForme(item) == poke(slot).num()) {
             return false;
@@ -5105,7 +5108,7 @@ bool BattleSituation::canMegaEvolve (int slot)
         if (ItemInfo::MegaStoneForme(item).original() == poke(slot).num()) {
             return true;
         }
-        if (ItemInfo::MegaStoneForme(item).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0) && !pokeMemory(slot).contains("PreTransformPoke")) {
+        if (ItemInfo::MegaStoneForme(item).original() == Pokemon::uniqueId(poke(slot).num().pokenum,0)) {
             return true;
         }
     }
