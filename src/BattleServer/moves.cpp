@@ -659,24 +659,15 @@ struct MMDestinyBond : public MM
 
     static void daf(int s, int, BS &b) {
         if (b.gen() >= 7) {
-            if (poke(b,s).contains("DestinyBondTurn") && poke(b,s)["DestinyBondTurn"].toInt() == b.turn() - 1) {
-                if (!testSuccess(poke(b,s)["DestinyBondCount"].toInt(), b)) {
-                    fturn(b,s).add(TM::Failed);
-                } else {
-                    poke(b,s)["DestinyBondTurn"] = b.turn();
-                    inc(poke(b,s)["DestinyBondCount"]);
-                }
-            } else {
-                poke(b,s)["DestinyBondTurn"] = b.turn();
+            if (!poke(b,s).contains("DestinyBondCount")) { // If the counter is 0
                 poke(b,s)["DestinyBondCount"] = 1;
+                return;
+            } else if (poke(b,s)["DestinyBondCount"].toInt() % 2 == 1) { // If the counter is odd
+                fturn(b,s).add(TM::Failed);
+            } else { // If the counter is even
+                inc(poke(b,s)["DestinyBondCount"]);
             }
         }
-    }
-
-    static bool testSuccess(int destinyCount, BS &b) {
-        //Unconfirmed: just copying protect's rate for now
-        double x = 100.0 / (pow(3.0, std::min(destinyCount, 6)));
-        return b.coinflip(x, 100.0);
     }
 
     static void uas(int s, int, BS &b) {
