@@ -659,12 +659,8 @@ struct MMDestinyBond : public MM
 
     static void daf(int s, int, BS &b) {
         if (b.gen() >= 7) {
-            if (!poke(b,s).contains("DestinyBondCount")) { // If the counter is 0
-                poke(b,s)["DestinyBondCount"] = 1;
-            } else if (poke(b,s)["DestinyBondCount"].toInt() % 2 == 1) { // If the counter is odd
-                fturn(b,s).add(TM::Failed);
-            } else { // If the counter is even
-                inc(poke(b,s)["DestinyBondCount"]);
+            if (poke(b,s).contains("DestinyBondTurn") && poke(b,s)["DestinyBondTurn"].toInt() == b.turn() - 1) {
+                fturn(b, s).add(TM::Failed);
             }
         }
     }
