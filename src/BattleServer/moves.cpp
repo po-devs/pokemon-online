@@ -661,7 +661,6 @@ struct MMDestinyBond : public MM
         if (b.gen() >= 7) {
             if (!poke(b,s).contains("DestinyBondCount")) { // If the counter is 0
                 poke(b,s)["DestinyBondCount"] = 1;
-                return;
             } else if (poke(b,s)["DestinyBondCount"].toInt() % 2 == 1) { // If the counter is odd
                 fturn(b,s).add(TM::Failed);
             } else { // If the counter is even
