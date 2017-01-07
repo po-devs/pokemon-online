@@ -820,7 +820,7 @@
 656:0 Froakie
 657:0 Frogadier
 658:0 Greninja
-658:1:AD Greninja-Unbonded
+658:1:D Greninja-Unbonded
 658:2:A Ash Greninja
 659:0 Bunnelby
 660:0 Diggersby
