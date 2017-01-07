@@ -153,6 +153,7 @@ void PokeBattle::init(PokePersonal &poke)
 
     item() = poke.item();
     ability() = poke.ability();
+    nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (!illegal()) {
         if (item() == Item::GriseousOrb && num() != Pokemon::Giratina_Origin && p.gen() <= 4) {
@@ -192,8 +193,13 @@ void PokeBattle::init(PokePersonal &poke)
         if ((ori == Pokemon::Castform || ori == Pokemon::Cherrim || ori == Pokemon::Darmanitan || ori == Pokemon::Meloetta || ori == Pokemon::Aegislash) && illegal() == false) {
             num().subnum = 0;
         }
+        // If Greninja-Unbonded or Ash-Greninja is selected, change it back to default Greninja and overwrite nick and ability
+        if (num() == Pokemon::Greninja_Unbonded || num() == Pokemon::Ash_Greninja) {
+            num().subnum = 0;
+            ability() = Ability::BattleBond;
+            nick() == PokemonInfo::Name(Pokemon::Greninja);
+        }
     }
-    nick() = (v.validate(poke.nickname()) == QNickValidator::Acceptable) ? poke.nickname() : PokemonInfo::Name(num());
 
     if (GenderInfo::Possible(poke.gender(), p.genderAvail())) {
         gender() = poke.gender();

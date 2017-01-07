@@ -3021,16 +3021,12 @@ struct AMBattleBond : public AM {
     }
 
     static void ak(int s, int, BS &b) {
-        if (b.koed(s))
+        if (b.koed(s) || b.poke(s).num() != Pokemon::Greninja)
             return;
 
-        if (PokemonInfo::OriginalForme(b.poke(s).num()) != Pokemon::Greninja || b.preTransPoke(s, Pokemon::Greninja_Unbonded))
-            return;
-        if (b.pokenum(s).subnum == 1) {
-            b.sendAbMessage(141, 0, s);
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
-            b.sendAbMessage(141, 1, s);
-        }
+        b.sendAbMessage(141, 0, s);
+        b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja);
+        b.sendAbMessage(141, 1, s);
     }
 };
 
