@@ -3028,7 +3028,7 @@ struct AMBattleBond : public AM {
             return;
         if (b.pokenum(s).subnum == 1) {
             b.sendAbMessage(141, 0, s);
-            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja, true);
+            b.changeForme(b.player(s), b.slotNum(s), Pokemon::Ash_Greninja);
             b.sendAbMessage(141, 1, s);
         }
     }
