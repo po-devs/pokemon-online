@@ -15,7 +15,7 @@
 18 ¡%s comenzó a cargar energía!
 19 ¡%s ha cambiado al tipo %t!
 20 ¡%s ha cambiado al tipo %t!
-23 ¡%s robó %i a %f!|¡%s robó %i a %f!
+23 ¡%s robó %i a %f!
 25 ¡%s reduce sus PS y maldice a %f!|¡%s es víctima de una Maldición!
 26 ¡%s se llevó a %f!|¡%s intenta llevarse a su rival!
 27 ¡%s se ha protegido!

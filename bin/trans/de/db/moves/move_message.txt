@@ -15,7 +15,7 @@
 18 %s lädt sich auf!
 19 %s transformed into the %t type!
 20 %s transformed into the %t type!
-23 %s stahl %f's %i!%s stahl %f's %i!
+23 %s stahl %f's %i!
 25 %s verliert einige KP und legt einen Fluch auf %f!|%s nimmt durch den Fluch Schaden!
 26 %s nahm %f mit sich!|%s versucht das Ziel mit sich zu nehmen!
 27 %s schützt sich selbst!

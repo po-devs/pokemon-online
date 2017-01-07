@@ -660,23 +660,9 @@ struct MMDestinyBond : public MM
     static void daf(int s, int, BS &b) {
         if (b.gen() >= 7) {
             if (poke(b,s).contains("DestinyBondTurn") && poke(b,s)["DestinyBondTurn"].toInt() == b.turn() - 1) {
-                if (!testSuccess(poke(b,s)["DestinyBondCount"].toInt(), b)) {
-                    fturn(b,s).add(TM::Failed);
-                } else {
-                    poke(b,s)["DestinyBondTurn"] = b.turn();
-                    inc(poke(b,s)["DestinyBondCount"]);
-                }
-            } else {
-                poke(b,s)["DestinyBondTurn"] = b.turn();
-                poke(b,s)["DestinyBondCount"] = 1;
+                fturn(b, s).add(TM::Failed);
             }
         }
-    }
-
-    static bool testSuccess(int destinyCount, BS &b) {
-        //Unconfirmed: just copying protect's rate for now
-        double x = 100.0 / (pow(3.0, std::min(destinyCount, 6)));
-        return b.coinflip(x, 100.0);
     }
 
     static void uas(int s, int, BS &b) {
@@ -1151,7 +1137,7 @@ struct MMCovet : public MM
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
         int i2 = b.poke(t).item();
         if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && b.canPassMStone(s, i2)) {
-            b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
+            b.sendMoveMessage(23,0,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
         } else if (b.hasWorkingAbility(t, Ability::StickyHold)) {
