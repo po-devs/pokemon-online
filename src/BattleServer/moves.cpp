@@ -1137,7 +1137,7 @@ struct MMCovet : public MM
         /* Thief & Covet steal item even if target koed, at least in gen 5 */
         int i2 = b.poke(t).item();
         if (b.poke(s).item() == 0 && b.canLoseItem(t, s) && b.canPassMStone(s, i2)) {
-            b.sendMoveMessage(23,(move(b,s)==Covet)?0:1,s,type(b,s),t,b.poke(t).item());
+            b.sendMoveMessage(23,0,s,type(b,s),t,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
         } else if (b.hasWorkingAbility(t, Ability::StickyHold)) {
