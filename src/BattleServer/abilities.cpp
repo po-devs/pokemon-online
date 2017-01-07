@@ -2920,6 +2920,9 @@ struct AMDisguise : AM
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
                 turn(b,s)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
+                // Opponent should still take Life Orb damage
+                turn(b,t)["ActivateLifeOrb"] = true;
+                turn(b,t)["LOTarget"] = s;
                 disguise(s,t,b);
             }
         }
