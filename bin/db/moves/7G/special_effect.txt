@@ -388,6 +388,7 @@
 627 130-2#Nature's Madness
 628 221#Revelation Dance
 629 220#Shell Trap
+630 104-7#Solar Blade
 631 231#sunsteel strike
 633 240-4|1000-3_1#PsychicTerrain
 634 223#throat chop
