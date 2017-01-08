@@ -129,7 +129,7 @@
 92:0 Gastly
 93:0 Haunter
 94:0:H Gengar
-94:1:M Mega Gengar 
+94:1:M Mega Gengar
 95:0 Onix
 96:0 Drowzee
 97:0 Hypno
