@@ -8196,7 +8196,7 @@ struct MMZHealSwitch : public MM
 struct MMZSupernova : public MM
 {
     MMZSupernova() {
-        functions["AfterAttackFinished"] = &zm;
+        functions["AfterAttackSuccessful"] = &zm;
     }
 
     static void zm(int s, int, BS &b) {
