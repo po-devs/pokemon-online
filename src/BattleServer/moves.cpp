@@ -782,12 +782,10 @@ struct MMDetect : public MM
         }
 
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
-            return;
-        }
-
-        if (b.zTurn(s)) {
-            turn(b,s)["ZMoveProtected"] = true;
-            b.sendItemMessage(68, t, 1);
+            if (b.zTurn(s)) {
+                turn(b,s)["ZMoveProtected"] = true;
+                b.sendItemMessage(68, s, 1);
+            }
             return;
         }
 
@@ -7120,18 +7118,16 @@ struct MMKingsShield: public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
-            return;
-        }
-
         /* Shoud be removed if being kept separate from other protect moves - as then it's only called in attacking situations */
         if (tmove(b,s).category == Move::Other) {
             return;
         }
 
-        if (b.zTurn(s)) {
-            turn(b,s)["ZMoveProtected"] = true;
-            b.sendItemMessage(68, t, 1);
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            if (b.zTurn(s)) {
+                turn(b,s)["ZMoveProtected"] = true;
+                b.sendItemMessage(68, s, 1);
+            }
             return;
         }
 
@@ -7177,11 +7173,15 @@ struct MMMatBlock : public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+        if (tmove(b,s).category == Move::Other) {
             return;
         }
 
-        if (tmove(b,s).category == Move::Other) {
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            if (b.zTurn(s)) {
+                turn(b,s)["ZMoveProtected"] = true;
+                b.sendItemMessage(68, s, 1);
+            }
             return;
         }
 
@@ -7255,6 +7255,10 @@ struct MMSpikyShield : public MM
         }
 
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            if (b.zTurn(s)) {
+                turn(b,s)["ZMoveProtected"] = true;
+                b.sendItemMessage(68, s, 1);
+            }
             return;
         }
 
@@ -7723,17 +7727,15 @@ struct MMBanefulBunker: public MM
             return;
         }
 
-        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
-            return;
-        }
-
         if (tmove(b,s).category == Move::Other) {
             return;
         }
 
-        if (b.zTurn(s)) {
-            turn(b,s)["ZMoveProtected"] = true;
-            b.sendItemMessage(68, t, 1);
+        if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            if (b.zTurn(s)) {
+                turn(b,s)["ZMoveProtected"] = true;
+                b.sendItemMessage(68, s, 1);
+            }
             return;
         }
 
@@ -8215,10 +8217,7 @@ struct MMZAlola : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        turn(b,s)["CustomDamage"] = b.poke(t).lifePoints()* 3 / 4;
-        if (turn(b,t).value("ZMoveProtected").toBool()) {
-            turn(b,s)["CustomDamage"] = turn(b,s)["CustomDamage"].toInt() * 3 / 4;
-        }
+        turn(b,s)["CustomDamage"] =  b.poke(t).lifePoints() * 3 / 4;
     }
 };
 
