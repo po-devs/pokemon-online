@@ -8203,7 +8203,11 @@ struct MMZAlola : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        turn(b,s)["CustomDamage"] =  b.poke(t).lifePoints() * 3 / 4;
+        int customDamage = b.poke(t).lifePoints() * 3 / 4;
+        if (turn(b,s).value("ZMoveProtected").toBool()) {
+            customDamage = customDamage / 4;
+        }
+        turn(b,s)["CustomDamage"] = customDamage;
     }
 };
 
