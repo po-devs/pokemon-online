@@ -614,7 +614,7 @@
 646 Can only be used on the first turn after the user has switched in. Priority level 2.
 647 Protects the user from offensive moves used by any other Pokémon, but fails if the user acts last in the turn it is used. If a Pokémon attacks the user with a contact move, that Pokémon becomes Poisoned. Every time Protect, Detect, Endure, Quick Guard, Wide Guard, Crafty Shield, King's Shield, or Spiky Shield are used, the chance of success of this move is halved for the next turn, to a minimum of 12.5%. Priority level 4.
 648 Lowers the user's Speed by 1 stage.
-649 Recovers 1/2 of the user's max HP, but 2/3 during Grassy Terrain.
+649 Recovers 1/2 of the targets's max HP, but 2/3 during Grassy Terrain.
 650 Recovers HP equal to the value of the target's Attack stat. Lowers the target's Attack by 1 stage.
 651 Draws to the target any single-target move used by any of the opponent's Pokémon. Priority level 3.
 652 Lowers the target's Speed by 1. Poisons the target.
