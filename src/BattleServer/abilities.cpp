@@ -559,7 +559,7 @@ struct AMForeCast : public AM {
         functions["WeatherChange"] = &us;
         functions["OnLoss"] = &ol;
         functions["EndTurn12.0"] = &us; /* Gen 4 */
-        functions["EndTurn31.0"] = &us; /* Gen 5 */
+        functions["EndTurn32.0"] = &us; /* Gen 5 */
     }
     /*At the end of each turn, Castform's type is re-adjusted to what the weather is, overriding Soak, etc.*/
 
@@ -1140,7 +1140,7 @@ struct AMSlowStart : public AM {
     AMSlowStart() {
         functions["UponSetup"] = &us;
         functions["EndTurn12.0"] = &et; /* gen 4 */
-        functions["EndTurn31.0"] = &et; /* gen 5 */
+        functions["EndTurn32.0"] = &et; /* gen 5 */
         functions["StatModifier"] = &sm;
     }
 
@@ -2138,7 +2138,7 @@ struct AMRegenerator : public AM {
 
 struct AMPickUp : public AM {
     AMPickUp() {
-        functions["EndTurn28.3"] = &et;
+        functions["EndTurn29.3"] = &et;
     }
 
     static void et(int s, int, BS &b) {

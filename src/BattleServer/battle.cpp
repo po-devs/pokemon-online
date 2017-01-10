@@ -201,25 +201,25 @@ void BattleSituation::initializeEndTurnFunctions()
         25.0 Terrains end
 
         26.0 Trick Room ends
-        26.1 Wonder Room ends
-        26.2 Magic Room ends
+        27.0 Wonder Room ends
+        28.0 Magic Room ends
 
-        28.0 Uproar message
-        28.1 Speed Boost, Bad Dreams, Harvest, Moody
-        28.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
-        28.3 pickup
+        29.0 Uproar message
+        29.1 Speed Boost, Bad Dreams, Harvest, Moody
+        29.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
+        29.3 pickup
 
-        29.0 Zen Mode
+        30.0 Zen Mode
 
-        30.0 Pokémon is switched in (if previous Pokémon fainted)
-        30.1 Healing Wish, Lunar Dance
-        30.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
+        31.0 Pokémon is switched in (if previous Pokémon fainted)
+        31.1 Healing Wish, Lunar Dance
+        31.2 Spikes, Toxic Spikes, Stealth Rock (hurt in the order they are first used)
 
-        31.0 Slow Start, Forecast
+        32.0 Slow Start, Forecast
         */
         ownEndFunctions.push_back(QPair<int, VoidFunction>(1, &BattleSituation::endTurnWeather));
         ownEndFunctions.push_back(QPair<int, VoidFunction>(25, &BattleSituation::endTurnTerrain));
-        ownEndFunctions.push_back(QPair<int, VoidFunction>(30, &BattleSituation::requestEndOfTurnSwitchIns));
+        ownEndFunctions.push_back(QPair<int, VoidFunction>(31, &BattleSituation::requestEndOfTurnSwitchIns));
 
         addEndTurnEffect(AbilityEffect, 5, 1); /* Shed skin, Hydration, Healer */
         addEndTurnEffect(ItemEffect, 5, 2); /* Leftovers, Black sludge */
@@ -227,12 +227,12 @@ void BattleSituation::initializeEndTurnFunctions()
         addEndTurnEffect(OwnEffect, 9, 0, 0, "", NULL, &BattleSituation::endTurnPoison);
         addEndTurnEffect(OwnEffect, 10, 0, 0, "", NULL, &BattleSituation::endTurnBurn);
 
-        addEndTurnEffect(AbilityEffect, 28, 1); /* Speed Boost, Bad Dreams, Harvest, Pickup Moody */
-        addEndTurnEffect(ItemEffect, 28, 2); /* Orbs, sticky barb */
+        addEndTurnEffect(AbilityEffect, 29, 1); /* Speed Boost, Bad Dreams, Harvest, Moody */
+        addEndTurnEffect(ItemEffect, 29, 2); /* Orbs, sticky barb */
 
-        addEndTurnEffect(AbilityEffect, 29, 0); /* Daruma Mode */
+        addEndTurnEffect(AbilityEffect, 30, 0); /* Daruma Mode */
 
-        addEndTurnEffect(AbilityEffect, 31, 0); /* Slow Start, Forecast */
+        addEndTurnEffect(AbilityEffect, 32, 0); /* Slow Start, Forecast */
     }
 }
 
