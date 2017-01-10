@@ -5590,7 +5590,7 @@ struct MMUproar : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen gen) {
-        return gen <= 4 ? makeBracket(6, 12) : makeBracket(28, 0) ;
+        return gen <= 4 ? makeBracket(6, 12) : makeBracket(29, 0) ;
     }
 
     static void uas(int s,int, BS &b) {
@@ -5948,7 +5948,7 @@ struct MMMagicRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(26, 2) ;
+        return makeBracket(28, 0) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
@@ -6222,7 +6222,7 @@ struct MMWonderRoom : public MM {
     }
 
     static ::bracket bracket(Pokemon::gen) {
-        return makeBracket(26, 1) ;
+        return makeBracket(27, 0) ;
     }
 
     //fixme: store weather effects (gravity, trickroom, magicroom, wonderroom) in a flagged int hard coded in BattleSituation
