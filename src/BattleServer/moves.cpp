@@ -4096,6 +4096,7 @@ struct MMJudgment : public MM
         if (((ItemInfo::isPlate(item) && move(b,s) == Move::Judgment) || (ItemInfo::isMemoryChip(item) && move(b,s) == Move::Multi_Attack))
                 && b.hasWorkingItem(s, item) && !turn(b,s).value("Symbiote").toBool()) {
             tmove(b,s).type = poke(b,s)["ItemArg"].toInt();
+            turn(b, s)["JudgmentWithPlate"] = true;
         }
     }
 };
