@@ -1474,8 +1474,12 @@ bool PokemonInfo::HasMegaEvo(const Pokemon::uniqueId &pokeid)
 }
 
 bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
-{
-    return !(m_Options.value(pokeid.pokenum).contains('B') || m_Options.value(pokeid.pokenum).contains('H'));
+{   //Hidden Forme if either the Forme or the Original Forme has the B tag
+    if (m_Options.value(pokeid.pokenum).contains('B'))
+        return false;
+    else if (m_Options.value(pokeid).contains('B'))
+        return false;
+    return true;
 }
 
 bool PokemonInfo::IsMegaEvo(const Pokemon::uniqueId &pokeid)

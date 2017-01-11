@@ -821,7 +821,7 @@
 657:0 Frogadier
 658:0 Greninja
 658:1:D Greninja-Unbonded
-658:2:A Ash Greninja
+658:2:AB Ash Greninja
 659:0 Bunnelby
 660:0 Diggersby
 661:0 Fletchling
@@ -932,7 +932,7 @@
 717:0 Yveltal
 718:0 Zygarde
 718:1:AD Zygarde-10%
-718:2:A Zygarde-Complete
+718:2:AB Zygarde-Complete
 719:0:H Diancie
 719:1:M Mega Diancie
 720:0 Hoopa
