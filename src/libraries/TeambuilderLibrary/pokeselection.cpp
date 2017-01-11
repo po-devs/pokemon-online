@@ -135,12 +135,14 @@ void PokeSelection::setNum(const Pokemon::uniqueId &num)
         if (formes.length() > 1) {
             QSignalMapper *mapper = new QSignalMapper(m);
             foreach(Pokemon::uniqueId forme, formes) {
-                QAction *ac = m->addAction(PokemonInfo::Name(forme), mapper, SLOT(map()));
-                ac->setCheckable(true);
-                if (forme == num) {
-                    ac->setChecked(true);
+                if (PokemonInfo::AFormesShown(forme)) {
+                    QAction *ac = m->addAction(PokemonInfo::Name(forme), mapper, SLOT(map()));
+                    ac->setCheckable(true);
+                    if (forme == num) {
+                        ac->setChecked(true);
+                    }
+                    mapper->setMapping(ac, forme.toPokeRef());
                 }
-                mapper->setMapping(ac, forme.toPokeRef());
             }
             connect(mapper, SIGNAL(mapped(int)), SLOT(changeForme(int)));
 
