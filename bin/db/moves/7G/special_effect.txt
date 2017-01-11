@@ -383,7 +383,7 @@
 616 175#Thousand Arrows
 617 12#Thousand Waves-- Has Mean Look effect
 621 219#Hyperpsace Fury-- breaks protect
-622 231#core enforcer
+622 243#core enforcer
 626 231#moongeist beam
 627 130-2#Nature's Madness
 628 221#Revelation Dance

@@ -8062,6 +8062,26 @@ struct MMWaterShuriken : public MM
     }
 };
 
+struct MMCoreEnforcer : public MM
+{
+    MMCoreEnforcer() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int t, BS &b) {
+        if (!fturn(b,t).contains(TM::HasMoved))
+            return;
+        if (poke(b,t).value("AbilityNullified").toBool())
+            return;
+        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::Imposter || b.ability(t) == Ability::StanceChange)
+            return;
+
+        b.sendMoveMessage(51,0,s,type(b,s),t,b.ability(t));
+        b.loseAbility(t);
+        poke(b,t)["AbilityNullified"] = true;
+    }
+};
+
 //Z Move Effects below
 struct MMZBoost : public MM
 {
@@ -8502,6 +8522,7 @@ void MoveEffect::init()
     REGISTER_MOVE(240, Terrain);
     REGISTER_MOVE(241, Spotlight);
     REGISTER_MOVE(242, WaterShuriken);
+    REGISTER_MOVE(243, CoreEnforcer)
 
     REGISTER_MOVE(1000, ZBoost);
     REGISTER_MOVE(1001, ZCrit);
