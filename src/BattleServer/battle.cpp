@@ -836,9 +836,6 @@ std::vector<int> BattleSituation::calculateFinalOrder(const priority_order &prio
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
-            turnMemory(player).remove("TurnOrder");
-            callaeffects(player,player, "TurnOrder"); //Stall
-            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
             secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
         }
 
@@ -873,6 +870,9 @@ void BattleSituation::analyzeChoices()
     }
 
     priority_order priorities = calculatePriorities(playersByOrder, false);
+
+    callaeffects(player,player, "TurnOrder"); //Stall
+    callieffects(player,player, "TurnOrder"); //Lagging tail & ...
 
     std::vector<int> &players = speedsVector;
 
