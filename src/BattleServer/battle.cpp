@@ -827,7 +827,7 @@ BattleSituation::priority_order BattleSituation::calculatePriorities(const std::
     return priorities;
 }
 
-std::vector<int> BattleSituation::calculateFinalOrder(const priority_order &priorities, bool afterMegas)
+std::vector<int> BattleSituation::calculateFinalOrder(const priority_order &priorities)
 {
     std::vector<int> players;
 
@@ -836,12 +836,6 @@ std::vector<int> BattleSituation::calculateFinalOrder(const priority_order &prio
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
-            //Despite gen 7 turn order calculation, Stall effect remains after mega evolution
-            if (!afterMegas) {
-                turnMemory(player).remove("TurnOrder");
-                callaeffects(player,player, "TurnOrder"); //Stall
-                callieffects(player,player, "TurnOrder"); //Lagging tail & ...
-            }
             secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
         }
 
@@ -877,10 +871,13 @@ void BattleSituation::analyzeChoices()
 
     priority_order priorities = calculatePriorities(playersByOrder, false);
 
+    callaeffects(player,player, "TurnOrder"); //Stall
+    callieffects(player,player, "TurnOrder"); //Lagging tail & ...
+
     std::vector<int> &players = speedsVector;
 
     /* Needs to be before switches, otherwise analytic + pursuit on empty speed vector crashes the game */
-    players = calculateFinalOrder(priorities, false);
+    players = calculateFinalOrder(priorities);
 
     foreach(int player, items) {
         analyzeChoice(player);
@@ -929,7 +926,7 @@ void BattleSituation::analyzeChoices()
         /* In gen 7, recalculate turns after mega evos */
         playersByOrder = sortedBySpeed(std::move(speeds));
         priorities = calculatePriorities(playersByOrder, true);
-        players = calculateFinalOrder(priorities, true);
+        players = calculateFinalOrder(priorities);
     }
 
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
