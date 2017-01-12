@@ -1373,6 +1373,7 @@ std::vector<std::pair<int, int> > BattleBase::calculateSpeeds()
     return speeds;
 }
 
+
 bool BattleBase::attacking() const
 {
     return attacker() != -1;
