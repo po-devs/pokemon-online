@@ -34,7 +34,7 @@ public:
     void analyzeChoices(); 
     std::vector<int> sortedBySpeed(std::vector<std::pair<int,int>> speeds = std::vector<std::pair<int,int>>());
     priority_order calculatePriorities(const std::vector<int> &originalOrder, bool afterMegas);
-    std::vector<int> calculateFinalOrder(const priority_order &priorities);
+    std::vector<int> calculateFinalOrder(const priority_order &priorities, bool afterMegas);
 
     /* Commands for the battle situation */
     void engageBattle();
