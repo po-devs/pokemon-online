@@ -808,34 +808,6 @@ void BattleSituation::analyzeChoices()
 
     std::vector<int> playersByOrder = sortedBySpeed();
 
-    //Gen 7 mega evolution changes turn order now.
-    if (gen() >= 7) {
-        auto speeds = calculateSpeeds();
-
-        foreach(int i, playersByOrder) {
-            if (!choice(i).attackingChoice() && ! choice(i).moveToCenterChoice()) {
-                continue;
-            }
-
-            int spot = i;
-
-            if (!megaEvolve(spot)) {
-                continue;
-            }
-
-            //update particular speed as it mega evolved
-            for (auto &pair : speeds) {
-                if (pair.first == spot) {
-                    pair.second = getStat(spot, Speed);
-                    break;
-                }
-            }
-        }
-
-        /* In gen 7, recalculate turns after mega evos */
-        playersByOrder = sortedBySpeed(std::move(speeds));
-    }
-
     foreach(int i, playersByOrder) {
         if (choice(i).itemChoice()) {
             items.push_back(i);
@@ -893,10 +865,49 @@ void BattleSituation::analyzeChoices()
     foreach(int i, playersByOrder) {
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
-            if (gen() < 7) {
-                megaEvolve(slot);
-            }
+            megaEvolve(slot);
             useZMove(slot);
+        }
+    }
+
+    //Gen 7 mega evolution changes turn order now.
+    if (gen() >= 7) {
+        players.clear();
+        playersByOrder = sortedBySpeed(calculateSpeeds());
+
+        //Ability of the mega evo is used to determine priority
+        priorities.clear();
+        foreach(int i, playersByOrder) {
+            //Reset priority to erase effects of base evolution abilities
+            tmove(i).priority = MoveInfo::SpeedPriority(tmove(i).attack, gen());
+
+            if (choice(i).attackingChoice()){
+                calleffects(i, i, "PriorityChoice"); //Me First. Needs to go above aeffects
+                callaeffects(i, i, "PriorityChoice");
+                priorities[tmove(i).priority].push_back(i);
+            } else if (choice(i).moveToCenterChoice()){
+                /* Shifting choice */
+                priorities[0].push_back(i);
+            }
+        }
+
+        for (it = priorities.begin(); it != priorities.end(); ++it) {
+            std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
+
+            foreach (int player, it->second) {
+                //already called turnorder effects above
+                secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
+            }
+
+            for(std::map<int, std::vector<int> >::iterator it = secondPriorities.begin(); it != secondPriorities.end(); ++it) {
+                foreach(int i, playersByOrder) {
+                    foreach(int p, it->second) {
+                        if (i == p) {
+                            players.push_back(i);
+                        }
+                    }
+                }
+            }
         }
     }
 
