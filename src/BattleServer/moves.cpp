@@ -8019,7 +8019,7 @@ struct MMAbilityIgnore : public MM
         functions["BeforeHitting"] = &bh;
     }
 
-    static void bh(int s, int t, BS &b) {
+    static void bh(int, int t, BS &b) {
         if (AbilityInfo::moldBreakable(b.ability(t))) {
             //b.sendMoveMessage(239,0,s,type(b,s),t);
         }
