@@ -88,7 +88,8 @@ public:
     void symbiosisPass(int s);
     bool canPassMStone(int target, int item);
     bool preTransPoke(int s, Pokemon::uniqueId check);
-    bool canMegaEvolve(int slot);
+    bool hasPossibilityOfMegaEvolving(int slot) const;
+    bool canMegaEvolve(int slot) const;
     bool canUseZMove(int slot);
     bool canBeZMove(int s, int attack);
     bool makesContact(int s);

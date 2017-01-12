@@ -631,12 +631,7 @@ BattleChoices BattleSituation::createChoice(int spot)
     }
 
     //Mega Evolution is not hindered by Embargo, etc.
-    if (canMegaEvolve(spot)) {
-        Pokemon::uniqueId forme = poke(spot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(spot).item());
-        if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
-            ret.mega = true;
-        }
-    }
+    ret.mega = canMegaEvolve(spot);
 
     //Nor are Z Moves
     if (canUseZMove(spot)) {
@@ -948,27 +943,19 @@ void BattleSituation::analyzeChoices()
 
 bool BattleSituation::megaEvolve(int slot)
 {
-    //Split to allow Mega Evo to activate on Special Pursuit
-    //Mega Evolution is not hindered by Embargo, etc.
-    if (choice(slot).mega()) {
-        if (canMegaEvolve(slot)) {
-            Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
-            if (!bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))) {
-                //The Strong weather ability is lost before mega evolution occurs. Illusion however does NOT fade, so can't just call loseAbility haphazardly
-                if (ability(player(slot)) == Ability::DesolateLand || ability(player(slot)) == Ability::PrimordialSea || ability(player(slot)) == Ability::DeltaStream) {
-                    loseAbility(player(slot));
-                }
-                sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
-                changeForme(player(slot), slotNum(slot), forme, false, false, true);
-                megas[player(slot)] = true;
-                pokeMemory(player(slot))["MegaEvolveTurn"] = turn();
-
-                return true;
-            }
-        }
+    if (!choice(slot).mega() || !canMegaEvolve(slot)) {
+        return false;
     }
+    if (ability(player(slot)) == Ability::DesolateLand || ability(player(slot)) == Ability::PrimordialSea || ability(player(slot)) == Ability::DeltaStream) {
+        loseAbility(player(slot));
+    }
+    Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
+    sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
+    changeForme(player(slot), slotNum(slot), forme, false, false, true);
+    megas[player(slot)] = true;
+    pokeMemory(player(slot))["MegaEvolveTurn"] = turn();
 
-    return false;
+    return true;
 }
 
 void BattleSituation::useZMove(int slot)
@@ -5088,7 +5075,7 @@ bool BattleSituation::preTransPoke(int s, Pokemon::uniqueId check)
     return false;
 }
 
-bool BattleSituation::canMegaEvolve (int slot)
+bool BattleSituation::hasPossibilityOfMegaEvolving(int slot) const
 {
     if (megas[player(slot)]) {
         return false;
@@ -5118,6 +5105,16 @@ bool BattleSituation::canMegaEvolve (int slot)
         return true;
     }
     return false;
+}
+
+bool BattleSituation::canMegaEvolve(int spot) const
+{
+    if (!hasPossibilityOfMegaEvolving(spot)) {
+        return false;
+    }
+
+    Pokemon::uniqueId forme = poke(spot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(spot).item());
+    return !bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme));
 }
 
 int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
