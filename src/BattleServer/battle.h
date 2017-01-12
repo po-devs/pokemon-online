@@ -20,6 +20,7 @@ class BattleSituation : public BattleBase
     Q_OBJECT
 public:
     typedef QVariantHash context;
+    typedef std::map<int, std::vector<int>, std::greater<int> > priority_order;
 
     BattleSituation(const BattlePlayer &p1, const BattlePlayer &p2, const ChallengeInfo &additionnalData, int id, const TeamBattle &t1, const TeamBattle &t2, BattleServerPluginManager *p);
     ~BattleSituation();
@@ -32,6 +33,8 @@ public:
     void analyzeChoice(int player);
     void analyzeChoices(); 
     std::vector<int> sortedBySpeed(std::vector<std::pair<int,int>> speeds = std::vector<std::pair<int,int>>());
+    priority_order calculatePriorities(const std::vector<int> &originalOrder, bool afterMegas);
+    std::vector<int> calculateFinalOrder(const priority_order &priorities);
 
     /* Commands for the battle situation */
     void engageBattle();
@@ -57,6 +60,7 @@ public:
     void sendBack(int player, bool silent = false);
     void shiftSpots(int spot1, int spot2, bool silent = false);
     bool megaEvolve(int spot);
+    bool justMegaEvolved(int spot) const;
     void useZMove(int spot);
     void sendPoke(int player, int poke, bool silent = false);
     void callEntryEffects(int player);

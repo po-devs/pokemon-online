@@ -798,53 +798,24 @@ std::vector<int> BattleSituation::sortedBySpeed(std::vector<std::pair<int,int>> 
     return std::move(ret);
 }
 
-void BattleSituation::analyzeChoices()
+
+BattleSituation::priority_order BattleSituation::calculatePriorities(const std::vector<int> &originalOrder, bool afterMegas)
 {
-    setupChoices();
+    priority_order priorities;
 
-    std::map<int, std::vector<int>, std::greater<int> > priorities;
-    std::vector<int> items;
-    std::vector<int> switches;
-
-    std::vector<int> playersByOrder = sortedBySpeed();
-
-    //Gen 7 mega evolution changes turn order now.
-    if (gen() >= 7) {
-        auto speeds = calculateSpeeds();
-
-        foreach(int i, playersByOrder) {
-            if (!choice(i).attackingChoice() && ! choice(i).moveToCenterChoice()) {
-                continue;
-            }
-
-            int spot = i;
-
-            if (!megaEvolve(spot)) {
-                continue;
-            }
-
-            //update particular speed as it mega evolved
-            for (auto &pair : speeds) {
-                if (pair.first == spot) {
-                    pair.second = getStat(spot, Speed);
-                    break;
-                }
-            }
-        }
-
-        /* In gen 7, recalculate turns after mega evos */
-        playersByOrder = sortedBySpeed(std::move(speeds));
-    }
-
-    foreach(int i, playersByOrder) {
-        if (choice(i).itemChoice()) {
-            items.push_back(i);
-        } else if (choice(i).switchChoice()) {
-            switches.push_back(i);
-        } else if (choice(i).attackingChoice()){
+    foreach(int i, originalOrder) {
+        if (choice(i).attackingChoice()){
             if (gen() >= 5) {
-                calleffects(i, i, "PriorityChoice"); //Me First. Needs to go above aeffects
-                callaeffects(i, i, "PriorityChoice");
+                /* Only run once */
+                if (!afterMegas) {
+                    calleffects(i, i, "PriorityChoice"); //Me First. Needs to go above effects
+                }
+                /* In gen 7, run this code when afterMegas is true for megas, and when it's false for others.
+                * So that we don't run PriorityChoice twice.
+                */
+                if (gen() <= 6 || (afterMegas == choice(i).mega())) {
+                    callaeffects(i, i, "PriorityChoice");
+                }
             }
             priorities[tmove(i).priority].push_back(i);
         } else if (choice(i).moveToCenterChoice()){
@@ -853,18 +824,18 @@ void BattleSituation::analyzeChoices()
         }
     }
 
-    std::map<int, std::vector<int>, std::greater<int> >::const_iterator it;
-    std::vector<int> &players = speedsVector;
-    players.clear();
+    return priorities;
+}
 
-    /* Needs to be before switches, otherwise analytic + pursuit on empty speed vector crashes the game */
-    for (it = priorities.begin(); it != priorities.end(); ++it) {
+std::vector<int> BattleSituation::calculateFinalOrder(const priority_order &priorities)
+{
+    std::vector<int> players;
+
+    for (auto it = priorities.begin(); it != priorities.end(); ++it) {
         /* There's another priority system: Ability stall, and Item lagging tail */
         std::map<int, std::vector<int>, std::greater<int> > secondPriorities;
 
         foreach (int player, it->second) {
-            callaeffects(player,player, "TurnOrder"); //Stall
-            callieffects(player,player, "TurnOrder"); //Lagging tail & ...
             secondPriorities[turnMemory(player)["TurnOrder"].toInt()].push_back(player);
         }
 
@@ -874,6 +845,41 @@ void BattleSituation::analyzeChoices()
             }
         }
     }
+
+    return players;
+}
+
+void BattleSituation::analyzeChoices()
+{
+    setupChoices();
+
+    std::vector<int> items;
+    std::vector<int> switches;
+
+    std::vector<int> playersByOrder = sortedBySpeed();
+
+    //Gen 7 mega evolution changes turn order now.
+    auto speeds = calculateSpeeds();
+
+    foreach(int spot, playersByOrder) {
+        if (choice(spot).itemChoice()) {
+            items.push_back(spot);
+        } else if (choice(spot).switchChoice()) {
+            switches.push_back(spot);
+        } else {
+            /* Stall effects / abilities aren't affected by mega evolving, and are determined
+             * once at the beginning of the turn */
+            callaeffects(spot, spot, "TurnOrder"); //Stall
+            callieffects(spot, spot, "TurnOrder"); //Lagging tail & ...
+        }
+    }
+
+    priority_order priorities = calculatePriorities(playersByOrder, false);
+
+    std::vector<int> &players = speedsVector;
+
+    /* Needs to be before switches, otherwise analytic + pursuit on empty speed vector crashes the game */
+    players = calculateFinalOrder(priorities);
 
     foreach(int player, items) {
         analyzeChoice(player);
@@ -890,14 +896,39 @@ void BattleSituation::analyzeChoices()
         }
     }
 
-    foreach(int i, playersByOrder) {
+    foreach(int i, players) {
         if (choice(i).attackingChoice() || choice(i).moveToCenterChoice()) {
             int slot = i;
-            if (gen() < 7) {
-                megaEvolve(slot);
-            }
+            megaEvolve(slot);
             useZMove(slot);
         }
+    }
+
+    if (gen() >= 7) {
+        foreach(int i, players) {
+            if (!choice(i).attackingChoice() && ! choice(i).moveToCenterChoice()) {
+                continue;
+            }
+
+            int spot = i;
+
+            if (!justMegaEvolved(spot)) {
+                continue;
+            }
+
+            //update particular speed as it mega evolved
+            for (auto &pair : speeds) {
+                if (pair.first == spot) {
+                    pair.second = getStat(spot, Speed);
+                    break;
+                }
+            }
+        }
+
+        /* In gen 7, recalculate turns after mega evos */
+        playersByOrder = sortedBySpeed(std::move(speeds));
+        priorities = calculatePriorities(playersByOrder, true);
+        players = calculateFinalOrder(priorities);
     }
 
     /* The loop is separated, cuz all TurnOrders must be called at the beggining of the turn,
@@ -953,9 +984,14 @@ bool BattleSituation::megaEvolve(int slot)
     sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
     changeForme(player(slot), slotNum(slot), forme, false, false, true);
     megas[player(slot)] = true;
-    pokeMemory(player(slot))["MegaEvolveTurn"] = turn();
+    pokeMemory(slot)["MegaEvolveTurn"] = turn();
 
     return true;
+}
+
+bool BattleSituation::justMegaEvolved(int spot) const
+{
+    return pokeMemory(spot).contains("MegaEvolveTurn") && pokeMemory(spot).value("MegaEvolveTurn").toInt() == turn();
 }
 
 void BattleSituation::useZMove(int slot)
@@ -1395,7 +1431,7 @@ void BattleSituation::testCritical(int player, int target)
 
     if (critical || isCrit) {
         turnMem(player).add(TM::CriticalHit);
-        notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits        
+        notify(All, CriticalHit, target); // An attack with multiple targets can have varying critical hits
         pokeMemory(player).remove("LaserFocused");
     } else {
         turnMem(player).remove(TM::CriticalHit);
@@ -1557,7 +1593,7 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
     int oldAttacker = attacker();
     int oldAttacked = attacked();
     /* For Sleep Talk */
-    bool special = specialOccurence;    
+    bool special = specialOccurence;
     bool zmoving = pokeMemory(player).value("ZMoveTurn") == turn() && !specialOccurence;
     bool zmovenotify = false;
 
@@ -1887,7 +1923,7 @@ ppfunction:
             bool hitting = false;
             bool noDamage = false;
             bool sub = false;
-            
+
             for (repeatCount() = 0; repeatCount() < num && !koed(target) && (repeatCount()==0 || !koed(player)); repeatCount()+=1) {
                 clearAtk();
                 clearBp();
@@ -3405,7 +3441,7 @@ int BattleSituation::calculateDamage(int p, int t)
             // 25 = Ice
             // 26 = Dragon
             // 27 = Dark
-            
+
             attack = 10;
             int typeConversions[] = {0, 1, 2, 3, 4, 5, 7, 8, 9, 20, 21, 22, 23, 24, 25, 26, 27};
             def = typeConversions[getType(p, 2)];
@@ -4148,9 +4184,9 @@ end:
         }
         if (!sub) {
             calleffects(player, source, "UponOffensiveDamageReceived");
-            
+
             // Otherwise Stamina boosts twice and this is only for Berserk anyway
-            if (pokeMemory(source).value("Berserked").toBool() == true) { 
+            if (pokeMemory(source).value("Berserked").toBool() == true) {
                 callaeffects(player, source, "UponOffensiveDamageReceived");
             }        }
     }
