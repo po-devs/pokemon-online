@@ -1225,16 +1225,17 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             if (shiny) {
                 return PokemonInfo::Picture(pokeid, gen, gender, false, back);
             }
+        } else if (gen.num == 7 && pokeid.pokenum <= 721){
+            // When Female/Shiny sprites are missing in Gen 7, attemp to load them from Gen 6 if it is a pre-Gen 7 poke
+            // and don't default back to Male/non-Shiny
+            if (gender == Pokemon::Female || shiny) {
+                return PokemonInfo::Picture(pokeid, 6, gender, shiny, back);
+            }
         } else {
-            // When Female/Shiny sprites are missing in Gen 7, attemp to load them from Gen 6 and
-            // don't default back to Male/non-Shiny
-            if (gender == Pokemon::Female) {
-                return PokemonInfo::Picture(pokeid, 6, gender, shiny, back);
-            }
-
-            if (shiny) {
-                return PokemonInfo::Picture(pokeid, 6, gender, shiny, back);
-            }
+            if (gender == Pokemon::Female)
+                return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiny, back);
+            if (shiny)
+                return PokemonInfo::Picture(pokeid, gen, gender, false, back);
         }
 
         switch(gen.num) {
