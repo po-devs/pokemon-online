@@ -1214,11 +1214,18 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return PokemonInfo::Picture(pokeid, gen, gender, shiny, back, false);
         }
 
-        if (gen.num != 7) {
+        // Gen 7 only has the sprites of the new Pokemon, so we have to make sure that
+        // missing sprites are loaded from Gen 6
+        if (gen.num == 7 && pokeid.pokenum <= 721) {
+            // When Female/Shiny sprites are missing in Gen 7, attemp to load them from Gen 6 if it is a pre-Gen 7 poke
+            // and don't default back to Male/non-Shiny
+            if (gender == Pokemon::Female || shiny) {
+                return PokemonInfo::Picture(pokeid, 6, gender, shiny, back);
+            }
+        } else { // When a sprite of a pre-Gen 7 poke is missing
             if (gender == Pokemon::Female) {
                 return PokemonInfo::Picture(pokeid, gen, Pokemon::Male, shiny, back);
             }
-
             if (shiny) {
                 return PokemonInfo::Picture(pokeid, gen, gender, false, back);
             }
@@ -3532,8 +3539,10 @@ int AbilityInfo::NumberOfAbilities(Pokemon::gen g)
             hc = 77; //Air lock
         } else if (g <= 4) {
             hc = 124; //Bad dreams
-        } else if (g <= 5 || 1) {
+        } else if (g <= 5) {
             hc = 165; //Teravolt
+        } else if (g <= 6 || 1) {
+            hc = 191; //Delta Stream
         }
         return std::min(hc, total); //safety check, in case db was edited
     }
