@@ -8074,8 +8074,12 @@ struct MMCoreEnforcer : public MM
             return;
         if (poke(b,t).value("AbilityNullified").toBool())
             return;
-        if (b.ability(t) == Ability::Multitype || b.ability(t) == Ability::RKSSystem || b.ability(t) == Ability::Imposter || b.ability(t) == Ability::StanceChange)
+        int ability = b.ability(t);
+        if (ability == Ability::Multitype || ability == Ability::RKSSystem || ability == Ability::Imposter || ability == Ability::StanceChange ||
+                ability == Ability::PowerConstruct || ability == Ability::BattleBond || ability == Ability::ZenMode ||
+                ability == Ability::ShieldsDown || ability == Ability::Schooling) {
             return;
+        }
 
         b.sendMoveMessage(51,0,s,type(b,s),t,b.ability(t));
         b.loseAbility(t);
