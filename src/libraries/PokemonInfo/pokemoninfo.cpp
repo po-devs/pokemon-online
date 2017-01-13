@@ -1214,7 +1214,8 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             return PokemonInfo::Picture(pokeid, gen, gender, shiny, back, false);
         }
 
-        // Gen 7 only has the sprites of the new Pokemon, so we have to make sure that missing sprites are loaded from Gen 6
+        // Gen 7 only has the sprites of the new Pokemon, so we have to make sure that
+        // missing sprites are loaded from Gen 6.
 
         if (gen.num != 7) { // If sprites are missing although Gen 7 isn't selected
             if (gender == Pokemon::Female) {
@@ -1225,8 +1226,8 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 return PokemonInfo::Picture(pokeid, gen, gender, false, back);
             }
         } else {
-            // When Female/Shiny sprites are missing in Gen 7, load them from Gen 6 and don't attempt
-            // to default back to Male/non-Shiny
+            // When Female/Shiny sprites are missing in Gen 7, attemp to load them from Gen 6 and
+            // don't default back to Male/non-Shiny
             if (gender == Pokemon::Female) {
                 return PokemonInfo::Picture(pokeid, 6, gender, shiny, back);
             }
