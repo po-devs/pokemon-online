@@ -36,6 +36,7 @@ void BattleBase::init(const BattlePlayer &p1, const BattlePlayer &p2, const Chal
     restricted[1] = p2.restrictedPokes;
     bannedPokes[0] = p1.bannedPokes.split(", ");
     bannedPokes[1] = p2.bannedPokes.split(", ");
+    bannedZMoves = p1.bannedZMoves.split(", ");
     ratings[0] = p1.rating;
     ratings[1] = p2.rating;
     winMessage[0] = p1.win;
@@ -975,7 +976,7 @@ bool BattleBase::validChoice(const BattleChoice &b)
         return true;
     }
 
-    int move = this->move(player, b.attackSlot());
+    QString move = MoveInfo::Name(this->move(player, b.attackSlot()));
     int item = this->poke(b.slot()).item();
 
     if (b.attackingChoice()){
