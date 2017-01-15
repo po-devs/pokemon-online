@@ -62,9 +62,9 @@ void BattleCommunicator::startBattle(Player *p1, Player *p2, const ChallengeInfo
         Tier & t = TierMachine::obj()->tier(tier);
 
         BattlePlayer pb1(p1->name(), p1->id(), p1->rating(team1.tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),
-                         p1->tieMessage(), t.getMaxLevel(), t.restricted(team1), t.maxRestrictedPokes, t.numberOfPokemons, t.getBannedPokes(), t.allowIllegal == "true");
+                         p1->tieMessage(), t.getMaxLevel(), t.restricted(team1), t.maxRestrictedPokes, t.numberOfPokemons, t.getBannedPokes(), t.allowIllegal == "true", t.getBannedZMoves(true));
         BattlePlayer pb2(p2->name(), p2->id(), p2->rating(team2.tier), p2->avatar(), p2->winningMessage(), p2->losingMessage(),
-                         p2->tieMessage(), t.getMaxLevel(), t.restricted(team2), t.maxRestrictedPokes, t.numberOfPokemons, t.getBannedPokes(), t.allowIllegal == "true");
+                         p2->tieMessage(), t.getMaxLevel(), t.restricted(team2), t.maxRestrictedPokes, t.numberOfPokemons, t.getBannedPokes(), t.allowIllegal == "true", t.getBannedZMoves(true));
         relay->startBattle(id, pb1, pb2, c, team1, team2);
     } else {
         BattlePlayer pb1(p1->name(), p1->id(), p1->rating(team1.tier), p1->avatar(), p1->winningMessage(), p1->losingMessage(),

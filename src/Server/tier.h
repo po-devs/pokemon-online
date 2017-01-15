@@ -126,6 +126,7 @@ public:
     QString getBannedPokes(bool parentNeeded = false) const;
     QString getRestrictedPokes() const;
     QString getBannedMoves() const;
+    QString getBannedZMoves(bool parentNeeded = false) const;
     QString getBannedItems() const;
     QString getBannedAbilities() const;
     int getGeneration();
@@ -133,6 +134,7 @@ public:
     void importBannedPokes(const QString &);
     void importRestrictedPokes(const QString &);
     void importBannedMoves(const QString &);
+    void importBannedZMoves(const QString &);
     void importBannedItems(const QString &);
     void importBannedAbilities(const QString &);
 
@@ -196,6 +198,7 @@ private:
     Tier *parent;
     QSet<int> bannedItems;
     QSet<int> bannedMoves;
+    QSet<int> bannedZMoves;
     QSet<int> bannedAbilities;
     QSet<Pokemon::uniqueId> bannedPokes;
     QSet<Pokemon::uniqueId> restrictedPokes;

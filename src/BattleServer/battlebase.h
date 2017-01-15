@@ -189,6 +189,7 @@ protected:
     QString loseMessage[2];
     QString tieMessage[2];
     QStringList bannedPokes[2];
+    QStringList bannedZMoves;
     bool allowIllegal;
 
     /* timers */

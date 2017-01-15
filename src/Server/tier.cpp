@@ -940,6 +940,7 @@ void Tier::loadFromXml(const QDomElement &elem)
     last_count_time = 0;
 
     importBannedMoves(elem.attribute("moves"));
+    importBannedZMoves(elem.attribute("zmoves"));
     importBannedItems(elem.attribute("items"));
     importBannedPokes(elem.attribute("pokemons"));
     importBannedAbilities(elem.attribute("abilities", ""));
@@ -1027,6 +1028,7 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("mode", mode);
     dest.setAttribute("displayOrder", displayOrder);
     dest.setAttribute("moves", getBannedMoves());
+    dest.setAttribute("zmoves", getBannedZMoves());
     dest.setAttribute("items", getBannedItems());
     dest.setAttribute("abilities", getBannedAbilities());
     dest.setAttribute("pokemons", getBannedPokes());
@@ -1105,6 +1107,19 @@ QString Tier::getBannedMoves() const
     return bannedMovesS.join(", ");
 }
 
+QString Tier::getBannedZMoves(bool parentNeeded) const
+{
+    QStringList bannedZMovesS;
+    foreach(int zmove, bannedZMoves) {
+        bannedZMovesS.append(MoveInfo::Name(zmove));
+    }
+    if (parent && parentNeeded) {
+        bannedZMovesS.append(parent->getBannedZMoves());
+    }
+    bannedZMovesS.sort();
+    return bannedZMovesS.join(", ");
+}
+
 QString Tier::getBannedAbilities() const
 {
     QStringList bannedAbilitiesS;
@@ -1172,6 +1187,20 @@ void Tier::importBannedMoves(const QString &s)
 
         if (num != 0)
             bannedMoves.insert(num);
+    }
+}
+
+void Tier::importBannedZMoves(const QString &s)
+{
+    bannedZMoves.clear();
+    if (s.length() == 0)
+        return;
+    QStringList zmoves = s.split(",");
+    foreach(QString zmove, zmoves) {
+        int num = MoveInfo::Number(zmove.trimmed());
+
+        if (num != 0)
+            bannedZMoves.insert(num);
     }
 }
 
@@ -1347,6 +1376,7 @@ Tier *Tier::dataClone() const
     t.banParentS = banParentS;
     t.bannedItems = bannedItems;
     t.bannedMoves = bannedMoves;
+    t.bannedZMoves = bannedZMoves;
     t.bannedAbilities = bannedAbilities;
     t.bannedPokes = bannedPokes;
     t.restrictedPokes = restrictedPokes;

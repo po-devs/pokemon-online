@@ -45,7 +45,7 @@ private:
     void clearCurrentEdit();
     /* Data used to configure categories / tiers */
     QString parent;
-    QString pokemons, restrPokemons, moves, items, abilities;
+    QString pokemons, restrPokemons, moves, zmoves, items, abilities;
     TierCategory *currentTierCat;
     Tier *currentTier;
     Type currentType;
