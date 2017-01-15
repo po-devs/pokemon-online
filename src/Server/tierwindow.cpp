@@ -159,6 +159,7 @@ void TierWindow::openTierEdit(Tier *t)
     helper->addConfigHelper(new ConfigSpin("Max number of pokemon", t->numberOfPokemons, 1, 6));
     helper->addConfigHelper(new ConfigLine("Pokemon", pokemons));
     helper->addConfigHelper(new ConfigLine("Moves", moves));
+    helper->addConfigHelper(new ConfigLine("ZMoves", zmoves));
     helper->addConfigHelper(new ConfigLine("Items", items));
     helper->addConfigHelper(new ConfigLine("Abilities", abilities));
     helper->addConfigHelper(new ConfigSpin("Max number of restricted pokemon", t->maxRestrictedPokes, 0, 6));
@@ -167,6 +168,7 @@ void TierWindow::openTierEdit(Tier *t)
 
     pokemons = t->getBannedPokes();
     moves = t->getBannedMoves();
+    zmoves = t->getBannedZMoves();
     items = t->getBannedItems();
     abilities = t->getBannedAbilities();
     restrPokemons = t->getRestrictedPokes();
@@ -274,6 +276,7 @@ void TierWindow::updateTier()
     currentTier->importBannedItems(items);
     currentTier->importBannedPokes(pokemons);
     currentTier->importBannedMoves(moves);
+    currentTier->importBannedZMoves(zmoves);
     currentTier->importBannedAbilities(abilities);
     currentTier->importRestrictedPokes(restrPokemons);
 

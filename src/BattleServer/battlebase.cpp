@@ -975,6 +975,9 @@ bool BattleBase::validChoice(const BattleChoice &b)
         return true;
     }
 
+    int move = this->move(player, b.attackSlot());
+    int item = this->poke(b.slot()).item();
+
     if (b.attackingChoice()){
         /* It's an attack, we check the target is valid */
         if (b.target() < 0 || b.target() >= numberOfSlots())
@@ -997,6 +1000,9 @@ bool BattleBase::validChoice(const BattleChoice &b)
                         && choice(i).zmove()) {
                     return false;
                 }
+            }
+            if (bannedZMoves.contains(move) && item >= 3000 && item <= 3017) {
+                return false;
             }
         }
         return true;
