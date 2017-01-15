@@ -7883,7 +7883,7 @@ struct MMAuroraVeil : public MM
     static void et(int s, int, BS &b) {
         team(b,s)["AuroraVeilCount"] = team(b,s)["AuroraVeilCount"].toInt() - 1;
 
-        if (team(b,s)["AuroraVeilCount"].toInt() == 1) {
+        if (team(b,s)["AuroraVeilCount"].toInt() == 0) {
             b.sendMoveMessage(236, 1, s, Pokemon::Ice);
         }
     }
