@@ -207,6 +207,10 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     int limit;
 
+    if (pokeid == Pokemon::Greninja_Unbonded) {
+        minGen = 7;
+    }
+
     if (gen >= 3)
         limit = std::max(3, minGen);
     else
@@ -218,7 +222,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 return MoveSetChecker::isValid(PokemonInfo::OriginalForme(pokeid), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
             } else if (PokemonInfo::HasPreEvo(pokeid.pokenum) &&
-                       !(PokemonInfo::IsForme(pokeid) && (PokemonInfo::OriginalForme(pokeid) == Pokemon::Pikachu || PokemonInfo::OriginalForme(pokeid) == Pokemon::Floette))) {
+                       !(PokemonInfo::IsForme(pokeid) && (PokemonInfo::OriginalForme(pokeid) == Pokemon::Pikachu || PokemonInfo::OriginalForme(pokeid) == Pokemon::Floette || PokemonInfo::OriginalForme(pokeid) == Pokemon::Greninja))) {
                 return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
             } //Note: Pikachu and Floette checks above are more of a back end fix. Ideally, the invalid moves shouldn't appear in the learnset at all.

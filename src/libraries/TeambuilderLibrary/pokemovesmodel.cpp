@@ -21,7 +21,7 @@ PokeMovesModel::PokeMovesModel(const Pokemon::uniqueId &id, Pokemon::gen gen, QO
 QHash<int, QString> getMoves(const Pokemon::uniqueId &num, Pokemon::gen gen, bool root = true, bool hackmons = false) {
     QHash<int, QString> ret;
     if (!hackmons) {
-        if (gen.num != 1 && gen.num != 3) {
+        if (gen.num != 1 && gen.num != 3 && num != Pokemon::Greninja_Unbonded) {
             ret = getMoves(num, Pokemon::gen(gen.num-1, GenInfo::NumberOfSubgens(gen.num-1)-1), false);
         }
         return ret.unite(map_container_with_value(PokemonInfo::TMMoves(num, gen), root ? QObject::tr("TM/HM") : QObject::tr("%1G TM/HM").arg(gen.num)))
