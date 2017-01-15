@@ -1107,11 +1107,14 @@ QString Tier::getBannedMoves() const
     return bannedMovesS.join(", ");
 }
 
-QString Tier::getBannedZMoves() const
+QString Tier::getBannedZMoves(bool parentNeeded) const
 {
     QStringList bannedZMovesS;
     foreach(int zmove, bannedZMoves) {
         bannedZMovesS.append(MoveInfo::Name(zmove));
+    }
+    if (parent && parentNeeded) {
+        bannedZMovesS.append(parent->getBannedZMoves());
     }
     bannedZMovesS.sort();
     return bannedZMovesS.join(", ");

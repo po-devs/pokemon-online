@@ -126,7 +126,7 @@ public:
     QString getBannedPokes(bool parentNeeded = false) const;
     QString getRestrictedPokes() const;
     QString getBannedMoves() const;
-    QString getBannedZMoves() const;
+    QString getBannedZMoves(bool parentNeeded = false) const;
     QString getBannedItems() const;
     QString getBannedAbilities() const;
     int getGeneration();
