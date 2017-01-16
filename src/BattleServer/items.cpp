@@ -462,7 +462,7 @@ struct IMStickyBarb : public IM
 {
     IMStickyBarb() {
         functions["EndTurn6.20"] = &et; /* Gen 4 */
-        functions["EndTurn28.2"] = &et; /* Gen 5 */
+        functions["EndTurn29.2"] = &et; /* Gen 5 */
         functions["UponPhysicalAssault"] = &upa;
     }
 
