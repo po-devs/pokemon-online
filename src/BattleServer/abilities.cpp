@@ -1208,7 +1208,7 @@ struct AMSoundProof : public AM {
 struct AMSpeedBoost : public AM {
     AMSpeedBoost() {
         functions["EndTurn6.2"] = &et; /* Gen 4 */
-        functions["EndTurn28.1"] = &et; /* Gen 5 */
+        functions["EndTurn29.1"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
