@@ -1020,19 +1020,35 @@ QDomElement & Tier::toXml(QDomElement &dest) const {
     dest.setAttribute("banParent", banParentS);
     dest.setAttribute("gen", m_gen.num);
     dest.setAttribute("subgen", m_gen.subnum);
-    dest.setAttribute("minGen", minGen);
-    dest.setAttribute("allowIllegal", allowIllegal);
-    dest.setAttribute("maxLevel", maxLevel);
-    dest.setAttribute("numberOfPokemons", numberOfPokemons);
-    dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
-    dest.setAttribute("mode", mode);
+    if (minGen != -1) {
+        dest.setAttribute("minGen", minGen);
+    }
+    if (allowIllegal != "false") {
+        dest.setAttribute("allowIllegal", allowIllegal);
+    }
+    if (maxLevel != 100) {
+        dest.setAttribute("maxLevel", maxLevel);
+    }
+    if (numberOfPokemons != 6) {
+        dest.setAttribute("numberOfPokemons", numberOfPokemons);
+    }
+    if (maxRestrictedPokes != 1) {
+        dest.setAttribute("numberOfRestricted", maxRestrictedPokes);
+    }
+    if (mode != 0) {
+        dest.setAttribute("mode", mode);
+    }
     dest.setAttribute("displayOrder", displayOrder);
     dest.setAttribute("moves", getBannedMoves());
-    dest.setAttribute("zmoves", getBannedZMoves());
+    if (getBannedZMoves().length() > 0) {
+        dest.setAttribute("zmoves", getBannedZMoves());
+    }
     dest.setAttribute("items", getBannedItems());
     dest.setAttribute("abilities", getBannedAbilities());
     dest.setAttribute("pokemons", getBannedPokes());
-    dest.setAttribute("restrictedPokemons", getRestrictedPokes());
+    if (getRestrictedPokes().length() > 0) {
+        dest.setAttribute("restrictedPokemons", getRestrictedPokes());
+    }
 
     if (clauses != 0) {
         QStringList res;
