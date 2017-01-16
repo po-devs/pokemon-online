@@ -304,7 +304,7 @@ struct IMStatusOrb : public IM
 {
     IMStatusOrb() {
         functions["EndTurn6.8"] = &et; /* Gen 4 */
-        functions["EndTurn28.2"] = &et; /* Gen 5 */
+        functions["EndTurn29.2"] = &et; /* Gen 5 */
     }
 
     static void et(int s, int, BS &b) {
