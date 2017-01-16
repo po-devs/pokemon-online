@@ -1486,6 +1486,8 @@ bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
         return false;
     else if (m_Options.value(pokeid).contains('B'))
         return false;
+    else if (m_Options.value(pokeid.pokenum).contains('H'))
+        return false;
     return true;
 }
 
