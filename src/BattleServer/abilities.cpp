@@ -2762,7 +2762,7 @@ struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 
 struct AMZenMode : public AMPinch {
     AMZenMode() {
-        functions["EndTurn29.0"] = &et;
+        functions["EndTurn30.0"] = &et;
         functions["OnLoss"] = &ol;
         functions["UponSetup"] = &et;
     }
@@ -3138,7 +3138,7 @@ struct AMSchooling : public AMPinch {
 
 struct AMShieldsDown : public AMPinch {
     AMShieldsDown() {
-        functions["EndTurn29.0"] = &et;
+        functions["EndTurn30.0"] = &et;
         functions["UponSetup"] = &et;
     }
 
