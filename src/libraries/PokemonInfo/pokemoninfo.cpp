@@ -1216,7 +1216,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
         // Gen 7 only has the sprites of the new Pokemon, so we have to make sure that
         // missing sprites are loaded from Gen 6
-        if (gen.num == 7 && pokeid.pokenum <= 721) {
+        if (gen.num == 7 && pokeid.pokenum <= 721 && !IsAlolan(pokeid)) {
             // When Female/Shiny sprites are missing in Gen 7, attemp to load them from Gen 6 if it is a pre-Gen 7 poke
             // and don't default back to Male/non-Shiny
             if (gender == Pokemon::Female || shiny) {
