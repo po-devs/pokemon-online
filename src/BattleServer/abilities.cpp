@@ -3106,7 +3106,7 @@ struct AMBeastBoost : public AM {
 
 struct AMSchooling : public AMPinch {
     AMSchooling() {
-        functions["EndTurn29.0"] = &et;
+        functions["EndTurn30.0"] = &et;
         functions["UponSetup"] = &et;
     }
 
@@ -3165,7 +3165,7 @@ struct AMShieldsDown : public AMPinch {
 
 struct AMPowerConstruct : public AMPinch {
     AMPowerConstruct() {
-        functions["EndTurn29.0"] = &et;
+        functions["EndTurn30.0"] = &et;
         functions["UponSetup"] = &et;
     }
 

@@ -209,7 +209,7 @@ void BattleSituation::initializeEndTurnFunctions()
         29.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
         29.3 pickup
 
-        30.0 Zen Mode
+        30.0 Zen Mode, Schooling, Power Construct
 
         31.0 Pokémon is switched in (if previous Pokémon fainted)
         31.1 Healing Wish, Lunar Dance
