@@ -2911,27 +2911,23 @@ struct AMDisguise : AM
         if (b.hasSubstitute(s)) {
             return;
         }
-        
-        if (fturn(b,t).typeMod == -100) {
-            return;
-        }
 
         //UNTESTED: Pokemon shouldn't take Recoil damage but should take Rocky Helmet
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
                 turn(b,s)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
                 // Opponent should still take Life Orb damage
-                turn(b,t)["ActivateLifeOrb"] = true;
-                turn(b,t)["LOTarget"] = s;
                 disguise(s,t,b);
             }
         }
     }
 
-    static void disguise (int s, int, BS &b) {
+    static void disguise (int s, int t, BS &b) {
         b.sendAbMessage(138, 0, s);
         b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
         b.changeForme(b.player(s), b.slotNum(s), Pokemon::Mimikyu_Busted);
+        turn(b,t)["ActivateLifeOrb"] = true;
+        turn(b,t)["LOTarget"] = s;
     }
 };
 

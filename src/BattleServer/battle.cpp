@@ -1867,9 +1867,6 @@ ppfunction:
             if (gen() >= 7) {
                 calleffects(target, player, "DetermineProtectedAgainstAttackKS");
                 checkAttackFailed();
-                if (oppBlockFailure(target, player)) {
-                    continue;
-                }
             }
 
             int typemod = turnMem(player).typeMod;
@@ -1915,6 +1912,10 @@ ppfunction:
             checkAttackFailed();
             callzeffects(this->player(target), player, "DetermineProtectedAgainstAttack");
             checkAttackFailed();
+
+            if (oppBlockFailure(target, player)) {
+                continue;
+            }
 
             int num = repeatNum(player);
             bool hit = num > 1;
@@ -5258,7 +5259,8 @@ bool BattleSituation::blockPriority(int player, int target)
 bool BattleSituation::oppBlockFailure (int target, int player)
 {
     if (target != player) {
-        callaeffects(target,player,"OpponentBlock");
+        if (!testFail(player))
+            callaeffects(target,player,"OpponentBlock");
         callieffects(target,player,"OpponentBlock"); //Safety Goggles
 
         if (blockPriority(player, target)) {
