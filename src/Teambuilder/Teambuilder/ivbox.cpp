@@ -64,11 +64,7 @@ void IvBox::updateAll()
     } else {
         ui->hpivspin->setDisabled(false);
         ui->spdefivspin->setDisabled(false);
-        if (poke().gen() > 6) {
-            ui->hpchoice->hide();
-        } else {
-            ui->hpchoice->show();
-        }
+        ui->hpchoice->show();
 
         for (int i = 0; i < 6; i++) {
             m_ivchangers[i]->setRange(0, 31);
@@ -177,6 +173,7 @@ void IvBox::updateHiddenPower()
 {
     if (poke().gen() > 6 && hasValidHiddenPower()) {
         ui->hiddenPowerType->setCurrentIndex(poke().hiddenPower() - 1);
+        updateHiddenPowerSelection();
         return;
     }
 
@@ -189,7 +186,12 @@ void IvBox::updateHiddenPower()
 
 void IvBox::updateHiddenPowerSelection()
 {
-    QList<QStringList> possibilities = HiddenPowerInfo::PossibilitiesForType(calculateHiddenPowerType(), poke().gen());
+    QList<QStringList> possibilities;
+    if (poke().gen() > 6) {
+        possibilities = HiddenPowerInfo::PossibilitiesForType(poke().hiddenPower(), poke().gen());
+    } else {
+        possibilities = HiddenPowerInfo::PossibilitiesForType(calculateHiddenPowerType(), poke().gen());
+    }
 
     while (ui->hpchoice->rowCount() > 0) {
         ui->hpchoice->removeRow(0);
@@ -241,8 +243,8 @@ void IvBox::changeHiddenPower(int newType)
             int type = calculateHiddenPowerType();
             ui->hiddenPowerType->setCurrentIndex(type - 1);
             poke().setHiddenPower(type);
+            return;
         }
-        return;
     }
 
     if (poke().gen() > 2) {
@@ -266,13 +268,19 @@ void IvBox::changeHiddenPower(int newType)
             QMessageBox::information(NULL, tr("Impossible type"), tr("%1 can't have Hidden Power type %2.").arg(PokemonInfo::Name(poke().num().pokenum), ui->hiddenPowerType->currentText()));
             int type = calculateHiddenPowerType();
             ui->hiddenPowerType->setCurrentIndex(type - 1);
+            if (poke().gen() > 6) {
+                poke().setHiddenPower(type);
+                updateHiddenPowerSelection();
+            }
             return;
         }
 
-        QStringList possibility = possibilities.front();
+        if (poke().gen() < 7) {
+            QStringList possibility = possibilities.front();
 
-        for (int i = 0; i < std::max(6, possibility.size()); i++) {
-            poke().setDV(i, possibility[i].toInt());
+            for (int i = 0; i < std::max(6, possibility.size()); i++) {
+                poke().setDV(i, possibility[i].toInt());
+            }
         }
     } else {
         QPair<quint8,quint8> dvs = HiddenPowerInfo::AttDefDVsForGen2(newType);
