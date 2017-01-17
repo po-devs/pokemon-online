@@ -159,7 +159,7 @@ struct AMArenaTrap : public AM {
 struct AMBadDreams : public AM {
     AMBadDreams() {
         functions["EndTurn6.11"] = &et; /* Gen 4 */
-        functions["EndTurn28.1"] = &et; /* Gen 5 */
+        functions["EndTurn29.1"] = &et; /* Gen 5 */
     }
 
     static void et (int s, int, BS &b) {
@@ -1883,7 +1883,7 @@ struct AMTelepathy : public AM {
 struct AMHarvest : public AM
 {
     AMHarvest() {
-        functions["EndTurn28.1"] = &et;
+        functions["EndTurn29.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1991,7 +1991,7 @@ struct AMJustified : public AM {
 
 struct AMMoody : public AM {
     AMMoody() {
-        functions["EndTurn28.1"] = &et;
+        functions["EndTurn29.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
