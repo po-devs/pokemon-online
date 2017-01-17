@@ -1104,8 +1104,6 @@ bool Team::importFromTxt(const QString &file1, bool hack)
                         }
                     }
                 }
-            } else if (s.contains(" Nature")) {
-                p.nature() = NatureInfo::Number(s.section(' ', 0, 0));
             } else if (s.startsWith("-")) {
                 QString move = s.section('-',1).trimmed();
 
@@ -1135,6 +1133,8 @@ bool Team::importFromTxt(const QString &file1, bool hack)
                 if (moveNum == Move::Return) {
                     p.happiness() = 255;
                 }
+            } else if (s.contains(" Nature")) {
+                p.nature() = NatureInfo::Number(s.section(' ', 0, 0));
             }
         }
 
