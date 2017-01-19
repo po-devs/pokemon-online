@@ -32,12 +32,12 @@
 23:0 Ekans
 24:0 Arbok
 25:0 Pikachu
-25:1:D Pikachu-Rock Star
-25:2:D Pikachu-Belle
-25:3:D Pikachu-Pop Star
-25:4:D Pikachu-Ph. D
-25:5:D Pikachu-Libre
-25:6:A Pikachu-Cosplay
+25:1:DF Pikachu-Rock Star
+25:2:DF Pikachu-Belle
+25:3:DF Pikachu-Pop Star
+25:4:DF Pikachu-Ph. D
+25:5:DF Pikachu-Libre
+25:6:AF Pikachu-Cosplay
 25:7:A Pikachu-First Hat
 25:8:A Pikachu-Second Hat
 25:9:A Pikachu-Third Hat
@@ -820,7 +820,7 @@
 656:0 Froakie
 657:0 Frogadier
 658:0 Greninja
-658:1:D Greninja-Unbonded
+658:1:DF Greninja-Unbonded
 658:2:AB Ash Greninja
 659:0 Bunnelby
 660:0 Diggersby
@@ -861,7 +861,7 @@
 670:2:A Floette-Yellow
 670:3:A Floette-Blue
 670:4:A Floette-White
-670:5 Floette-Eternal
+670:5:F Floette-Eternal
 671:0 Florges
 671:1:A Florges-Orange
 671:2:A Florges-Yellow

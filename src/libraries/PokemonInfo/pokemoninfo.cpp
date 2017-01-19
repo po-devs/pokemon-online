@@ -876,7 +876,10 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
             continue;
         }
         foreach(Pokemon::uniqueId id, Formes(id, gen)) {
-            if(!m_Moves.contains(id)) {
+            if (IsLockedForm(id)) {
+                continue;
+            }
+            if (!m_Moves.contains(id)) {
                 m_Moves[id] = m_Moves.value(id.original());
             }
         }
@@ -1110,6 +1113,12 @@ bool PokemonInfo::IsDifferent(Pokemon::uniqueId id)
 bool PokemonInfo::IsAlolan(Pokemon::uniqueId id)
 {
     return m_Options.value(id).contains('L');
+}
+
+bool PokemonInfo::IsLockedForm(Pokemon::uniqueId id)
+{
+    /*For Pokemon with form specific movesets who can't change form*/
+    return IsAlolan(id) || m_Options.value(id).contains('F');
 }
 
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
