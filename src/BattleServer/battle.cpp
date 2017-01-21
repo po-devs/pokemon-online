@@ -2423,9 +2423,6 @@ bool BattleSituation::hasWorkingAbility(int player, int ab) const
             if (move == Move::MoongeistBeam || move == Move::SunsteelStrike) {
                 return false;
             }
-            if (move == Move::CoreEnforcer && hasMoved(attacker())) {
-                return false;
-            }
         }
     }
     return !pokeMemory(player).value("AbilityNullified").toBool();
