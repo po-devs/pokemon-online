@@ -3751,7 +3751,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /*** MOD 3 ***/ //Aka: Gen 4
         /* Solid Rock & Filter */
-        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
+        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
             damage = damage * 3 / 4;
         }
         /* Expert Belt */
@@ -3952,7 +3952,7 @@ int BattleSituation::calculateDamage(int p, int t)
             finalmod = chainMod(finalmod, 0x1800);
         }
         /* Solid Rock, Filter */
-        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
+        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
             finalmod = chainMod(finalmod, 0xC00);
         }
         //*** 3 ***//
