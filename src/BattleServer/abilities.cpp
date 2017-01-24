@@ -1705,10 +1705,10 @@ struct AMPickPocket : public AM
 struct AMSheerForce : public AM
 {
     AMSheerForce() {
-        functions["BasePowerModifier"] = &bpm;
+        functions["BeforeTargetList"] = &btl;
     }
 
-    static void bpm(int s, int, BS &b) {
+    static void btl(int s, int, BS &b) {
         int cl = tmove(b,s).classification;
 
         /* Self stat changing moves like nitro charge/ancient power are boosted, but not moves like close combat/super power */
@@ -1718,10 +1718,14 @@ struct AMSheerForce : public AM
 
         tmove(b,s).classification = Move::StandardMove;
         tmove(b,s).flinchRate = 0;
-        b.chainBp(s, 0x14CD);
 
         /* Ugly, to tell life orb not to activate =/ */
         turn(b,s)["EncourageBug"] = true;
+        addFunction(poke(b,s), "BasePowerModifier", "SheerForce", &bpm);
+    }
+
+    static void bpm(int s, int, BS &b) {
+        b.chainBp(s, 0x14CD);
     }
 };
 
@@ -2912,11 +2916,9 @@ struct AMDisguise : AM
             return;
         }
 
-        //UNTESTED: Pokemon shouldn't take Recoil damage but should take Rocky Helmet
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
                 turn(b,s)[QString("BlockDamageOnly%1").arg(b.attackCount())] = true;
-                // Opponent should still take Life Orb damage
                 disguise(s,t,b);
             }
         }

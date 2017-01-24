@@ -328,6 +328,7 @@ struct IMLifeOrb : public IM
     IMLifeOrb() {
         functions["Mod2Modifier"] = &m2m;
         functions["UponDamageInflicted"] = &udi;
+        functions["UponHittingDisguise"] = &uhd;
         functions["AfterTargetList"] = &atl;
     }
 
@@ -352,6 +353,13 @@ struct IMLifeOrb : public IM
             turn(b,s)["ActivateLifeOrb"] = true;
             turn(b,s)["LOTarget"] = t;
         }
+    }
+
+    static void uhd(int s, int t, BS &b) {
+        if (s == t || b.koed(s))
+            return;
+        turn(b,s)["ActivateLifeOrb"] = true;
+        turn(b,s)["LOTarget"] = t;
     }
 
     static void atl(int s, int, BS &b) {
