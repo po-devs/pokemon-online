@@ -1958,10 +1958,12 @@ ppfunction:
                         testCritical(player, target);
                         int damage = calculateDamage(player, target);
                         inflictDamage(target, damage, player, true);
-                    } else if (makesContact(player)) {
-                        // Contact effects still work when Disguise is up
-                        // The curse type check is for Corrosion
-                        callieffects(target, player, "UponPhysicalAssault");
+                    } else {
+                        // Contact effects and Life Orb still work when Disguise is up
+                        callieffects(player, target, "UponHittingDisguise");
+                        if (makesContact(player)) {
+                            callieffects(target, player, "UponPhysicalAssault");
+                        }
                     }
                     hitcount += 1;
                     hitting = true;
@@ -1973,8 +1975,11 @@ ppfunction:
                         if (!noDamage) {
                             int damage = turnMemory(player).value("CustomDamage").toInt();
                             inflictDamage(target, damage, player, true);
-                        } else if (makesContact(player) && tmove(player).type != Type::Curse) {
-                            callieffects(target, player, "UponPhysicalAssault");
+                        } else {
+                            callieffects(player, target, "UponHittingDisguise");
+                            if (makesContact(player) && tmove(player).type != Type::Curse) {
+                                callieffects(target, player, "UponPhysicalAssault");
+                            }
                         }
                         hitcount += 1;
                         hitting = true;
