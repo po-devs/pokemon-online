@@ -159,7 +159,7 @@ struct AMArenaTrap : public AM {
 struct AMBadDreams : public AM {
     AMBadDreams() {
         functions["EndTurn6.11"] = &et; /* Gen 4 */
-        functions["EndTurn28.1"] = &et; /* Gen 5 */
+        functions["EndTurn29.1"] = &et; /* Gen 5 */
     }
 
     static void et (int s, int, BS &b) {
@@ -1887,7 +1887,7 @@ struct AMTelepathy : public AM {
 struct AMHarvest : public AM
 {
     AMHarvest() {
-        functions["EndTurn28.1"] = &et;
+        functions["EndTurn29.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -1995,7 +1995,7 @@ struct AMJustified : public AM {
 
 struct AMMoody : public AM {
     AMMoody() {
-        functions["EndTurn28.1"] = &et;
+        functions["EndTurn29.1"] = &et;
     }
 
     static void et(int s, int, BS &b) {
@@ -2915,10 +2915,6 @@ struct AMDisguise : AM
         if (b.hasSubstitute(s)) {
             return;
         }
-        
-        if (fturn(b,t).typeMod == -100) {
-            return;
-        }
 
         if (!b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))].toBool()) {
             if (tmove(b,t).power > 0 && s != t) {
@@ -2928,10 +2924,12 @@ struct AMDisguise : AM
         }
     }
 
-    static void disguise (int s, int, BS &b) {
+    static void disguise (int s, int t, BS &b) {
         b.sendAbMessage(138, 0, s);
         b.battleMemory()[QString("DisguiseBusted%1%2").arg(b.player(s)).arg(b.currentInternalId(s))] = true;
         b.changeForme(b.player(s), b.slotNum(s), Pokemon::Mimikyu_Busted);
+        turn(b,t)["ActivateLifeOrb"] = true;
+        turn(b,t)["LOTarget"] = s;
     }
 };
 
@@ -3106,7 +3104,7 @@ struct AMBeastBoost : public AM {
 
 struct AMSchooling : public AMPinch {
     AMSchooling() {
-        functions["EndTurn29.0"] = &et;
+        functions["EndTurn30.0"] = &et;
         functions["UponSetup"] = &et;
     }
 
@@ -3165,7 +3163,7 @@ struct AMShieldsDown : public AMPinch {
 
 struct AMPowerConstruct : public AMPinch {
     AMPowerConstruct() {
-        functions["EndTurn29.0"] = &et;
+        functions["EndTurn30.0"] = &et;
         functions["UponSetup"] = &et;
     }
 

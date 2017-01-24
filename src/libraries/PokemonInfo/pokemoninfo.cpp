@@ -876,7 +876,10 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
             continue;
         }
         foreach(Pokemon::uniqueId id, Formes(id, gen)) {
-            if(!m_Moves.contains(id)) {
+            if (IsLockedForm(id)) {
+                continue;
+            }
+            if (!m_Moves.contains(id)) {
                 m_Moves[id] = m_Moves.value(id.original());
             }
         }
@@ -1112,6 +1115,12 @@ bool PokemonInfo::IsAlolan(Pokemon::uniqueId id)
     return m_Options.value(id).contains('L');
 }
 
+bool PokemonInfo::IsLockedForm(Pokemon::uniqueId id)
+{
+    /*For Pokemon with form specific movesets who can't change form*/
+    return IsAlolan(id) || m_Options.value(id).contains('F');
+}
+
 Pokemon::uniqueId PokemonInfo::NonAestheticForme(Pokemon::uniqueId id)
 {
     //This is used in Tiering pokemon. Different = tiered differently
@@ -1216,7 +1225,7 @@ QPixmap PokemonInfo::Picture(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
         // Gen 7 only has the sprites of the new Pokemon, so we have to make sure that
         // missing sprites are loaded from Gen 6
-        if (gen.num == 7 && pokeid.pokenum <= 721) {
+        if (gen.num == 7 && pokeid.pokenum <= 721 && !IsAlolan(pokeid)) {
             // When Female/Shiny sprites are missing in Gen 7, attemp to load them from Gen 6 if it is a pre-Gen 7 poke
             // and don't default back to Male/non-Shiny
             if (gender == Pokemon::Female || shiny) {

@@ -209,7 +209,7 @@ void BattleSituation::initializeEndTurnFunctions()
         29.2 Toxic Orb activation, Flame Orb activation, Sticky Barb
         29.3 pickup
 
-        30.0 Zen Mode
+        30.0 Zen Mode, Schooling, Power Construct
 
         31.0 Pokémon is switched in (if previous Pokémon fainted)
         31.1 Healing Wish, Lunar Dance
@@ -1867,9 +1867,6 @@ ppfunction:
             if (gen() >= 7) {
                 calleffects(target, player, "DetermineProtectedAgainstAttackKS");
                 checkAttackFailed();
-                if (oppBlockFailure(target, player)) {
-                    continue;
-                }
             }
 
             int typemod = turnMem(player).typeMod;
@@ -1915,6 +1912,10 @@ ppfunction:
             checkAttackFailed();
             callzeffects(this->player(target), player, "DetermineProtectedAgainstAttack");
             checkAttackFailed();
+
+            if (oppBlockFailure(target, player)) {
+                continue;
+            }
 
             int num = repeatNum(player);
             bool hit = num > 1;
@@ -2426,9 +2427,6 @@ bool BattleSituation::hasWorkingAbility(int player, int ab) const
             }
             int move = tmove(attacker()).attack;
             if (move == Move::MoongeistBeam || move == Move::SunsteelStrike) {
-                return false;
-            }
-            if (move == Move::CoreEnforcer && hasMoved(attacker())) {
                 return false;
             }
         }
@@ -3758,7 +3756,7 @@ int BattleSituation::calculateDamage(int p, int t)
 
         /*** MOD 3 ***/ //Aka: Gen 4
         /* Solid Rock & Filter */
-        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
+        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
             damage = damage * 3 / 4;
         }
         /* Expert Belt */
@@ -3959,7 +3957,7 @@ int BattleSituation::calculateDamage(int p, int t)
             finalmod = chainMod(finalmod, 0x1800);
         }
         /* Solid Rock, Filter */
-        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock))) {
+        if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
             finalmod = chainMod(finalmod, 0xC00);
         }
         //*** 3 ***//
@@ -5263,7 +5261,8 @@ bool BattleSituation::blockPriority(int player, int target)
 bool BattleSituation::oppBlockFailure (int target, int player)
 {
     if (target != player) {
-        callaeffects(target,player,"OpponentBlock");
+        if (!testFail(player))
+            callaeffects(target,player,"OpponentBlock");
         callieffects(target,player,"OpponentBlock"); //Safety Goggles
 
         if (blockPriority(player, target)) {

@@ -770,7 +770,7 @@ struct MMDetect : public MM
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
             if (b.zTurn(s)) {
                 turn(b,s)["ZMoveProtected"] = true;
-                b.sendItemMessage(68, s, 1);
+                b.sendItemMessage(68, t, 1);
             }
             return;
         }
@@ -8073,6 +8073,8 @@ struct MMCoreEnforcer : public MM
         if (!b.hasMoved(t))
             return;
         if (poke(b,t).value("AbilityNullified").toBool())
+            return;
+        if (b.hasSubstitute(t) && !b.canBypassSub(s))
             return;
         int ability = b.ability(t);
         if (ability == Ability::Multitype || ability == Ability::RKSSystem || ability == Ability::Imposter || ability == Ability::StanceChange ||
