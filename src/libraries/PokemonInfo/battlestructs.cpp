@@ -322,6 +322,8 @@ DataStream & operator >> (DataStream &in, PokeBattle &po)
     }
     if (in.version >= 4) {
         in >> po.hiddenPower();
+    } else {
+        po.hiddenPower() = Type::Dark;
     }
     in >> po.happiness();
 

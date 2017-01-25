@@ -1532,7 +1532,7 @@ DataStream & operator << (DataStream & out, const PokePersonal & p)
 
     network.setFlag(pp::hasNickname, !p.nickname().isEmpty());
     network.setFlag(pp::hasHappiness, p.happiness() != 0);
-    network.setFlag(pp::hasHiddenPower, p.hiddenPower() != Type::Dark);
+    network.setFlag(pp::hasHiddenPower, p.gen() > 6 && p.hiddenPower() != Type::Dark);
 
     for (int i = Hp; i <= Speed; i++) {
         if (p.DV(i) != 31) {
@@ -1634,8 +1634,12 @@ DataStream & operator >> (DataStream & in, PokePersonal & p)
         if (p.gen() >= 2 && network[pp::hasHappiness]) {
             v.stream >> p.happiness();
         }
-        if (p.gen() > 6 && network[pp::hasHiddenPower]) {
-            v.stream >> p.hiddenPower();
+        if (p.gen() > 6) {
+            if (network[pp::hasHiddenPower]) {
+                v.stream >> p.hiddenPower();
+            } else {
+                p.hiddenPower() = Type::Dark;
+            }
         }
     }
 
