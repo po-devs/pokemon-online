@@ -171,7 +171,7 @@ void IvBox::updateIV(int stat)
 
 void IvBox::updateHiddenPower()
 {
-    if (poke().gen() > 6 && hasValidHiddenPower()) {
+    if (poke().gen() > 6 && poke().hasValidHiddenPower()) {
         ui->hiddenPowerType->setCurrentIndex(poke().hiddenPower() - 1);
         updateHiddenPowerSelection();
         return;
@@ -238,7 +238,7 @@ void IvBox::changeHiddenPower(int newType)
 
     if (poke().gen() > 6) {
         poke().setHiddenPower(newType);
-        if (!hasValidHiddenPower()) {
+        if (!poke().hasValidHiddenPower()) {
             QMessageBox::information(NULL, tr("Invalid Hidden Power"), tr("Cannot have Hidden Power type %1 with those IVs.").arg(poke().hiddenPower()));
             int type = calculateHiddenPowerType();
             ui->hiddenPowerType->setCurrentIndex(type - 1);
@@ -299,25 +299,4 @@ void IvBox::changeHPSelection(int row)
     }
 
     updateIVs();
-}
-
-bool IvBox::hasValidHiddenPower()
-{
-    if (poke().gen() > 6) {
-        int minPossible = 0;
-        int maxPossible = 0;
-        for (int i = 0; i < 6; i++) {
-            //Speed comes before sp.atk and sp.def
-            int b = i == 5 ? 3 : (i > 2 ? i+1 : i);
-
-            minPossible += poke().DV(i) == 31 ? 0 : (poke().DV(i) % 2) << b;
-            maxPossible += poke().DV(i) == 31 ? 1 << b : (poke().DV(i) % 2) << b;
-        }
-        minPossible = (minPossible*15)/63 + 1;
-        maxPossible = (maxPossible*15)/63 + 1;
-        if (maxPossible < poke().hiddenPower() || poke().hiddenPower() < minPossible) {
-            return false;
-        }
-    }
-    return true;
 }

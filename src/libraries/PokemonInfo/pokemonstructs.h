@@ -128,6 +128,7 @@ public:
     void reset();
     /* Removes / Reset things if they are wrong */
     void runCheck(bool hack = false);
+    bool hasValidHiddenPower() const;
     bool isLegal() const;
     void setMove(int moveNum, int moveSlot, bool check=false) throw (QString);
     int addMove(int moveNum, bool check = false) throw (QString);

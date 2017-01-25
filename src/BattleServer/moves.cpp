@@ -2667,10 +2667,13 @@ struct MMHiddenPower : public MM
         if (b.zTurn(s)) {
             return;
         }
+        quint8 *dvs = fpoke(b,s).dvs;
         if (b.gen() > 6) {
             tmove(b, s).type = fpoke(b, s).hiddenPower;
+            if (tmove(b, s).type >= TypeInfo::NumberOfTypes()) {
+              tmove(b,s).type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
+            }
         } else {
-            quint8 *dvs = fpoke(b,s).dvs;
             int type = HiddenPowerInfo::Type(b.gen(), dvs[0], dvs[1], dvs[2], dvs[3], dvs[4], dvs[5]);
             tmove(b, s).type = type;
             if (b.gen() < 6) {
