@@ -59,6 +59,7 @@ void BaseBattleWindow::init(const PlayerInfo &me, const PlayerInfo &opponent, co
 
     init();
     show();
+    alwaysOnTopChanged(alwaysOnTop->isChecked());
 }
 
 BaseBattleWindow::BaseBattleWindow()
@@ -197,7 +198,6 @@ void BaseBattleWindow::init()
 
     musicPlayStop();
     criesPlayStop();
-    alwaysOnTopChanged(alwaysOnTop->isChecked());
 }
 
 bool BaseBattleWindow::musicPlayed() const
