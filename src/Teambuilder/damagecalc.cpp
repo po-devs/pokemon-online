@@ -624,7 +624,7 @@ void DamageCalc::calculate()
         amod = chainmod(amod, 0x1800);
     }
     // -2N. THICK CLUB //
-    if ((mypoke == Pokemon::Cubone || mypoke == Pokemon::Marowak) && myitem == Item::ThickClub && category == Move::Physical) {
+    if ((mypoke == Pokemon::Cubone || mypoke == Pokemon::Marowak || mypoke == Pokemon::Marowak_Alolan) && myitem == Item::ThickClub && category == Move::Physical) {
         amod = chainmod(amod, 0x2000);
     }
     // -2O. DEEPSEATOOTH //
@@ -637,7 +637,11 @@ void DamageCalc::calculate()
     }
     // -2Q. SOUL DEW //
     if ((mypoke == Pokemon::Latios || mypoke == Pokemon::Latias) && myitem == Item::SoulDew) {
-        amod = chainmod(amod, 0x1800);
+        if (gen >= 7 && (type == Type::Dragon || type == Type::Psychic)) {
+            amod = chainmod(amod, 0x1333);
+        } else {
+            amod = chainmod(amod, 0x1800);
+        }
     }
     // -2R. CHOICE ITEMS //
     if ((myitem == Item::ChoiceBand && category == Move::Physical) || (myitem == Item::ChoiceSpecs && category == Move::Special)) {
@@ -693,7 +697,7 @@ void DamageCalc::calculate()
         dmod = chainmod(dmod, 0x1800);
     }
     // -1H. SOUL DEW //
-    if ((opoke == Pokemon::Latios || opoke == Pokemon::Latias) && oitem == Item::SoulDew && usingspecial) {
+    if ((opoke == Pokemon::Latios || opoke == Pokemon::Latias) && oitem == Item::SoulDew && usingspecial && gen <= 6) {
         dmod = chainmod(dmod, 0x1800);
     }
 
@@ -837,6 +841,10 @@ void DamageCalc::calculate()
         bmod = chainmod(bmod, 0x1555);
     }
 
+    // 0AC. BATTERY //
+    if (myability == Ability::Battery && category == Move::Special)
+        bmod = chainmod(bmod, 0x14CD);
+
     bp = applymod(bp, bmod);
     int base = ((((2 * mylevel) / 5 + 2) * bp * attack) / defense) / 50 + 2;
 
@@ -913,8 +921,8 @@ void DamageCalc::calculate()
     if (crit && myability == Ability::Sniper) {
         fmod = chainmod(fmod, 0x1800);
     }
-    // 8F. SOLID ROCK/FILTER //
-    if (crit && (oability == Ability::SolidRock || oability == Ability::Filter)) {
+    // 8F. SOLID ROCK/FILTER/Prism Armor //
+    if (crit && (oability == Ability::SolidRock || oability == Ability::Filter || oability == Ability::PrismArmor)) {
         fmod = chainmod(fmod, 0xC00);
     }
     // 8G. METRONOME // 0x1000+n*0x333 if n≤4 and 0x2000 otherwise
@@ -934,9 +942,12 @@ void DamageCalc::calculate()
     if (ui->surfondive->isChecked()) {
         fmod = chainmod(fmod, 0x2000);
     }
-    // 8O. FUR COAT //
-    if (oability == Ability::FurCoat && category == Move::Physical) {
+
+    // 8O. FUR COAT/FLUFFY //
+    if ((oability == Ability::FurCoat || (oability == Ability::Fluffy && type != Type::Fire)) && category == Move::Physical) {
         fmod = chainmod(fmod, 0x0800);
+    } else if (oability == Ability::Fluffy && type == Type::Fire) {
+        fmod = chainmod(fmod, 0x2000);
     }
 
     dmin = applymod(dmin, fmod);
