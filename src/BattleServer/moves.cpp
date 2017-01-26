@@ -7919,7 +7919,7 @@ struct MMSpectralThief : public MM {
             int oppBoost = fpoke(b,t).boosts[i];
             if (oppBoost > 0) {
                 b.inflictStatMod(s, i, oppBoost, s, false);
-                b.inflictStatMod(t, i, -oppBoost, s, false);
+                b.changeStatMod(t, i, 0); // Reset the enemy boosts and ignore Ability effects
                 stole = true;
             }
         }
