@@ -128,7 +128,7 @@ public:
     // Will always return base form (subnum 0).
     static Pokemon::uniqueId OriginalEvo(const Pokemon::uniqueId &pokeid);
     //Returns 0 if no preevo
-    static int PreEvo(int pokenum);
+    static Pokemon::uniqueId PreEvo(const Pokemon::uniqueId &pokeid);
     static bool HasPreEvo(int pokenum);
     static bool IsInEvoChain(const Pokemon::uniqueId &pokeid);
     static PokeBaseStats BaseStats(const Pokemon::uniqueId &pokeid, Pokemon::gen gen);
