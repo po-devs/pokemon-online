@@ -207,10 +207,6 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
     int limit;
 
-    if (pokeid == Pokemon::Greninja_Unbonded) {
-        minGen = 7;
-    }
-
     if (gen >= 3)
         limit = std::max(3, minGen);
     else
@@ -222,7 +218,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                 return MoveSetChecker::isValid(PokemonInfo::OriginalForme(pokeid), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
             } else if (PokemonInfo::HasPreEvo(pokeid.pokenum)) {
-                return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, maledw,
+                return MoveSetChecker::isValid(PokemonInfo::PreEvo(pokeid), g, moves, 0, gender, level, maledw,
                                                invalid_moves, error);
             }
             if (invalid_moves) {
@@ -277,7 +273,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                         return false;
                     }
                     return nobreeding == false &&
-                            isValid(PokemonInfo::PreEvo(pokeid.pokenum), g, moves, 0, gender, level, false, invalid_moves, error);
+                            isValid(PokemonInfo::PreEvo(pokeid), g, moves, 0, gender, level, false, invalid_moves, error);
                 }
                 if(gen < 6) {
                     if (invalid_moves) {
@@ -373,16 +369,16 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
                     /* Special case: Pikachu has a pre-evo in gen 2, and egg moves
                       from it, but moves it learn from gen 1 and its pre evo can't learn
                       from gen 1 */
-                    int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
-                    if (preevo != 0 &&  preevo != pokeid.pokenum) {
+                    Pokemon::uniqueId preevo = PokemonInfo::PreEvo(pokeid);
+                    if (preevo.pokenum != 0 &&  preevo.pokenum != pokeid.pokenum) {
                         if (ok && isValid(preevo, g, moves))
                             return true;
                     }
                 }
             } else if (!nobreeding) {
-                int preevo = PokemonInfo::PreEvo(pokeid.pokenum);
+                Pokemon::uniqueId preevo = PokemonInfo::PreEvo(pokeid);
 
-                if (preevo != 0 &&  preevo != pokeid.pokenum && PokemonInfo::Exists(preevo, 1)) {
+                if (preevo.pokenum != 0 &&  preevo.pokenum != pokeid.pokenum && PokemonInfo::Exists(preevo, 1)) {
                     bool ok = true;
                     foreach(int move, moves) {
                         if (!MoveInfo::Exists(move, 1)) {
@@ -435,7 +431,7 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             moves3.subtract(PokemonInfo::PreEvoMoves(pokeid,g));
 
             if (moves3.size() != moves.size()) {
-                int pokemon = PokemonInfo::PreEvo(pokeid.pokenum);
+                Pokemon::uniqueId pokemon = PokemonInfo::PreEvo(pokeid);
 
                 int ab2;
                 AbilityGroup ab = PokemonInfo::Abilities(pokeid, g);

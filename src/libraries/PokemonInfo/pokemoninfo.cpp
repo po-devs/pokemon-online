@@ -1574,9 +1574,16 @@ Pokemon::uniqueId PokemonInfo::OriginalEvo(const Pokemon::uniqueId &pokeid)
     return Pokemon::uniqueId(m_OriginalEvos.value(pokeid.pokenum), 0);
 }
 
-int PokemonInfo::PreEvo(int pokenum)
+// Takes advantage of all alola preevos being form 1
+Pokemon::uniqueId PokemonInfo::PreEvo(const Pokemon::uniqueId &pokeid)
 {
-    return m_PreEvos.value(pokenum);
+    if (pokeid == Pokemon::Greninja_Unbonded) {
+        return 0;
+    }
+    if (IsAlolan(pokeid) && IsAlolan(Pokemon::uniqueId(m_PreEvos.value(pokeid.pokenum), 1))) {
+        return Pokemon::uniqueId(m_PreEvos.value(pokeid.pokenum), 1);
+    }
+    return Pokemon::uniqueId(m_PreEvos.value(pokeid.pokenum), 0);
 }
 
 bool PokemonInfo::HasPreEvo(int pokenum)
