@@ -350,7 +350,7 @@ bool PokePersonal::hasValidHiddenPower() const
         }
         minPossible = (minPossible*15)/63 + 1;
         maxPossible = (maxPossible*15)/63 + 1;
-        return !(maxPossible < hiddenPower() || hiddenPower() < minPossible);
+        return (hiddenPower() <= maxPossible && hiddenPower() >= minPossible);
     }
     return hiddenPower() == HiddenPowerInfo::Type(gen().num, DV(0), DV(1), DV(2), DV(3), DV(4), DV(5));
 }
