@@ -329,7 +329,7 @@ void PokePersonal::runCheck(bool hack)
         MoveSetChecker::isValid(num(), gen(), move(0), move(1), move(2), move(3), ability(), gender(), level(), false, &invalidMoves);
     }
 
-    if (gen() < 7 || !hasValidHiddenPower()) {
+    if (!hasValidHiddenPower()) {
       hiddenPower() = HiddenPowerInfo::Type(gen().num, DV(0), DV(1), DV(2), DV(3), DV(4), DV(5));
     }
 }
@@ -337,21 +337,21 @@ void PokePersonal::runCheck(bool hack)
 
 bool PokePersonal::hasValidHiddenPower() const
 {
-  if (gen() > 6) {
-      int minPossible = 0;
-      int maxPossible = 0;
-      for (int i = 0; i < 6; i++) {
-          //Speed comes before sp.atk and sp.def
-          int b = i == 5 ? 3 : (i > 2 ? i+1 : i);
+    if (gen() >= 7 && level() == 100) {
+        int minPossible = 0;
+        int maxPossible = 0;
+        for (int i = 0; i < 6; i++) {
+            //Speed comes before sp.atk and sp.def
+            int b = i == 5 ? 3 : (i > 2 ? i+1 : i);
 
-          minPossible += DV(i) == 31 ? 0 : (DV(i) % 2) << b;
-          maxPossible += DV(i) == 31 ? 1 << b : (DV(i) % 2) << b;
-      }
-      minPossible = (minPossible*15)/63 + 1;
-      maxPossible = (maxPossible*15)/63 + 1;
-      return !(maxPossible < hiddenPower() || hiddenPower() < minPossible);
-  }
-  return hiddenPower() == HiddenPowerInfo::Type(gen().num, DV(0), DV(1), DV(2), DV(3), DV(4), DV(5));
+            minPossible += DV(i) == 31 ? 0 : (DV(i) % 2) << b;
+            maxPossible += DV(i) == 31 ? 1 << b : (DV(i) % 2) << b;
+        }
+        minPossible = (minPossible*15)/63 + 1;
+        maxPossible = (maxPossible*15)/63 + 1;
+        return !(maxPossible < hiddenPower() || hiddenPower() < minPossible);
+    }
+    return hiddenPower() == HiddenPowerInfo::Type(gen().num, DV(0), DV(1), DV(2), DV(3), DV(4), DV(5));
 }
 
 int PokePersonal::addMove(int moveNum, bool check) throw(QString)
