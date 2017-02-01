@@ -337,7 +337,8 @@ void PokePersonal::runCheck(bool hack)
 
 bool PokePersonal::hasValidHiddenPower() const
 {
-    if (gen() >= 7 && level() == 100) {
+
+  if (gen() >= 7 && level() == 100) {
         int minPossible = 0;
         int maxPossible = 0;
         for (int i = 0; i < 6; i++) {
