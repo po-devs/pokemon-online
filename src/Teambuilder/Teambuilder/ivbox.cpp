@@ -239,7 +239,7 @@ void IvBox::changeHiddenPower(int newType)
     if (poke().gen() >= 7 && poke().level() == 100) {
         poke().setHiddenPower(newType);
         if (!poke().hasValidHiddenPower()) {
-            QMessageBox::information(NULL, tr("Invalid Hidden Power"), tr("Cannot have Hidden Power type %1 with those IVs.").arg(poke().hiddenPower()));
+            QMessageBox::information(NULL, tr("Invalid Hidden Power"), tr("Cannot have Hidden Power type %1 with those IVs.").arg(TypeInfo::Name(poke().hiddenPower())));
             int type = calculateHiddenPowerType();
             ui->hiddenPowerType->setCurrentIndex(type - 1);
             poke().setHiddenPower(type);
