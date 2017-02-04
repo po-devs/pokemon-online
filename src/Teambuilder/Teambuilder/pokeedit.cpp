@@ -459,7 +459,13 @@ void PokeEdit::changeItem(const QString &itemName)
             poke().item() = 0;
         }
         if (poke().num().pokenum == Pokemon::Arceus) {
-            int subnum = ItemInfo::isPlate(itemNum) ? ItemInfo::PlateType(itemNum) : 0;
+            int subnum;
+            if (ItemInfo::isPlate(itemNum)) {
+                 subnum = ItemInfo::PlateType(itemNum);
+            } else {
+                // Automatically defaults back to 0
+                subnum = ItemInfo::ZCrystalType(itemNum);
+            }
             setNum(Pokemon::uniqueId(poke().num().pokenum, subnum));
         }
         if (poke().num().pokenum == Pokemon::Silvally) {

@@ -170,7 +170,8 @@ void PokeBattle::init(PokePersonal &poke)
             if (ItemInfo::isPlate(item())) {
                 num().subnum = ItemInfo::PlateType(item());
             } else {
-                num().subnum = 0;
+                // Automatically defaults back to 0
+                num().subnum = ItemInfo::ZCrystalType(item());
             }
         }
         if (PokemonInfo::OriginalForme(num()) == Pokemon::Silvally) {
