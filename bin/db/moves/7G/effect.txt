@@ -559,7 +559,7 @@
 588 Terrain move. For 5 turns, grounded Pokémon cannot fall asleep, and have the power of their Electric-type moves boosted by 50%.
 589 If the target has not moved yet, changes the type of the target's next move to Electric.
 590 Prevents any Pokémon from switching out on the turn after the one it was used.
-591 If this attack knocks out the target, raises the user's Attack by 2 stages.
+591 If this attack knocks out the target, raises the user's Attack by 3 stages.
 592 Raises Defense of all Grass-type Pokémon in battle by 1 stage.
 593 Terrain move. For 5 turns, grounded Pokémon restore 1/16 of their max HP at the end of each turn, have the power of their Grass-type moves boosted by 50%, and have the damage they take from Bulldoze, Earthquake, and Magnitude reduced by 50%.
 594 For the current turn, all Normal-type moves used have their type changed to Electric. Priority level 1.
