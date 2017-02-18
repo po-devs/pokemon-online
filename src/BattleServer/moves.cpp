@@ -5268,7 +5268,7 @@ struct MMTripleKick : public MM {
 
     static void bh(int s, int t, BS &b) {
         int count = 1;
-        // In Gen 2 Triple Kick hits 1 - 3 times
+        // In Gen 2 Triple Kick hits 1 - 3 times at random with an even distribution
         if (b.gen().num == 2) {
             count = b.randint(3) + 1; 
         }
