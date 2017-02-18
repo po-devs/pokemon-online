@@ -5268,7 +5268,11 @@ struct MMTripleKick : public MM {
 
     static void bh(int s, int t, BS &b) {
         int count = 1;
-        if (b.testAccuracy(s, t, true)) {
+        // In Gen 2 Triple Kick hits 1 - 3 times
+        if (b.gen().num == 2) {
+            count = b.randint(3) + 1; 
+        }
+        else if (b.testAccuracy(s, t, true)) {
             count += 1;
             if (b.testAccuracy(s, t, true)) {
                 count += 1;
