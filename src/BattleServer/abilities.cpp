@@ -2465,7 +2465,7 @@ struct AMMagician : public AM
 
     /* Ripped off from Covet */
     static void upa(int s, int t, BS &b) {
-        if (!b.koed(t) && !b.koed(s) && b.poke(s).item() == 0 && b.canLoseItem(t,s)) {
+        if (!b.koed(s) && b.poke(s).item() == 0 && b.canLoseItem(t,s)) {
             b.sendAbMessage(78, 0,s,t,0,b.poke(t).item());
             b.acqItem(s, b.poke(t).item());
             b.loseItem(t);
