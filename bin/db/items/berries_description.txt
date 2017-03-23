@@ -9,11 +9,11 @@
 8 Automatically cures the holder of being Confused. Consumed after use.
 9 Automatically cures the holder of being Paralyzed, Asleep, Poisoned, Burned, Frozen or Confused. Consumed after use.
 10 Restores 25% of holder's max HP when its HP falls below 50%. Consumed after use.
-11 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Bold, Calm, Modest or Timid nature. Consumed after use.
-12 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has an Adamant, Careful, Impish or Jolly nature. Consumed after use.
-13 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Brave, Quiet, Relaxed or Sassy nature. Consumed after use.
-14 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Lax, Naive, Naughty or Rash nature. Consumed after use.
-15 Restores 12.5% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Gentle, Hasty, Lonely or Mild nature. Consumed after use.
+11 Restores 50% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Bold, Calm, Modest or Timid nature. Consumed after use.
+12 Restores 50% of holder's max HP when its HP falls below 50%, but also confuses it if it has an Adamant, Careful, Impish or Jolly nature. Consumed after use.
+13 Restores 50% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Brave, Quiet, Relaxed or Sassy nature. Consumed after use.
+14 Restores 50% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Lax, Naive, Naughty or Rash nature. Consumed after use.
+15 Restores 50% of holder's max HP when its HP falls below 50%, but also confuses it if it has a Gentle, Hasty, Lonely or Mild nature. Consumed after use.
 16 Bury it in soft soil to grow a Razz Plant.
 17 Bury it in soft soil to grow a Bluk Plant.
 18 Bury it in soft soil to grow a Nanab Plant.
