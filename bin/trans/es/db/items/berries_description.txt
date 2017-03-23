@@ -9,11 +9,11 @@
 8 Cura al usuario de su confusión.
 9 Cura al usuario de su parálisis, sueño, envenenamiento, quemadura, congelamiento o confusión.
 10 Restaura el 25% de los PS máximos del usuario cuando sus PS caen por debajo del 50%.
-11 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Osada, Serena, Modesta o Miedosa.
-12 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Firme, Cauta, Agitada o Alegre.
-13 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Audaz, Mansa, Plácida o Grosera.
-14 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Floja, Ingenua, Pícara o Alocada.
-15 Restaura el 12.5% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Amable, Activa, Huraña o Afable.
+11 Restaura el 50% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Osada, Serena, Modesta o Miedosa.
+12 Restaura el 50% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Firme, Cauta, Agitada o Alegre.
+13 Restaura el 50% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Audaz, Mansa, Plácida o Grosera.
+14 Restaura el 50% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Floja, Ingenua, Pícara o Alocada.
+15 Restaura el 50% de los PS máximos del usuario cuando sus PS caen por debajo del 50%, pero confunde al usuario si su naturaleza es Amable, Activa, Huraña o Afable.
 16 Plantar en tierra fértil para obtener un árbol de Frambu.
 17 Plantar en tierra fértil para obtener un árbol de Oram.
 18 Plantar en tierra fértil para obtener un árbol de Latano.
