@@ -257,8 +257,7 @@ void TierMachine::tierValidation(PokeBattle &pok, const QString &name) const
     Tier *t = this->tier(name).dataClone();
 
     if (t->gen() > 6) {
-        //changing the hp to match ivs lets people choose hidden power without updating
-        //change ivs to match hp instead in lc for android friendliness
+        //change ivs to match hp instead for android friendliness
         if (t->maxLevel == 5 || pok.level() < t->maxLevel) {
             if (pok.hiddenPower() != HiddenPowerInfo::Type(pok.gen(), pok.dvs().at(0), pok.dvs().at(1), pok.dvs().at(2), pok.dvs().at(3), pok.dvs().at(4), pok.dvs().at(5))) {
                 //gen 6/7 legend can't have hp fighting
