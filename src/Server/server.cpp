@@ -1549,6 +1549,9 @@ void Server::startBattle(int id1, int id2, const ChallengeInfo &c, int team1, in
     QString fulltier = QString("Mixed %1").arg(GenInfo::Version(p1->team(team1).gen));
     QString tier = p1->team(team1).tier == p2->team(team2).tier ? p1->team(team1).tier : fulltier;
 
+    TierMachine::obj()->tierValidation(battleTeam1, tier);
+    TierMachine::obj()->tierValidation(battleTeam2, tier);
+
     printLine(QString("%1 battle between %2 and %3 started").arg(tier.length() > 0 ? tier : fulltier).arg(name(id1)).arg(name(id2)));
 
     battleList.insert(id, Battle(id1, id2, c.mode, tier));
