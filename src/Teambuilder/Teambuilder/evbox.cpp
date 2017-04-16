@@ -29,7 +29,7 @@ EvBox::EvBox(QWidget *parent) :
     setNums(m_boosts);
 #undef setNums
 
-    for(int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         connect(m_sliders[i], SIGNAL(valueChanged(int)), this, SLOT(changeEV(int)));
         connect(m_evs[i], SIGNAL(textChanged(QString)), this, SLOT(changeEV(QString)));
         connect(m_boosts[i], SIGNAL(rightClick()), this, SLOT(changeToMinusBoost()));
@@ -40,10 +40,16 @@ EvBox::EvBox(QWidget *parent) :
 
 void EvBox::updateNatureButtons()
 {
+    bool oldgen = poke().gen() <= 2;
+
+    for (int i = 0; i < 6; i++) {
+            m_boosts[i]->setHidden(oldgen);
+    }
+
     for (int j = 1; j<6;j++){
         if (NatureInfo::Boost(poke().nature(),j) == 1)
             Theme::ChangePics(m_boosts[j], "plus");
-        else if(NatureInfo::Boost(poke().nature(),j) == 0)
+        else if (NatureInfo::Boost(poke().nature(),j) == 0)
             Theme::ChangePics(m_boosts[j], "equal");
         else
             Theme::ChangePics(m_boosts[j], "minus");
@@ -88,17 +94,11 @@ void EvBox::updateAll()
     if (poke().gen() <= 2) {
         ui->sdefslider->setDisabled(true);
         ui->sdefedit->setDisabled(true);
+        ui->sdefboost->setHidden(true);
 
-        for (int i = 0; i < 6; i++) {
-            m_boosts[i]->setDisabled(true);
-        }
     } else {
         ui->sdefslider->setDisabled(false);
         ui->sdefedit->setDisabled(false);
-
-        for (int i = 0; i < 6; i++) {
-            m_boosts[i]->setDisabled(false);
-        }
     }
 }
 
