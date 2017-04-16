@@ -902,6 +902,10 @@ struct MMFeint : public MM
         if (b.gen() <= 4 && !remove) {
             fturn(b, s).add(TM::Failed);
         }
+
+        if (turn(b, t).value("KingsShieldUsed").toBool()) {
+            turn(b, t)["KingsShieldUsed"] = false;
+        }
     }
 };
 
