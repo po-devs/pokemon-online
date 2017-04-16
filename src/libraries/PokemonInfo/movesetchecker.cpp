@@ -359,7 +359,8 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         if (g.num == 7)
         {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
-            if (isValid(pokeid, Gen::Yellow, moves, ability, gender, level, maledw, invalid_moves, error, minGen))
+            QSet<int> *temp_invalid;
+            if (isValid(pokeid, Gen::Yellow, moves, ability, gender, level, maledw, temp_invalid, error, minGen))
             {
                 if (ab.ab(2) == ability || ab.ab(2) == 0)
                 {
