@@ -251,7 +251,8 @@ void PokeBattle::init(PokePersonal &poke)
         }
     }
 
-    if (poke.gen() > 6) {
+    //moved to tierstructs.cpp to use tier as a condition
+    /*if (poke.gen() > 6) {
         int minPossible = 0;
         int maxPossible = 0;
         for (int i = 0; i < 6; i++) {
@@ -270,7 +271,8 @@ void PokeBattle::init(PokePersonal &poke)
         }
     } else {
         hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
-    }
+    }*/
+    hiddenPower() = std::min(std::max(poke.hiddenPower(), quint8(Type::Fighting)), quint8(Type::Dark));
 
     evs().clear();
     for (int i = 0; i < 6; i++) {
@@ -506,10 +508,6 @@ TeamBattle::TeamBattle(Team &other)
     int curs = 0;
     for (int i = 0; i < 6; i++) {
         poke(curs).init(other.poke(i));
-        //Lv 5 pokemon can't hyper train
-        if (tier == "SM LC") {
-            poke(curs).hiddenPower() = HiddenPowerInfo::Type(gen, poke(curs).dvs().value(0), poke(curs).dvs().value(1), poke(curs).dvs().value(2), poke(curs).dvs().value(3), poke(curs).dvs().value(4), poke(curs).dvs().value(5));
-        }
         if (poke(curs).num() != 0) {
             ++curs;
         }

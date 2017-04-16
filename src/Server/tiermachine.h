@@ -47,6 +47,8 @@ public:
     bool existsPlayer(const QString &name, const QString &player);
     bool isValid(const TeamBattle &t, const QString tier) const;
     bool isBanned(const PokeBattle &p, const QString &tier) const;
+    void tierValidation(TeamBattle &t, const QString &name) const;
+    void tierValidation(PokeBattle &pok, const QString &name) const;
 
     void loadMemberInMemory(const QString &name, const QString &tier, QObject *o, const char *slot);
     void fetchRankings(const QString &tier, const QVariant &data, QObject *o, const char *slot);
