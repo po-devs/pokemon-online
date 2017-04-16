@@ -208,6 +208,10 @@ void PokeMovesDb::save()
 
                 pokes[id].gens[g].moves[AllMoves].unite(pokes[id].gens[g].moves[i]);
 
+                if (g.num == 7 && i != SpecialMoves) {
+                    pokes[id].gens[g].moves[AllMoves].unite(pokes[id].gens[Gen::Yellow].moves[i]);
+                }
+
                 QList<int> moves = pokes[id].gens[g].moves[i].toList();
                 moves.removeOne(Move::Struggle);
 

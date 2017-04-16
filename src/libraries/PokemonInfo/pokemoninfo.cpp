@@ -737,6 +737,10 @@ void PokemonInfo::loadGen(Pokemon::gen g)
         if (g.num != 3 && g.num != GenInfo::GenMin()) {
             loadGen(Pokemon::gen(g.num-1, g.wholeGen));
             gens[g].load(m_Directory, g, &gens[Pokemon::gen(g.num-1, g.wholeGen)]);
+            if (g.num == 7) {
+                loadGen(Pokemon::gen(1, 1));
+                gens[g].addVirtualConsoleTransfer(&gens[Pokemon::gen(1, 1)]);
+            }
         } else {
             gens[g].load(m_Directory, g, NULL);
         }
@@ -881,6 +885,28 @@ void PokemonInfo::Gen::loadMoves(Gen *parent)
             }
             if (!m_Moves.contains(id)) {
                 m_Moves[id] = m_Moves.value(id.original());
+            }
+        }
+    }
+}
+
+void PokemonInfo::Gen::addVirtualConsoleTransfer(Gen *parent)
+{
+    QMutableHashIterator<Pokemon::uniqueId, PokemonMoves> it(m_Moves);
+    while(it.hasNext()) {
+        it.next();
+        PokemonMoves &moves = it.value();
+
+        if (parent) {
+            if (parent->m_Moves.contains(it.key())) {
+                const PokemonMoves &pmoves = parent->m_Moves.value(it.key());
+
+                moves.genMoves.unite(pmoves.regularMoves);
+                moves.genMoves.unite(pmoves.eggMoves);
+                moves.genMoves.unite(pmoves.preEvoMoves);
+                moves.genMoves.unite(pmoves.TMMoves);
+                moves.genMoves.unite(pmoves.levelMoves);
+                moves.genMoves.unite(pmoves.tutorMoves);
             }
         }
     }

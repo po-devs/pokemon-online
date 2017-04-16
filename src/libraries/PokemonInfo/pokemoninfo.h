@@ -158,6 +158,7 @@ public:
         void loadReleased(Gen *parent);
         void loadMinLevels(Gen *parent);
 
+        void addVirtualConsoleTransfer(Gen *parent);
         void addTradebacks(Gen *parent);
 
         bool isReleased(const Pokemon::uniqueId &);

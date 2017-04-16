@@ -202,6 +202,8 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
     QSet<int> moves = moves2;
     moves.remove(0);
 
+    bool transferWrongAbility = false;
+
     if (!enforceMinLevels)
         level = 100;
 
@@ -245,13 +247,15 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             if (invalid_moves) {
                 *invalid_moves = moves;
             }
-            if (error) {
+            if (transferWrongAbility){
+                *error = QObject::tr("%1 must have its hidden ability to know moves from RBY transfer.")
+                         .arg(PokemonInfo::Name(pokeid));
+            } else if (error) {
                 *error = QObject::tr("%1 can't learn the following moves: %2.")
                          .arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
             }
             return false;
         }
-
 
         /* If the pokemon is underleveled, he was caught wild or from a previous gen, anyhow he couldn't have evolved from this gen */
         bool nobreeding = PokemonInfo::MinEggLevel(pokeid, g) > level;
@@ -350,6 +354,24 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
 
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
+
+        /* Can transfer gen 1 from virtual console to gen 7 */
+        if (g.num == 7)
+        {
+            AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
+            QSet<int> *temp_invalid;
+            if (isValid(pokeid, Gen::Yellow, moves, ability, gender, level, maledw, temp_invalid, error, minGen))
+            {
+                if (ab.ab(2) == ability || ab.ab(2) == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    transferWrongAbility = true;
+                }
+            }
+        }
 
         /* In gen 2 we must allow tradebacks. For that we need movesets without gen 2
            egg moves or special moves */
