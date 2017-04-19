@@ -258,7 +258,7 @@ void PokePersonal::runCheck(bool hack)
             setMove(0, i, false);
         }
     }
-    if (hiddenPower() < Type::Fighting || hiddenPower() >= Type::Dark) {
+    if (hiddenPower() < Type::Fighting || hiddenPower() > Type::Dark) {
       hiddenPower() = HiddenPowerInfo::Type(gen().num, DV(0), DV(1), DV(2), DV(3), DV(4), DV(5));
     }
     if (hack) {
