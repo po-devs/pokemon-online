@@ -114,6 +114,7 @@ public:
 
     quint16 normalStat(int stat) const;
     void updateStats(Pokemon::gen gen);
+    void forceMatchHiddenPowerIV();
 
     bool isFull() const { return lifePoints() == totalLifePoints(); }
     quint8 lifePercent() const { return lifePoints() == 0 ? 0 : std::max(1, lifePoints()*100/totalLifePoints());}
