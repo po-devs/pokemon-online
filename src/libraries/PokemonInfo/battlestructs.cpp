@@ -272,7 +272,13 @@ void PokeBattle::init(PokePersonal &poke)
     } else {
         hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
     }*/
-    hiddenPower() = std::min(std::max(poke.hiddenPower(), quint8(Type::Fighting)), quint8(Type::Dark));
+    if (!poke.hasValidHiddenPower()) {
+        hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
+    } else if (poke.hiddenPower() == Type::Fighting && ((poke.num().pokenum >= Pokemon::Xerneas && poke.num().pokenum <= Pokemon::Volcanion) || (poke.num().pokenum >= Pokemon::Tapu_Koko && poke.num().pokenum <= Pokemon::Marshadow))) {
+        hiddenPower() = HiddenPowerInfo::Type(poke.gen(), poke.DV(0), poke.DV(1), poke.DV(2), poke.DV(3), poke.DV(4), poke.DV(5));
+    } else {
+        hiddenPower() = std::min(std::max(poke.hiddenPower(), quint8(Type::Fighting)), quint8(Type::Dark));
+    }
 
     evs().clear();
     for (int i = 0; i < 6; i++) {
@@ -304,6 +310,24 @@ void PokeBattle::updateStats(Pokemon::gen gen)
 
     for (int i = 0; i < 5; i++) {
         normal_stats[i] = PokemonInfo::FullStat(num(), gen.num, nature(), i+1, level(), dvs()[i+1], evs()[i+1]);
+    }
+}
+
+void PokeBattle::forceMatchHiddenPowerIV()
+{
+    if (gen() >= 7 && hiddenPower() != HiddenPowerInfo::Type(gen(), dvs()[Hp], dvs()[Attack], dvs()[Defense], dvs()[SpAttack], dvs()[SpDefense], dvs()[Speed])) {
+        QStringList temp;
+        //gen 6/7 legends have at least 3 ivs be 31
+        if ((hiddenPower() == Type::Flying || hiddenPower() == Type::Poison || hiddenPower() == Type::Rock) && ((num().pokenum >= Pokemon::Xerneas && num().pokenum <= Pokemon::Volcanion) || (num().pokenum >= Pokemon::Tapu_Koko && num().pokenum <= Pokemon::Marshadow))) {
+            temp = HiddenPowerInfo::PossibilitiesForType(hiddenPower(), gen()).at(1);
+        } else {
+            temp = HiddenPowerInfo::PossibilitiesForType(hiddenPower(), gen()).at(0);
+        }
+        dvs().clear();
+        for (int i = 0; i < 6; i++) {
+            dvs() << temp.at(i).toInt();
+        }
+        updateStats(gen());
     }
 }
 

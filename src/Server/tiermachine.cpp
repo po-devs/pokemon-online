@@ -240,11 +240,9 @@ bool TierMachine::isBanned(const PokeBattle &pok, const QString & tier) const
 
 void TierMachine::tierValidation(TeamBattle &t, const QString &name) const
 {
-    if (exists(name)) {
-        for (int i = 0; i < 6; i++)
-        {
-            tierValidation(t.poke(i), name);
-        }
+    for (int i = 0; i < 6; i++)
+    {
+        tierValidation(t.poke(i), name);
     }
 }
 
@@ -254,28 +252,17 @@ void TierMachine::tierValidation(PokeBattle &pok, const QString &name) const
         return;
     }
 
-    Tier *t = this->tier(name).dataClone();
+    if (!exists(name)) {
+        if (pok.level() < 100 && pok.gen() >= 7) {
+            pok.forceMatchHiddenPowerIV();
+        }
+    } else {
+        Tier *t = this->tier(name).dataClone();
 
-    if (t->gen() > 6) {
-        //change ivs to match hp instead for android friendliness
-        if (t->maxLevel == 5 || pok.level() < t->maxLevel) {
-            if (pok.hiddenPower() != HiddenPowerInfo::Type(pok.gen(), pok.dvs().at(0), pok.dvs().at(1), pok.dvs().at(2), pok.dvs().at(3), pok.dvs().at(4), pok.dvs().at(5))) {
-                //gen 6/7 legend can't have hp fighting
-                if (pok.hiddenPower() == Type::Fighting && ((pok.num().pokenum >= Pokemon::Xerneas && pok.num().pokenum <= Pokemon::Volcanion) || (pok.num().pokenum >= Pokemon::Tapu_Koko && pok.num().pokenum <= Pokemon::Marshadow))) {
-                    pok.hiddenPower() = HiddenPowerInfo::Type(pok.gen(), pok.dvs().at(0), pok.dvs().at(1), pok.dvs().at(2), pok.dvs().at(3), pok.dvs().at(4), pok.dvs().at(5));
-                } else {
-                    QStringList dvs;
-                    //gen 6/7 have at least 3 ivs be 31
-                    if ((pok.hiddenPower() == Type::Flying || pok.hiddenPower() == Type::Poison || pok.hiddenPower() == Type::Rock) && ((pok.num().pokenum >= Pokemon::Xerneas && pok.num().pokenum <= Pokemon::Volcanion) || (pok.num().pokenum >= Pokemon::Tapu_Koko && pok.num().pokenum <= Pokemon::Marshadow))) {
-                        dvs = HiddenPowerInfo::PossibilitiesForType(pok.hiddenPower(), pok.gen()).at(1);
-                    } else {
-                        dvs = HiddenPowerInfo::PossibilitiesForType(pok.hiddenPower(), pok.gen()).at(0);
-                    }
-                    pok.dvs().clear();
-                    for (int i = 0; i < 6; i++) {
-                        pok.dvs() << dvs.at(i).toInt();
-                    }
-                }
+        if (t->gen() >= 7) {
+            //change ivs to match hp instead for android friendliness
+            if (t->maxLevel == 5 || pok.level() < t->maxLevel) {
+                pok.forceMatchHiddenPowerIV();
             }
         }
     }

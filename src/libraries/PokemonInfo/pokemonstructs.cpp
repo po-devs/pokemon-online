@@ -258,7 +258,7 @@ void PokePersonal::runCheck(bool hack)
             setMove(0, i, false);
         }
     }
-    if (hiddenPower() < 0 || hiddenPower() >= TypeInfo::NumberOfTypes()) {
+    if (hiddenPower() < Type::Fighting || hiddenPower() > Type::Dark) {
       hiddenPower() = HiddenPowerInfo::Type(gen().num, DV(0), DV(1), DV(2), DV(3), DV(4), DV(5));
     }
     if (hack) {
@@ -338,7 +338,7 @@ void PokePersonal::runCheck(bool hack)
 bool PokePersonal::hasValidHiddenPower() const
 {
 
-  if (gen() >= 7 && level() == 100) {
+  if (gen() >= 7) {
         int minPossible = 0;
         int maxPossible = 0;
         for (int i = 0; i < 6; i++) {

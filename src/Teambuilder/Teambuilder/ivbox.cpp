@@ -171,7 +171,7 @@ void IvBox::updateIV(int stat)
 
 void IvBox::updateHiddenPower()
 {
-    if (poke().gen() >= 7 && poke().hasValidHiddenPower() && poke().level() == 100) {
+    if (poke().gen() >= 7 && poke().hasValidHiddenPower()) {
         ui->hiddenPowerType->setCurrentIndex(poke().hiddenPower() - 1);
         updateHiddenPowerSelection();
         return;
@@ -187,7 +187,7 @@ void IvBox::updateHiddenPower()
 void IvBox::updateHiddenPowerSelection()
 {
     QList<QStringList> possibilities;
-    if (poke().gen() >= 7 && poke().level() == 100) {
+    if (poke().gen() >= 7) {
         possibilities = HiddenPowerInfo::PossibilitiesForType(poke().hiddenPower(), poke().gen());
     } else {
         possibilities = HiddenPowerInfo::PossibilitiesForType(calculateHiddenPowerType(), poke().gen());
@@ -236,7 +236,7 @@ void IvBox::changeHiddenPower(int newType)
         return;
     }
 
-    if (poke().gen() >= 7 && poke().level() == 100) {
+    if (poke().gen() >= 7) {
         poke().setHiddenPower(newType);
         if (!poke().hasValidHiddenPower()) {
             QMessageBox::information(NULL, tr("Invalid Hidden Power"), tr("Cannot have Hidden Power type %1 with those IVs.").arg(TypeInfo::Name(poke().hiddenPower())));
@@ -268,14 +268,14 @@ void IvBox::changeHiddenPower(int newType)
             QMessageBox::information(NULL, tr("Impossible type"), tr("%1 can't have Hidden Power type %2.").arg(PokemonInfo::Name(poke().num().pokenum), ui->hiddenPowerType->currentText()));
             int type = calculateHiddenPowerType();
             ui->hiddenPowerType->setCurrentIndex(type - 1);
-            if (poke().gen() >= 7 && poke().level() == 100) {
+            if (poke().gen() >= 7) {
                 poke().setHiddenPower(type);
                 updateHiddenPowerSelection();
             }
             return;
         }
 
-        if (poke().gen() < 7 || poke().level() != 100) {
+        if (poke().gen() < 7) {
             QStringList possibility = possibilities.front();
 
             for (int i = 0; i < std::max(6, possibility.size()); i++) {
