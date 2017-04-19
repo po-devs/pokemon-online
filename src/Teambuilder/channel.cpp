@@ -139,6 +139,8 @@ void Channel::anchorClicked(const QUrl &url)
             client->activateChannel(cname);
         } else if (path == "reconnect") {
             client->reconnect();
+        } else if (path == "openteambuilder") {
+            client->openTeamBuilder();
         } else if (path.leftRef(6) == "watch/") {
             int id = path.mid(6).toInt();
             client->watchBattleRequ(id);
