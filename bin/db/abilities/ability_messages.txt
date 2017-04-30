@@ -81,7 +81,7 @@
 138 %s's disguise served it as a decoy and was busted!
 139 %s's Innards Out hurts %f!
 140 %s started to dance too!
-141 %s became fully charged due to its bond with %ts!|%s became Ash-Greninja!
+141 %s became fully charged due to its bond with its Trainer!|%s became Ash-Greninja!
 142 %s's Soul-Heart raises its Special Attack!
 143 %f's %a was taken over by %s!
 147 %s formed a school!|%s stopped schooling!
