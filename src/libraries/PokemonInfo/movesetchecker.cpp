@@ -247,12 +247,14 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
             if (invalid_moves) {
                 *invalid_moves = moves;
             }
-            if (transferWrongAbility){
-                *error = QObject::tr("%1 must have its hidden ability to know moves from RBY transfer.")
-                         .arg(PokemonInfo::Name(pokeid));
-            } else if (error) {
-                *error = QObject::tr("%1 can't learn the following moves: %2.")
-                         .arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
+            else if (error) {
+                if (transferWrongAbility){
+                    *error = QObject::tr("%1 must have its hidden ability to know moves from RBY transfer.")
+                             .arg(PokemonInfo::Name(pokeid));
+                } else {
+                    *error = QObject::tr("%1 can't learn the following moves: %2.")
+                             .arg(PokemonInfo::Name(pokeid), getCombinationS(moves));
+                }
             }
             return false;
         }
