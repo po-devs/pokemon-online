@@ -3,11 +3,11 @@
 
 #include <qglobal.h>
 
-#define VERSION QString("2.7.1")
+#define VERSION QString("2.7.2")
 
 static const quint16 PROTOCOL_VERSION = 4;
 static const quint16 PROTOCOL_SUBVERSION = 0;
-static const quint16 CLIENT_VERSION_NUMBER = 2700;
+static const quint16 CLIENT_VERSION_NUMBER = 2720;
 static const int UPDATE_ID = 4;
 
 #ifdef Q_OS_LINUX
