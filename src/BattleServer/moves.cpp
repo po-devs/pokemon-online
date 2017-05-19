@@ -7555,6 +7555,7 @@ struct MMRevelationDance : public MM
             tmove(b,s).type = Pokemon::Curse;
         } else {
             tmove(b,s).type = b.getType(s, 1);
+            turn(b, s)["RevelationDanceType"] = true;
         }
     }
 };
