@@ -985,7 +985,7 @@ struct AMNormalize : public AM {
 
     static void btl(int s, int, BS &b) {
         //Unconfirmed: Do normally Normal types get buffed too?
-        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal && tmove(b,s).attack != Move::HiddenPower && tmove(b,s).attack != Move::WeatherBall
+        if (tmove(b,s).type != Type::Curse && tmove(b,s).type != Type::Normal && tmove(b,s).attack != Move::HiddenPower && tmove(b,s).attack != Move::WeatherBall && tmove(b,s).attack != Move::RevelationDance
                 && !b.zTurn(s) && !turn(b,s).value("JudgmentWithPlate").toBool()) {
             tmove(b,s).type = Type::Normal;
             turn(b,s)["Normalized"] = true;
@@ -2204,7 +2204,7 @@ struct AMAerilate : public AM {
     }
 
     static void baf(int s, int, BS &b) {
-        if (type(b,s) == Type::Normal && !b.zTurn(s) &&  !turn(b,s).value("JudgmentWithPlate").toBool()) {
+        if (type(b,s) == Type::Normal && !b.zTurn(s) && tmove(b,s).attack != Move::RevelationDance && !turn(b,s).value("JudgmentWithPlate").toBool()) {
             turn(b,s)["Aerilated"] = true;
             tmove(b, s).type = poke(b,s)["AbilityArg"].toInt();
         }
