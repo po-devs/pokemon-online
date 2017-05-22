@@ -31,7 +31,7 @@
 46 %s is getting pumped!
 47 %s lost its focus!|%s is tightening its focus!
 48 %s became the center of attention!
-51 %f's %a was suppressed!
+51 %f's ability was suppressed!
 53 Gravity intensified!|Gravity returned to normal!|%s couldn't stay airbourne because of gravity!|%s's %m was cancelled because of gravity!|%s can't use %m because of gravity!
 54 %f's %m lost all its PP because of %s' Grudge!
 55 %s swapped its boosts with %f!
