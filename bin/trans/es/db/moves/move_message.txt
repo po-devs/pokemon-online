@@ -31,7 +31,7 @@
 46 ¡%s se está preparando para luchar!
 47 ¡%s perdió su concentración!|¡%s está reforzando su concentración!
 48 ¡%s se convirtió en el centro de atención!
-51 ¡Se suprimió la habilidad %a de %f!
+51 ¡Se suprimió la habilidad de %f!
 53 ¡La gravedad se ha incrementado!|La gravedad ha vuelto a su estado normal|¡%s no ha podido mantenerse en el aire debido al efecto de la gravedad!|¡%m de %s se ha disipado debido a la fuerza de la gravedad!|¡%s no puede usar %m debido a la fuerza de la gravedad!
 54 ¡%f perdió todos los PP de %m por la Rabia de %s!
 55 ¡%s intercambió los cambios de características con %f!
