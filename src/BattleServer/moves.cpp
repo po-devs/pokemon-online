@@ -254,6 +254,11 @@ struct MMBatonPass : public MM
         c.remove("LastMoveUsed");
         c.remove("LastMoveUsedTurn");
 
+        // Mega Gengar doesn't get Telekinesis effect with Baton Pass
+        if (b.poke(s).num().original() == Pokemon::Gengar && b.poke(s).num().isForme()) {
+            c.remove("LevitatedCount");
+        }
+
         QList<int> boosts;
 
         for(int i = 0; i < 8; i++) {
@@ -6299,6 +6304,12 @@ struct MMTelekinesis : public MM
         if (poke(b,t).contains("LevitatedCount")) {
             fturn(b,s).add(TM::Failed);
         }
+
+        // Some pokmemon are immune to Telekinesis
+        if (b.poke(t).num().original() == Pokemon::Diglett || b.poke(t).num().original() == Pokemon::Dugtrio || b.poke(t).num() == Pokemon::Sandygast ||
+                b.poke(t).num() == Pokemon::Palossand || b.poke(t).num().original() == Pokemon::Gengar && b.poke(t).num().isForme() /* Mega Gengar */) {
+            fturn(b,s).add(TM::Failed);
+        }
     }
 
     static void uas(int s, int t, BS &b) {
@@ -6314,7 +6325,7 @@ struct MMTelekinesis : public MM
 
     static void et(int s, int , BS &b) {
         inc(poke(b,s)["LevitatedCount"], -1);
-        if (poke(b,s).value("LevitatedCount").toInt() == 0) {
+        if (poke(b,s).value("LevitatedCount").toInt() <= 0) {
             poke(b,s).remove("LevitatedCount");
             b.removeEndTurnEffect(BS::PokeEffect, s, "Telekinesis");
             b.sendMoveMessage(174, 1, s);

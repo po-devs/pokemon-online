@@ -986,6 +986,11 @@ bool BattleSituation::megaEvolve(int slot)
     megas[player(slot)] = true;
     pokeMemory(slot)["MegaEvolveTurn"] = turn();
 
+    // Gengar loses Telekinesis effect after mega evolving
+    if (poke(slot).num().original() == Pokemon::Gengar) {
+        pokeMemory(slot).remove("LevitatedCount");
+    }
+
     return true;
 }
 
