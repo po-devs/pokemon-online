@@ -8015,7 +8015,7 @@ struct MMDarkVoid : public MM
     }
 
     static void daf(int s, int, BS &b) {
-        if (b.gen() >= 7 && b.poke(s).num() != Pokemon::Darkrai) {
+        if (b.gen() >= 7 && b.poke(s).num() != Pokemon::Darkrai && !b.battleMemory().value("CoatingAttackNow").toBool()) {
             fturn(b,s).add(TM::Failed);
         }
     }
