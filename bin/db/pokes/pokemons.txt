@@ -24,9 +24,9 @@
 18:0:H Pidgeot
 18:1:M Mega Pidgeot
 19:0 Rattata
-19:1:L Alolan Rattata
+19:1:LD Alolan Rattata
 20:0 Raticate
-20:1:L Alolan Raticate
+20:1:LD Alolan Raticate
 21:0 Spearow
 22:0 Fearow
 23:0 Ekans
@@ -45,11 +45,11 @@
 25:11:A Pikachu-Fifth Hat
 25:12:A Pikachu-Sixth Hat
 26:0 Raichu
-26:1:L Alolan Raichu
+26:1:LD Alolan Raichu
 27:0 Sandshrew
-27:1:L Alolan Sandshrew
+27:1:LD Alolan Sandshrew
 28:0 Sandslash
-28:1:L Alolan Sandslash
+28:1:LD Alolan Sandslash
 29:0 Nidoran-F
 30:0 Nidorina
 31:0 Nidoqueen
@@ -59,9 +59,9 @@
 35:0 Clefairy
 36:0 Clefable
 37:0 Vulpix
-37:1:L Alolan Vulpix
+37:1:LD Alolan Vulpix
 38:0 Ninetales
-38:1:L Alolan Ninetales
+38:1:LD Alolan Ninetales
 39:0 Jigglypuff
 40:0 Wigglytuff
 41:0 Zubat
@@ -74,13 +74,13 @@
 48:0 Venonat
 49:0 Venomoth
 50:0 Diglett
-50:1:L Alolan Diglett
+50:1:LD Alolan Diglett
 51:0 Dugtrio
-51:1:L Alolan Dugtrio
+51:1:LD Alolan Dugtrio
 52:0 Meowth
-52:1:L Alolan Meowth
+52:1:LD Alolan Meowth
 53:0 Persian
-53:1:L Alolan Persian
+53:1:LD Alolan Persian
 54:0 Psyduck
 55:0 Golduck
 56:0 Mankey
@@ -103,11 +103,11 @@
 72:0 Tentacool
 73:0 Tentacruel
 74:0 Geodude
-74:1:L Alolan Geodude
+74:1:LD Alolan Geodude
 75:0 Graveler
-75:1:L Alolan Graveler
+75:1:LD Alolan Graveler
 76:0 Golem
-76:1:L Alolan Golem
+76:1:LD Alolan Golem
 77:0 Ponyta
 78:0 Rapidash
 79:0 Slowpoke
@@ -121,9 +121,9 @@
 86:0 Seel
 87:0 Dewgong
 88:0 Grimer
-88:1:L Alolan Grimer
+88:1:LD Alolan Grimer
 89:0 Muk
-89:1:L Alolan Muk
+89:1:LD Alolan Muk
 90:0 Shellder
 91:0 Cloyster
 92:0 Gastly
@@ -139,10 +139,10 @@
 101:0 Electrode
 102:0 Exeggcute
 103:0 Exeggutor
-103:1:L Alolan Exeggutor
+103:1:LD Alolan Exeggutor
 104:0 Cubone
 105:0 Marowak
-105:1:L Alolan Marowak
+105:1:LD Alolan Marowak
 106:0 Hitmonlee
 107:0 Hitmonchan
 108:0 Lickitung
