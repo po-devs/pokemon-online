@@ -8265,7 +8265,7 @@ struct MMZExtremeEvoboost : public MM
 
     static void uas(int s, int, BS &b) {
         for (int i = Attack; i <= Speed; i++) {
-            b.inflictZStatMod(s, i, 2, s);
+            b.inflictStatMod(s, i, 2, s);
         }
     }
 };

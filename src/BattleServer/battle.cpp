@@ -2811,7 +2811,7 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     if (negative)
         *negative = !pos;
 
-    if (gen() >= 5 && hasWorkingAbility(player, Ability::Simple)) {
+    if (gen() >= 5 && (hasWorkingAbility(player, Ability::Simple) && !zeffectboost)) {
         mod *= 2;
     }
 
