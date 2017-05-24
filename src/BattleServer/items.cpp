@@ -1095,7 +1095,7 @@ struct IMWeaknessPolicy  : public IM {
             (*this) << Move::Bide << Move::SonicBoom << Move::DragonRage << Move::NightShade
                                   << Move::Psywave << Move::Present << Move::Counter << Move::SeismicToss
                                   << Move::MirrorCoat << Move::MetalBurst << Move::FinalGambit
-                                  << Move::Endeavor << Move::SuperFang;
+                                  << Move::Endeavor << Move::SuperFang << Move::NaturesMadness;
         }
     };
     static FM forbidden_moves;
