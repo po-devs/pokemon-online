@@ -2805,9 +2805,9 @@ bool BattleSituation::canGetStatus(int target, int status, int inflicter) {
     }
 }
 
-bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative)
+bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative, bool zeffectboost)
 {
-    bool pos = (mod > 0) ^ hasWorkingAbility(player, Ability::Contrary);
+    bool pos = (mod > 0) ^ (hasWorkingAbility(player, Ability::Contrary) && !zeffectboost);
     if (negative)
         *negative = !pos;
 
@@ -2816,6 +2816,11 @@ bool BattleSituation::inflictStatMod(int player, int stat, int mod, int attacker
     }
 
     return BattleBase::inflictStatMod(player, stat, pos ? std::abs(mod) : - std::abs(mod), attacker, tell);
+}
+
+bool BattleSituation::inflictZStatMod(int player, int stat, int mod, int attacker, bool tell)
+{
+    return BattleSituation::inflictStatMod(player, stat, mod, attacker, tell, NULL, true);
 }
 
 bool BattleSituation::loseStatMod(int player, int stat, int malus, int attacker, bool tell)
