@@ -1697,6 +1697,14 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         }
     }
 
+    // Charge moves can be blocked on the second turn
+    if (specialOccurence && pokeMemory(player)["ReleaseTurn"] == turn()) {
+        callpeffects(player, player, "MovePossible");
+        if (turnMemory(player).value("ImpossibleToMove").toBool()) {
+            goto trueend;
+        }
+    }
+
     //Healing moves called with another move while under heal block are still blocked
     if (specialOccurence && pokeMemory(player).value("HealBlockCount").toInt() > 0) {
         callpeffects(player, player, "MovePossible");
