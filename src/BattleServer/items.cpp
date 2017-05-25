@@ -510,8 +510,8 @@ struct IMMetronome : public IM
             return;
         }
 
-        int count = poke(b,s).value("IMMetroCount").toInt() + 1;
-        poke(b,s)["IMMetroCount"] = count;
+        int count = poke(b,s).value("IMMetroCount").toInt();
+        poke(b,s)["IMMetroCount"] = count + 1;
         if (b.gen() < 5) {
             poke(b,s)["IMMetroMod"] = std::min(20, count * 2);
         } else {
