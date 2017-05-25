@@ -8119,11 +8119,11 @@ struct MMZBoost : public MM
         int rate = args[1].toInt();
         if (stat == AllStats) {
             for (int i = Attack; i <= Speed; i++) {
-                b.inflictStatMod(s, i, rate, s);
+                b.inflictZStatMod(s, i, rate, s);
             }
 
         } else {
-            b.inflictStatMod(s, stat, rate, s);
+            b.inflictZStatMod(s, stat, rate, s);
         }
     }
 };
@@ -8178,7 +8178,7 @@ struct MMZCurse : public MM
         if (b.hasType(s,Pokemon::Ghost)) {
             MMZRecovery::zm(s,s,b);
         } else {
-            b.inflictStatMod(s, Attack, 1, s);
+            b.inflictZStatMod(s, Attack, 1, s);
         }
     }
 };

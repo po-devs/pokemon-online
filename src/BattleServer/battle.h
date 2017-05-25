@@ -71,8 +71,9 @@ public:
     void changeAForme(int player, int newforme);
     bool hasMinimalStatMod(int player, int stat);
     bool hasMaximalStatMod(int player, int stat);
-    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative);
+    bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell, bool *negative, bool zeffectboost = false);
     bool inflictStatMod(int player, int stat, int mod, int attacker, bool tell = true) {return inflictStatMod(player, stat, mod, attacker, tell, NULL);}
+    bool inflictZStatMod(int player, int stat, int mod, int attacker, bool tell = true);
 private:
     /* Returns false if blocked */
     bool loseStatMod(int player, int stat, int malus, int attacker, bool tell=true);
