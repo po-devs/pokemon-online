@@ -1403,15 +1403,7 @@ struct AMWonderGuard : public AM {
         int tp = type(b,t);
         /* Fire fang always hits through Wonder Guard, at least in 4th gen... */
         if (tmove(b,t).power > 0 && tp != Pokemon::Curse && (b.gen() >= 5 || move(b, t) != Move::FireFang)) {
-            int mod = b.rawTypeEff(tp, s);
-
-            //freeze dry hits through wonderguard if it would hit water for SE damage
-            //flying press needs testing for the same thing
-            if (tmove(b,t).attack == Move::FreezeDry && (fpoke(b,s).type1 == Type::Water || fpoke(b,s).type2 == Type::Water)) {
-                mod+=1;
-            }
-
-            if (mod <= 0) {
+            if (b.turnMem(t).typeMod <= 0) {
                 b.sendAbMessage(71,0,s);
                 turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
             }
