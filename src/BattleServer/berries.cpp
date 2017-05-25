@@ -272,7 +272,7 @@ struct BMPinchStat : public BMPinch
         tp(p, s, b);
     }
 
-    static void asc(int p, int s, BS &b) {
+    static void asc(int p, int, BS &b) {
         tp(p, p, b);
     }
 
