@@ -1856,7 +1856,8 @@ struct MMEncore : public MM
             fturn(b,s).add(TM::Failed);
             return;
         }
-        if (!poke(b,t).contains("LastMoveUsedTurn") || (b.zTurn(t) && b.hasMoved(t))) {
+        // doesn't matter if the last zmove used was hacked because it will have 0 pp after being used and then encore fails anyways
+        if (!poke(b,t).contains("LastMoveUsedTurn") || (b.zTurn(t) && b.hasMoved(t)) || MoveInfo::isZMove(poke(b,t)["LastMoveUsed"].toInt())) {
             fturn(b,s).add(TM::Failed);
             return;
         }

@@ -1727,10 +1727,16 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
 
         pokeMemory(player)[QString("Move%1Used").arg(move)] = true;
 
-        pokeMemory(player)["LastMoveUsed"] = attack;
-        pokeMemory(player)["LastMoveUsedTurn"] = turn();
-        pokeMemory(player)["AnyLastMoveUsed"] = attack;
-        battleMemory()["AnyLastMoveUsed"] = attack;
+        if (zmoving && canBeZMove(player, attack) && isZMovePossible(player, move) && ((tmove(player).power > 0 && attack != Move::MeFirst) || tmove(player).attack == Move::ExtremeEvoboost)) {
+            pokeMemory(player)["LastMoveUsed"] = ItemInfo::ZCrystalMove(poke(player).item());
+            pokeMemory(player)["AnyLastMoveUsed"] = ItemInfo::ZCrystalMove(poke(player).item());
+            battleMemory()["AnyLastMoveUsed"] = ItemInfo::ZCrystalMove(poke(player).item());
+        } else {
+            pokeMemory(player)["LastMoveUsed"] = attack;
+            pokeMemory(player)["AnyLastMoveUsed"] = attack;
+            battleMemory()["AnyLastMoveUsed"] = attack;
+        }
+        pokeMemory(player)["LastMoveUsedTurn"] = turn();   
     } else if (attack != 0) {
         /* Recharge moves have their attack as 0 on the recharge turn : Blast Burn , ...
             So that's why attack is tested against 0. */
