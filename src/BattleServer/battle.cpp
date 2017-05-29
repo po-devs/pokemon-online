@@ -628,6 +628,10 @@ BattleChoices BattleSituation::createChoice(int spot)
         if (!isMovePossible(spot,i)) {
             ret.attackAllowed[i] = false;
         }
+        if (gen() >= 7 && pokeMemory(spot).contains("ChoiceMemory")
+                && poke(spot).item() != 0 && hasWorkingItem(spot, poke(spot).item()) && move(spot, i) != pokeMemory(spot)["ChoiceMemory"].toInt()) {
+            ret.attackAllowed[i] = false;
+        }
     }
 
     //Mega Evolution is not hindered by Embargo, etc.
@@ -1711,6 +1715,13 @@ void BattleSituation::useAttack(int player, int move, bool specialOccurence, boo
         if (turnMemory(player).value("ImpossibleToMove").toBool()) {
             goto trueend;
         }
+    }
+
+    //Gen 7 forces you to use choice locked moves even under embargo, magic room, etc.
+    if (!specialOccurence && pokeMemory(player).contains("ChoiceMemory") && pokeMemory(player)["ChoiceMemory"].toInt() != attack && gen() >= 7) {
+        notify(All, UseAttack, player, qint16(attack));
+        notify(All, Failed, player);
+        goto trueend;
     }
 
     //Gen 3 Sleep Talk fails if the move selected has 0 pp
@@ -4391,6 +4402,7 @@ bool BattleSituation::canLoseItem(int player, int attacker)
 
 void BattleSituation::loseItem(int player, bool real)
 {
+    callieffects(player, player, "UponLoseItem");
     poke(player).item() = 0;
     notify(this->player(player), ChangeTempPoke, player, quint8(TempItem), quint8(slotNum(player)), 0);
     if (real && slotNum(player) < numberPerSide() && hasWorkingAbility(player, Ability::Unburden)) {
