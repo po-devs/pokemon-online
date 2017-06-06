@@ -648,7 +648,7 @@ BattleChoices BattleSituation::createChoice(int spot)
 
     if (!hasWorkingItem(spot, Item::ShedShell) && (gen() < 6 || !hasType(spot, Type::Ghost))) {
         /* Shed Shell */
-        if (linked(spot, "Blocked") || linked(spot, "Trapped")) {
+        if ((!hasWorkingAbility(spot, Ability::ShieldDust) && linked(spot, "Blocked")) || linked(spot, "Trapped")) {
             ret.switchAllowed = false;
         }
 
