@@ -7633,6 +7633,9 @@ struct MMThroatChop : public MM //copied from taunt
             b.sendAbMessage(112,1,t);
             return;
         }
+        if (b.hasWorkingAbility(t, Ability::ShieldDust))
+            return;
+        
         b.sendMoveMessage(223,1,s,Pokemon::Dark,t);
         if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
