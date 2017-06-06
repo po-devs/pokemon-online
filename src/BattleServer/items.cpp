@@ -84,12 +84,17 @@ struct IMChoiceItem : public IM
 {
     IMChoiceItem() {
         functions["UponSetup"] = &us;
+        functions["UponLoseItem"] = &uli;
         functions["MovesPossible"] = &mp;
         functions["BeforeTargetList"] = &btl;
         functions["AfterTargetList"] = &atl;
     }
 
     static void us(int s, int, BS &b) {
+        poke(b,s).remove("ChoiceMemory");
+    }
+
+    static void uli(int s, int, BS &b) {
         poke(b,s).remove("ChoiceMemory");
     }
 
