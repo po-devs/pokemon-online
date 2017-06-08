@@ -1095,6 +1095,7 @@ struct MMBlock : public MM
 
     static void uas (int s, int t, BS &b) {
         if ((b.hasWorkingAbility(t, Ability::AromaVeil) || b.hasWorkingAbility(s, Ability::SheerForce)) && (tmove(b,s).attack == Move::SpiritShackle || tmove(b,s).attack == Move::AnchorShot))
+            return;
 
         if (!b.linked(t, "Blocked") && !b.koed(t)) {
             b.link(s, t, "Blocked");
