@@ -1094,6 +1094,8 @@ struct MMBlock : public MM
     }
 
     static void uas (int s, int t, BS &b) {
+        if ((b.hasWorkingAbility(t, Ability::AromaVeil) || b.hasWorkingAbility(s, Ability::SheerForce)) && (tmove(b,s).attack == Move::SpiritShackle || tmove(b,s).attack == Move::AnchorShot))
+
         if (!b.linked(t, "Blocked") && !b.koed(t)) {
             b.link(s, t, "Blocked");
             b.sendMoveMessage(12, 0, s, type(b,s), t);
@@ -5055,6 +5057,9 @@ struct MMSmellingSalt : public MM
 
     static void aas(int s, int t, BS &b) {
         if (!b.koed(t)) {
+            if (b.hasWorkingAbility(s, Ability::SheerForce) && tmove(b,s).attack == Move::SparklingAria)
+                return;
+
             int status = turn(b,s)["SmellingSalt_Arg"].toInt();
 
             /* Venom Shock doesn't heal, as well as Hex */
@@ -7635,7 +7640,9 @@ struct MMThroatChop : public MM //copied from taunt
         }
         if (b.hasWorkingAbility(t, Ability::ShieldDust))
             return;
-        
+        if (b.hasWorkingAbility(s, Ability::SheerForce))
+            return;
+
         b.sendMoveMessage(223,1,s,Pokemon::Dark,t);
         if (b.gen() >= 5 && b.hasWorkingItem(t, Item::MentalHerb)) /* mental herb*/ {
             b.sendItemMessage(7,t);
@@ -8236,6 +8243,9 @@ struct MMZSupernova : public MM
     }
 
     static void zm(int s, int, BS &b) {
+        if(b.hasWorkingAbility(s, Ability::SheerForce))
+            return;
+
         if(b.terrain != BS::PsychicTerrain) {
             b.sendMoveMessage(240,BS::PsychicTerrain - 1,s,type(b,s));
             b.coverField(BS::PsychicTerrain, (b.hasWorkingItem(s, Item::TerrainExtender) ? 8 : 5));

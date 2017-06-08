@@ -1702,10 +1702,12 @@ struct AMSheerForce : public AM
 
     static void btl(int s, int, BS &b) {
         int cl = tmove(b,s).classification;
+        int move = tmove(b,s).attack;
 
         /* Self stat changing moves like nitro charge/ancient power are boosted, but not moves like close combat/super power */
-        if (cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove && tmove(b,s).flinchRate == 0
+        if ((cl != Move::OffensiveStatChangingMove && cl != Move::OffensiveStatusInducingMove && tmove(b,s).flinchRate == 0
             && (cl != Move::OffensiveSelfStatChangingMove || ((signed char)(tmove(b,s).boostOfStat >> 16)) < 0))
+            && !(move == Move::AnchorShot || move == Move::GenesisSupernova || move == Move::SparklingAria || move == Move::SpiritShackle || move == Move::ThroatChop))
             return;
 
         tmove(b,s).classification = Move::StandardMove;
