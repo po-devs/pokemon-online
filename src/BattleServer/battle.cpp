@@ -5297,14 +5297,15 @@ bool BattleSituation::blockPriority(int player, int target)
 bool BattleSituation::oppBlockFailure (int target, int player)
 {
     if (target != player) {
-        if (!testFail(player))
-            callaeffects(target,player,"OpponentBlock");
-        callieffects(target,player,"OpponentBlock"); //Safety Goggles
-
         if (blockPriority(player, target)) {
             calleffects(player,target,"AttackSomehowFailed");
             return true;
         }
+
+        if (!testFail(player))
+            callaeffects(target,player,"OpponentBlock");
+        callieffects(target,player,"OpponentBlock"); //Safety Goggles
+
         if (turnMemory(target).contains(QString("Block%1").arg(attackCount()))) {
             calleffects(player,target,"AttackSomehowFailed");
             return true;
