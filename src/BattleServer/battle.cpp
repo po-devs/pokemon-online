@@ -1904,9 +1904,6 @@ ppfunction:
                 /* If it's ineffective we just say it */
                 notify(All, Effective, target, quint8(0));
                 calleffects(player,target,"AttackSomehowFailed");
-                if (Move::OffensiveStatusInducingMove && tmove(player).status == Pokemon::Poisoned && hasWorkingAbility(player, Ability::Corrosion)) {
-                    applyMoveStatMods(player, target);
-                }
                 continue;
             }
 
