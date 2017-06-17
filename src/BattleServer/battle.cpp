@@ -1406,8 +1406,7 @@ void BattleSituation::testCritical(int player, int target)
         craise += 1;
     }
     if (pokeMemory(player).value("ZCrit").toBool()) {
-        craise += 1;
-        pokeMemory(player).remove("ZCrit");
+        craise += 2;
     }
 
     if (gen() < 6) {
