@@ -628,7 +628,7 @@ BattleChoices BattleSituation::createChoice(int spot)
         if (!isMovePossible(spot,i)) {
             ret.attackAllowed[i] = false;
         }
-        if (gen() >= 7 && pokeMemory(spot).contains("ChoiceMemory")
+        if (gen() >= 7 && pokeMemory(spot).contains("ChoiceMemory") && pokeMemory(spot)["ChoiceMemory"].toInt() != 0
                 && poke(spot).item() != 0 && hasWorkingItem(spot, poke(spot).item()) && move(spot, i) != pokeMemory(spot)["ChoiceMemory"].toInt()) {
             ret.attackAllowed[i] = false;
         }
