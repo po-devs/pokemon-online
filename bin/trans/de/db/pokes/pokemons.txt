@@ -908,6 +908,7 @@
 744:0 Wuffels
 745:0 Wolwerock
 745:1 Wolwerock-Nacht
+745:2 Wolwerock-Zwielicht
 746:0 Lusardin
 746:1 Lusardin-Schwarm
 747:0 Garstella
