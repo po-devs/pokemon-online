@@ -44,6 +44,7 @@
 25:10:A Pikachu-Fourth Hat
 25:11:A Pikachu-Fifth Hat
 25:12:A Pikachu-Sixth Hat
+25:13:A Pikachu-Seventh Hat
 26:0 Raichu
 26:1:LD Alolan Raichu
 27:0 Sandshrew

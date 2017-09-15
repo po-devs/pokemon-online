@@ -2488,7 +2488,8 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
             break;
             case Move::_10_000_000VoltThunderBolt:
                 return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
-                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
+                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat
+                     || pk == Pokemon::Pikachu_Seventh_Hat)
                         && mv == Move::Thunderbolt;
             break;
             case Move::ClangorousSoulblaze:
