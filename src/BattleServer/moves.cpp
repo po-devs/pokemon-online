@@ -7967,6 +7967,12 @@ struct MMInstruct : public MM
     static void daf(int s, int t, BS &b) {
         if (!poke(b,t).contains("LastMoveUsed")) {
             fturn(b,s).add(TM::Failed);
+            return;
+        }
+        
+        if (poke(b,t).value("LastMoveUsed").toInt() == Move::Instruct) {
+            fturn(b,s).add(TM::Failed);
+            return;
         }
     }
 
