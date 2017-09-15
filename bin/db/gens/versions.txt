@@ -18,3 +18,4 @@
 6:0 X/Y
 6:1 Omega Ruby/Alpha Sapphire
 7:0 Sun/Moon
+7:1 Ultra Sun/Ultra Moon

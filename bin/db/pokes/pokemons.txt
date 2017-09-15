@@ -966,6 +966,7 @@
 744:0 Rockruff
 745:0 Lycanroc
 745:1:D Lycanroc-Midnight
+745:2:D Lycanroc-Dusk
 746:0:B Wishiwashi
 746:1:A Wishiwashi-School
 747:0 Mareanie

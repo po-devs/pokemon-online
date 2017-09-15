@@ -17,7 +17,7 @@ enum {
     RubySapphire=3, Colosseum=3+(1<<8),FRLG=3+(2<<8),Emerald=3+(3<<8), XD=3+(4<<8),
     DiamondPearl=4, Platinum=4+(1<<8), HGSS=4+(2<<8),
     BlackWhite=5, BlackWhite2=5+(1<<8),
-    XY=6, ORAS=6+(1<<8), SunMoon=7
+    XY=6, ORAS=6+(1<<8), SunMoon=7, UltraSunMoon=7+(1<<8)
 };
 
 }
@@ -1029,6 +1029,7 @@ namespace Pokemon
         Zygarde_10 = Zygarde + (1 << 16),
         Zygarde_Complete = Zygarde + (2 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
+        Lycanroc_Dusk = Lycanroc + (2 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
         Ash_Greninja = Greninja + (2 << 16),
         Pikachu_First_Hat = Pikachu + (7 << 16),
@@ -1813,7 +1814,9 @@ namespace Move
         MaliciousMoonsault,
         OceanicOperetta,
         Soul_Stealing7_StarStrike,
-        _10_000_000VoltThunderBolt
+        _10_000_000VoltThunderBolt,
+        ClangorousSoulblaze,
+        SplinteredStormshards
     };
 }
 

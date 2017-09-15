@@ -455,3 +455,5 @@
 3026 Primarium Z
 3027 Marshadium Z
 3028 Pikashunium Z
+3029 Kommo-oium Z
+3030 Lycanium Z
