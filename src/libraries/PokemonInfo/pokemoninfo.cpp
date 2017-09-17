@@ -2496,7 +2496,8 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
                 return pk == Pokemon::Kommo_o && mv == Move::ClangingScales;
             break;
             case Move::SplinteredStormshards:
-                return pk == Pokemon::Lycanroc && mv == Move::StoneEdge;
+                return (pk == Pokemon::Lycanroc || pk == Pokemon::Lycanroc_Midnight || pk == Pokemon::Lycanroc_Dusk)
+                        && mv == Move::StoneEdge;
             break;
         }
     }
