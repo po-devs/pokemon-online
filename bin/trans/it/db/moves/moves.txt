@@ -363,7 +363,7 @@
 362 Acquadisale
 363 Dononaturale
 364 Fintoattacco
-365 Schiamazzo
+365 Spennata
 366 Ventoincoda
 367 Acupressione
 368 Metalscoppio
