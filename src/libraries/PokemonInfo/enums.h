@@ -1040,7 +1040,9 @@ namespace Pokemon
         Pikachu_Sixth_Hat = Pikachu + (12 << 16),
         Pikachu_Seventh_Hat = Pikachu + (13 << 16),
         Minior_Red = Minior + (1 << 16),
-        Mimikyu_Busted = Mimikyu + (1 << 16)
+        Mimikyu_Busted = Mimikyu + (1 << 16),
+        Necrozma_DuskMane = Necrozma + (1 << 16),
+        Necrozma_DawnWings = Necrozma + (2 << 16)
     };
 }
 
