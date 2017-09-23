@@ -455,3 +455,5 @@
 3026 Primastal Z
 3027 Marshastal Z
 3028 Ash-Pikastal Z
+3029 Kommostal Z
+3030 Lycanrostal Z
