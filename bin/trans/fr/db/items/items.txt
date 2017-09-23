@@ -455,3 +455,5 @@
 3026 Oratozélite
 3027 Marshadium Z
 3028 Pikachazélite
+3029 Ékaïzélite
+3030 Lougarozélite
