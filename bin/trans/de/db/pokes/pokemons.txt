@@ -989,6 +989,8 @@
 798:0 Katagami
 799:0 Schlingking
 800:0 Necrozma
+800:1 Necrozma-Abendmähne
+800:2 Necrozma-Morgenschwingen
 801:0 Magearna
 801:1 Magearna-Pokeball
 802:0 Marshadow
