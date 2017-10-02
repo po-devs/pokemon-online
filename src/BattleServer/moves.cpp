@@ -8285,7 +8285,7 @@ struct MMZExtremeEvoboost : public MM
 
 struct MMZClangorousSoulblaze : public MM
 {
-    MMZClangorousScales() {
+    MMZClangorousSoulblaze() {
         functions["UponAttackSuccessful"] = &uas;
     }
 
