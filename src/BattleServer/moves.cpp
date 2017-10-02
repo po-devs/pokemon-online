@@ -8305,7 +8305,7 @@ struct MMZSplinteredStormshards : public MM
     static void uas(int s, int, BS &b) {
         if (b.terrain != BS::NoTerrain) {
             b.notify(BS::All, BattleCommands::TerrainMessage, s, qint8(BS::EndTerrain), qint8(b.terrain));
-            coverField(BS::NoTerrain, -1);
+            b.coverField(BS::NoTerrain, -1);
         }
     }
 };
