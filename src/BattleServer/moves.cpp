@@ -8285,13 +8285,27 @@ struct MMZExtremeEvoboost : public MM
 
 struct MMZClangorousSoulblaze : public MM
 {
-    MMZClangorousSoulblaze() {
+    MMZClangorousScales() {
         functions["UponAttackSuccessful"] = &uas;
     }
 
     static void uas(int s, int, BS &b) {
         for (int i = Attack; i <= Speed; i++) {
             b.inflictStatMod(s, i, 1, s);
+        }
+    }
+};
+
+struct MMZSplinteredStormshards : public MM
+{
+    MMZSplinteredStormshards() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (b.terrain != BS::NoTerrain) {
+            b.notify(BS::All, BattleCommands::TerrainMessage, s, qint8(BS::EndTerrain), qint8(b.terrain));
+            coverField(BS::NoTerrain, -1);
         }
     }
 };
@@ -8587,4 +8601,5 @@ void MoveEffect::init()
     REGISTER_MOVE(1008, ZAlola);
     REGISTER_MOVE(1009, ZExtremeEvoboost);
     REGISTER_MOVE(1010, ZClangorousSoulblaze);
+    REGISTER_MOVE(1011, ZSplinteredStormshards);
 }
