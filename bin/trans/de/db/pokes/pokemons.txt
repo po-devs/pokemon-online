@@ -908,6 +908,7 @@
 744:0 Wuffels
 745:0 Wolwerock
 745:1 Wolwerock-Nacht
+745:2 Wolwerock-Zwielicht
 746:0 Lusardin
 746:1 Lusardin-Schwarm
 747:0 Garstella
@@ -988,6 +989,8 @@
 798:0 Katagami
 799:0 Schlingking
 800:0 Necrozma
+800:1 Necrozma-Abendmähne
+800:2 Necrozma-Morgenschwingen
 801:0 Magearna
 801:1 Magearna-Pokeball
 802:0 Marshadow

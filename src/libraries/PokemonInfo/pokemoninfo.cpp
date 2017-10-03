@@ -1519,9 +1519,9 @@ bool PokemonInfo::AFormesShown(const Pokemon::uniqueId &pokeid)
 {   //Hidden Forme if either the Forme or the Original Forme has the B tag
     if (m_Options.value(pokeid.pokenum).contains('B'))
         return false;
-    else if (m_Options.value(pokeid).contains('B'))
+    if (m_Options.value(pokeid).contains('B'))
         return false;
-    else if (m_Options.value(pokeid.pokenum).contains('H'))
+    if (m_Options.value(pokeid.pokenum).contains('H'))
         return false;
     return true;
 }
@@ -2432,12 +2432,12 @@ QString MoveInfo::path(const QString &file)
 
 bool MoveInfo::isUniqueZMove(int movenum)
 {
-    return movenum >= 691 && movenum <= 701;
+    return movenum >= 691 && movenum <= 703;
 }
 
 bool MoveInfo::isZMove(int movenum)
 {
-    return movenum >= 673 && movenum <= 701;
+    return movenum >= 673 && movenum <= 703;
 }
 
 bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen)
@@ -2488,8 +2488,16 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
             break;
             case Move::_10_000_000VoltThunderBolt:
                 return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
-                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat)
+                     || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat
+                     || pk == Pokemon::Pikachu_Seventh_Hat)
                         && mv == Move::Thunderbolt;
+            break;
+            case Move::ClangorousSoulblaze:
+                return pk == Pokemon::Kommo_o && mv == Move::ClangingScales;
+            break;
+            case Move::SplinteredStormshards:
+                return (pk == Pokemon::Lycanroc || pk == Pokemon::Lycanroc_Midnight || pk == Pokemon::Lycanroc_Dusk)
+                        && mv == Move::StoneEdge;
             break;
         }
     }

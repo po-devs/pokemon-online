@@ -7852,7 +7852,7 @@ struct MMPurify : public MM
     static void uas(int s, int t, BS &b) {
         b.healStatus(t, 0);
         b.sendMoveMessage(234,0,s,type(b,s),t);
-        //UNCONFIRMED. How much does this heal? Currently at 50%
+        
         if (b.canHeal(s, BS::HealByMove, Move::Purify)) {
             b.healLife(s, b.poke(s).totalLifePoints() / 2);
             b.sendMoveMessage(234,1,s,type(b,s),t);
@@ -8118,7 +8118,7 @@ struct MMCoreEnforcer : public MM
             return;
         }
 
-        b.sendMoveMessage(51,0,s,type(b,s),t,b.ability(t));
+        b.sendMoveMessage(51,0,s,type(b,s),t,ability);
         b.loseAbility(t);
         poke(b,t)["AbilityNullified"] = true;
     }
@@ -8262,7 +8262,7 @@ struct MMZSupernova : public MM
 
 struct MMZAlola : public MM
 {
-    //TODO: Test Evoboost + Guardian of Alola
+    
     MMZAlola() {
         functions["CustomAttackingDamage"] = &uas;
     }
@@ -8285,6 +8285,33 @@ struct MMZExtremeEvoboost : public MM
     static void uas(int s, int, BS &b) {
         for (int i = Attack; i <= Speed; i++) {
             b.inflictStatMod(s, i, 2, s);
+        }
+    }
+};
+
+struct MMZClangorousSoulblaze : public MM
+{
+    MMZClangorousSoulblaze() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        for (int i = Attack; i <= Speed; i++) {
+            b.inflictStatMod(s, i, 1, s);
+        }
+    }
+};
+
+struct MMZSplinteredStormshards : public MM
+{
+    MMZSplinteredStormshards() {
+        functions["UponAttackSuccessful"] = &uas;
+    }
+
+    static void uas(int s, int, BS &b) {
+        if (b.terrain != BS::NoTerrain) {
+            b.notify(BS::All, BattleCommands::TerrainMessage, s, qint8(BS::EndTerrain), qint8(b.terrain));
+            b.coverField(BS::NoTerrain, -1);
         }
     }
 };
@@ -8578,5 +8605,7 @@ void MoveEffect::init()
     REGISTER_MOVE(1006, ZCurse);
     REGISTER_MOVE(1007, ZSupernova);
     REGISTER_MOVE(1008, ZAlola);
-    REGISTER_MOVE(1009, ZExtremeEvoboost)
+    REGISTER_MOVE(1009, ZExtremeEvoboost);
+    REGISTER_MOVE(1010, ZClangorousSoulblaze);
+    REGISTER_MOVE(1011, ZSplinteredStormshards);
 }

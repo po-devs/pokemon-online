@@ -421,3 +421,5 @@
 693 1009#Extreme evo boost
 695 1007#genesis supernova
 696 1008#guardian of alola
+702 1010#ClangorousSoulblaze
+703 1011#SplinteredStormshards

@@ -342,6 +342,24 @@
 341 Dolcespuma
 342 Sfera Rossa
 343 Sfera Blu
+361 Fifasfera
+362 Fissacampo
+363 Smorzaurti
+364 Elettroseme
+365 Psicoseme
+366 Nebbiaseme
+367 Erbaseme
+368 Ultra Ball
+369 Malasada maxi
+370 Sasso qualsiasi
+371 Tappo d'argento
+372 Tappo d'oro
+373 Pietragelo
+374 Yantafrollino
+375 Nettare rosa
+376 Nettare giallo
+377 Nettare rosso
+378 Nettare viola
 1000 Fiocco Rosa
 1001 Fiocco Pois
 2001 Venusaurite

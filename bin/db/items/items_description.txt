@@ -455,3 +455,5 @@
 3026 Enables Primarina to upgrade Sparkling Aria into the special Z Move: Oceanic Operetta
 3027 Enables Marshadow to upgrade Spectral Thief into the special Z Move: Soul-Stealing 7-Star Strike
 3028 Enables Pikachu in Cap to upgrade Thunderbolt into the special Z Move: 10,000,000 Volt Thunderbolt
+3029 Enables Kommo-o to upgrade Clanging Scales into the special Z Move: Clangorous Soulblaze
+3030 Enables Lycanroc to upgrade Stone Edge into the special Z Move: Splintered Stormshards
