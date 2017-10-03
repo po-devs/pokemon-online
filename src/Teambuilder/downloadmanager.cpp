@@ -7,9 +7,8 @@
 #include <Utilities/functions.h>
 #include "../Shared/config.h"
 #include <Utilities/ziputils.h>
-#ifdef QT5
+
 #include <QtConcurrent>
-#endif
 
 #ifdef __WIN32
 #include <windows.h>

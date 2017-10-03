@@ -42,11 +42,7 @@ public:
     bool hasConfigurationWidget() const;
 
     bool isReadyForDeletion() const {
-#ifdef QT5
         return refCounter.load() == 0;
-#else
-        return refCounter == 0;
-#endif
     }
 
     battleserver_plugin_version()

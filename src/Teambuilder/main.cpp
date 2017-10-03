@@ -33,7 +33,6 @@
 #include "../Shared/config.h"
 
 #ifdef _WIN32
-# ifdef QT5
 void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &msg)
 {
     switch (type) {
@@ -52,26 +51,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &m
         abort();
     }
 }
-# else
-void myMessageOutput(QtMsgType type, const char *msg)
-{
-    switch (type) {
-    case QtDebugMsg:
-        fprintf(stderr, "%s\n", msg);
-        fflush(stderr);
-        break;
-    case QtWarningMsg:
-        fprintf(stderr, "Warning: %s\n", msg);
-        break;
-    case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s\n", msg);
-        break;
-    case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s\n", msg);
-        abort();
-    }
-}
-# endif
 #endif
 
 QTranslator qtTranslator, translator;
@@ -80,11 +59,7 @@ int main(int argc, char *argv[])
 {
 #ifdef _WIN32
     freopen("stdout.txt", "w", stderr);
-# ifdef QT5
     qInstallMessageHandler(myMessageOutput);
-# else
-    qInstallMsgHandler(myMessageOutput);
-# endif
 #endif
 #if defined(Q_OS_MACX)
     // On Mac, switch working directory to resources folder

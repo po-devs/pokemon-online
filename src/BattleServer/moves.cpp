@@ -6314,7 +6314,7 @@ struct MMTelekinesis : public MM
 
         // Some pokmemon are immune to Telekinesis
         if (b.poke(t).num().original() == Pokemon::Diglett || b.poke(t).num().original() == Pokemon::Dugtrio || b.poke(t).num() == Pokemon::Sandygast ||
-                b.poke(t).num() == Pokemon::Palossand || b.poke(t).num().original() == Pokemon::Gengar && b.poke(t).num().isForme() /* Mega Gengar */) {
+                b.poke(t).num() == Pokemon::Palossand || (b.poke(t).num().original() == Pokemon::Gengar && b.poke(t).num().isForme()) /* Mega Gengar */) {
             fturn(b,s).add(TM::Failed);
         }
     }

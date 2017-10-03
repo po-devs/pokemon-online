@@ -1,9 +1,7 @@
 #include "controlpanel.h"
 #include <Utilities/functions.h>
 #include <PokemonInfo/networkstructs.h>
-#ifdef QT5
 #include <QMessageBox>
-#endif
 
 ControlPanel::ControlPanel(int myauth, const UserInfo &ui)
 {

@@ -1,4 +1,3 @@
-#ifdef QT5
 #include <QApplication>
 #include <QDialog>
 #include <QFileDialog>
@@ -7,7 +6,6 @@
 #include <QScrollArea>
 #include <QStandardPaths>
 #include <QStyleFactory>
-#endif
 #include <QtCore/QVariant>
 #include <QWebView>
 #include <QWebFrame>
@@ -52,11 +50,8 @@ static void setDefaultValues()
     setDefaultValue(s, "Profile/Path", appDataPath("Profiles", true));
     setDefaultValue(s, "Profile/Current", appDataPath("Profiles", false));
 
-#ifdef QT5
     const QString docLocation = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-#else
-    const QString docLocation = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-#endif
+
 #ifdef Q_OS_MACX
     setDefaultValue(s, "Teams/Folder", docLocation + "/Teams/");
     setDefaultValue(s, "Themes/Directory", docLocation + "/Pokemon Online Themes/");
@@ -107,11 +102,6 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
 
     pluginManager = new ClientPluginManager(this);
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     setDefaultValues();
 
     QSettings s;
@@ -141,14 +131,11 @@ MainEngine::MainEngine(bool updated) : displayer(0), freespot(0)
     Theme::init(s.value("Themes/Current").toString());
 
     /* Loading the values */
-#ifdef QT5
     if (s.value("application_style").toString().toLower() == "plastique") {
         s.remove("application_style");
     }
     QApplication::setStyle(s.value("application_style", "Fusion").toString());
-#else
-    QApplication::setStyle(s.value("application_style", "plastique").toString());
-#endif
+
     loadStyleSheet();
 
     connect(&downloader, SIGNAL(updatesAvailable(QString,bool)), SLOT(updateDataReady(QString,bool)));
@@ -657,11 +644,7 @@ void MainEngine::addStyleMenu(QMenuBar *menuBar)
     QActionGroup *ag = new QActionGroup(menuBar);
 
     QSettings settings;
-#ifdef QT5
     QString curStyle = settings.value("application_style", "Fusion").toString();
-#else
-    QString curStyle = settings.value("application_style", "plastique").toString();
-#endif
 
     foreach(QString s , style) {
         QAction *ac = menuStyle->addAction(s,this,SLOT(changeStyle()));

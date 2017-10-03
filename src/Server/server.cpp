@@ -77,11 +77,6 @@ extern bool skipChecksOnStartUp;
 void Server::start(){
     serverIns = this;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
 #ifndef BOOST_SOCKETS
     for (int i = 0; i < serverPorts.size(); ++i) {
         myservers.append(new QTcpServer());

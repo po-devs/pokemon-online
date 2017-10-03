@@ -1,10 +1,6 @@
 #include <QWidget>
 #include <QIODevice>
-#ifdef QT5
 #include <QStandardPaths>
-#else
-#include <QDesktopServices>
-#endif
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -142,11 +138,7 @@ void cropImage(QImage &p)
 
 QString appDataPath(const QString &subfolder, bool createFolder)
 {
-#ifdef QT5
     const QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + "/" + subfolder;
-#else
-    const QString path = QDesktopServices::storageLocation(QDesktopServices::DataLocation) + "/" + subfolder;
-#endif
 
     if (createFolder) {
         QDir d;

@@ -638,11 +638,6 @@ void PokemonInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     // Load db/pokes data.
     loadNames();
     loadEvos();
@@ -1808,11 +1803,6 @@ void MoveInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     loadNames();
     loadMoveMessages();
 
@@ -2457,48 +2447,35 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
         switch(zmove) {
             case Move::Catastropika:
                 return pk == Pokemon::Pikachu && mv == Move::VoltTackle;
-            break;
             case Move::StokedSparksurfer:
                 return pk == Pokemon::Raichu_Alolan && mv == Move::Thunderbolt;
-            break;
             case Move::ExtremeEvoboost:
                 return pk == Pokemon::Eevee && mv == Move::LastResort;
-            break;
             case Move::PulverizingPancake:
                 return pk == Pokemon::Snorlax && mv ==  Move::GigaImpact;
-            break;
             case Move::GenesisSupernova:
                 return pk == Pokemon::Mew && mv == Move::Psychic;
-            break;
             case Move::GuardianofAlola:
                 return (pk == Pokemon::Tapu_Bulu || pk == Pokemon::Tapu_Koko || pk == Pokemon::Tapu_Lele || pk == Pokemon::Tapu_Fini)
                         && mv == Move::NaturesMadness;
-            break;
             case Move::SinisterArrowRaid:
                 return pk == Pokemon::Decidueye && mv == Move::SpiritShackle;
-            break;
             case Move::MaliciousMoonsault:
                 return pk == Pokemon::Incineroar && mv == Move::DarkestLariat;
-            break;
             case Move::OceanicOperetta:
                 return pk == Pokemon::Primarina && mv == Move::SparklingAria;
-            break;
             case Move::Soul_Stealing7_StarStrike:
                 return pk == Pokemon::Marshadow && mv == Move::SpectralThief;
-            break;
             case Move::_10_000_000VoltThunderBolt:
                 return (pk == Pokemon::Pikachu_First_Hat || pk == Pokemon::Pikachu_Second_Hat || pk == Pokemon::Pikachu_Third_Hat
                      || pk == Pokemon::Pikachu_Fourth_Hat || pk == Pokemon::Pikachu_Fifth_Hat || pk == Pokemon::Pikachu_Sixth_Hat
                      || pk == Pokemon::Pikachu_Seventh_Hat)
                         && mv == Move::Thunderbolt;
-            break;
             case Move::ClangorousSoulblaze:
                 return pk == Pokemon::Kommo_o && mv == Move::ClangingScales;
-            break;
             case Move::SplinteredStormshards:
                 return (pk == Pokemon::Lycanroc || pk == Pokemon::Lycanroc_Midnight || pk == Pokemon::Lycanroc_Dusk)
                         && mv == Move::StoneEdge;
-            break;
         }
     }
 
@@ -2524,11 +2501,6 @@ bool MoveInfo::isInvokingMove(int mc)
 void ItemInfo::init(const QString &dir)
 {
     m_Directory = dir;
-
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
 
     loadGenData();
     loadNames();
@@ -3145,11 +3117,6 @@ void TypeInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     loadNames();
     loadCategories();
     loadEff();
@@ -3297,11 +3264,6 @@ void NatureInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     loadNames();
 }
 
@@ -3398,11 +3360,6 @@ void CategoryInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     loadNames();
 }
 
@@ -3445,11 +3402,6 @@ int CategoryInfo::NumberOfCategories()
 void AbilityInfo::init(const QString &dir)
 {
     m_Directory = dir;
-
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
 
     loadNames();
     loadMessages();
@@ -3609,11 +3561,6 @@ void GenderInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     loadNames();
 }
 
@@ -3721,11 +3668,6 @@ void StatInfo::init(const QString &dir)
 {
     m_Directory = dir;
 
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
-
     fill_int_str(m_stats, path("stats.txt"), true);
     fill_int_str(m_status, path("status.txt"), true);
 }
@@ -3810,11 +3752,6 @@ QString StatInfo::path(const QString &filename)
 void GenInfo::init(const QString &dir)
 {
     m_Directory = dir;
-
-#ifndef QT5
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-#endif
 
     fill_gen_string(m_versions, path("versions.txt"), true);
     fill_int_str(m_gens, path("gens.txt"), true);

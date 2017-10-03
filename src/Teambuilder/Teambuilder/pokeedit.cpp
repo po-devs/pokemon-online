@@ -88,19 +88,14 @@ void PokeEdit::fillMoves()
     ui->moveChoice->setModel(filter);
     ui->moveChoice->disconnect(SIGNAL(activated(QModelIndex)), this);
     connect(ui->moveChoice, SIGNAL(activated(QModelIndex)), SLOT(moveEntered(QModelIndex)));
-#ifdef QT5
+
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Range, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
     ui->moveChoice->horizontalHeader()->setSectionResizeMode(PokeMovesModel::Type, QHeaderView::Fixed);
-#else
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::PP, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Pow, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Acc, QHeaderView::ResizeToContents);
-    ui->moveChoice->horizontalHeader()->setResizeMode(PokeMovesModel::Name, QHeaderView::Fixed);
-#endif
+
     ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Name, 125);
     ui->moveChoice->horizontalHeader()->resizeSection(PokeMovesModel::Type, Theme::TypePicture(Type::Normal).width()+5);
     ui->moveChoice->setIconSize(Theme::TypePicture(Type::Normal).size());

@@ -75,9 +75,6 @@ void SpectatorWindow::init(const FullBattleConfiguration &conf)
 
         battleView = scene->getWidget();
 
-#ifndef QT5
-        qmlcount ++;
-#endif
         qmlwindow = true;
 
         lastOutput = scene;
@@ -151,12 +148,6 @@ QWidget *SpectatorWindow::getSampleWidget()
 
 SpectatorWindow::~SpectatorWindow()
 {
-    if (qmlwindow) {
-#ifndef QT5
-        qmlcount--;
-#endif
-    }
-
     input->deleteTree();
     delete input;
 }

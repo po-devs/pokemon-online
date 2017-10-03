@@ -1,6 +1,4 @@
-#ifdef QT5
 #include <QApplication>
-#endif
 
 #include <Utilities/qscrolldowntextbrowser.h>
 #include <Utilities/functions.h>
