@@ -6,10 +6,9 @@ compiler:
   - clang
 
 before_install:
-  - sudo apt-get update
-
-install:
-  - sudo apt-get install libpulse-dev libzip-dev qt5-default qtbase5-dev qtmultimedia5-dev qtquick1-5-dev qtscript5-dev qtdeclarative5-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-particles-plugin 
+ - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+ - sudo apt-get update -qq
+ - sudo apt-get install libpulse-dev libzip-dev qt5-default qtbase5-dev qtmultimedia5-dev qtquick1-5-dev qtscript5-dev qtdeclarative5-dev qtdeclarative5-qtquick2-plugin qtdeclarative5-particles-plugin libqt5webkit5-dev 
 
 script:
   - qmake "CONFIG += po_all po_registry webconf" && make && ./scripts/run-tests.sh
