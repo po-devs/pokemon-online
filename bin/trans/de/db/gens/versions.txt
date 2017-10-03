@@ -18,3 +18,4 @@
 6:0 X/Y
 6:1 Omega Rubin/Alpha Saphir
 7:0 Sonne/Mond
+7:1 Ultrasonne/Ultramond
