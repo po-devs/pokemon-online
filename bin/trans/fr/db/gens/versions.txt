@@ -18,3 +18,4 @@
 6:0 X/Y
 6:1 Rubis Oméga/Saphir Alpha
 7:0 Soleil/Lune
+7:1 Ultra-Soleil/Ultra-Lune
