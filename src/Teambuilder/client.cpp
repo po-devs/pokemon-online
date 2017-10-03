@@ -21,14 +21,13 @@
 #include "pluginmanager.h"
 #include "plugininterface.h"
 #include "loadwindow.h"
-#ifdef QT5
+
 #include <QCompleter>
 #include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QSlider>
 #include <QSplitter>
-#endif
 
 Client::Client(ClientPluginManager *p, TeamHolder *t, const QString &url , const quint16 port) : myteam(t), findingBattle(false), url(url), port(port), myrelay(new Analyzer()), pluginManager(p)
 {

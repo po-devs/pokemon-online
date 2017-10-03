@@ -2470,11 +2470,7 @@ void ScriptWindow::okPressed()
 
 void ScriptWindow::gotoLine()
 {
-#ifdef QT5
     int line = QInputDialog::getInt(myedit, tr("Line Number"), tr("To what line do you want to go?"), 1, 1, myedit->document()->lineCount());
-#else
-    int line = QInputDialog::getInteger(myedit, tr("Line Number"), tr("To what line do you want to go?"), 1, 1, myedit->document()->lineCount());
-#endif
     QTextCursor myCursor = myedit->textCursor();
     myCursor.setPosition(0);
     myCursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, line - 1);

@@ -2,9 +2,7 @@
 #define CHANNEL_H
 
 #include <QtGui>
-#ifdef QT5
 #include <QtWidgets>
-#endif
 #include <PokemonInfo/networkstructs.h>
 
 class QTreeWidget;

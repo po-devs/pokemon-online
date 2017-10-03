@@ -8,13 +8,8 @@
 #include <BattleManager/battledatatypes.h>
 #include <BattleManager/battlecommandmanager.h>
 
-#ifdef QT5
 #include <QMediaPlayer>
 #include <QAudioOutput>
-#else
-#include <phonon/mediaobject.h>
-#include <phonon/audiooutput.h>
-#endif
 
 class BaseBattleDisplay;
 class QScrollDownTextBrowser;
@@ -118,11 +113,7 @@ public slots:
     void musicPlayStop();
     void criesPlayStop();
     void enqueueMusic();
-#ifdef QT5
     void criesProblem(QAudio::State newState);
-#else
-    void criesProblem(Phonon::State newState);
-#endif
     void alwaysOnTopChanged(bool state, bool save = true);
 protected:
     int ignoreSpecs;
@@ -144,19 +135,9 @@ protected:
     QCheckBox *flashWhenMoveDone;
     QCheckBox *alwaysOnTop;
 
-#ifdef QT5
     QMediaPlayer *audio;
     QAudioOutput *cry;
-#else
-    /* The device which outputs the sound */
-    Phonon::AudioOutput *audioOutput;
-    /* The media the device listens from */
-    Phonon::MediaObject *mediaObject;
-    /* The device for cries */
-    Phonon::AudioOutput *cryOutput;
-    /* The media the device listens from for pokemon cries */
-    Phonon::MediaObject * cryObject;
-#endif
+
     /* The media sources for the music */
     QList<QString> sources;
 

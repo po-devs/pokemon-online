@@ -5,11 +5,7 @@ namespace {
     static quint32 MAGIC = 0xB0C3B455;
     static quint16 VERSION = 0x0002;
     inline QString dataLocation() {
-#ifdef QT5
         return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#else
-        return QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#endif
     }
 }
 

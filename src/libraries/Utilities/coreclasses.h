@@ -343,11 +343,7 @@ struct icompare{
 };
 
 /* Map with case insensitive key binding */
-#ifdef QT5
 template <class ValType>
 using istringmap = std::map<QString, ValType, icompare>;
-#else
-template <class ValType>
-class istringmap : public std::map<QString, ValType, icompare>{};
-#endif
+
 #endif // CORECLASSES_H

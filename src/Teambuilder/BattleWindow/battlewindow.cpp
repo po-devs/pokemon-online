@@ -1,8 +1,6 @@
 #include <cstdlib>
 
-#ifdef QT5
 #include <QButtonGroup>
-#endif
 
 #include "../Shared/battlecommands.h"
 #include <Utilities/otherwidgets.h>

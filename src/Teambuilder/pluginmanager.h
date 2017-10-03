@@ -3,9 +3,7 @@
 
 #include <QtCore>
 #include <QtGui>
-#ifdef QT5
 #include <QtWidgets>
-#endif
 
 #include <Utilities/pluginmanager.h>
 #include "plugininterface.h"

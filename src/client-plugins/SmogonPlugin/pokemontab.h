@@ -4,9 +4,7 @@
 #include <QLabel>
 #include <QDialog>
 #include <QtGui>
-#ifdef QT5
 #include <QtWidgets>
-#endif
 #include "smogonbuild.h"
 #include <PokemonInfo/pokemoninfo.h>
 

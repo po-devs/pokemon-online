@@ -132,11 +132,7 @@ void ServerWidget::clearChat()
 
 void ServerWidget::openTempBanDialog(int pId)
 {
-#ifdef QT5
     int time = QInputDialog::getInt(this, "Temp Ban " + server->name(pId), "Input the amount of minutes that you want to ban " + server->name(pId), 1, 1, 3600);
-#else
-    int time = QInputDialog::getInteger(this, "Temp Ban " + server->name(pId), "Input the amount of minutes that you want to ban " + server->name(pId), 1, 1, 3600);
-#endif
     server->tempBan(pId, 0, time);
 }
 

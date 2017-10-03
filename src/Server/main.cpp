@@ -23,7 +23,6 @@ using namespace std;
 
 QString Server::dataRepo = QDir().absoluteFilePath(PO_DATA_REPO);
 
-# ifdef QT5
 void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &msg)
 {
     switch (type) {
@@ -42,37 +41,13 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext&, const QString &m
         abort();
     }
 }
-# else
-void myMessageOutput(QtMsgType type, const char *msg)
-{
-    switch (type) {
-    case QtDebugMsg:
-        fprintf(stderr, "%s\n", msg);
-        fflush(stderr);
-        break;
-    case QtWarningMsg:
-        fprintf(stderr, "Warning: %s\n", msg);
-        break;
-    case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s\n", msg);
-        break;
-    case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s\n", msg);
-        abort();
-    }
-}
-# endif
 
 bool skipChecksOnStartUp = false;
 
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
-# ifdef QT5
     qInstallMessageHandler(myMessageOutput);
-# else
-    qInstallMsgHandler(myMessageOutput);
-# endif
 
     /* Names to use later for QSettings */
     QCoreApplication::setApplicationName("Server for Pokemon-Online");
