@@ -1,3 +1,4 @@
 [submodule "lib/pillow"]
 	path = lib/pillow
 	url = https://github.com/acossette/pillow.git
+	branch = master
