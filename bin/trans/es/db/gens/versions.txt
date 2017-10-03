@@ -18,3 +18,4 @@
 6:0 X/Y
 6:1 Rubí Omega/Zafiro Alfa
 7:0 Sol/Luna
+7:1 Ultrasol/Ultraluna
