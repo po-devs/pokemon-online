@@ -18,3 +18,4 @@
 6:0 X/Y
 6:1 Rubino Omega/Zaffiro Alpha
 7:0 Sole/Luna
+7:1 Ultrasole/Ultraluna
