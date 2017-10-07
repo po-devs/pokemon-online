@@ -702,3 +702,4 @@
 701 10,000,000 Volt Thunderbolt
 702 Clangorous Soulblaze
 703 Splintered Stormshards
+704 Mind Blown
