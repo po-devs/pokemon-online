@@ -1819,7 +1819,8 @@ namespace Move
         Soul_Stealing7_StarStrike,
         _10_000_000VoltThunderBolt,
         ClangorousSoulblaze,
-        SplinteredStormshards
+        SplinteredStormshards,
+        MindBlown
     };
 }
 
