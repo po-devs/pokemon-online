@@ -1820,7 +1820,7 @@ namespace Move
         _10_000_000VoltThunderBolt,
         ClangorousSoulblaze,
         SplinteredStormshards,
-        Mind Blown
+        MindBlown
     };
 }
 
