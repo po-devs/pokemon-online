@@ -200,20 +200,12 @@ bool BaseBattleWindow::flashWhenMoved() const
 
 void BaseBattleWindow::changeCryVolume(int v)
 {
-#ifdef QT5
     cry->setVolume(float(v)/100);
-#else
-    cryOutput->setVolume(float(v)/100);
-#endif
 }
 
 void BaseBattleWindow::changeMusicVolume(int v)
 {
-#ifdef QT5
     audio->setVolume(v);
-#else
-    audioOutput->setVolume(float(v)/100);
-#endif
 }
 
 void BaseBattleWindow::musicPlayStop()
