@@ -703,3 +703,6 @@
 702 Clangorous Soulblaze
 703 Splintered Stormshards
 704 Mind Blown
+705 Photon Geyser
+706 Searing Sunraze Smash
+707 Menacing Moonraze Maelstorm
