@@ -2422,12 +2422,12 @@ QString MoveInfo::path(const QString &file)
 
 bool MoveInfo::isUniqueZMove(int movenum)
 {
-    return movenum >= 691 && movenum <= 703;
+    return (movenum >= 691 && movenum <= 703) || movenum >= 706;
 }
 
 bool MoveInfo::isZMove(int movenum)
 {
-    return movenum >= 673 && movenum <= 703;
+    return (movenum >= 673 && movenum <= 703) || movenum >= 706;
 }
 
 bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen)
@@ -2476,6 +2476,10 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
             case Move::SplinteredStormshards:
                 return (pk == Pokemon::Lycanroc || pk == Pokemon::Lycanroc_Midnight || pk == Pokemon::Lycanroc_Dusk)
                         && mv == Move::StoneEdge;
+            case Move::SearingSunrazeSmash:
+                return (pk == Pokemon::Solgaleo || pk == Pokemon::Necrozma_DuskMane) && mv == Move::SunsteelStrike;
+            case Move::MenacingMoonrazeMaelstorm:
+                return (pk == Pokemon::Lunala || pk == Pokemon::Necrozma_DawnWings) && mv == Move::MoongeistBeam;
         }
     }
 
