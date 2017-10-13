@@ -702,3 +702,7 @@
 701 Tausendfacher Donnerblitz
 702 Rasselnder Seelentanz
 703 Fataler Steinregen
+704 Knallkopf
+705 Photonen-Geysir
+706 Schmetternde Sonnenwalze
+707 Geballter Mondlaser
