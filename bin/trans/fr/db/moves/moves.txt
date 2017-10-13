@@ -702,3 +702,7 @@
 701 Giga-Tonnerre
 702 Dracacophonie Flamboyante
 703 Hurlement des Roches-Lames
+704 Caboche-Kaboum
+705 Photo-Geyser
+706 Hélio-Choc Dévastateur
+707 Rayons Séléno-Explosifs
