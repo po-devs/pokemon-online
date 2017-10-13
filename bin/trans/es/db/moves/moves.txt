@@ -702,3 +702,7 @@
 701 Gigarrayo Fulminante
 702 Estruendo Implacable
 703 Tempestad Rocosa
+704 Cabeza Sorpresa
+705 Géiser Fotónico
+706 Embestida Solar
+707 Deflagración Lunar
