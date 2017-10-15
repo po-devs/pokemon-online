@@ -1823,7 +1823,7 @@ namespace Move
         MindBlown,
         PhotonGeyser,
         SearingSunrazeSmash,
-        MenacingMoonrazeMaelstorm
+        MenacingMoonrazeMaelstrom
     };
 }
 
