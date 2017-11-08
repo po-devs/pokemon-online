@@ -1042,8 +1042,7 @@ namespace Pokemon
         Minior_Red = Minior + (1 << 16),
         Mimikyu_Busted = Mimikyu + (1 << 16),
         Necrozma_DuskMane = Necrozma + (1 << 16),
-        Necrozma_DawnWings = Necrozma + (2 << 16),
-        Ultra_Necrozma = Necrozma + (3 << 16)
+        Necrozma_DawnWings = Necrozma + (2 << 16)
     };
 }
 
