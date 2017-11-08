@@ -956,6 +956,11 @@ namespace Pokemon
         Necrozma,
         Magearna,
         Marshadow,
+        Poipole,
+        Naganadel,
+        Stakataka,
+        Blacephelon,
+        Zeraora,
 
         // Base forms end here. Cosmetic forms dont need to be listed
         Rotom_Mow = Rotom + (1 << 16),
@@ -2111,7 +2116,8 @@ namespace Ability
         TanglingHair,
         PowerOfAlchemy,
         BeastBoost,
-        PrismArmor
+        PrismArmor,
+        Neuroforce
     };
 }
 

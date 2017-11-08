@@ -1055,3 +1055,8 @@
 801:0 Magearna
 801:1:AD Magearna-Pokeball
 802:0 Marshadow
+803:0 Poipole
+804:0 Naganadel
+805:0 Stakataka
+806:0 Blacephelon
+807:0 Zeraora
