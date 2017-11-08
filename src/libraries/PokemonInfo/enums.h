@@ -1829,7 +1829,9 @@ namespace Move
         MindBlown,
         PhotonGeyser,
         SearingSunrazeSmash,
-        MenacingMoonrazeMaelstrom
+        MenacingMoonrazeMaelstrom,
+        SnuggleForever,
+        PlasmaFists
     };
 }
 
