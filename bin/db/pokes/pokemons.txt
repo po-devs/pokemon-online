@@ -1051,6 +1051,7 @@
 800:0 Necrozma
 800:1:D Necrozma-Dusk Mane
 800:2:D Necrozma-Dawn Wings
+800:3 Ultra Necrozma
 801:0 Magearna
 801:1:AD Magearna-Pokeball
 802:0 Marshadow
