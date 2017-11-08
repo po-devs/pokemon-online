@@ -60,13 +60,11 @@ PlayersWindow::PlayersWindow(QWidget *parent, int expireDays)
                     bannedString.append(QString(" (%2 seconds)").arg(expiration));
                 }
             } else {
-                if(expiration >= 60) {
-                    expiration = expiration / 60;
-                    if(expiration == 1) {
-                        bannedString.append(QString(" (%1 minute)").arg(expiration));
-                    } else {
-                        bannedString.append(QString(" (%2 minutes)").arg(expiration));
-                    }
+                expiration = expiration / 60;
+                if(expiration == 1) {
+                    bannedString.append(QString(" (%1 minute)").arg(expiration));
+                } else {
+                    bannedString.append(QString(" (%2 minutes)").arg(expiration));
                 }
             }
         }

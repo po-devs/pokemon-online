@@ -716,14 +716,14 @@ void RegularBattleScene::updateToolTip(int spot)
             } else {
                 if (boost >= 0) {
                     tooltip += range[i] + (boost > 0 ? QString(" (+%1)").arg(boost) : "");
-                } else if (boost < 0) {
+                } else {
                     tooltip += range[i] + QString(" (%1)").arg(boost);
                 }
             }
         } else {
             if (boost >= 0) {
                 tooltip += statval[i] + (boost > 0 ? QString(" (+%1)").arg(boost) : "");
-            } else if (boost < 0) {
+            } else {
                 tooltip += statval[i] + QString(" (%1)").arg(boost);
             }
         }

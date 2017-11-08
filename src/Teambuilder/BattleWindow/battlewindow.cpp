@@ -1151,7 +1151,7 @@ void BattlePokeButton::updateToolTip()
         tooltip = tr("%1 lv %2\n\nItem:%3\nAbility:%4\n\nMoves:\n--%5\n--%6\n--%7\n--%8")
                 .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item()),
                      AbilityInfo::Name(p.ability())).arg(moves[0]).arg(moves[1]).arg(moves[2]).arg(moves[3]);
-    } else if (p.ability() == 0) {
+    } else {
         if (p.item() != 0) {
             tooltip = tr("%1 lv %2\n\nItem:%3\n\nMoves:\n--%4\n--%5\n--%6\n--%7")
                     .arg(PokemonInfo::Name(p.num()), QString::number(p.level()), ItemInfo::Name(p.item())).arg(moves[0]).arg(moves[1]).arg(moves[2]).arg(moves[3]);

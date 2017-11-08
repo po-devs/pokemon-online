@@ -59,8 +59,6 @@ namespace {
             return PokemonInfo::LevelMoves(num, gen);
         } else if (learning == EggLearning) {
             return PokemonInfo::EggMoves(num, gen);
-        } else if (learning == LevelLearning) {
-            return PokemonInfo::LevelMoves(num, gen);
         } else if (learning == DWLearning) {
             return PokemonInfo::dreamWorldMoves(num, gen);
         } else {
