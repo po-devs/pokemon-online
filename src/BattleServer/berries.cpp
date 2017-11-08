@@ -43,8 +43,6 @@ struct BMStatusBerry : public BM
 
         /* Lum berry */
         if (arg == 0) {
-            if (status == Pokemon::Fine)
-                return;
             goto end;
         } else { /* Other Status Berry */
             if (status == arg) {
