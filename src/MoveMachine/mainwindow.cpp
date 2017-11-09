@@ -133,7 +133,8 @@ void PokeMovesDb::save()
                         continue;
 
                     //Discard pre-evo/egg moves from event pokemon
-                    if (PokemonInfo::IsForme(id) && (id.pokenum == Pokemon::Pikachu || id.pokenum == Pokemon::Floette)) {
+                    if (PokemonInfo::IsForme(id) && (id.pokenum == Pokemon::Pikachu || id.pokenum == Pokemon::Floette
+                        || id.pokenum == Pokemon::Rockruff)) {
                         if (i == EggMoves || i == PreEvoMoves) {
                             continue;
                         }
