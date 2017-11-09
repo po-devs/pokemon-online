@@ -8316,6 +8316,23 @@ struct MMZSplinteredStormshards : public MM
     }
 };
 
+struct MMPhotonGeyser : public MM
+{
+    MMPhotonGeyser() {
+        functions["BeforeCalculatingDamage"] = &bcd;
+    }
+    
+    static void bcd(int s, int, BS &b) {
+        int atk = b.getStat(s, Defense);
+        int spAtk = b.getStat(s, SpDefense);
+        
+        // TODO: Test what happens when Attack and SpAttack are the same
+        if (atk > spAtk) {
+            tmove(b,s).category = Category::Physical;
+        }
+    }
+};
+
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
     *DetermineAttackFailure -- turn, poke: set fturn(b,s).add(TM::Failed) to true to make the attack fail
@@ -8608,4 +8625,6 @@ void MoveEffect::init()
     REGISTER_MOVE(1009, ZExtremeEvoboost);
     REGISTER_MOVE(1010, ZClangorousSoulblaze);
     REGISTER_MOVE(1011, ZSplinteredStormshards);
+    REGISTER_MOVE(1012, PhotonGeyser);
+    
 }

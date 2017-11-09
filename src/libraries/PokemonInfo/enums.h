@@ -956,6 +956,11 @@ namespace Pokemon
         Necrozma,
         Magearna,
         Marshadow,
+        Poipole,
+        Naganadel,
+        Stakataka,
+        Blacephelon,
+        Zeraora,
 
         // Base forms end here. Cosmetic forms dont need to be listed
         Rotom_Mow = Rotom + (1 << 16),
@@ -1028,6 +1033,7 @@ namespace Pokemon
         Golem_Alolan = Golem + (1 << 16),
         Zygarde_10 = Zygarde + (1 << 16),
         Zygarde_Complete = Zygarde + (2 << 16),
+        Rockruff_PreDusk = Rockruff + (1 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
         Lycanroc_Dusk = Lycanroc + (2 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
@@ -1042,7 +1048,8 @@ namespace Pokemon
         Minior_Red = Minior + (1 << 16),
         Mimikyu_Busted = Mimikyu + (1 << 16),
         Necrozma_DuskMane = Necrozma + (1 << 16),
-        Necrozma_DawnWings = Necrozma + (2 << 16)
+        Necrozma_DawnWings = Necrozma + (2 << 16),
+        Ultra_Necrozma = Necrozma + (3 << 16)
     };
 }
 
@@ -1823,7 +1830,10 @@ namespace Move
         MindBlown,
         PhotonGeyser,
         SearingSunrazeSmash,
-        MenacingMoonrazeMaelstrom
+        MenacingMoonrazeMaelstrom,
+        SnuggleForever,
+        PlasmaFists,
+        LightThatBurnsTheSky
     };
 }
 
@@ -2111,7 +2121,8 @@ namespace Ability
         TanglingHair,
         PowerOfAlchemy,
         BeastBoost,
-        PrismArmor
+        PrismArmor,
+        Neuroforce
     };
 }
 

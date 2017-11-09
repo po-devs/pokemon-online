@@ -706,3 +706,6 @@
 705 Photon Geyser
 706 Searing Sunraze Smash
 707 Menacing Moonraze Maelstrom
+708 Snuggle Forever
+709 Plasma Fists
+710 Light That Burns the Sky
