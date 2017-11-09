@@ -3992,7 +3992,7 @@ int BattleSituation::calculateDamage(int p, int t)
             finalmod = chainMod(finalmod, 0xC00);
         }
         /* Neuroforce */
-        if (turnMem(p).typeMod > 0 && hasWorkingAbility(p, Ability::Neuroforce) {
+        if (turnMem(p).typeMod > 0 && hasWorkingAbility(p, Ability::Neuroforce)) {
             finalmod = chainmod(finalmod, 0x1555);
         }
         //*** 3 ***//
