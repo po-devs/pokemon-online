@@ -1290,19 +1290,6 @@ struct AMThickFat : public AM {
     }
 };
 
-//Moved to calculateDamage
-/*struct AMTintedLens : public AM {
-    AMTintedLens() {
-        functions["BasePowerModifier"] = &bpm;
-    }
-
-    static void bpm(int s, int , BS &b) {
-        if (b.gen() < 5 && fturn(b,s).typeMod < 0) {
-            b.chainBp(s, 20);
-        }
-    }
-};*/
-
 struct AMTrace : public AM {
     AMTrace() {
         functions["UponSetup"] = &us;
@@ -1828,26 +1815,6 @@ struct AMPrankster : public AM
     }
 };
 
-//Moved to calculateDamage
-/*struct AMMultiScale : public AM
-{
-    AMMultiScale() {
-        functions["BasePowerFoeModifier"] = &bpfm;
-    }
-
-    static void bpfm(int s, int t, BS &b) {
-        if (b.poke(s).isFull()) {
-            b.chainBp(t, -2048);
-            int finalmod = turn(b,s).value("FinalModifier").toInt();
-            if (finalmod == 0) {
-                turn(b,s)["FinalModifier"] = 50;
-            } else {
-                turn(b,s)["FinalModifier"] = finalmod/2;
-            }
-        }
-    }
-};*/
-
 struct AMFlareBoost : public AM
 {
     AMFlareBoost() {
@@ -2095,20 +2062,6 @@ struct AMHealer : public AM {
         b.healStatus(p, b.poke(p).status());
     }
 };
-
-//Was already in calculateDamage, but now its only there
-/*struct AMFriendGuard : public AM
-{
-    AMFriendGuard() {
-        functions["BasePowerAbilityModifier"] = &bpm;
-    }
-
-    static void bpm(int s, int t, BS &b) {
-        if (b.arePartners(s, t)) {
-            b.chainBp(s, -1024);
-        }
-    }
-};*/
 
 struct AMNaturalCure : public AM {
     AMNaturalCure () {
@@ -2688,21 +2641,6 @@ struct AMTriage : public AM
         }
     }
 };
-
-//Moved to Battle.cpp due to it being a Team Side effect
-/*struct AMDazzling : public AM
-{
-    AMDazzling() {
-        functions["OpponentBlock"] = &ob;
-    }
-
-    static void ob(int s, int t, BS &b) {
-        if (tmove(b,t).priority > 0 && !b.arePartners(s, t)) {
-            turn(b,s)[QString("Block%1").arg(b.attackCount())] = true;
-            b.sendAbMessage(129, 0, s, t, Type::Curse, tmove(b,t).attack);
-        }
-    }
-};*/
 
 struct AMBerserk : public AMPinch /*Mostly copied from Pinch Berries*/
 {
@@ -3305,7 +3243,7 @@ void AbilityEffect::init()
     REGISTER_AB(62, TangledFeet);
     REGISTER_AB(63, Technician);
     REGISTER_AB(64, ThickFat);
-    //REGISTER_AB(65, TintedLens);
+    //REGISTER_AB(65, TintedLens); -> moved to calculateDamage
     REGISTER_AB(66, Trace);
     REGISTER_AB(67, Truant);
     REGISTER_AB(68, SapSipper);
@@ -3320,10 +3258,10 @@ void AbilityEffect::init()
     REGISTER_AB(77, ZenMode);
     REGISTER_AB(78, PickPocket);
     REGISTER_AB(79, SheerForce);
-    REGISTER_AB(80, Defiant); /*Defiant, Competitive*/
+    REGISTER_AB(80, Defiant); /*Competitive*/
     REGISTER_AB(81, Imposter);
     REGISTER_AB(82, Prankster);
-    //REGISTER_AB(83, MultiScale); /*ShadowShield*/
+    //REGISTER_AB(83, MultiScale); /*ShadowShield*/ -> moved to calculateDamage
     REGISTER_AB(84, FlareBoost);
     REGISTER_AB(85, Telepathy);
     REGISTER_AB(86, Regenerator);
@@ -3340,7 +3278,7 @@ void AbilityEffect::init()
     REGISTER_AB(97, Rattled);
     REGISTER_AB(98, Analytic);
     REGISTER_AB(99, Healer);
-    //REGISTER_AB(100, FriendGuard);
+    //REGISTER_AB(100, FriendGuard); -> moved to calculateDamage
     REGISTER_AB(101, PoisonTouch);
     REGISTER_AB(102, Unnerve);
     //gen 6
@@ -3372,7 +3310,7 @@ void AbilityEffect::init()
     // gen 7    
     REGISTER_AB(127, Comatose);
     REGISTER_AB(128, ElectricSurge); /*Misty, Grassy, Psychic Surges*/
-        //REGISTER_AB(129, Dazzling); /*Queenly Majesty*/
+    //REGISTER_AB(129, Dazzling); /*Queenly Majesty*/ -> moved to blockPriority
     REGISTER_AB(130, Berserk);
     REGISTER_AB(131, Battery);
     REGISTER_AB(132, Fluffy);

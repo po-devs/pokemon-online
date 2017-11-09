@@ -3594,8 +3594,8 @@ int BattleSituation::calculateDamage(int p, int t)
             damage *= 2;
             typemod--;
         }
-
-        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2) && typemod < 0) // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+        // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2))
             typemod--;
 
         while (typemod < 0) {
@@ -3943,7 +3943,7 @@ int BattleSituation::calculateDamage(int p, int t)
         /* Final Mods section*/
         /* Correct Order:
          * 1. Moves:     Reflect, Light Screen
-         * 2. Abilities: Multiscale, Shadow Shield, Tinted Lens, Friend Guard, Sniper, Solid Rock, Filter
+         * 2. Abilities: Multiscale, Shadow Shield, Tinted Lens, Friend Guard, Sniper, Solid Rock, Filter, Neuroforce
          * 3. Items:     Metronome, Expert Belt, Life Orb, Damage Reducing berry
          * 4. Combos:    Stomp+Minimize, Earthquake+Dig, Surf+Dive, Steamroller+Minimize
          */
@@ -3990,6 +3990,10 @@ int BattleSituation::calculateDamage(int p, int t)
         /* Solid Rock, Filter */
         if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
             finalmod = chainMod(finalmod, 0xC00);
+        }
+        /* Neuroforce */
+        if (turnMem(p).typeMod > 0 && hasWorkingAbility(p, Ability::Neuroforce) {
+            finalmod = chainmod(finalmod, 0x1555);
         }
         //*** 3 ***//
         /* Expert Belt */
