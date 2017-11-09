@@ -8331,7 +8331,7 @@ struct MMPhotonGeyser : public MM
             tmove(b,s).category = Category::Physical;
         }
     }
-}
+};
 
 /* List of events:
     *UponDamageInflicted -- turn: just after inflicting damage
