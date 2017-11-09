@@ -3590,17 +3590,24 @@ int BattleSituation::calculateDamage(int p, int t)
 
         // Type effectiveness
         int typemod = turnMem(p).typeMod;
-        while (typemod > 0) {
-            damage *= 2;
-            typemod--;
-        }
+        if (typemod > 0) {
+            while (typemod > 0) {
+                damage *= 2;
+                typemod--;
+            }
+            //TODO: Test if this belongs here
+            if (hasWorkingAbility(p, Ability::Neuroforce) {
+                damage = damage * 3/2;
+            }
+        } else if (typemod < 0) {
+            // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+            if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2))
+                typemod--;
 
-        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2) && typemod < 0) // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
-            typemod--;
-
-        while (typemod < 0) {
-            damage /= 2;
-            typemod++;
+            while (typemod < 0) {
+                damage /= 2;
+                typemod++;
+            }
         }
 
         int randnum = randint(39) + 217; // remember that randint is 0 to n-1
