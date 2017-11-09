@@ -8322,7 +8322,7 @@ struct MMPhotonGeyser : public MM
         functions["BeforeCalculatingDamage"] = &bcd;
     }
     
-    static vod bcd(int s, int, BS &b) {
+    static void bcd(int s, int, BS &b) {
         int atk = b.getStat(s, Defense);
         int spAtk = b.getStat(s, SpDefense);
         
