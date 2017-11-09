@@ -3993,7 +3993,7 @@ int BattleSituation::calculateDamage(int p, int t)
         }
         /* Neuroforce */
         if (turnMem(p).typeMod > 0 && hasWorkingAbility(p, Ability::Neuroforce)) {
-            finalmod = chainmod(finalmod, 0x1555);
+            finalmod = chainMod(finalmod, 0x1555);
         }
         //*** 3 ***//
         /* Expert Belt */
