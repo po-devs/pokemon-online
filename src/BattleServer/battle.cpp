@@ -3597,12 +3597,12 @@ int BattleSituation::calculateDamage(int p, int t)
         // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
         if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2))
             typemod--;
-        
+
         while (typemod < 0) {
             damage /= 2;
             typemod++;
         }
-        
+
         int randnum = randint(39) + 217; // remember that randint is 0 to n-1
         if (attackused == Move::Flail || attackused == Move::Reversal) {
             // these moves are proven to ignore randomization
