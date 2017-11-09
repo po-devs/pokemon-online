@@ -3590,26 +3590,19 @@ int BattleSituation::calculateDamage(int p, int t)
 
         // Type effectiveness
         int typemod = turnMem(p).typeMod;
-        if (typemod > 0) {
-            while (typemod > 0) {
-                damage *= 2;
-                typemod--;
-            }
-            //TODO: Test if this belongs here
-            if (hasWorkingAbility(p, Ability::Neuroforce) {
-                damage = damage * 3/2;
-            }
-        } else if (typemod < 0) {
-            // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
-            if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2))
-                typemod--;
-
-            while (typemod < 0) {
-                damage /= 2;
-                typemod++;
-            }
+        while (typemod > 0) {
+            damage *= 2;
+            typemod--;
         }
-
+        // Present only inflicts a quarter of the normal damage against Rock and Steel-type Pokémon.
+        if (attackused == Move::Present && gen() != Pokemon::gen(Gen::Stadium2))
+            typemod--;
+        
+        while (typemod < 0) {
+            damage /= 2;
+            typemod++;
+        }
+        
         int randnum = randint(39) + 217; // remember that randint is 0 to n-1
         if (attackused == Move::Flail || attackused == Move::Reversal) {
             // these moves are proven to ignore randomization
@@ -3950,7 +3943,7 @@ int BattleSituation::calculateDamage(int p, int t)
         /* Final Mods section*/
         /* Correct Order:
          * 1. Moves:     Reflect, Light Screen
-         * 2. Abilities: Multiscale, Shadow Shield, Tinted Lens, Friend Guard, Sniper, Solid Rock, Filter
+         * 2. Abilities: Multiscale, Shadow Shield, Tinted Lens, Friend Guard, Sniper, Solid Rock, Filter, Neuroforce
          * 3. Items:     Metronome, Expert Belt, Life Orb, Damage Reducing berry
          * 4. Combos:    Stomp+Minimize, Earthquake+Dig, Surf+Dive, Steamroller+Minimize
          */
@@ -3997,6 +3990,10 @@ int BattleSituation::calculateDamage(int p, int t)
         /* Solid Rock, Filter */
         if (turnMem(p).typeMod > 0 && (hasWorkingAbility(t,Ability::Filter) || hasWorkingAbility(t,Ability::SolidRock) || hasWorkingAbility(t,Ability::PrismArmor))) {
             finalmod = chainMod(finalmod, 0xC00);
+        }
+        /* Neuroforce */
+        if (turnMem(p).typeMod > 0 && hasWorkingAbility(p, Ability::Neuroforce) {
+            finalmod = chainmod(finalmod, 0x1555);
         }
         //*** 3 ***//
         /* Expert Belt */
