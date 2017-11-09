@@ -1033,6 +1033,7 @@ namespace Pokemon
         Golem_Alolan = Golem + (1 << 16),
         Zygarde_10 = Zygarde + (1 << 16),
         Zygarde_Complete = Zygarde + (2 << 16),
+        Rockruff_PreDusk = Rockruff + (1 << 16),
         Lycanroc_Midnight = Lycanroc + (1 << 16),
         Lycanroc_Dusk = Lycanroc + (2 << 16),
         Greninja_Unbonded = Greninja + (1 << 16),
@@ -1831,7 +1832,8 @@ namespace Move
         SearingSunrazeSmash,
         MenacingMoonrazeMaelstrom,
         SnuggleForever,
-        PlasmaFists
+        PlasmaFists,
+        LightThatBurnsTheSky
     };
 }
 
