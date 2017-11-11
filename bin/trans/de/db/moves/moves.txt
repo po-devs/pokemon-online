@@ -706,3 +706,6 @@
 705 Photonen-Geysir
 706 Schmetternde Sonnenwalze
 707 Geballter Mondlaser
+708 Herzliche Knuddelkloppe
+709 Plasmafäuste
+710 Licht des Erlöschens
