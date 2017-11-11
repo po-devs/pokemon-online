@@ -1,4 +1,4 @@
-﻿0 (No Item)
+0 (No Item)
 1 Increases the healing effect of Absorb, Aqua Ring, Drain Punch, Draining Kiss, Dream Eater, Giga Drain, Horn Leech, Ingrain, Leech Life, Leech Seed, Mega Drain, Oblivion Wing, and Parabolic Charge used by the holder by 30%.
 2 Increases the holder's Beauty stat in contests.
 3 Increases the holder's evasion by 10%.
@@ -457,3 +457,7 @@
 3028 Enables Pikachu in Cap to upgrade Thunderbolt into the special Z Move: 10,000,000 Volt Thunderbolt
 3029 Enables Kommo-o to upgrade Clanging Scales into the special Z Move: Clangorous Soulblaze
 3030 Enables Lycanroc to upgrade Stone Edge into the special Z Move: Splintered Stormshards
+3031 Enables Mimikyu to upgrade Play Rough to a special Z-Move: Let’s Snuggle Forever
+3032 Enables Solgaleo or Dusk Mane Necrozma to upgrade Sunsteel Strike to a special Z-Move: Searing Sunraze Smash
+3033 Enables Lunala or Dawn Wings Necrozma to upgrade Moongeist Beam to a special Z-Move: Menacing Moonraze Maelstrom
+3034 a crystal that turns Dusk Mane Necrozma or Dawn Wings Necrozma into Ultra Necrozma, and upgrade Ultra Necrozma’s Photon Geyser to a special Z-Move: Light That Burns the Sky
