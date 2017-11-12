@@ -1831,7 +1831,7 @@ namespace Move
         PhotonGeyser,
         SearingSunrazeSmash,
         MenacingMoonrazeMaelstrom,
-        SnuggleForever,
+        LetsSnuggleForever,
         PlasmaFists,
         LightThatBurnsTheSky
     };
