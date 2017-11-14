@@ -2480,7 +2480,7 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
                 return (pk == Pokemon::Solgaleo || pk == Pokemon::Necrozma_DuskMane) && mv == Move::SunsteelStrike;
             case Move::MenacingMoonrazeMaelstrom:
                 return (pk == Pokemon::Lunala || pk == Pokemon::Necrozma_DawnWings) && mv == Move::MoongeistBeam;
-            case Move::SnuggleForever:
+            case Move::LetsSnuggleForever:
                 return pk == Pokemon::Mimikyu && mv == Move::PlayRough;
         }
     }
