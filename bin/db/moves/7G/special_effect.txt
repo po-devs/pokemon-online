@@ -427,4 +427,5 @@
 705 1012#PhotonGeyser
 706 231#SearingSunrazeSmash
 707 231#MenacingMoonrazeMaelstrom
+709 217#PlasmaFists
 710 231|1012#LightThatBurnsTheSky
