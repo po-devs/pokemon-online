@@ -2558,6 +2558,10 @@ struct MMWideGuard : public MM
         }
 
         if (! (tmove(b, s).flags & Move::ProtectableFlag) ) {
+            if (b.zTurn(s) && b.gen() >= Pokemon::gen(Gen::UltraSunMoon) ) {
+                turn(b,s)["ZMoveProtected"] = true;
+                b.sendItemMessage(68, t, 1);
+            }
             return;
         }
 
