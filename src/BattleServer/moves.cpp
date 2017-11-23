@@ -8327,8 +8327,8 @@ struct MMPhotonGeyser : public MM
     }
     
     static void bcd(int s, int, BS &b) {
-        int atk = b.getStat(s, Defense);
-        int spAtk = b.getStat(s, SpDefense);
+        int atk = b.getRawStat(s, Attack);
+        int spAtk = b.getRawStat(s, SpAttack);
         
         // TODO: Test what happens when Attack and SpAttack are the same
         if (atk > spAtk) {
