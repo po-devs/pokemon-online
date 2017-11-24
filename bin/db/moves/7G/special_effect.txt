@@ -424,7 +424,7 @@
 702 1010#ClangorousSoulblaze
 703 1011#SplinteredStormshards
 704 8-50#MindBlown
-705 1012#PhotonGeyser
+705 231|1012#PhotonGeyser
 706 231#SearingSunrazeSmash
 707 231#MenacingMoonrazeMaelstrom
 709 217#PlasmaFists
