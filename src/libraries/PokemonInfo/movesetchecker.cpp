@@ -357,12 +357,23 @@ bool MoveSetChecker::isValid(const Pokemon::uniqueId &pokeid, Pokemon::gen gen, 
         /* now we know the pokemon at least knows all moves */
         moves.subtract(PokemonInfo::RegularMoves(pokeid, g));
 
-        /* Can transfer gen 1 from virtual console to gen 7 */
+        /* Can transfer gen 1 and 2 from virtual console to gen 7 */
         if (g.num == 7)
         {
             AbilityGroup ab = PokemonInfo::Abilities(pokeid, gen);
-            if (isValid(pokeid, Gen::Yellow, moves, ability, gender, level, maledw, nullptr, error, minGen))
+            bool valid;
+            if (g.subnum == 0) {
+                valid = isValid(pokeid, Gen::Yellow, moves, ability, gender, level, maledw, nullptr, error, minGen);
+            } else {
+                valid = isValid(pokeid, Gen::Crystal, moves, ability, gender, level, maledw, nullptr, error, minGen);
+                //i dont think this adds anything since you can trade back and forth between 1 and 2
+                /*if (!valid) {
+                    valid = isValid(pokeid, Gen::Yellow, moves, ability, gender, level, maledw, nullptr, error, minGen);
+                }*/
+            }
+            if (valid)
             {
+                //make sure the pokemon has its hidden ability
                 if (ab.ab(2) == ability || ab.ab(2) == 0)
                 {
                     return true;
