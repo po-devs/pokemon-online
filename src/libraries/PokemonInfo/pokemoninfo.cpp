@@ -735,6 +735,10 @@ void PokemonInfo::loadGen(Pokemon::gen g)
             if (g.num == 7) {
                 loadGen(Pokemon::gen(1, 1));
                 gens[g].addVirtualConsoleTransfer(&gens[Pokemon::gen(1, 1)]);
+                if (g.subnum > 0) {
+                    loadGen(Pokemon::gen(2, 1));
+                    gens[g].addVirtualConsoleTransfer(&gens[Pokemon::gen(2, 1)]);
+                }
             }
         } else {
             gens[g].load(m_Directory, g, NULL);
