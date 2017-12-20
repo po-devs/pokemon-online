@@ -2581,7 +2581,7 @@ struct AMStamina : public AM {
     }
 
     static void uodr(int s, int t, BS &b) {
-        if (!b.koed(s) && s != t) { // copied from ability Anger Point
+        if (!b.koed(s) && s != t && (!(b.hasSubstitute(s)) || b.canBypassSub(t))) { // copied from ability Anger Point
             b.sendAbMessage(133,0,s);
             b.inflictStatMod(s, Defense, 1, s);
         }
