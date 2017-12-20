@@ -8111,7 +8111,7 @@ struct MMCoreEnforcer : public MM
     }
 
     static void uas(int s, int t, BS &b) {
-        if (!b.hasMoved(t))
+        if (!fturn(b,t).contains(TM::HasMoved))
             return;
         if (poke(b,t).value("AbilityNullified").toBool())
             return;
