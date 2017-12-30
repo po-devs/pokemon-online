@@ -30,7 +30,7 @@ AvatarDialog::AvatarDialog(QWidget *parent, int current) :
 
     int perRow = qMax(geometry().width() / 96 - 2, 1);
 
-    for (int i = 0; i < 844; i++) {
+    for (int i = 0; i < 852; i++) {
         QPushButton *b = new QPushButton(QIcon(Theme::TrainerSprite(i + 1)), "");
 
         b->setProperty("avatar", i + 1);
