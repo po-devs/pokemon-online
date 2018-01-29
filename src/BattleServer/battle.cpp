@@ -1418,9 +1418,16 @@ void BattleSituation::testCritical(int player, int target)
         case 4: case 5: minch = 24; break;
         case 6: default: minch = 48;
         }
-    } else {
+    } else if (gen() < 7) {
         switch(craise) {
         case 0: minch = 3; break;
+        case 1: minch = 6; break;
+        case 2: minch = 24; break;
+        case 3: default: minch = 48;
+        }
+    } else {
+        switch(craise) {
+        case 0: minch = 2; break;
         case 1: minch = 6; break;
         case 2: minch = 24; break;
         case 3: default: minch = 48;
