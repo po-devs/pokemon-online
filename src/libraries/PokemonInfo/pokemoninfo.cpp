@@ -2426,12 +2426,12 @@ QString MoveInfo::path(const QString &file)
 
 bool MoveInfo::isUniqueZMove(int movenum)
 {
-    return (movenum >= 691 && movenum <= 703) || (movenum >= 706 && movenum <= 708);
+    return (movenum >= 691 && movenum <= 703) || (movenum >= 706 && movenum <= 710);
 }
 
 bool MoveInfo::isZMove(int movenum)
 {
-    return (movenum >= 673 && movenum <= 703) || (movenum >= 706 && movenum <= 708);
+    return (movenum >= 673 && movenum <= 703) || (movenum >= 706 && movenum <= 710);
 }
 
 bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen)
@@ -2486,6 +2486,8 @@ bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen g
                 return (pk == Pokemon::Lunala || pk == Pokemon::Necrozma_DawnWings) && mv == Move::MoongeistBeam;
             case Move::LetsSnuggleForever:
                 return pk == Pokemon::Mimikyu && mv == Move::PlayRough;
+            case Move::LightThatBurnsTheSky:
+                return pk == Pokemon::Ultra_Necrozma && mv == Move::PhotonGeyser;
         }
     }
 

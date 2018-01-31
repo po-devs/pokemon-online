@@ -5196,7 +5196,8 @@ bool BattleSituation::canMegaEvolve(int spot) const
     }
 
     Pokemon::uniqueId forme = poke(spot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(spot).item());
-    return !bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme));
+    return !bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme))
+            && (poke(spot).num() != Pokemon::Rayquaza || !ItemInfo::isZCrystal(poke(spot).item()));
 }
 
 int BattleSituation::intendedMoveSlot (int s, int slot, int mv)
