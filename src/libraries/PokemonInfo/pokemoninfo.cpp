@@ -2426,12 +2426,12 @@ QString MoveInfo::path(const QString &file)
 
 bool MoveInfo::isUniqueZMove(int movenum)
 {
-    return (movenum >= 691 && movenum <= 703) || (movenum >= 706 && movenum <= 710);
+    return (movenum >= 691 && movenum <= 703) || (movenum >= 706 && movenum <= 708) || movenum == 710;
 }
 
 bool MoveInfo::isZMove(int movenum)
 {
-    return (movenum >= 673 && movenum <= 703) || (movenum >= 706 && movenum <= 710);
+    return (movenum >= 673 && movenum <= 703) || (movenum >= 706 && movenum <= 708) || movenum == 710;
 }
 
 bool MoveInfo::canBeZMove(Pokemon::uniqueId pk, int item, int mv, Pokemon::gen gen)
