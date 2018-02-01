@@ -1054,7 +1054,11 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
         connect(dynamic_cast<QAbstractButton*>(attacks[i]), SIGNAL(clicked()), mymapper, SLOT(map()));
     }
     megaevo = new QPushButton(this);
-    megaevo->setText(tr("Mega evolution"));
+    if (poke.num() == Pokemon::Necrozma_DuskMane || poke.num() == Pokemon::Necrozma_DawnWings) {
+        megaevo->setText(tr("Ultra Burst"));
+    } else {
+        megaevo->setText(tr("Mega evolution"));
+    }
     megaevo->setCheckable(true);
     megaevo->setObjectName("MegaEvo");
     l->addWidget(megaevo, 2, 0, 1, 2);

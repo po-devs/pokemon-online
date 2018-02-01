@@ -27,5 +27,6 @@
 68 %s surrounded itself with its Z-Power!|%f couldn't fully protect itself and got hurt!|%s used Z-%m!
 71 The Adrenaline Orb raised %s's Speed!
 72 %s protected itself with the Protective Pads!
+73 %s regained its true power through Ultra Burst!
 1007 %s recovered from fainting!
 1999 %s recovered from fainting!

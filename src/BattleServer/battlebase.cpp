@@ -951,10 +951,12 @@ bool BattleBase::validChoice(const BattleChoice &b)
             return false;
         /* If there's a mega evo, we verify another hasn't been already chosen */
         if (b.mega()) {
+            bool burst = poke(b.slot()).num() == Pokemon::Necrozma_DuskMane || poke(b.slot()).num() == Pokemon::Necrozma_DawnWings;
             for (int i = 0; i < numberOfSlots(); i++) {
                 int p2 = this->player(i);
+                bool sameMegaType = burst == (poke(i).num() == Pokemon::Necrozma_DuskMane || poke(i).num() == Pokemon::Necrozma_DawnWings);
                 if (i != b.slot() && p2 == player && couldMove[i] && hasChoice[i] == false && choice(i).attackingChoice()
-                        && choice(i).mega()) {
+                        && choice(i).mega() && sameMegaType) {
                     return false;
                 }
             }

@@ -2510,7 +2510,8 @@ namespace Item
         RedNectar,
         PurpleNectar,
         NormaliumZ = 3000,
-        FiriumZ = 3009 //for Arceus + Burnup
+        FiriumZ = 3009, //for Arceus + Burnup
+        UltranecroziumZ = 3034
     };
 
     enum Target
