@@ -670,9 +670,9 @@
 702 Z-Move. Deals immense damage and increases the user's Attack, Defense, Special Attack, Special Defense, and Speed by 1 stage. Requires the move Clanging Scale, the item Kommonium Z, and can only be used by Kommo-o.
 703 Z-Move. Deals immense damage and removes all terrain from the field. Requires the move Stone Edge, the item Lycanium Z, and can only be used by Lycanroc.
 704 The user attacks everything around it by causing its own head to explode, costing 1/2 of the user’s max HP.
-705 Targets the opponent’s special defense, inflicting damage with the user’s Attack or Sp. Atk - whichever stat is higher.
+705 Becomes a physical move if user's Atk > Sp. Atk. Also ignores the target's Ability.
 706 Z-Move. Deals immense damage, ignoring the target's Ability. Requires the move Sunsteel Strike, the item Solganium Z, and can only be used by Necrozma Dusk Mane or Solgaleo.
 707 Z-Move. Deals immense damage, ignoring the target's Ability. Requires the move Moongeist Beam, the item Lunalium Z, and can only be used by Necrozma Dawn Wings or Lunala.
 708 Z-Move. Deals immense damage. Requires the move Play Rough, the item Mimikium Z, and can only be used by Mimikyu.
 709 The user attacks with electrically charged fists, causing ion deluge effect, changing Normal-type moves to Electric-type moves on the field until the end of the turn.
-710 Z-Move. Targets the opponent’s special defense, inflicting damage with the user’s Attack or Sp. Atk - whichever stat is higher. Also ignores the target's Ability. Requires the move Photon Geyser, the item Ultranecrozium Z, and can only be used by Ultra Necrozma.
+710 Z-Move. Becomes a physical move if user's Atk > Sp. Atk. Also ignores the target's Ability. Requires the move Photon Geyser, the item Ultranecrozium Z, and can only be used by Ultra Necrozma.
