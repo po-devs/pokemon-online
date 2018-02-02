@@ -454,6 +454,7 @@ private:
     QVector<int> indexes;
     bool megas[2];
     bool zmoves[2];
+    bool ultrabursts[2];
 };
 
 Q_DECLARE_METATYPE(BattleSituation::MechanicsFunction)

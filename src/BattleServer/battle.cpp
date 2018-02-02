@@ -30,6 +30,7 @@ BattleSituation::BattleSituation(const BattlePlayer &p1, const BattlePlayer &p2,
 
     megas[0] = megas[1] = false;
     zmoves[0] = zmoves[1] = false;
+    ultrabursts[0] = ultrabursts[1] = false;
 }
 
 BattleSituation::~BattleSituation()
@@ -984,10 +985,20 @@ bool BattleSituation::megaEvolve(int slot)
     if (ability(player(slot)) == Ability::DesolateLand || ability(player(slot)) == Ability::PrimordialSea || ability(player(slot)) == Ability::DeltaStream) {
         loseAbility(player(slot));
     }
-    Pokemon::uniqueId forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
-    sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
+    Pokemon::uniqueId forme;
+    if (poke(slot).num() == Pokemon::Necrozma_DuskMane || poke(slot).num() == Pokemon::Necrozma_DawnWings) {
+        forme = Pokemon::Ultra_Necrozma;
+        sendItemMessage(73, slot, 0, 0, 0, forme.toPokeRef());
+    } else {
+        forme = poke(slot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(slot).item());
+        sendItemMessage(66, slot, 0, 0, 0, forme.toPokeRef());
+    }
     changeForme(player(slot), slotNum(slot), forme, false, false, true);
-    megas[player(slot)] = true;
+    if (forme == Pokemon::Ultra_Necrozma) {
+        ultrabursts[player(slot)] = true;
+    } else {
+        megas[player(slot)] = true;
+    }
     pokeMemory(slot)["MegaEvolveTurn"] = turn();
 
     // Gengar loses Telekinesis effect after mega evolving
@@ -5159,11 +5170,15 @@ bool BattleSituation::preTransPoke(int s, Pokemon::uniqueId check)
 
 bool BattleSituation::hasPossibilityOfMegaEvolving(int slot) const
 {
+    //Ultra burst doesn't prevent other pokemon from mega evolving, but it does prevent them from using ultra burst
+    int item = poke(slot).item();
+    if ((poke(slot).num() == Pokemon::Necrozma_DuskMane || poke(slot).num() == Pokemon::Necrozma_DawnWings) && item == Item::UltranecroziumZ) {
+        return !ultrabursts[player(slot)];
+    }
     if (megas[player(slot)]) {
         return false;
     }
-    int item = poke(slot).item();
-    if (ItemInfo::isZCrystal(item)) {
+    if (ItemInfo::isZCrystal(item) && poke(slot).num() == Pokemon::Rayquaza) {
         //Rayquaza can't mega evolve if it holds a Z Crystal
         return false;
     }
@@ -5195,7 +5210,14 @@ bool BattleSituation::canMegaEvolve(int spot) const
         return false;
     }
 
-    Pokemon::uniqueId forme = poke(spot).num() == Pokemon::Rayquaza ? Pokemon::Rayquaza_Mega : ItemInfo::MegaStoneForme(poke(spot).item());
+    Pokemon::uniqueId forme;
+    if (poke(spot).num() == Pokemon::Rayquaza) {
+        forme = Pokemon::Rayquaza_Mega;
+    } else if (poke(spot).num() == Pokemon::Necrozma_DuskMane || poke(spot).num() == Pokemon::Necrozma_DawnWings) {
+        forme = Pokemon::Ultra_Necrozma;
+    } else {
+        forme = ItemInfo::MegaStoneForme(poke(spot).item());
+    }
     return !bannedPokes[0].contains(PokemonInfo::Name(forme)) && !bannedPokes[1].contains(PokemonInfo::Name(forme));
 }
 
