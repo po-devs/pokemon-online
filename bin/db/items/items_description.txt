@@ -460,4 +460,4 @@
 3031 Enables Mimikyu to upgrade Play Rough to a special Z-Move: Let’s Snuggle Forever
 3032 Enables Solgaleo or Dusk Mane Necrozma to upgrade Sunsteel Strike to a special Z-Move: Searing Sunraze Smash
 3033 Enables Lunala or Dawn Wings Necrozma to upgrade Moongeist Beam to a special Z-Move: Menacing Moonraze Maelstrom
-3034 a crystal that turns Dusk Mane Necrozma or Dawn Wings Necrozma into Ultra Necrozma, and upgrade Ultra Necrozma’s Photon Geyser to a special Z-Move: Light That Burns the Sky
+3034 A crystal that turns Dusk Mane Necrozma or Dawn Wings Necrozma into Ultra Necrozma, and upgrade Ultra Necrozma’s Photon Geyser to a special Z-Move: Light That Burns the Sky
