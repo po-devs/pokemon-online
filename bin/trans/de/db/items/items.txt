@@ -457,3 +457,7 @@
 3028 Ash-Pikachium Z
 3029 Grandirasium Z
 3030 Wolwerockium Z
+3031 Mimigmium Z
+3032 Solgalium Z
+3033 Lunalium Z
+3034 Ultranecrozium Z
