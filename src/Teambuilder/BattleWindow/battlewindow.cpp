@@ -529,6 +529,11 @@ void BattleWindow::goToNextChoice()
         if (!data().isKoed(spot))
         {
             auto azone = myazones[slot];
+            if (data().poke(spot).num() == Pokemon::Necrozma_DuskMane || data().poke(spot).num() == Pokemon::Necrozma_DawnWings) {
+                azone->megaevo->setText(tr("Ultra Burst"));
+            } else {
+                azone->megaevo->setText(tr("Mega evolution"));
+            }
             azone->megaevo->setVisible(choices.mega);
             azone->megaevo->setChecked(false);
             azone->zmove->setVisible(choices.zmove);
@@ -1054,11 +1059,7 @@ AttackZone::AttackZone(const PokeProxy &poke, Pokemon::gen gen)
         connect(dynamic_cast<QAbstractButton*>(attacks[i]), SIGNAL(clicked()), mymapper, SLOT(map()));
     }
     megaevo = new QPushButton(this);
-    if (poke.num() == Pokemon::Necrozma_DuskMane || poke.num() == Pokemon::Necrozma_DawnWings) {
-        megaevo->setText(tr("Ultra Burst"));
-    } else {
-        megaevo->setText(tr("Mega evolution"));
-    }
+    megaevo->setText(tr("Mega evolution"));
     megaevo->setCheckable(true);
     megaevo->setObjectName("MegaEvo");
     l->addWidget(megaevo, 2, 0, 1, 2);
