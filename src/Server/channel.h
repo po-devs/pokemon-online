@@ -32,7 +32,7 @@ public:
     static bool validName(const QString &name);
     static QNickValidator *checker;
 
-    void log(const QString &message);
+    void log(int pid, const QString &message);
     void onRemoval();
 
     void warnAboutRemoval();
@@ -52,7 +52,9 @@ public:
     QSet<int> players;
     QSet<int> disconnectedPlayers;
     QHash<int, Battle> battleList;
+    QFile logfile;
     Server *server;
+    int logDay;
 };
 
 #endif // CHANNEL_H

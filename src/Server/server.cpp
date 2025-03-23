@@ -196,7 +196,7 @@ void Server::start(){
     for (int i = 0; i < serverPorts.size(); ++i) {
         quint16 port = serverPorts.at(i);
 #ifndef BOOST_SOCKETS
-        listenSuccess = server(i)->listen(QHostAddress::Any, port);
+        listenSuccess = server(i)->listen(QHostAddress::AnyIPv4, port);
 #else
         listenSuccess = server(i)->listen(port);
 #endif
@@ -1952,7 +1952,7 @@ void Server::broadCast(const QString &message, int channel, int sender, bool htm
     } else {
         if (channel != NoChannel) {
             if(useChannelFileLog) {
-                this->channel(channel).log(fullMessage);
+                this->channel(channel).log(sender, fullMessage);
             }
             printLine(QString("[#%1] %2").arg(this->channel(channel).name(), fullMessage), chatMessage, true);
             if (sender == NoSender) {

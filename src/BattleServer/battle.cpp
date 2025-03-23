@@ -3164,6 +3164,10 @@ QVector<int> BattleSituation::getTypes(int player, bool transform) const
 {
     QVector<int> ret;
 
+    if (fpoke(player).type1 == Type::Curse) { // fix the ??? bug
+        ret.push_back(Type::Curse);
+    }
+
     foreach(int type, fpoke(player).types) {
         if (type == Pokemon::Flying && pokeMemory(player).value("Roosted").toBool() && !transform) {
             continue;
