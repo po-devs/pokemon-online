@@ -9,12 +9,45 @@
 
 QNickValidator *Channel::checker = new QNickValidator(nullptr);
 
-Channel::Channel(const QString &name, int id) : m_prop_id(id), m_prop_name(name){
+Channel::Channel(const QString &name, int id) : m_prop_id(id), m_prop_name(name), logDay(0) {
+    QDir d;
     server = Server::serverIns;
+    if(!d.exists("logs/chat/" + name)) {
+        d.mkpath("logs/chat/" + name);
+    }
 }
 
-void Channel::log(const QString &message) {
-    (void) message;
+void Channel::log(int pid, const QString &message) {
+    if(!logfile.isOpen() || logDay != QDate::currentDate().day()) {
+        if(logfile.isOpen()) {
+            logfile.close();
+        }
+        QString date = QDate::currentDate().toString("yyyy-MM-dd");
+        QString filename = "logs/chat/"+name()+"/"+date+".html";
+        logDay = QDate::currentDate().day();
+        logfile.setFileName(filename);
+        logfile.open(QFile::WriteOnly | QFile::Append | QFile::Text);
+    }
+    QString name;
+    QString color;
+    int auth;
+    if (pid == -1) {
+        name = "~~Server~~";
+        color = "#FFA500";
+        auth = 0;
+    } else {
+        name = server->player(pid)->name();
+        color = server->player(pid)->color().name();
+        auth = server->player(pid)->auth();
+    }
+    QString logMessage = message;
+    if (auth > 0) {
+        logMessage.replace(QRegExp(name + ":"), "<font color='" + color + "'>+<b><i>" + name + ":</i></b></font>");
+    } else {
+        logMessage.replace(QRegExp(name + ":"), "<font color='" + color + "'><b>" + name + ":</b></font>");
+    }
+    logfile.write(QString("(%1) %2<br>\n").arg(QTime::currentTime().toString("hh:mm:ss"), message).toUtf8());
+    logfile.flush();
 }
 
 bool Channel::validName(const QString &name) {
@@ -127,6 +160,10 @@ void Channel::warnAboutRemoval()
         } else {
             server->player(p)->removeChannel(id());
         }
+    }
+
+    if(logfile.isOpen()) {
+        logfile.close();
     }
 
     players.clear();
